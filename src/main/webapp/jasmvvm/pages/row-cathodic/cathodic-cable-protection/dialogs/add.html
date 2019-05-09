@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+		html,
+		body {
+			width: 100%;
+		}
+
+		#app {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.content {
+			height: calc(100% - 40px);
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.el-form-item {
+			margin-bottom: 15px !important;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<jas-dialog-wrapper>
+			<div class="content">
+				<el-form ref="formData" :rules="rules" :model="formData" label-width="150px">
+					<jas-form-items-group ref="mainForm" :form="formData" :fields-config="fieldsConfig" :names-group="['基础数据','位置数据']"
+					  :fields-group="[baseFields,locationFields]"></jas-form-items-group>
+					<!--<jas-base-group-title name="基础数据"></jas-base-group-title>
+					<jas-form-items ref="mainForm" :form="formData" :fields="baseFields" :fields-config="fieldsConfig"></jas-form-items>
+					<jas-base-group-title name="位置数据"></jas-base-group-title>
+					<jas-form-items ref="mainForm" :form="formData" :fields="locationFields" :fields-config="fieldsConfig"></jas-form-items>-->
+					<jas-base-group-title name="阴极保护数据"></jas-base-group-title>
+					<el-row>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="阴保电缆编号" prop="cableCode" required>
+								<el-input v-model.trim="formData.cableCode" clearable placeholder="请输入阴保电缆编号" size="small"></el-input>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆规格型号" prop="cableSpecification">
+								<el-input v-model.trim="formData.cableSpecification" clearable placeholder="请输入电缆规格型号" size="small"></el-input>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆盘号" prop="cableTrayNum">
+								<el-input v-model.trim="formData.cableTrayNum" clearable placeholder="请输入电缆盘号" size="small"></el-input>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆批次" prop="cableBatche">
+								<el-input v-model.trim="formData.cableBatche" clearable placeholder="请输入电缆批次" size="small"></el-input>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆保护结构">
+								<el-select v-model="formData.cableStruction" clearable placeholder="请选择电缆保护结构" size="small">
+									<el-option v-for="item in domain.cableStructions" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆敷设图编号" prop="cableLayoutCode">
+								<el-input v-model.trim="formData.cableLayoutCode" clearable placeholder="请输入电缆敷设图编号" size="small"></el-input>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆敷设方式">
+								<el-select v-model="formData.cableLayingMethod" clearable placeholder="请选择电缆敷设方式" size="small">
+									<el-option v-for="item in domain.cableLayingMethods" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆长度(m)" prop="cableLength" required>
+								<el-input-number :precision="3" :step="1" :max="9999999.999" controls-position="right" v-model="formData.cableLength" clearable
+								  placeholder="请输入电缆长度(m)" size="small"></el-input-number>
+							</el-form-item>
+						</el-col>
+						<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+							<el-form-item label="电缆用途">
+								<el-select v-model="formData.cableUse" clearable placeholder="请选择电缆用途" size="small" @change="isShow">
+									<el-option v-for="item in domain.cableUses" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+								</el-select>
+							</el-form-item>
+						</el-col>
+						<template v-if="isSelected.isShow">
+							<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+								<el-form-item :label="isSelected.name">
+									<el-select v-model="formData[isSelected.key]" clearable :placeholder="isSelected.placeholder" size="small">
+										<el-option v-for="item in  isSelected.options" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+									</el-select>
+							</el-col>
+						</template>
+					</el-row>
+					<jas-base-group-title name="其他信息"></jas-base-group-title>
+					<el-row>
+						<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+							<jas-remarks :remarks="formData.remarks" @changevalue="changevalue"></jas-remarks>
+						</el-col>
+					</el-row>
+					<jas-base-group-title name="附件信息"></jas-base-group-title>
+
+					<jas-file-upload :project-oid="formData.projectOid" ref="upload" @success="uploadSuccess"></jas-file-upload>
+				</el-form>
+			</div>
+			<div slot="footer" class="dialog-footer" style="text-align: center">
+				<el-button size="small" @click="cancel()">取 消</el-button>
+				<el-button size="small" :disabled="but_disabled" type="primary" @click="submit('formData')">确 定
+				</el-button>
+			</div>
+		</jas-dialog-wrapper>
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<!--<script src="js/ajaxFileUpload.js"></script>-->
+<script>
+	var app = new Vue({
+		el: "#app",
+		data: function () {
+			var that = this;
+			return {
+				but_disabled:false,
+				domain: {
+					cableStructions: [], //电缆保护结构
+					cableLayingMethods: [], //电缆敷设方式
+					cableUses: [] //电缆用途
+				},
+				rules: {
+					cableLength: [{
+						required: true,
+						message: '电缆长度为必填项',
+						//	trigger: 'blur'
+					}],
+					cableCode: [{
+						required: true,
+						message: '阴保电缆编号为必填项',
+						//	trigger: 'blur'
+					}, {
+						min: "0",
+						max: 50,
+						message: "不能超过50个字"
+					}],
+					cableSpecification: [{
+						min: "0",
+						max: 30,
+						message: "不能超过30个字"
+					}],
+					cableTrayNum: [{
+						min: "0",
+						max: 35,
+						message: "不能超过35个字"
+					}],
+					cableBatche: [{
+						min: "0",
+						max: 50,
+						message: "不能超过50个字"
+					}],
+					cableLayoutCode: [{
+						min: "0",
+						max: 50,
+						message: "不能超过50个字"
+					}],
+					supervisionEngineer: [{
+						min: "0",
+						max: 50,
+						message: "不能超过50个字"
+					}],
+					collectionPerson: [{
+						min: "0",
+						max: 30,
+						message: "不能超过30个字"
+					}]
+				},
+				isSelected: {
+					isShow: false,
+					key: '',
+					name: '',
+					placeholder: '',
+					options: []
+				},
+				baseFields: [ //
+					{
+						field: "projectOid",
+						name: '项目名称'
+					}, {
+						field: "tendersOid",
+						name: '标段名称'
+					}, {
+						field: "pipelineOid",
+						name: '管线名称'
+					}, {
+						field: "pipeSegmentOid",
+						name: '线路段名称'
+					}, {
+						field: "constructUnit",
+						name: '施工单位'
+					}, {
+						field: "constructDate",
+						name: '施工日期'
+					}, {
+						field: "supervisionUnit",
+						name: '监理单位'
+					}, {
+						field: "supervisionEngineer",
+						name: '监理工程师'
+					}, {
+						field: "collectionPerson",
+						name: "采集人员"
+					}, {
+						field: "collectionDate",
+						name: '采集日期'
+					}
+				],
+				locationFields: [{
+					name: "桩号",
+					field: "medianStakeOid"
+				}, {
+					name: "相对桩位置(m)",
+					field: "relativeMileage"
+				}],
+				fieldsConfig: {
+					projectOid: {
+						type: 'select',
+						optionUrl: '/daq/privilege/getProjectList.do',
+						childSelect: ['tendersOid'],
+						childUrl: ['/daq/privilege/getTendersList.do'],
+						isRequired: true,
+						isInit: true
+					},
+					tendersOid: {
+						type: 'select',
+						childSelect: ['pipelineOid', 'supervisionUnit'],
+						childUrl: ['/daq/privilege/getPipelineListByTendersOid.do', '/daq/privilege/getSupervisionUnitByTendersOid.do'],
+						isRequired: true,
+						isInit: true
+					},
+					pipelineOid: {
+						type: 'select',
+						childSelect: ['pipeSegmentOid'],
+						childUrl: ['/daq/privilege/getPipeSegmentList.do'],
+						isRequired: true,
+						isInit: true
+					},
+					pipeSegmentOid: {
+						type: 'select',
+						childSelect: ['medianStakeOid'],
+						childUrl: ['/daq/privilege/getMedianStakeList.do'],
+						isRequired: true,
+						isInit: true
+					},
+					constructUnit: {
+						type: 'select',
+						disabled: true,
+						optionUrl: '/daq/privilege/getCurrentUnitId.do',
+						isRequired: true
+					},
+					constructDate: {
+						type: 'date',
+						isRequired: true,
+						lessDateScope: ['collectionDate'], //第一个数组表示 小于的日期，第二个数组表示大于的日期。默认是小于今天 today 默认为今天
+						maxDateScope: [],
+						isLessToday: true, //默认是小于今天的
+						pickerOptions: { //用于设置默认是小于今天的
+							disabledDate: function (time) {
+								return time.getTime() > new Date().getTime()
+							}
+						},
+					},
+					supervisionUnit: {
+						type: 'select',
+						isRequired: true,
+					},
+					supervisionEngineer: {
+						type: 'input',
+						rules: [{
+							min: "0",
+							max: 50,
+							message: "不能超过50个字"
+						}]
+					},
+					collectionPerson: {
+						type: 'input',
+						rules: [{
+							min: "0",
+							max: 30,
+							message: "不能超过30个字"
+						}]
+					},
+					collectionDate: {
+						type: 'date',
+						isRequired: true,
+						lessDateScope: [], //第一个数组表示 小于的日期，第二个数组表示大于的日期。默认是小于今天 today 默认为今天
+						maxDateScope: ['constructDate'],
+						isLessToday: true, //默认是小于今天的
+						pickerOptions: { //用于设置默认是小于今天的
+							disabledDate: function (time) {
+								return time.getTime() > new Date().getTime()
+							}
+						},
+					},
+					medianStakeOid: {
+						type: 'select',
+						isRequired: true,
+					},
+					relativeMileage: {
+						type: 'number',
+						name: '相对桩位置(m)',
+						max: 9999999.99,
+						precision: 2,
+						isRequired: true
+					}
+				},
+				formData: {
+					projectOid: "",
+					tendersOid: "",
+					pipelineOid: "",
+					pipeSegmentOid: "",
+					constructUnit: "",
+					collectionDate: "",
+					supervisionUnit: "",
+					medianStakeOid: "",
+					relativeMileage: "",
+					cableLength: "",
+					cableCode: "",
+					cableSpecification: "",
+					cableTrayNum: "",
+					cableBatche: "",
+					cableLayoutCode: "",
+					supervisionEngineer: "",
+					collectionPerson: "",
+					auxiliaryAnodeBedOid: "",
+					testStakeOid: "",
+					sacrificeAnodeOid: "",
+					cableProtectionCode: ""
+				}
+			}
+		},
+
+		mounted: function () {
+			var that = this;
+			var param = window.jasTools.base.getParamsInUrl(location.href);
+			var userBo = JSON.parse(localStorage.getItem("user"));
+			that.formData.constructUnit = userBo.unitId;
+			if (param.oid) {
+				this.oid = param.oid;
+				this.formData.oid = this.oid;
+				this.isEdit = true;
+				this.getDetailByObjectId();
+				this.$refs.upload.requestFile(this.oid);
+
+			};
+			this.requestDomainFromDomainTable('cable_struction_domain', function (arr) {
+				that.domain.cableStructions = arr;
+			});
+			this.requestDomainFromDomainTable('cable_laying_method_domain', function (arr) {
+				that.domain.cableLayingMethods = arr;
+			});
+			this.requestDomainFromDomainTable('cable_use_domain', function (arr) {
+				that.domain.cableUses = arr;
+			});
+		},
+		methods: {
+			changevalue: function (msg) {
+				this.formData.remarks = msg;
+			},
+			cancel: function (param) {
+				window.parent.jasTools.dialog.close(param);
+			},
+			requestDomainFromDomainTable: function (domainName, cb) {
+				var that = this;
+				var url = jasTools.base.rootPath +
+					"/jasframework/sysdoman/getDoman.do";
+				jasTools.ajax.get(url, {
+					"domainName": domainName
+				}, function (data) {
+					var aDomain = data.map(function (item) {
+						return {
+							key: item.codeId,
+							value: item.codeName,
+						}
+					});
+					cb && cb(aDomain);
+				});
+			},
+			submit: function (formName) {
+				var that = this;
+				this.$refs[formName].validate(function (valid) {
+					if (valid) {
+						that.save();
+					}
+				});
+			},
+
+			save: function () {
+				var that = this;
+				var msg = "";
+				if (!this.isEdit) {
+					msg = "增加成功";
+					url = jasTools.base.rootPath +
+						"/jdbc/commonData/cathodicCableProtection/save.do";
+				} else {
+					msg = "修改成功";
+					url = jasTools.base.rootPath +
+						"/jdbc/commonData/cathodicCableProtection/update.do";
+				}
+				that.but_disabled = true;
+				jasTools.ajax.post(url, that.formData, function (data) {
+					that.$refs.upload.uploadFile(data.data || that.oid);
+				},function(data){
+					if(data.status==-1){
+						that.but_disabled = false;
+					}
+				});
+
+			},
+			uploadSuccess: function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: !this.isEdit ? '保存成功' : '修改成功'
+				});
+				this.cancel(1);
+			},
+			getDetailByObjectId: function () {
+				var that = this;
+				var url = jasTools.base.rootPath + "/jdbc/commonData/cathodicCableProtection/getPage.do";
+				jasTools.ajax.post(url, {
+					oid: that.oid
+				}, function (data) {
+					that.formData = data.rows[0];
+					that.$refs['mainForm'].triggerFatherSelectsChange();
+					that.isShow(data.rows[0].cableUse, true)
+				});
+			},
+			isShow: function (val, edit) {
+				var that = this;
+				if (!edit) {
+					that.formData.auxiliaryAnodeBedOid = "";
+					that.formData.testStakeOid = "";
+					that.formData.sacrificeAnodeOid = "";
+					that.formData.cableProtectionCode = "";
+				}
+
+				if (!val) {
+					that.isSelected.isShow = false;
+					return;
+				}
+				var url = jasTools.base.rootPath + "/daq/cathodicCableProtection/queryForSelect.do";
+				jasTools.ajax.post(url, {
+					codeId: val,
+					pipeSegmentOid: that.formData.pipeSegmentOid
+				}, function (data) {
+					that.isSelected.options = data.rows;
+				});
+				if (val == 'cable_use_code_001') {
+					that.isSelected.isShow = true;
+					that.isSelected.key = 'testStakeOid';
+					that.isSelected.name = '测试桩号';
+					that.isSelected.placeholder = '请输入测试桩号';
+				}
+				if (val == 'cable_use_code_002') {
+					that.isSelected.isShow = true;
+					that.isSelected.key = 'sacrificeAnodeOid';
+					that.isSelected.name = '牺牲阳极编号';
+					that.isSelected.placeholder = '请输入牺牲阳极编号';
+				}
+				if (val == 'cable_use_code_003') {
+					that.isSelected.isShow = true;
+					that.isSelected.key = 'cableProtectionCode';
+					that.isSelected.name = '阴保电源编号';
+					that.isSelected.placeholder = '请输入阴保电源编号';
+				}
+				if (val == 'cable_use_code_004') {
+					that.isSelected.isShow = true;
+					that.isSelected.key = 'auxiliaryAnodeBedOid';
+					that.isSelected.name = '辅助阳极地床编号';
+					that.isSelected.placeholder = '请输入辅助阳极地床编号';
+				}
+			}
+		},
+	});
+</script>
+
+</html>

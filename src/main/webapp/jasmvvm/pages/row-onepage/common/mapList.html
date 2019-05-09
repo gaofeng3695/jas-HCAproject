@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../src/css/main.css">
+	<style>
+		html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		ul,li{
+			list-style: none;
+		}
+		.map-list-box{
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			padding: 10px;
+		}
+		.map-list{
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			color: #5695cb;
+			overflow: auto;
+		}
+		.map-list li{
+			height: 25px;
+			line-height: 25px;
+			padding: 0 10px;
+		}
+		.map-list li:hover{
+			color: #fff;
+			background-color: #72c1ea66;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<div class="map-list-box">
+			<ul class="map-list">
+				<li class="list-item" v-for="item in mapList">{{item}}</li>
+				<!--<li class="list-item">管线</li>
+				<li class="list-item">场站</li>
+				<li class="list-item">阀室</li>
+				<li class="list-item">穿跨越</li>
+				<li class="list-item">公安</li>
+				<li class="list-item">消防</li>
+				<li class="list-item">学校</li>
+				<li class="list-item">医院</li>-->
+			</ul>
+		</div>
+	</div>
+</body>
+<script src="./../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../lib/vue/vue.js"></script>
+<script src="./../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../common/components/jas-components.js "></script>
+<script src="./../../../common/js/jas-tools.js"></script>
+<script>
+	var appDetail = new Vue({
+		el: "#app",
+		data: function () {
+			return {
+				mapList:["管线","场站","阀室","穿跨越","公安","消防","学校","医院"]
+			}
+		},
+		created: function () {
+			
+		},
+		methods: {
+			
+		},
+	});
+
+</script>
+</html>

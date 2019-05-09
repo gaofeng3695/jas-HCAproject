@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.rank-table th,
+		.rank-table td{
+			white-space: nowrap;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<table class="rank-table">
+			<thead>
+				<tr>
+					<th v-for="item in titleData">{{item}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index)  in detailData" @click="openDetail(index)"> 
+					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
+					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> <td>{{item.g}}</td> <td>{{item.h}}</td> <td>{{item.i}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<script>
+	var dataList = {
+			"fengxianList":{
+				"title":["序号","风险名称","风险等级","所属企业","企业联系人","联系人部门","联系电话","风险位置","防护措施"],
+				"data": [{
+					"a": "高后果区500内施工   ",
+					"b": "Ⅲ级",
+					"c": "内蒙古西部管道",
+					"d": "王志",
+					"e": "保护部",
+					"f": "18311360111",
+					"j": "呼市西部管道25#桩30米",
+					"g": "1天2巡",
+				}, {
+					"a": "高后果区交直流干扰",
+					"b": "Ⅲ级",
+					"c": "内蒙古西部天然气",
+					"d": "陈治",
+					"e": "保护部",
+					"f": "15111636891",
+					"j": "呼市西部管道25#桩31米",
+					"g": "一月一测",
+				}, {
+					"a": "高后果区滑坡",
+					"b": "Ⅲ级",
+					"c": "内蒙古西部管道",
+					"d": "陈一",
+					"e": "保护部",
+					"f": "18913602478",
+					"j": "呼市西部管道25#桩32米",
+					"g": "巡护",
+				}],
+			},
+			"gaoHouGuoWeiGui":{
+				"title":["序号","高后区违规企业名称","违规事项","上次上报时间","企业联系人","联系人部门","联系电话","违规地点","跟踪状态"],
+				"data":[{
+					"a": "内蒙古西部管道",
+					"b": "18个月未上报",
+					"c": "2018年3月",
+					"d": "王志",
+					"e": "保护部",
+					"f": "18311360111",
+					"j": "呼市某区某街",
+					"g": "未上报"
+				}, {
+					"a": "某管道公司",
+					"b": "19个月未上报",
+					"c": "2018年3月",
+					"d": "陈一",
+					"e": "保护部",
+					"f": "15111636891",
+					"j": "包头某区某街",
+					"g": "未上报"
+				}, {
+					"a": "某管道公司",
+					"b": "20个月未上报",
+					"c": "2018年3月",
+					"d": "陈治",
+					"e": "保护部",
+					"f": "18913602478",
+					"j": "呼市某区某街",
+					"g": "未上报"
+				}],
+			},
+			"neiJianCeWeiGui":{
+				"title":["序号","违规企业名称","违规事项","投产时间","最近检测时间","评价检测期限","企业联系人","联系人部门","联系电话"],
+				"data":[{
+						"a": "内蒙古西部管道",
+						"b": "未按规定开展内检测",
+						"c": "2001年3月",
+						"d": "2015年",
+						"e": "2019年",
+						"f": "王志",
+						"j": "保护部",
+						"g": "18311360111"
+					}, {
+						"a": "某管道公司",
+						"b": "未按规定开展内检测",
+						"c": "1998年3月",
+						"d": "2015年",
+						"e": "2020年",
+						"f": "陈治",
+						"j": "保护部",
+						"g": "18311360111"
+					},{
+						"a": "某管道公司",
+						"b": "未按规定开展内检测",
+						"c": "1998年3月",
+						"d": "2015年",
+						"e": "2021年",
+						"f": "陈一",
+						"j": "保护部",
+						"g": "18311360111"
+					}],
+			},
+			"duBanList":{
+				"title":["序号","所属盟市","督办项","已整改","待整改","整改完成率"],
+				"data":[{
+						"a": "鄂尔多斯市",
+						"b": "68",
+						"c": "32",
+						"d": "36",
+						"e": "47%"
+					}, {
+						"a": "呼和浩特市",
+						"b": "50",
+						"c": "23",
+						"d": "27",
+						"e": "46%"
+					},{
+						"a": "包头市",
+						"b": "78",
+						"c": "50",
+						"d": "28",
+						"e": "64%"
+					},{
+						"a": "赤峰市",
+						"b": "37",
+						"c": "37",
+						"d": "0",
+						"e": "100%"
+					}],
+			},
+			"success": 1
+		};
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+
+	var appDetail = new Vue({
+		el: "#app",
+		data: function () {
+			return {
+				titleData:{},
+				detailData:{},
+				dataType:"",
+			}
+		},
+		created: function () {
+			var that = this;
+			that.dataType = getParamter("dataType");
+			this.titleData  = dataList[this.dataType].title;
+			this.detailData = dataList[this.dataType].data;
+			//定位多条数据
+			if(parent.app.layerId){
+                var len = this.detailData.length;
+                var idFieldName = parent.app.layerKeyName ? parent.app.layerKeyName:"gid";
+                var ids = [];
+			    for(var i = 1 ; i <= len ;i++){
+					ids.push(i);
+				}
+                parent.app.jasMap.flashGraphic(ids,parent.app.layerId,{
+                    fieldName:idFieldName
+				});
+			}
+		},
+		methods: {
+			openDetail:function(idx){
+				if(this.dataType == "fengxianList"){
+					//alert("在地图上展示改点:"+idx);
+					parent.app.locationPoint(idx,"demo_pd_fengxian");
+				}
+				/* else{
+					parent.app.openDetail(this.dataType);
+				} */
+				
+				//parent.app.openDetail(this.dataType);
+			}
+		},
+	});
+
+</script>
+</html>

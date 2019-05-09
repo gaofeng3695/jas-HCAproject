@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>内蒙古自治区油气长输管线安全监控平台</title>
+
+	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../src/css/main.css">
+	<link rel="stylesheet" href="../../../src/css/onepage.css">
+	<style>
+		.panelitem {
+			height: 100%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem_right_top {
+			height: 50%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem_right_bottom{
+			height: 50%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+
+		.height-one{
+			height: 85px;
+			margin: 10px 0;
+			/*background: cyan*/
+		}
+		.height-two{
+			height: calc(100% - 105px);
+			/*background: yellow*/
+		}
+		.chart-dl{
+			font-size: 0;
+		}
+		.chart-dl dl{
+			width:25%;
+			height: 60px;
+			padding: 10px 0;
+			display: inline-block;
+			vertical-align: middle;
+			margin-bottom: 0;
+		}
+		.chart-dl dl dt,
+		.chart-dl dl dd{
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.chart-dl dl dt img{
+			width: 40px;
+			height: 40px;
+		}
+		.chart-dl dl dd{
+			padding-left:10px; 
+		}
+		.chart-dl dl dd p{
+			padding: 0;
+			margin: 0;
+			line-height: 20px;
+			color: #03affe
+		}
+		.chart-dl dl dd p:last-child{
+			font-size: 18px;
+			color: #ffcc00
+		}
+		.chart-square{
+			padding: 10px 2px;
+			box-sizing:border-box;
+			border: 1px solid #375a78
+		}
+		.chart-circle{
+			/*height: 100%;*/
+			display: flex;
+    		justify-content: space-between;
+		}
+		.chart-square dl,
+		.chart-circle dl{
+			/*height: 100%;*/
+			display: inline-block;
+			vertical-align: middle;
+			position: relative;
+			margin: 0;
+		}
+		.chart-square  dl dd,
+		.chart-square  dl dt{
+			width: 98px;
+			height: 59px;
+		}
+		.chart-circle dl dd,
+		.chart-circle dl dt img{
+			width: 94px;
+		}
+		.chart-square dl dd,
+		.chart-circle dl dd{
+			position: absolute;
+			left: 0;
+			top: 0;
+			text-align: center;
+		}
+		.chart-square dl dd p,
+		.chart-circle dl dd p{
+				color: #fff
+		}
+		.chart-square dl dd p:first-child,
+		.chart-circle dl dd p:first-child{
+			margin: 0;
+			margin-top: 20px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		.chart-square dl dd p:first-child{
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 12px;
+		}
+		.chart-square dl dd p:last-child{
+			font-size: 16px;
+			color: #e7ffff;
+			font-weight: bold;
+			line-height:26px;
+		}
+		.marquee-box{
+			height: 100%;
+			padding: 15px;
+			border:1px solid #375a78;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		legend{
+			color:#5695cb;
+			margin-left: 20px;
+		}
+		.marquee{
+			height: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+		.marquee .marquee-content{
+			display: block;
+			width:100%;
+			height: 200%;
+			position: absolute;
+			overflow: hidden;
+			-webkit-animation: marquee 20s linear infinite;
+			animation: marquee 20s linear infinite;
+		}
+		.marquee p{
+			color: #72c1ea;
+			margin-bottom: 20px;
+		}
+		.marquee span{
+			color: #93eeff;
+			border-right: 1px solid #93eeff;
+			padding: 0 5px;
+		}
+		.marquee span:last-child{
+			color: #ffc000;
+			border-right: 0
+		}
+
+		@keyframes marquee {
+			from {
+				top: 0;
+			}
+			to {
+				top: -100%;
+			}
+		}
+
+		 .absolute-r{
+			position: absolute;
+			right: 20px;
+			top: 0;
+			}
+			.select-box{
+				height: 100%; 
+			}
+			.select-box .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+				width: 120px;
+		}
+    
+			.select-box .btn{
+				padding: 3px 11px;
+			}
+			.select-box .search{
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+			}
+			.select-box  .search-input{
+				height: 28px;
+				padding-right:25px; 
+				border-radius: 4px;
+			}
+			.select-box  .search-icon{
+				display: inline-block;
+				vertical-align: middle;
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				width: 25px;
+				height: 28px;
+				border-radius: 0 4px 4px 0;
+				background:#0d85d3 url("../image/search.png")no-repeat center center;
+				background-size: 16px 16px;
+			}
+
+			.select-box .search-input,
+			.btn-default,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				background: transparent;
+				border: 1px solid #4c535b;
+			}
+			.select-box .search-input:focus,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				border: 1px solid #0d85d3;
+				outline: 0;
+			}
+				
+		.select-box button:-webkit-autofill{
+				-webkit-text-fill-color: #5695cb !important;
+				-webkit-box-shadow: 0 0 0px 1000px transparent  inset !important;
+				background-color:transparent;
+				background-image: none;
+				transition: background-color 50000s ease-in-out 0s; 
+			}
+			.center{
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+			.map-info{
+				position: absolute;
+				bottom: 0;
+				height: 20%;
+				width: 98%;
+				padding: 36px;
+				box-sizing: border-box;
+				color: #ffffff;
+				background-color: #060e224d;
+				line-height: 30px;
+				margin: 10px;
+			}
+			.map-info p{
+				    text-indent: 30px;
+			}
+			.map-info span{
+				color: #ffc000;
+				font-size: 14px;
+			}
+			.rank-table-my{
+			    width:100%;
+			    /*height: 100%;*/
+			    text-align: center;
+			    border-spacing: 5px;
+			    border-collapse: separate;
+			    z-index: 10;
+			}
+			.el-tree{
+				background: transparent;
+				color:#f1f2ea;
+			}
+			.my_el_tree_item{
+				padding-right: 4px; 
+			}
+			.el-tree-node__content:hover{
+				background-color: #f5f7fa47;
+			}
+			.el-tree-node:focus>.el-tree-node__content {
+				background-color: #f5f7fa47;
+			}
+			.el-tree-node.is-drop-inner>.el-tree-node__content .el-tree-node__label{
+				background-color: #f5f7fa47;
+				color: #f1f2ea;
+			}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="app">
+		<jas-onepage-wrapper :ismax="ismax" :index="index">
+			<template slot="left">
+				<div class="panelitem">
+					<jas-panel-opacity title="基础信息">
+						<div style="height:100%;">
+							<el-input
+							  	placeholder="输入关键字进行过滤"
+								v-model="filterText">
+							</el-input>
+							<el-tree ref="bcsic_tree" :expand-on-click-node="false"    :data="treeData" :props="defaultProps" :filter-node-method="filterNode" :default-expand-all="true" :render-content="renderContent" @node-click="handleNodeClick"></el-tree>
+						</div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+			<template slot="center" >
+				<div class="center">
+					<!-- <div class="switch-div">
+						<el-switch
+							style="display: block"
+							v-model="button_1_value"
+                          	inactive-color="#33568a"
+                          	inactive-text="高后果区Ⅰ级"
+                          	active-color="#ff2d2d">
+                        </el-switch>
+                        <el-switch
+                          	style="display: block"
+                          	v-model="button_2_value"
+                        	inactive-color="#33568a"
+	                        inactive-text ="高后果区Ⅱ级"
+	                        active-color="#ff7400">
+                        </el-switch>
+                        <el-switch
+                          	style="display: block"
+                          	v-model="button_3_value"
+                          	inactive-color="#33568a"
+                          	inactive-text="高后果区Ⅲ级"
+                          	active-color="#ffb719"> 
+                      	</el-switch>
+			     	</div> -->
+			     	<!--图层筛选条件-->
+					 <div class="select-div">
+							<el-select v-model="areaVal" @change="areaChange" placeholder="请选择" style="width:180px;margin-right: 10px;">
+								<el-option
+								v-for="item in areaOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+							<el-select v-model="companyVal" @change="companyChange"  placeholder="请选择" style="width:180px;">
+								<el-option
+								v-for="item in companyOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+					 </div>
+
+					 <!--图层操作按钮-->
+					 <div class="operate-div">
+						 <span class="max" @click="openMax"></span>
+                         <span class="yingxiang" @click="switchImageMap"></span>
+                         <span class="shiliang" @click="switchVecMap"></span>
+                         <span class="threeD" @click="open3D"></span>
+                         <span class="tuceng" @click="openTuCeng"></span>
+					 </div>
+					<div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
+					<div class="map-info" >
+					<p>内蒙古自治区管辖长输管线<span>30</span>条，规划设计管线<span>6800</span>公里在建管线长度<span>550</span>公里，在役管线总长度<span>5200</span>公里，其中，天然气管线<span>4000</span>公里，石油管线<span>1200</span>公里。各类型场站<span>30</span>个，阀室<span>300</span>座，输气压力<span>6~10</span>Mpa,气源主要接收来自中陕京四线天然气管道，长呼天然气管线，年供气能力达<span>200</span>亿立方米</p>
+					</div>
+				</div>
+			</template>
+			<template slot="right">
+				<div class="panelitem_right_top">
+					<jas-panel-opacity title="管线长度统计">
+						<div style="height:100%;">
+							<div id="pipeline_length_statistics" style="height:100%;"></div>
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem_right_bottom">
+					<jas-panel-opacity title="站场/阀室统计">
+						<div style="height:100%;">
+							<div id="station_statistics" style="height:100%;"></div>
+						</div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+		</jas-onepage-wrapper>
+	</div>
+
+	</div>
+
+</body>
+<!-- import Vue before Element -->
+<script src="../../../lib/vue/vue.js"></script>
+<script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<!-- import JavaScript -->
+<script src="../../../lib/echarts/echarts.min.js"></script>
+
+<script src="../../../common/components/jas-components.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script src="../components/onepage-components.js"></script>
+<script id="mapApi" src="../../map/mapjs/jasopengis.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script>
+	var onCenterStakeLayerClicked = function (e) {
+		//业务逻辑
+	};
+	var jasMap = new JasMap({
+		appConfig:"config.onepage.json",
+		onMapLoaded: function (e) {
+		},
+		onLayerAdded: function (e) {
+			var layerId = e.data.layerId;
+			if (layerId === "centerlinestake") {
+				//添加单个图层的点击事件
+				this.addLayerClickEventListener(layerId, onCenterStakeLayerClicked);
+			}
+		}
+	}); 
+</script>
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				defaultProps: {
+					children: 'children',
+					label: 'label'
+		        },
+		        
+		        jasMap:null,
+                mapConfig:"config.onepage.json",
+                layerId:"demo_pd_fengxian",//空间表layerId (表名)
+                layerKeyName:"gid",//空间表layerId (表名)
+                
+				ismax: false,
+				index:0,
+				button_1_value: true,   // 地图切换按钮样式
+				button_2_value: true,
+				button_3_value: true,
+				areaVal:"全自治区",
+				areaOption:[],
+				companyVal:"全部企业",
+				companyOption:[],
+				treeData:[],
+				pipelineLengthStatistics:"",
+				stationStatistics:"",
+				filterText: ''
+			}
+		},
+		watch: {
+		     filterText:function(val) {
+		        this.$refs.bcsic_tree.filter(val);
+		      },
+		   // 地图最大化的监控
+           ismax:function (newval, oldval) {
+                console.log("111111");
+                var that = this;
+                    this.$nextTick(function(){
+                        jasMap.resizeMap()
+                    })
+
+            },
+	    },
+		computed: {},
+		created: function () {
+			var that = this;
+			$(function(){
+				// 获取chart图表数据
+				that.getTreeData();
+				that.areaOption=[   // 下拉选选项值
+					{"label":"全自治区","value":"全自治区"},
+					{"label":"呼和浩特","value":"呼和浩特"},
+					{"label":"鄂尔多斯","value":"鄂尔多斯"},
+					{"label":"包头","value":"包头"},
+					{"label":"赤峰","value":"赤峰"},
+					{"label":"乌海","value":"乌海"},
+					{"label":"呼伦贝尔","value":"呼伦贝尔"},
+					{"label":"兴安盟","value":"兴安盟"},
+					{"label":"通辽","value":"通辽"},
+					{"label":"锡林郭勒盟","value":"锡林郭勒盟"},
+					{"label":"乌兰察布","value":"乌兰察布"},
+					{"label":"巴彦淖尔","value":"巴彦淖尔"},
+					{"label":"阿拉善盟","value":"阿拉善盟"},
+				];
+				that.companyOption=[   // 下拉选选项值
+					{"label":"全部企业","value":"全部企业"},
+					{"label":"内蒙古西部天然气管道运行有限公司","value":"内蒙古西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输气分公司","value":"中国石油天然气股份有限公司管道长庆输气分公司"},
+					{"label":"乌海华油天然气有限责任公司","value":"乌海华油天然气有限责任公司"},
+					{"label":"阿拉善盟深中能源发展有限公司","value":"阿拉善盟深中能源发展有限公司"},
+					{"label":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司","value":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输油气分公司","value":"中国石油天然气股份有限公司管道长庆输油气分公司"},
+					{"label":"中国石油东部有限公司西气东输银川管理处","value":"中国石油东部有限公司西气东输银川管理处"},
+				];
+				that.getPipelineLengthStatistics();
+				that.getStationStatistics();
+			})
+			
+		},
+		methods: {
+			getTreeData:function () {
+				var that = this;
+				$.getJSON(jasTools.base.rootPath+'/jasmvvm/pages/row-onepage/basic/datajson/treeData.json',function(data){
+					if(data && data.data){
+						that.treeData = data.data;
+					}
+				});
+			},
+			getPipelineLengthStatistics : function(){
+				var that = this;
+				if(!this.pipelineLengthStatistics){
+					that.pipelineLengthStatistics = echarts.init(document.getElementById('pipeline_length_statistics'));
+					$(window).resize(function () {
+						that.pipelineLengthStatistics.resize();
+					});
+				}
+				var option = {
+					    tooltip : {
+					        trigger: 'axis',
+					        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+					            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+					        }
+					    },
+					    legend: {
+					        data:['原油','成品油','天然气'],
+					        textStyle:{
+								color:"#f1f2ea"					            	
+					        },
+					        left:"right",
+					    },
+					    grid: {
+					        bottom:20
+					    },
+					    xAxis : [
+					        {
+					            type : 'category',
+					            data : ['呼和浩特','鄂尔多斯','包头','赤峰'],
+					            axisLabel: {
+					                textStyle: {
+					                    color: '#f1f2ea'
+					                }
+					            },
+					            axisLine:{
+					                lineStyle:{
+					                    color: '#f1f2ea'
+					                }   
+					            }
+					        }
+					    ],
+					    yAxis : [
+					        {
+					        	name:"（KM）",					        	
+					            type : 'value',
+					            axisLabel: {
+					                textStyle: {
+					                    color: '#f1f2ea'
+					                }
+					            },
+					            axisLine:{
+					                lineStyle:{
+					                    color: '#f1f2ea'
+					                }   
+					            }
+					        }
+					    ],
+					    series : [
+					    	{
+					            name:'原油',
+					            type:'bar',
+					            data:[68, 90, 106, 130],
+					            color:'#ff2d2d',
+					            barWidth:16,
+					            itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#5fccfc'
+											}, {
+											offset: 1,
+											color: '#2c46b5'
+										}])
+									}
+								}
+					        },{
+					            name:'成品油',
+					            type:'bar',
+					            data:[112, 82, 191, 234],
+					            color:'#ff7400',
+					            barWidth:16,
+					            itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#6950d2'
+											}, {
+											offset: 1,
+											color: '#9b4457'
+										}])
+									}
+								}
+					        },{
+					            name:'天然气',
+					            type:'bar',
+					            data:[104, 150, 260, 290],
+					            color:'#ffb719',
+					            barWidth:16,
+					            itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#ff7400'
+											}, {
+											offset: 1,
+											color: '#ff2d2d'
+										}])
+									}
+								}
+					        }
+					    ]
+					};
+				that.pipelineLengthStatistics.setOption(option, true);
+			},
+			getStationStatistics : function(){
+				var that = this;
+				if(!this.stationStatistics){
+					that.stationStatistics = echarts.init(document.getElementById('station_statistics'));
+					$(window).resize(function () {
+						that.stationStatistics.resize();
+					});
+				}
+				var option = {
+					    tooltip : {
+					        trigger: 'axis',
+					        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+					            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+					        }
+					    },
+					    legend: {
+					        data:['站场','阀室'],
+					        textStyle:{
+								color:"#f1f2ea"					            	
+					        },
+					        left:"right",
+					    },
+					    grid: {
+					        bottom:20
+					    },
+					    xAxis : [
+					        {
+					            type : 'category',
+					            data : ['呼和浩特','鄂尔多斯','包头','赤峰'],
+					            axisLabel: {
+					                textStyle: {
+					                    color: '#f1f2ea'
+					                }
+					            },
+					            axisLine:{
+					                lineStyle:{
+					                    color: '#f1f2ea'
+					                }   
+					            }
+					        }
+					    ],
+					    yAxis : [
+					        {
+					        	name:"（座）",					        	
+					            type : 'value',
+					            axisLabel: {
+					                textStyle: {
+					                    color: '#f1f2ea'
+					                }
+					            },
+					            axisLine:{
+					                lineStyle:{
+					                    color: '#f1f2ea'
+					                }   
+					            }
+					        }
+					    ],
+					    series : [
+					    	{
+					            name:'站场',
+					            type:'bar',
+					            data:[76, 103, 96, 45],
+					            color:'#ffb719',
+					            barWidth:30,
+					            itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#5fccfc'
+											}, {
+											offset: 1,
+											color: '#2c46b5'
+										}])
+									}
+								}
+					        },{
+					            name:'阀室',
+					            type:'bar',
+					            data:[68, 82, 121, 56],
+					            color:'#ff7400',
+					            barWidth:30,
+					            itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#6950d2'
+											}, {
+											offset: 1,
+											color: '#b3445c'
+										}])
+									}
+								}
+					        }
+					    ]
+					};
+				that.stationStatistics.setOption(option, true);
+				that.stationStatistics.on('click',function(obj){
+					  console.log(obj)
+				    jasTools.selfDialog.show({
+                        title: '站场列表',
+                        src: './dialogs/detailStationList.html',
+                        // src: './dialogs/detailList.html?dataType=fengxianList',
+                        height: '200px',
+                        // width: '800px',
+                        width: '48%',
+                    })
+				})
+				
+			},
+			open3D:function(e){
+                window.open("../../../../jasmvvm/pages/map3d/app_nmg/index.html");
+
+			},
+			openMax:function(e){
+                this.ismax = !this.ismax;
+			},
+			clearMap:function(e){
+				//alert("清除所有图层");
+			},
+			switchImageMap:function(e){
+                if(this.baseMap !== "google_img"){
+                    this.baseMap = "google_img";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                jasMap.switchBaseMap(this.baseMap);
+            },
+            switchVecMap:function(e){
+                if(this.baseMap !== "google_vec"){
+                    this.baseMap = "google_vec";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                jasMap.switchBaseMap(this.baseMap);
+            },
+            openTuCeng:function(){
+                jasTools.selfDialog.show({
+                    title: '图层列表',
+                    src: '../common/mapList.html',
+                    height: '265px',
+                    width: '200px',
+                    right:"27%",
+                    top:"360px",
+                })
+            },
+			areaChange:function(){
+				//alert(this.areaVal)
+			},
+			companyChange:function(){
+				//alert(this.companyVal)
+			},
+			handleNodeClick:function(obj){
+				console.log(obj)
+			    if(obj.label == '长呼线'){
+                   
+                    jasMap.flashGraphic(1,"demo_pd_pipeline",{"fieldName":"gid"});
+                }
+                if(obj.label == '站场（7座）'){
+                    jasTools.selfDialog.show({
+                        title: '站场列表',
+                        src: './dialogs/detailStationList.html',
+                        // src: './dialogs/detailList.html?dataType=fengxianList',
+                        height: '200px',
+                        // width: '800px',
+                        width: '48%',
+                    })
+                    jasMap.flashGraphic([2,4],  'demo_pd_zhanchang' ,{
+                        fieldName:'gid'
+                    });
+                }
+                if(obj.label == '呼市首站'){
+                    jasMap.flashGraphic([2],  'demo_pd_zhanchang' ,{
+                        fieldName:'gid'
+                    });
+                }
+                if(obj.label == '临河末站'){
+                    jasMap.flashGraphic([4],  'demo_pd_zhanchang' ,{
+                        fieldName:'gid'
+                    });
+                }                
+			},
+			renderContent:function(h, { node, data, store }) {
+				 var createElement = arguments[0];
+                 var level = arguments[1].node.level;
+                 console.log(arguments[1].node.label);
+                 console.log(level);
+                 var icon_class = 'fa fa-university';
+                 switch(level){
+                 case 1:
+                 	icon_class = 'fa fa-university';
+                 	break;
+                 case 2:
+                 	icon_class = 'fa fa-ils';
+                 	break;
+                 case 3:
+                 	icon_class = 'fa fa-cubes';
+                 	break;
+                 case 4:
+                 	icon_class = 'fa fa-tag';
+                 	break;
+                 
+                 }
+                 return createElement('span', [
+                     createElement('i', {attrs: {class: ''+icon_class+' my_el_tree_item'}}),
+                     createElement('span', "     "),
+                     createElement('span', arguments[1].node.label)
+                 ]);
+          	},
+          	filterNode(value, data) {
+                if (!value) return true;
+                return data.label.indexOf(value) !== -1;
+             },
+             openZCDetail:function(dataType){
+                 jasTools.selfDialog.show({
+                     title: '详情列表',
+                     src: './dialogs/detailPageStation.html',
+                     height: '450px',
+                     width: '30%',
+                     isDetail:true, 
+                 })
+             },          
+             openPipelineDetail: function(dataType){
+                 jasTools.selfDialog.show({
+                     title: '详情列表',
+                     src: './dialogs/detailPagePipeline.html',
+                     height: '450px',
+                     width: '30%',
+                     isDetail:true, 
+                 })
+             },          
+             openWhaterDetail: function(dataType){
+            	 console.log(1)
+                 jasTools.selfDialog.show({
+                     title: '详情列表',
+                     src: './dialogs/detailPageWhater.html',
+                     height: '450px',
+                     width: '30%',
+                     isDetail:true, 
+                 })
+             }       
+		}
+	})
+</script>
+
+
+</html>

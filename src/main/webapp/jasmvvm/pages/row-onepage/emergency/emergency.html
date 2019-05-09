@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>内蒙古自治区油气长输管线安全监控平台</title>
+
+	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../src/css/main.css">
+	<link rel="stylesheet" href="../../../src/css/onepage.css">
+	<style>
+		.panelitem {
+			height: 50%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem1 {
+			height: 20%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem2 {
+			height: 40%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.height-one{
+			height: 85px;
+			margin: 10px 0;
+			/*background: cyan*/
+		}
+		.height-two{
+			height: calc(100% - 105px);
+			/*background: yellow*/
+		}
+		.chart-dl{
+			font-size: 0;
+		}
+		.chart-dl dl{
+			width:25%;
+			height: 60px;
+			padding: 10px 0;
+			display: inline-block;
+			vertical-align: middle;
+			margin-bottom: 0;
+		}
+		.chart-dl dl dt,
+		.chart-dl dl dd{
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.chart-dl dl dt img{
+			width: 40px;
+			height: 40px;
+		}
+		.chart-dl dl dd{
+			padding-left:10px; 
+		}
+		.chart-dl dl dd p{
+			padding: 0;
+			margin: 0;
+			line-height: 20px;
+			color: #03affe
+		}
+		.chart-dl dl dd p:last-child{
+			font-size: 18px;
+			color: #ffcc00
+		}
+		.chart-square{
+			padding: 10px 2px;
+			box-sizing:border-box;
+			border: 1px solid #375a78
+		}
+		.chart-circle{
+			/*height: 100%;*/
+			display: flex;
+    		justify-content: space-between;
+		}
+		.chart-square dl,
+		.chart-circle dl{
+			/*height: 100%;*/
+			display: inline-block;
+			vertical-align: middle;
+			position: relative;
+			margin: 0;
+		}
+		.chart-square  dl dd,
+		.chart-square  dl dt{
+			width: 98px;
+			height: 59px;
+		}
+		.chart-circle dl dd,
+		.chart-circle dl dt img{
+			width: 94px;
+		}
+		.chart-square dl dd,
+		.chart-circle dl dd{
+			position: absolute;
+			left: 0;
+			top: 0;
+			text-align: center;
+		}
+		.chart-square dl dd p,
+		.chart-circle dl dd p{
+				color: #fff
+		}
+		.chart-square dl dd p:first-child,
+		.chart-circle dl dd p:first-child{
+			margin: 0;
+			margin-top: 20px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		.chart-square dl dd p:first-child{
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 12px;
+		}
+		.chart-square dl dd p:last-child{
+			font-size: 16px;
+			color: #e7ffff;
+			font-weight: bold;
+			line-height:26px;
+		}
+		.marquee-box{
+			height: 100%;
+			padding: 15px;
+			border:1px solid #375a78;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		legend{
+			color:#5695cb;
+			margin-left: 20px;
+		}
+		.marquee{
+			height: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+		.marquee .marquee-content{
+			display: block;
+			width:100%;
+			height: 200%;
+			position: absolute;
+			overflow: hidden;
+			-webkit-animation: marquee 20s linear infinite;
+			animation: marquee 20s linear infinite;
+		}
+		.marquee p{
+			color: #72c1ea;
+			margin-bottom: 20px;
+		}
+		.marquee span{
+			color: #93eeff;
+			border-right: 1px solid #93eeff;
+			padding: 0 5px;
+		}
+		.marquee span:last-child{
+			color: #ffc000;
+			border-right: 0
+		}
+
+		@keyframes marquee {
+			from {
+				top: 0;
+			}
+			to {
+				top: -100%;
+			}
+		}
+
+		 .absolute-r{
+			position: absolute;
+			right: 20px;
+			top: 0;
+			}
+			.select-box{
+				height: 100%; 
+			}
+			.select-box .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+				width: 120px;
+		}
+    
+			.select-box .btn{
+				padding: 3px 11px;
+			}
+			.select-box .search{
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+			}
+			.select-box  .search-input{
+				height: 28px;
+				padding-right:25px; 
+				border-radius: 4px;
+			}
+			.select-box  .search-icon{
+				display: inline-block;
+				vertical-align: middle;
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				width: 25px;
+				height: 28px;
+				border-radius: 0 4px 4px 0;
+				background:#0d85d3 url("../image/search.png")no-repeat center center;
+				background-size: 16px 16px;
+			}
+
+			.select-box .search-input,
+			.btn-default,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				background: transparent;
+				border: 1px solid #4c535b;
+			}
+			.select-box .search-input:focus,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				border: 1px solid #0d85d3;
+				outline: 0;
+			}
+				
+		.select-box button:-webkit-autofill{
+				-webkit-text-fill-color: #5695cb !important;
+				-webkit-box-shadow: 0 0 0px 1000px transparent  inset !important;
+				background-color:transparent;
+				background-image: none;
+				transition: background-color 50000s ease-in-out 0s; 
+			}
+			.center{
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+			.map-info{
+				position: absolute;
+				bottom: 0;
+				height: 20%;
+				width: 98%;
+				padding: 36px;
+				box-sizing: border-box;
+				color: #72c1ea;
+				background-color: #060e224d;
+				line-height: 30px;
+				margin: 10px;
+			}
+			.map-info p{
+				    text-indent: 30px;
+			}
+			.map-info span{
+				color: #ffc000;
+				font-size: 14px;
+			}
+			.fieldset-body{
+	width:100%;
+	height:100%;
+	display: flex;
+	justify-content: space-between;
+	align-items:stretch
+}
+.fieldset-item{
+	flex-basis:50%;
+	display: flex;
+}
+.fieldset-item .item-img{
+	flex-basis:40%;
+	position:relative
+}
+.fieldset-item .item-img img{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate;
+	transform: translate(-50%,-50%);
+}
+.fieldset-item .item-info{
+	flex-basis:60%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.fieldset-item .item-info .item-title{
+	font-size: 16px;
+	color: #eeeeee;
+	line-height: 30px;
+}
+.fieldset-item .item-info .item-val{
+	font-size:32px;
+	color:#0ff1e9
+}
+		
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="app">
+		<jas-onepage-wrapper :ismax="ismax" :index="index">
+			<template slot="left">
+				<div class="panelitem">
+					<jas-panel-opacity title="应急资源">
+						<div id="emergencyResource" style="height:90%;"></div>
+						<div i style="height:10%;">
+							<div style="width:36%;margin:0 auto;color:#a6b0b0;">
+							<i class="fa fa-chevron-left fa-lg" aria-hidden="true"></i>
+							<span class="fa-lg" style="font-size:1.2em">&emsp;呼和浩特&emsp;</span>
+							<i class="fa fa-chevron-right fa-lg" aria-hidden="true"></i>
+							</div>
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem">
+						<jas-panel-opacity title="安全事故">
+						<fieldset  class="chart marquee-box">
+									<div class="marquee">
+										<div class="marquee-content">
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+											<p>2019年3月25日13时48分，内蒙古自治区包头市土右旗沟门镇北只图村向阳小区一栋居民楼突然发生天然气管道爆炸，其中一个单元整体塌陷。</p>
+										</div>
+									</div>
+								</fieldset>
+					</jas-panel-opacity>
+				</div>
+			</template>
+			<template slot="center" >
+				 <div class="center">
+				 	 <div class="switch-div">
+			        	 <el-switch
+                          style="display: block"
+                          v-model="value3"
+                          inactive-color="#33568a"
+                          inactive-text="医院"
+                          active-color="#ff2323"
+                          >
+                        </el-switch>
+                        <el-switch
+                          style="display: block"
+                          v-model="value4"
+                          inactive-color="#33568a"
+                          inactive-text ="公安"
+                          active-color="#ffea00"
+                          >
+                        </el-switch>
+                        <el-switch
+                          style="display: block"
+                          v-model="value5"
+                          inactive-color="#33568a"
+                          inactive-text="消防"
+                          active-color="#00c6ff"
+                          > 
+                      	</el-switch>
+                        <el-switch
+                          style="display: block"
+                          v-model="value6"
+                          inactive-color="#33568a"
+                          inactive-text="学校"
+                          active-color="#28ffd9"
+                          > 
+                      	</el-switch>
+			          </div>
+			          <div class="select-div">
+							<el-select v-model="areaVal" @change="areaChange" placeholder="请选择" style="width:180px;margin-right: 10px;">
+								<el-option
+								v-for="item in areaOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+							<el-select v-model="companyVal" @change="companyChange"  placeholder="请选择" style="width:180px;">
+								<el-option
+								v-for="item in companyOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+					 </div>
+
+					 <!--图层操作按钮-->
+					 <div class="operate-div">
+						 <span class="max" @click="openMax"></span>
+						 <span class="yingxiang" @click="switchImageMap"></span>
+						 <span class="shiliang" @click="switchVecMap"></span>
+						 <span class="threeD" @click="open3D"></span>
+						 <span class="tuceng" @click="openTuCeng"></span>
+					 </div>
+					  <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
+					 <div class="map-info" v-show="!ismax">
+							<p>内蒙古自治区管辖长输管线<span>30</span>条，规划设计管线<span>6800</span>公里在建管线长度<span>550</span>公里，在役管线总长度<span>5200</span>公里，其中，天然气管线<span>4000</span>公里，石油管线<span>1200</span>公里。各类型场站<span>30</span>个，阀室<span>300</span>座，输气压力<span>6~10</span>Mpa,气源主要接收来自中陕京四线天然气管道，长呼天然气管线，年供气能力达<span>200</span>亿立方米</p>
+						</div>
+				 </div>
+			</template>
+			<template slot="right">
+				<div class="panelitem1">
+					<jas-panel-opacity title="合规性提醒">
+						<div style="height:100%">
+							<div class="fieldset-body">
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-repaire.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">3<span style="font-size:16px;">  家</span></p>	
+										<p class="item-title">未上报预案</p>
+									</div>	
+								</div>	
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-check.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">7<span style="font-size:16px;">  家</span></p>	
+										<p class="item-title">未进行演练</p>
+									</div>	
+								</div>	
+							</div>	
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem2">
+					<jas-panel-opacity title="培训演练">
+						<div id="training" style="height:100%;"></div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem2">
+					<jas-panel-opacity title="应急事件">
+						<fieldset  class="chart marquee-box">
+									<div class="marquee">
+										<div class="marquee-content">
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+											<p>2018-12-11,内蒙古西部天然气长输管道泄漏事故应急处置，挖掘机不慎将天然气管道挖破，造成天然气泄漏，西部天然气调度中心接到事故电话后立即启动应急预案，指派专业处置人员赶赴现场。</p>
+										</div>
+									</div>
+								</fieldset>
+					</jas-panel-opacity>
+				</div>
+			</template>
+		</jas-onepage-wrapper>
+	</div>
+
+	</div>
+
+</body>
+<!-- import Vue before Element -->
+<script src="../../../lib/vue/vue.js"></script>
+<script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<!-- import JavaScript -->
+<script src="../../../lib/echarts/echarts.min.js"></script>
+
+<script src="../../../common/components/jas-components.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script src="../components/onepage-components.js"></script>
+
+<script id="mapApi" src="../../map/mapjs/jasopengis.js"></script>
+
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				ismax:false,
+				index:7,
+				 jasMap:null,
+					mapConfig:"config.onepage.json",
+	                layerId:"demo_pd_fengxian",//空间表layerId (表名)
+	                layerKeyName:"gid",//空间表layerId (表名)
+				value3: true,   // 地图切换按钮样式
+	            value4: true,
+	            value5: true,
+	            value6: true,
+	            
+	            areaVal:"全自治区",
+				areaOption:[   // 下拉选选项值
+					{"label":"全自治区","value":"全自治区"},
+					{"label":"呼和浩特","value":"呼和浩特"},
+					{"label":"鄂尔多斯","value":"鄂尔多斯"},
+					{"label":"包头","value":"包头"},
+					{"label":"赤峰","value":"赤峰"},
+					{"label":"乌海","value":"乌海"},
+					{"label":"呼伦贝尔","value":"呼伦贝尔"},
+					{"label":"兴安盟","value":"兴安盟"},
+					{"label":"通辽","value":"通辽"},
+					{"label":"锡林郭勒盟","value":"锡林郭勒盟"},
+					{"label":"乌兰察布","value":"乌兰察布"},
+					{"label":"巴彦淖尔","value":"巴彦淖尔"},
+					{"label":"阿拉善盟","value":"阿拉善盟"},
+				],
+
+				companyVal:"全部企业",
+				companyOption:[   // 下拉选选项值
+					{"label":"全部企业","value":"全部企业"},
+					{"label":"内蒙古西部天然气管道运行有限公司","value":"内蒙古西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输气分公司","value":"中国石油天然气股份有限公司管道长庆输气分公司"},
+					{"label":"乌海华油天然气有限责任公司","value":"乌海华油天然气有限责任公司"},
+					{"label":"阿拉善盟深中能源发展有限公司","value":"阿拉善盟深中能源发展有限公司"},
+					{"label":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司","value":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输油气分公司","value":"中国石油天然气股份有限公司管道长庆输油气分公司"},
+					{"label":"中国石油东部有限公司西气东输银川管理处","value":"中国石油东部有限公司西气东输银川管理处"},
+				],
+			}
+		},
+		watch: {
+			// 如果需要联动
+			areaVal: function (newval, oldval) {
+				
+			},
+			// 地图最大化的监控
+			ismax:function (newval, oldval) {
+				console.log("111111");
+				var that = this;
+				// if(newval){
+					// alert("执行全屏地图的操作方法")
+					this.$nextTick(function(){
+						that.jasMap.resizeMap()
+					})
+				// }else{
+				// 	// alert("执行缩放地图的操作方法")
+				// }
+			},
+		},
+		computed: {},
+		created: function () {
+			var that = this;
+			$(function(){
+				// 获取chart图表数据
+				that.getChartData();
+			});
+			  that.jasMap = new JasMap({
+	                appConfig:that.mapConfig
+	            });
+			
+		},
+		methods: {
+			getChartData:function () {
+				var that = this;
+				that.trainingChart();
+				that.emergencyResourceChart();
+			},
+			emergencyResourceChart:function(){
+				var that = this;
+				if (!this.emergencyResource) {
+					this.emergencyResource = echarts.init(document.getElementById('emergencyResource'));
+					$(window).resize(function () {
+						that.emergencyResource.resize();
+					});
+				}
+				option = {
+					    tooltip: {
+					        trigger: 'axis'
+					    },
+					    legend: {
+					    	orient: 'horizontal',
+					        left: 'right',
+					        data:['呼和浩特'],
+					        textStyle:{
+					        	color:"#f1f2ea"	
+							},
+					    },
+					    radar: {
+					          name: {
+					            textStyle: {
+					                color: '#fff',
+					              // backgroundColor: '#999',
+					              fontSize:16,
+					                borderRadius: 3,
+					                padding: [3, 5]
+					           			}
+					        	},
+					            indicator: [
+					                {text: '医院', max: 100},
+					                {text: '消防', max: 100},
+					                {text: '公安', max: 100},
+					                {text: '预案', max: 100},
+					                {text: '人员车辆', max: 100}
+					            ]
+					        
+					    },
+					    series: [
+					        {
+					            type: 'radar',
+					             tooltip: {
+					                trigger: 'item'
+					            },
+					            itemStyle: {normal: {areaStyle: {type: 'default'}}},
+					            data: [
+					                {
+					                    value: [35,76,82,44,99],
+					                    name: '呼和浩特'
+					                }
+					            ]
+					        }
+					    ]
+					};
+
+				this.emergencyResource.setOption(option);
+			},
+			trainingChart:function(){
+				var that = this;
+				if (!this.Charttraining) {
+					this.Charttraining = echarts.init(document.getElementById('training'));
+					$(window).resize(function () {
+						that.Charttraining.resize();
+					});
+				}
+				// 指定图表的配置项和数据
+				    option = {
+						textStyle: {
+							color:"#f1f2ea"	,
+							fontSize: 12
+						},
+						tooltip : {
+							trigger: 'axis',
+							axisPointer: {
+								type: 'shadow',
+								label: {
+									show: true
+								}
+							}
+						},
+						legend: {
+							orient: 'horizontal',
+							textStyle:{
+								color:"#f1f2ea"	
+							},
+							data:['应急培训', '应急演练'],
+							 left: 'right'
+						},
+						grid: {
+							top: '12%',
+							left: '8%',
+							right: '8%',
+							bottom:"12%"
+						},
+						xAxis: [
+							{
+								type : 'category',
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+								data : ["西部天然气","中石油销售","中石化销售"]
+							}
+					],
+					yAxis: [
+							{
+								type : 'value',
+								name : '(次数)',
+								splitLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+							}
+						],
+						series : [
+							{
+								name: '应急培训',
+								type: 'bar',
+								barWidth:25,
+								itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#6950d2'
+											}, {
+											offset: 1,
+											color: '#9b4457'
+										}])
+
+									}
+								},
+								label: {
+									normal: {
+										show: true,
+										position: 'top',
+										textStyle:{
+											color:"#f1f2ea"
+										}
+									}
+								
+								},
+								data: ["7","3","6"]
+							},
+							{
+								name: '应急演练',
+								type: 'bar',
+								barWidth:25,
+								itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#0a8fca'
+											}, {
+											offset: 1,
+											color: '#2c46b5'
+											
+										}])
+									}
+								},
+								label: {
+									normal: {
+										show: true,
+										position: 'top',
+										textStyle:{
+											color:"#f1f2ea"
+										}
+									}
+								},
+								data: ["8","4","7"]
+							}
+						]
+					};
+				// 使用刚指定的配置项和数据显示图表。
+				this.Charttraining.setOption(option);
+			},
+			open3D:function(e){
+				// alert("open3D");
+				// var tag = e.target;
+				// console.log(tag);
+				// $(tag).toggleClass("active");
+				// if($(tag).hasClass("active")){
+				// }
+				window.open("../../../../jasmvvm/pages/map3d/app_nmg/index.html");
+			},
+			openMax:function(e){
+				// alert("地图最大化:"+this.ismax);
+				this.ismax = !this.ismax;
+			},
+			clearMap:function(e){
+				// alert("清除所有图层");
+			},
+            switchImageMap:function(e){
+                if(this.baseMap !== "google_img"){
+                    this.baseMap = "google_img";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+			},
+            switchVecMap:function(e){
+                if(this.baseMap !== "google_vec"){
+                    this.baseMap = "google_vec";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+            },
+			openTuCeng:function(){
+				jasTools.selfDialog.show({
+					title: '图层列表',
+					src: '../common/mapList.html',
+					height: '265px',
+					width: '200px',
+					right:"27%",
+					top:"360px",
+				})
+			},
+			areaChange:function(){
+			},
+			companyChange:function(){
+			}
+		}
+	})
+</script>
+
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<link rel="stylesheet"
+	href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+<link rel="stylesheet"
+	href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+<link rel="stylesheet" href="./../../../../src/css/main.css">
+<style>
+html, body, #app {
+	width: 100%;
+	height: 100%;
+	background: transparent;
+}
+
+.jas-detail-table .table_wrap th {
+	background: transparent;
+	color: #5695cb;
+}
+
+.jas-detail-table .table_wrap td {
+	color: #72c1ea;
+}
+
+.is-grown>div>div>span {
+	color: #93eeff;
+	background: transparent !important;
+}
+
+div {
+	border: 0 !important;
+}
+
+.jas-detail-table .table_wrap tr, .jas-detail-table .table_wrap th,
+	.jas-detail-table .table_wrap td {
+	border: 1px solid #375a78;
+}
+</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+
+		<jas-dialog-wrapper> <jas-base-group-title
+			name="基本信息"></jas-base-group-title> <jas-detail-table
+			:titles="fields" :detail="detail"></jas-detail-table> <jas-base-group-title
+			name="附件信息"></jas-base-group-title> <!--<jas-file-list :biz-id="oid"></jas-file-list>-->
+		</jas-dialog-wrapper>
+
+
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<script>
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+function getParamter(paramName, url) {
+    var seachUrl = window.location.search.replace("?", "");
+    if (url != null) {
+        var index = url.indexOf('?');
+        url = url.substr(index + 1);
+        seachUrl = url;
+    }
+    var ss = seachUrl.split("&");
+    var paramNameStr = "";
+    var paramNameIndex = -1;
+    for ( var i = 0; i < ss.length; i++) {
+        paramNameIndex = ss[i].indexOf("=");
+        paramNameStr = ss[i].substring(0, paramNameIndex);
+        if (paramNameStr == paramName) {
+            var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+            if (typeof (returnValue) == "undefined") {
+                returnValue = "";
+            }
+            return returnValue;
+        }
+    }
+    return "";
+}
+	var app = new Vue({
+		el : "#app",
+		data : function() {
+			var that = this;
+			return {
+				fields : [ //
+				{
+					field : "a1",
+					name : '所属管线'
+				}, {
+					field : "a2",
+					name : '所属企业'
+				}, {
+					field : "a3",
+					name : '相对管线距离'
+				}, {
+					field : "a4",
+					name : '水源地名称'
+				}, {
+					field : 'a5',
+					name : '水源地等级',
+				}, {
+					field : 'a6',
+					name : '与管线位置关系描述',
+				}]
+			}
+		},
+		created : function() {
+			var whaterJson= {
+                    "a1" : "长呼线",
+                    "a2" : "西部天然气",
+                    "a3" : "236m",
+                    "a4" : "西山村",
+                    "a5" : "二级",
+                    "a6" : "西北侧，地下水上游"
+            };
+			var pipelineJson = {
+					"a1":"X80","a2":"10兆帕","a3":"1012","a4":"X80","a5":"10兆帕","a6":"1012","a7":"20","a8":"原油","a9":"343公里","a10":"西部天然气","a11":"2019/3/1"
+			};
+			var stationJson = {"a1":"","a2":"","a3":"呼市首站","a4":"2000平方米","a5":"分输站","a6":"2012/3/1","a7":"长呼线","a8":"西部天然气"};
+		    var stationJson2 = {"a1":"呼市首站","a2":"2000平方米","a3":"分输站","a4":"2012/3/1","a5":"是","a6":"是","a7":"长呼线","a8":"西部天然气","a9":"","a10":"","a11":"呼和浩特大王村","a12":"王志","a13":"13915818766"};
+			
+			this.detail = {
+					"a1" : "长呼线",
+					"a2" : "西部天然气",
+					"a3" : "236m",
+					"a4" : "西山村",
+					"a5" : "二级",
+					"a6" : "西北侧，地下水上游"
+			}
+
+		},
+		methods : {},
+	});
+</script>
+
+</html>

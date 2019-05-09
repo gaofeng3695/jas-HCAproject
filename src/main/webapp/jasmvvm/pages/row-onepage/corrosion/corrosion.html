@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>内蒙古自治区油气长输管线安全监管平台</title>
+
+	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../src/css/main.css">
+	<link rel="stylesheet" href="../../../src/css/onepage.css">
+	<style>
+		.panelitem_left_top {
+			height: 67%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem_left_bottom{
+			height: 33%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+/* 		.panelitem { */
+/* 			height: 50%; */
+/* 			padding: 0 10px 10px; */
+/* 			box-sizing: border-box; */
+/* 		} */
+		.panelitem_right_top {
+			height: 20%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem_right_bottom {
+			height: 40%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+
+		.height-one{
+			height: 85px;
+			margin: 10px 0;
+			/*background: cyan*/
+		}
+		.height-two{
+			height: calc(100% - 105px);
+			/*background: yellow*/
+		}
+		.chart-dl{
+			font-size: 0;
+		}
+		.chart-dl dl{
+			width:25%;
+			height: 60px;
+			padding: 10px 0;
+			display: inline-block;
+			vertical-align: middle;
+			margin-bottom: 0;
+		}
+		.chart-dl dl dt,
+		.chart-dl dl dd{
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.chart-dl dl dt img{
+			width: 40px;
+			height: 40px;
+		}
+		.chart-dl dl dd{
+			padding-left:10px; 
+		}
+		.chart-dl dl dd p{
+			padding: 0;
+			margin: 0;
+			line-height: 20px;
+			color: #03affe
+		}
+		.chart-dl dl dd p:last-child{
+			font-size: 18px;
+			color: #ffcc00
+		}
+		.chart-square{
+			padding: 10px 2px;
+			box-sizing:border-box;
+			border: 1px solid #375a78
+		}
+		.chart-circle{
+			/*height: 100%;*/
+			display: flex;
+    		justify-content: space-between;
+		}
+		.chart-square dl,
+		.chart-circle dl{
+			/*height: 100%;*/
+			display: inline-block;
+			vertical-align: middle;
+			position: relative;
+			margin-left: 85px;
+		}
+		.chart-square  dl dd,
+		.chart-square  dl dt{
+			width: 98px;
+			height: 59px;
+		}
+		.chart-circle dl dd,
+		.chart-circle dl dt img{
+			width: 94px;
+		}
+		.chart-square dl dd,
+		.chart-circle dl dd{
+			position: absolute;
+			left: 0;
+			top: 0;
+			text-align: center;
+		}
+		.chart-square dl dd p,
+		.chart-circle dl dd p{
+				color: #fff
+		}
+		.chart-square dl dd p:first-child,
+		.chart-circle dl dd p:first-child{
+			margin: 0;
+			margin-top: 20px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		.chart-square dl dd p:first-child{
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 12px;
+		}
+		.chart-square dl dd p:last-child{
+			font-size: 16px;
+			color: #e7ffff;
+			font-weight: bold;
+			line-height:26px;
+		}
+		.marquee-box{
+			height: 100%;
+			padding: 15px;
+			border:1px solid #375a78;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		legend{
+			color:#5695cb;
+			margin-left: 20px;
+		}
+		.marquee{
+			height: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+		.marquee .marquee-content{
+			display: block;
+			width:100%;
+			height: 200%;
+			position: absolute;
+			overflow: hidden;
+			-webkit-animation: marquee 20s linear infinite;
+			animation: marquee 20s linear infinite;
+		}
+		.marquee p{
+			color: #72c1ea;
+			margin-bottom: 20px;
+		}
+		.marquee span{
+			color: #93eeff;
+			border-right: 1px solid #93eeff;
+			padding: 0 5px;
+		}
+		.marquee span:last-child{
+			color: #ffc000;
+			border-right: 0
+		}
+
+		@keyframes marquee {
+			from {
+				top: 0;
+			}
+			to {
+				top: -100%;
+			}
+		}
+
+		 .absolute-r{
+			position: absolute;
+			right: 20px;
+			top: 0;
+			}
+			.select-box{
+				height: 100%; 
+			}
+			.select-box .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+				width: 120px;
+		}
+    
+			.select-box .btn{
+				padding: 3px 11px;
+			}
+			.select-box .search{
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+			}
+			.select-box  .search-input{
+				height: 28px;
+				padding-right:25px; 
+				border-radius: 4px;
+			}
+			.select-box  .search-icon{
+				display: inline-block;
+				vertical-align: middle;
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				width: 25px;
+				height: 28px;
+				border-radius: 0 4px 4px 0;
+				background:#0d85d3 url("../image/search.png")no-repeat center center;
+				background-size: 16px 16px;
+			}
+
+			.select-box .search-input,
+			.btn-default,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				background: transparent;
+				border: 1px solid #4c535b;
+			}
+			.select-box .search-input:focus,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				border: 1px solid #0d85d3;
+				outline: 0;
+			}
+				
+		.select-box button:-webkit-autofill{
+				-webkit-text-fill-color: #5695cb !important;
+				-webkit-box-shadow: 0 0 0px 1000px transparent  inset !important;
+				background-color:transparent;
+				background-image: none;
+				transition: background-color 50000s ease-in-out 0s; 
+			}
+			.center{
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+			.map-info{
+				position: absolute;
+				bottom: 0;
+				height: 20%;
+				/* width: 100%; */
+				width: 98%;
+				padding: 36px;
+				box-sizing: border-box;
+				color: #72c1ea;
+/* 				color: #ffffff;  */
+				background-color: #060e224d;
+				line-height: 30px;
+				margin: 10px;
+			}
+			.map-info p{
+				    text-indent: 30px;
+			}
+			.map-info span{
+				color: #ffc000;
+				font-size: 14px;
+			}
+		
+			.fieldset-body{
+				width:100%;
+				height:100%;
+				display: flex;
+    			justify-content: space-between;
+    			align-items:stretch
+			}
+			.fieldset-item{
+				flex-basis:50%;
+				display: flex;
+			}
+			.fieldset-item .item-img{
+				flex-basis:40%;
+				position:relative
+			}
+			.fieldset-item .item-img img{
+				position: absolute;
+			    top: 50%;
+			    left: 50%;
+			    transform: translate;
+			    transform: translate(-50%,-50%);
+			}
+			.fieldset-item .item-info{
+				flex-basis:60%;
+				display: flex;
+			    flex-direction: column;
+			    justify-content: center;
+			}
+			.fieldset-item .item-info .item-title{
+				font-size: 16px;
+			    color: #eeeeee;
+			    line-height: 30px;
+			}
+			.fieldset-item .item-info .item-val{
+				font-size:32px;
+				color:#0ff1e9
+			}
+			
+			.switch-div{
+		        position: absolute;
+			    top: 20px;
+				display: inline-block;
+			    /*height: 12%;
+			    width: 16%;*/
+			    padding: 12px;
+			    box-sizing: border-box;
+			    background-color: #060e224d;
+			    line-height: 34px;
+			    margin: 10px;
+			    z-index: 10;
+			}
+			
+			.el-switch {
+			 margin: 5px;
+			}
+			.el-switch  .el-switch__label span{
+			    color: white;
+			}
+			.switch-div .el-switch__core{
+				float:right;
+			}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="app">
+		<jas-onepage-wrapper :isMax="isMax" :index="index">
+			<template slot="left">
+				<div class="panelitem_left_top">
+					<jas-panel-opacity title="专题统计">
+						<div style="height:100%;">
+							<div id="subjectStasticBar" style="height:45%;">
+	
+							</div>
+							<div style="height:10%;">
+							
+							</div>
+							<div id="subjectStasticPie" style="height:45%;">
+	
+							</div>
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem_left_bottom">
+					<jas-panel-opacity title="高后果区内腐蚀">
+						<div id="HCALevel" style="height:100%;"></div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+			<template slot="center" >
+				 <div class="center">
+				 	<div class="switch-div">
+                        <el-switch
+                          style="display: block"
+                          v-model="value2"
+                          inactive-color="#33568a"
+                          inactive-text="交直流腐蚀"
+                          active-color="#ffb719"
+                          > 
+                      </el-switch>
+			     </div>
+			     
+			     <!--图层筛选条件-->
+				 <div class="select-div">
+						<el-select v-model="areaVal" @change="areaChange" placeholder="请选择" style="width:180px;margin-right: 10px;">
+							<el-option
+							v-for="item in areaOption"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+						<el-select v-model="companyVal" @change="companyChange"  placeholder="请选择" style="width:180px;">
+							<el-option
+							v-for="item in companyOption"
+							:key="item.value"
+							:label="item.label"
+							:value="item.value">
+							</el-option>
+						</el-select>
+				 </div>
+
+				 <!--图层操作按钮-->
+				 <div class="operate-div">
+					 <span class="max" @click="openMax"></span>
+					 <span class="yingxiang" @click="switchImageMap"></span>
+					 <span class="shiliang" @click="switchVecMap"></span>
+					 <span class="threeD" @click="open3D"></span>
+					 <span class="tuceng" @click="openTuCeng"></span>
+				 </div>
+			     
+				 <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
+				 <div class="map-info" >
+						<p>内蒙古自治区管辖长输管线<span>30</span>条，规划设计管线<span>6800</span>公里在建管线长度<span>550</span>公里，在役管线总长度<span>5200</span>公里，其中，天然气管线<span>4000</span>公里，石油管线<span>1200</span>公里。各类型场站<span>30</span>个，阀室<span>300</span>座，输气压力<span>6~10</span>Mpa,气源主要接收来自中陕京四线天然气管道，长呼天然气管线，年供气能力达<span>200</span>亿立方米</p>
+					</div>
+				 </div>
+			</template>
+			<template slot="right">
+				<div class="panelitem_right_top">
+					<jas-panel-opacity title="合规性提醒">
+						<div style="height:100%">
+							<div class="fieldset-body">
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-repaire.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">3<span style="font-size:16px;">  家</span></p>	
+										<p class="item-title">未提交腐蚀报告</p>
+									</div>	
+								</div>	
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-check.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">21<span style="font-size:16px;">  处</span></p>	
+										<p class="item-title">交直流区欠保护</p>
+									</div>	
+								</div>	
+							</div>	
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem_right_bottom">
+					<jas-panel-opacity title="智能阴保桩">
+						<div id="smartStake" style="height:90%;">
+							
+						</div>
+						<div i style="height:10%;">
+							<div style="width:36%;margin:0 auto;color:#a6b0b0;">
+							<i class="fa fa-chevron-left fa-lg" style="color: #628ed4 !important" aria-hidden="true"></i>
+							<span class="fa-lg" style="font-size:1.2em;color:white;">&nbsp;西部天然气&nbsp;</span>
+							<i class="fa fa-chevron-right fa-lg"  style="color: #628ed4 !important" aria-hidden="true"></i>
+							</div>
+						</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem_right_bottom">
+					<jas-panel-opacity title="督办整改">
+						<div id="rectificationInfo" style="height:100%;"> </div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+		</jas-onepage-wrapper>
+	</div>
+
+	</div>
+
+</body>
+<!-- import Vue before Element -->
+<script src="../../../lib/vue/vue.js"></script>
+<script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<!-- import JavaScript -->
+<script src="../../../lib/echarts/echarts.min.js"></script>
+
+<script src="../../../common/components/jas-components.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script src="../components/onepage-components.js"></script>
+
+<script id="mapApi" src="../../map/mapjs/jasopengis.js"></script>
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				
+				"isMax":false,				
+				"index":4,				
+				"value2":true,				
+				"subjectStasticBar":"",	//专题统计-柱状图
+				"subjectStasticPie":"",	//专题统计-饼图
+				"HCALevel":"",			//高后果区内腐蚀
+				"smartStake":"",		//智能阴保桩
+				"rectificationInfo":"",	//整改情况
+
+				
+				jasMap:null,
+				mapConfig:"config.onepage.json",
+                layerId:"demo_pd_fengxian",//空间表layerId (表名)
+                layerKeyName:"gid",//空间表layerId (表名)
+
+
+				optVal1:"",  // 下拉选值
+				optVal2:"",
+				options1:[   // 下拉选选项值
+					{"label":"高后果区","value":"0"},
+					{"label":"II级高后果区","value":"1"},
+					{"label":"III级高后果区","value":"2"},
+				],
+				options2:[
+					{"label":"2019","value":"2019"},
+					{"label":"2018","value":"2018"},
+					{"label":"2017","value":"2017"},
+				],
+
+				areaVal:"全自治区",
+				areaOption:[   // 下拉选选项值
+					{"label":"全自治区","value":"全自治区"},
+					{"label":"呼和浩特","value":"呼和浩特"},
+					{"label":"鄂尔多斯","value":"鄂尔多斯"},
+					{"label":"包头","value":"包头"},
+					{"label":"赤峰","value":"赤峰"},
+					{"label":"乌海","value":"乌海"},
+					{"label":"呼伦贝尔","value":"呼伦贝尔"},
+					{"label":"兴安盟","value":"兴安盟"},
+					{"label":"通辽","value":"通辽"},
+					{"label":"锡林郭勒盟","value":"锡林郭勒盟"},
+					{"label":"乌兰察布","value":"乌兰察布"},
+					{"label":"巴彦淖尔","value":"巴彦淖尔"},
+					{"label":"阿拉善盟","value":"阿拉善盟"},
+				],
+
+				companyVal:"全部企业",
+				companyOption:[   // 下拉选选项值
+					{"label":"全部企业","value":"全部企业"},
+					{"label":"内蒙古西部天然气管道运行有限公司","value":"内蒙古西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输气分公司","value":"中国石油天然气股份有限公司管道长庆输气分公司"},
+					{"label":"乌海华油天然气有限责任公司","value":"乌海华油天然气有限责任公司"},
+					{"label":"阿拉善盟深中能源发展有限公司","value":"阿拉善盟深中能源发展有限公司"},
+					{"label":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司","value":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输油气分公司","value":"中国石油天然气股份有限公司管道长庆输油气分公司"},
+					{"label":"中国石油东部有限公司西气东输银川管理处","value":"中国石油东部有限公司西气东输银川管理处"},
+				],
+			}
+		},
+		watch: {
+			// 如果需要联动
+			areaVal: function (newval, oldval) {
+				
+			},
+			// 地图最大化的监控
+			isMax:function (newval, oldval) {
+				console.log("111111");
+				var that = this;
+				// if(newval){
+					// alert("执行全屏地图的操作方法")
+					this.$nextTick(function(){
+						that.jasMap.resizeMap()
+					})
+				// }else{
+				// 	// alert("执行缩放地图的操作方法")
+				// }
+			},
+		},
+		computed: {},
+		created: function () {
+			var that = this;
+			$(function(){
+				that.getSubjectStaticsBar();
+				that.getSubjectStaticsPie();
+				that.getHCALevel();
+				that.getSmartStake();
+				that.getRectificationInfo();
+				
+			})
+
+            that.jasMap = new JasMap({
+                appConfig:that.mapConfig
+            });
+			
+		},
+		methods: {
+			getRectificationInfo: function(){
+				var that = this;
+				if (!that.rectificationInfo) {
+			         that.rectificationInfo = echarts.init(document.getElementById('rectificationInfo'));
+		        }	
+				var option = {
+					    tooltip: {
+					        trigger: 'item',
+					        formatter: "{b}: {c} ({d}%)"
+					    },
+					    legend: {
+					        orient: 'horizontal',
+					        data:['已整改','待整改'],
+					        left:"right",
+					        textStyle:{
+								color:"#f1f2ea"					            	
+					        }
+					    },
+					    grid:{
+					    	left:0,
+					    	right:0,
+					    	top:0,
+					    	bottom:0
+					    },
+				        textStyle:{
+							color:"#f1f2ea"					            	
+				        },
+					    series: [
+					        {
+					            name:'整改情况',
+					            type:'pie',
+					            radius: ['35%', '60%'],
+					            avoidLabelOverlap: true,
+					            color:['#28ffd9','#ffea00'],
+					            label: {
+					                normal: {
+					                    show: true,
+					                    formatter: "{b}: {d}%",
+					                    position: 'top'
+					                },
+					                emphasis: {
+					                    show: true,
+					                    textStyle: {
+					                        fontSize: '15',
+					                        fontWeight: 'bold'
+					                    }
+					                }
+					            },
+					            labelLine: {
+					                normal: {
+					                    show: true
+					                }
+					            },
+					            data:[
+					                {value:680, name:'已整改'},
+					                {value:320, name:'待整改'}
+					            ]
+					        }
+					    ]
+					};
+				that.rectificationInfo.setOption(option, true);
+			},
+			getSmartStake: function(){
+				var that = this;
+				if (!that.smartStake) {
+			         that.smartStake = echarts.init(document.getElementById('smartStake'));
+		        }	
+				option = {
+				    tooltip : {
+				        trigger: 'axis',
+				    },
+				    grid:{
+// 						top: '12%',
+						left: '13%',
+						right: '18%',
+						bottom:"12%"
+				    },
+				    legend: {
+				        data:['通电点位最大值','通电点位最小值','交流电压平均值'],
+				        x: 'right',
+				        textStyle:{
+							color:"#f1f2ea"					            	
+				        }
+				    },
+				    textStyle:{
+						color:"#f1f2ea"					            	
+				    },
+				    xAxis : [
+				        {
+				            type : 'category',
+				            data : ['4月16日','4月17日','4月18日','4月19日','4月20日','4月21日','4月22日'],
+				            axisLine: {onZero: false},
+				        }
+				    ],
+				    yAxis: [
+				        {
+				            name: '通电点位值（mV）',
+				            type: 'value',
+				            max: 0
+				        },
+				        {
+				            name: '交流电压平均值（V）',
+				            type: 'value',
+				            max: 1.5,
+				        }
+				    ],
+				    series: [
+				        {
+				            name:'通电点位最大值',
+				            type:'line',
+				            itemStyle : {  
+				            normal : {  
+				                    color:'#00FF00',  
+				                    lineStyle:{  
+				                        color:'#00FF00'  
+				                    }  
+				                }  
+				            },
+				            data:[
+				                -1.21,-1.22,-1.2,-1.19,-0.23,-1.23,-1.21
+				            ]
+				        },{
+				            name:'通电点位最小值',
+				            itemStyle : {  
+				                normal : {  
+				                    color:'#ff7400',  
+				                    lineStyle:{  
+				                        color:'#ff7400'  
+				                    }  
+				                }  
+				            },
+				            type:'line',
+				            data:[
+				                -1.31,-1.33,-1.31,-1.3,-1.45,-1.29,-1.28
+				            ]
+				        },
+				        {
+				            name:'交流电压平均值',
+				            yAxisIndex:1,
+				            type:'line',
+				             itemStyle : {  
+				                normal : {  
+				                    color:'#ffb719',  
+				                    lineStyle:{  
+				                        color:'#ffb719'  
+				                    }  
+				                }  
+				            }, 
+				            data: [
+				                0.05,0.1,0.16,0.01,0.03,0.18,0.18
+				            ]
+				        }
+				    ]
+				};
+
+				that.smartStake.setOption(option, true);
+			},
+			getHCALevel: function(){
+				var that = this;
+				if (!that.HCALevel) {
+			         that.HCALevel = echarts.init(document.getElementById('HCALevel'));
+		        }	
+				option = {
+					    color: ['#000000'],
+					    tooltip : {
+					        trigger: 'axis',
+					        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+					            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+					        }
+					    },
+					    grid: {
+							top: '12%',
+							left: '8%',
+							right: '8%',
+							bottom:"12%"
+					    },
+					    xAxis : [
+					        {
+					            type : 'category',
+					            data : ['Ⅰ级高后果区','Ⅱ级高后果区','Ⅲ级高后果区'],
+					            axisTick: {
+					                alignWithLabel: true
+					            }
+					        }
+					    ],
+					    yAxis : [
+					        {
+					            name:"（处）",
+					            type : 'value'
+					        }
+					    ],
+					    legend: {
+					        orient: 'horizontal',
+					        left:"right",
+					        data : ['高','中','低'],
+					        textStyle:{
+								color:"#f1f2ea"					            	
+				            }
+					    },
+				        textStyle:{
+							color:"#f1f2ea"					            	
+			            },
+					    series : [
+					        {
+					        	itemStyle:{
+						        	normal:{
+						        		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						        			offset: 0,
+						        		color: '#0a8fca'
+						        			}, {
+						        			offset: 1,
+						        			color: '#2c46b5'
+						        		}])
+	
+						        	}
+						        },
+					            name:'低',
+					            type:'bar',
+					            color:'rgba(255,255,0,255)',
+					            data:[40, 30, 40]
+					        },{
+					        	itemStyle:{
+						        	normal:{
+						        		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						        			offset: 0,
+						        		color: '#6950d2'
+						        			}, {
+						        			offset: 1,
+						        			color: '#9b4457'
+						        		}])
+	
+						        	}
+						        },
+					            name:'中',
+					            type:'bar',
+					             color:'rgba(255,165,0,255)',
+					            data:[30, 20, 30]
+					        },{
+					        	itemStyle:{
+						        	normal:{
+						        		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						        			offset: 0,
+						        		color: '#ff7400'
+						        			}, {
+						        			offset: 1,
+						        			color: '#ff2d2d'
+						        		}])
+	
+						        	}
+						        },
+					            name:'高',
+					            type:'bar',
+					             color:'rgba(255,0,0,255)',
+					            data:[10, 10, 20]
+					        }
+					        
+					    ]
+					};
+				that.HCALevel.setOption(option, true);
+			},
+			getSubjectStaticsPie: function(){
+				var that = this;
+				if (!that.subjectStasticPie) {
+			         that.subjectStasticPie = echarts.init(document.getElementById('subjectStasticPie'));
+		        }	
+				option = {
+					    tooltip : {
+					        trigger: 'item',
+					        formatter: "{a} <br/>{b} : {c} ({d}%)"
+					    },
+					    legend: {
+					        orient: 'horizontal',
+					        left: 'right',
+					        data: ['高','中','低'],
+					        textStyle:{
+								color:"#f1f2ea"					            	
+					        }
+					    },
+					    textStyle:{
+							color:"#f1f2ea"					            	
+					    },
+					    series : [
+					        {
+					            name: '等级',
+					            type: 'pie',
+					            color:['#ff2d2d','#ff7400','#ffb719'],
+					            label: {
+					                normal: {
+					                    show: true,
+					                    formatter: "{b}: {d}%",
+					                    position: 'top'
+					                },
+					                emphasis: {
+					                    show: true,
+					                    textStyle: {
+					                        fontSize: '15',
+					                        fontWeight: 'bold'
+					                    }
+					                }
+					            },
+					            data:[
+					                {value:234, name:'高'},
+					                {value:135, name:'中'},
+					                {value:154, name:'低'}
+					            ],
+					            itemStyle: {
+					                emphasis: {
+					                    shadowBlur: 10,
+					                    shadowOffsetX: 0,
+					                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+					                }
+					            }
+					        }
+					    ]
+					};
+				that.subjectStasticPie.setOption(option, true);
+			},
+			getSubjectStaticsBar: function(){
+				var that = this;
+				if (!that.subjectStasticBar) {
+			         that.subjectStasticBar = echarts.init(document.getElementById('subjectStasticBar'));
+		        }	
+				option = {
+					    color: ['#000000'],
+					    tooltip : {
+					        trigger: 'axis',
+					        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+					            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+					        }
+					    },
+					    xAxis : [
+					        {
+					            type : 'category',
+					            data : ['呼和浩特','鄂尔多斯','包头','赤峰'],
+					            axisTick: {
+					                alignWithLabel: true
+					            }
+					        }
+					    ],
+					    yAxis : [
+					        {
+					            name:"（Km）",
+					            type : 'value'
+					        }
+					    ],
+					    grid: {
+							top: '18%',
+							left: '8%',
+							right: '8%',
+							bottom:"12%"
+					    },
+					    legend: {
+					    	orient: 'horizontal',
+					    	left:"right",
+					        data : ['交流干扰里程','直流干扰里程'],
+				            textStyle:{
+								color:"#f1f2ea"					            	
+				            }
+					    },
+			            textStyle:{
+							color:"#f1f2ea"					            	
+			            },
+					    series : [
+					        {
+					        	itemStyle:{
+						        	normal:{
+						        		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						        			offset: 0,
+						        		color: '#0a8fca'
+						        			}, {
+						        			offset: 1,
+						        			color: '#2c46b5'
+						        		}])
+	
+						        	}
+						        },
+					            name:'交流干扰里程',
+					            type:'bar',
+					            color:'rgba(255,255,0,255)',
+					            data:[200, 150,100,150]
+					        },{
+					        	itemStyle:{
+						        	normal:{
+						        		color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						        			offset: 0,
+						        		color: '#6950d2'
+						        			}, {
+						        			offset: 1,
+						        			color: '#9b4457'
+						        		}])
+	
+						        	}
+						        },
+					            name:'直流干扰里程',
+					            type:'bar',
+					             color:'rgba(255,165,0,255)',
+					            data:[100, 50, 200, 200]
+					        }
+					        
+					    ]
+					};
+				that.subjectStasticBar.setOption(option, true);
+			},
+			openRiskDetail:function(){
+				// $(".map-info").hide();
+				jasTools.selfDialog.show({
+					title: '风险列表',
+					src: './dialogs/detail2.html',
+					height: '200px',
+					// width: '800px',
+					width: '48%',
+				})
+			},
+			open3D:function(e){
+				// alert("open3D");
+				// var tag = e.target;
+				// console.log(tag);
+				// $(tag).toggleClass("active");
+				// if($(tag).hasClass("active")){
+					// alert("执行打开3D图层");
+				// }
+				window.open("../../../../jasmvvm/pages/map3d/app_nmg/index.html");
+			},
+			openMax:function(e){
+				// alert("地图最大化:"+this.ismax);
+				this.isMax = !this.isMax;
+			},
+			clearMap:function(e){
+				// alert("清除所有图层");
+			},
+            switchImageMap:function(e){
+                if(this.baseMap !== "google_img"){
+                    this.baseMap = "google_img";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+			},
+            switchVecMap:function(e){
+                if(this.baseMap !== "google_vec"){
+                    this.baseMap = "google_vec";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+            },
+			openTuCeng:function(){
+				jasTools.selfDialog.show({
+					title: '图层列表',
+					src: '../common/mapList.html',
+					height: '265px',
+					width: '200px',
+					right:"27%",
+					top:"360px",
+				})
+			},
+			areaChange:function(){
+// 				alert(this.areaVal)
+			},
+			companyChange:function(){
+// 				alert(this.companyVal)
+			}
+
+		}
+	})
+</script>
+
+
+</html>

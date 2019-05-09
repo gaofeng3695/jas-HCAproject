@@ -1,0 +1,206 @@
+{
+  "description": "基于产品 JasOpenGIS 1.0",
+  "style": "lightblue",
+  "basePath": "",
+  "resources": [{
+      "type": "css",
+      "url": "basepath:../lib/openlayer_v5.0.2/ol.css"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/openlayer_v5.0.2/ol.js",
+      "id": "ol.js"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/icon.css"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/default/easyui.css"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery/jquery-1.12.4.min.js",
+      "id": "jquery.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/jquery.easyui.min.js",
+      "relyOn": "jquery.js",
+      "id": "easyui.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/locale/easyui-lang-zh_CN.js",
+      "relyOn": "easyui.js",
+      "id": "easyui-lang.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/proj4js/proj4_2.4.4.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/FileSaver.min.js"
+    },
+
+    {
+      "type": "js",
+      "url": "basepath:mapmodules.js"
+    },{
+      "type": "js",
+      "url": "basepath:mapstyles/default.js",
+      "relyOn": "ol.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:mapstyles/default.onepage.js",
+      "relyOn": "ol.js"
+    },  {
+      "type": "js",
+      "url": "basepath:mapstyles/mymapstyles.js",
+      "relyOn": "ol.js"
+    }
+    
+
+  ],
+  "services": {},
+  "map": {
+    "id": "jasMap",
+    "scale": false,
+    "attribution": false,
+    "zoom": false,
+    "mapOptions": {
+      "center": [111.41, 43.82],
+      "level": 5,
+      "projection": "EPSG:4326"
+    },
+    "basemaps": {
+      "label": "基础底图",
+      "baseMapLayers": [{
+        "id": "dark_shp",
+        "index": 0,
+        "label": "行政区划图",
+        "icon": "stylepath:images/basemap_shp.png",
+        "type": "Tile",
+        "source": "TileWMS",
+        "url": "http://gms.zyax.cn/geoserver/project_anjian/wms",
+        "params": {
+          "LAYERS2": "jasgroup:china_canton_op",
+          "LAYERS": "project_anjian:canton_neimenggu_dark"
+        }
+      },{
+        "id": "google_img",
+        "index": 1,
+        "label": "谷歌影像",
+        "icon": "stylepath:images/basemap_img.png",
+        "type": "Tile",
+        "source": "google-image"
+      },{
+        "id": "google_vec",
+        "index": 1,
+        "label": "谷歌矢量",
+        "icon": "stylepath:images/basemap_img.png",
+        "type": "Tile",
+        "source": "google-vec"
+      }]
+    },
+    "optionallayers": [{
+      "id":"basePipeData",
+      "label":"基础管线数据",
+      "layerSet":[{
+        "id": "demo_pd_zhanchang",
+        "index": 90,
+        "maxScale":25000000,
+        "label": "站场","flash":true,
+        "renderer":{
+          "style":"demo_pd_zhanchang_style"
+        }
+      },{
+        "id": "demo_pd_fashi",
+        "index": 90,
+        "label": "阀室","flash":true,
+        "maxScale":5000000,
+        "renderer":{
+          "style":"demo_pd_fashi_style"
+        }
+      },{
+        "id": "demo_pd_pipeline",
+        "index": 30,
+        "label": "管线","flash":true,
+        "renderer":{
+          "style":"demo_pd_pipeline_style"
+        }
+      },{
+        "id": "demo_pd_chuankuayue",
+        "index": 30,
+        "label": "穿跨越","flash":true,
+        "maxScale":25000000,
+        "renderer":{
+          "style":"demo_pd_chuankuayue_style"
+        }
+      }]
+    },{
+      "id":"yjzyData",
+      "label":"应急资源",
+      "layerSet":[{
+        "id": "demo_pd_gongan",
+        "index": 90,
+        "label": "公安","flash":true,
+        "maxScale":250000,
+        "renderer":{
+          "style":"demo_pd_gongan_style"
+        }
+      },{
+        "id": "demo_pd_xiaofangdui",
+        "index": 90,
+        "label": "消防","flash":true,
+        "maxScale":250000,
+        "renderer":{
+          "style":"demo_pd_xiaofang_style"
+        }
+      },{
+        "id": "demo_pd_yiyuan",
+        "index": 30,
+        "label": "医院","flash":true,
+        "maxScale":250000,
+        "renderer":{
+          "style":"demo_pd_yiyuan_style"
+        }
+      },{
+        "id": "demo_pd_xuexiao",
+        "index": 30,
+        "label": "学校","flash":true,
+        "maxScale":250000,
+        "renderer":{
+          "style":"demo_pd_xuexiao_style"
+        }
+      }]
+    },{
+      "id":"zhuanTiData",
+      "label":"专题数据",
+      "layerSet":[{
+        "id": "demo_pd_fengxian",
+        "label": "风险",
+        "index": 90,
+        "renderer": {
+          "style": "demo_pd_fengxian_render_by_level"
+        },
+        "listener": {
+          "onClick": {
+            "responseType": "function",
+            "callback": "app.openDetail"
+          }
+        },
+        "maxScale2":200000,
+        "outFields": "*",
+        "flash": true,
+        "visible": false,
+        "strategy": "all"
+      }]
+    }]
+  },
+  "proxy": [],
+  "modules": []
+}

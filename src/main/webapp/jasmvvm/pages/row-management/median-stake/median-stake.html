@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>自定义表单配置</title>
+	<!-- <link rel="stylesheet" href="./libelement-ui/element-#0E2B4A/src/index.css"> -->
+	<link rel="stylesheet" href="./../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./../../../src/css/main.css">
+	<style>
+		.el-form-item {
+			margin-bottom: 0px;
+		}
+
+		.jasmap {
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+
+		<jas-list-wrapper>
+			<jas-search-for-list slot="search" :form="topSearch" :fields="searchFields" :fields-config="fieldsConfig" @search="searchList"></jas-search-for-list>
+
+			<jas-table-for-list ref="table" slot="list" :self-btns="['locate']" :privilege-code="privilegeCode" :fields="tableFields"
+			  :form="topSearch" search-path="/jdbc/commonData/medianStake/getPage.do" :add-url="addUrl" :detail-url="detailUrl" delete-path="/daq/medianStake/delete.do"
+			  @locate="locate" :class-name="className" :template-code="templateCode"></jas-table-for-list>
+		</jas-list-wrapper>
+
+
+	</div>
+</body>
+
+<script src="./../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../lib/vue/vue.js"></script>
+<script src="./../../../lib/vue-multipane/vue-multipane.js"></script>
+<script src="./../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../common/components/jas-components.js"></script>
+<script src="./../../../common/js/jas-tools.js"></script>
+
+<!-- <script id="mapApi" src="./../../map/mapjs/mapjs4ol.js"></script> -->
+<script>
+</script>
+<script>
+	var vm = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				className: '',
+				templateCode: '',
+				addUrl: './pages/row-management/median-stake/dialogs/add.html',
+				detailUrl: './pages/row-management/median-stake/dialogs/detail.html',
+				privilegeCode: '',
+				topSearch: {
+					projectOid: '',
+					pipelineOid: '',
+					medianStakeCode: ''
+				},
+				searchFields: [ //
+					{
+						name: '项目名称',
+						field: 'projectOid'
+					}, {
+						name: '管线名称',
+						field: 'pipelineOid'
+					}, {
+						name: '中线桩编号',
+						field: 'medianStakeCode'
+					}
+				],
+				fieldsConfig: {
+					projectOid: {
+						type: 'select',
+						name: '项目名称',
+						optionUrl: '/daq/project/getList.do',
+						childSelect: ['pipelineOid'],
+						childUrl: ['/daq/pipeline/getList.do'],
+					},
+					pipelineOid: {
+						type: 'select',
+						name: '管线名称',
+					},
+					medianStakeCode: {
+						type: 'input',
+						name: '中线桩编号',
+					},
+				},
+				tableFields: [ //
+					{
+						name: '项目名称',
+						field: 'projectName'
+					}, {
+						name: '管线名称',
+						field: 'pipelineName'
+					}, {
+						name: '中线桩编号',
+						field: 'medianStakeCode'
+					}, {
+						name: '里程(km)',
+						field: 'mileage'
+					}, {
+						name: '高程',
+						field: 'pointz'
+					}, {
+						name: 'X坐标',
+						field: 'pointx'
+					}, {
+						name: 'Y坐标',
+						field: 'pointy'
+					},
+					{
+						name: '备注',
+						field: 'remarks'
+					}
+				],
+				formData: {
+					oid: '', //	主键
+					project_oid: '', //	项目oid
+					projectName: '', //	项目oid
+					pipeline_oid: '', //	管线oid
+					pipelineName: '', //	管线oid
+					medianStakeCode: '', //	中线桩编号
+					mileage: '', //	里程(km)
+					pointz: '', //	高程
+					pointx: '', //	X坐标
+					pointy: '', //	Y坐标
+					mark_stone_type: '', //	标石类型
+					markStoneTypeName: '', //	标石类型
+					markStoneLocation: '', //	标石概略位置
+					remarks: '', //	备注
+					create_user_id: '', //	创建人id
+					create_user_name: '', //	创建人名称
+					create_datetime: '', //	创建时间
+					modify_user_id: '', //	修改人id
+					modify_user_name: '', //	修改人名称
+					modify_datetime: '', //	修改时间
+					active: '', //	有效标志
+				}
+			}
+		},
+		mounted: function () {
+			var that = this;
+			var param = window.jasTools.base.getParamsInUrl(location.href);
+			this.privilegeCode = param.privilegeCode;
+			this.templateCode = param.templateCode; //|| "stake-2";
+			this.className = param.className; // || 'cn.jasgroup.jasframework.acquisitiondata.scope.medianstake.query.MedianStakeQueryPage';
+
+		},
+		methods: {
+			searchList: function () {
+				this.$refs.table.search();
+			},
+			locate: function (row) {
+				var code = 'daq_median_stake';
+				top.app.locate(row.oid, code);
+			},
+
+		},
+	});
+</script>
+
+</html>

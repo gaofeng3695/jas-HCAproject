@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.rank-table th,
+		.rank-table td{
+			white-space: nowrap;
+		}
+		.el-button--primary.is-plain{
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<el-row style="padding:15px 5px">
+			<el-button size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
+			<el-button size="small" plain type="primary" icon="fa fa-pencil">修改</el-button>
+			<el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
+			<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button>
+			<el-button size="small" plain type="primary" icon="fa fa-level-up">提交</el-button>
+			<el-button size="small" plain type="primary" icon="fa fa-check"  @click="openDetail">办理</el-button>
+		  </el-row>
+		<table class="rank-table">
+			<thead>
+				<tr>
+					<th v-for="item in titleData">{{item}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index)  in detailData"> 
+					<td><input  name="boxs" type="checkbox"/></td>
+					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
+					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> <td>{{item.g}}</td> <td>{{item.h}}</td> <td>{{item.i}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<script>
+	var dataList = {
+			"neiJianCeWeiGui":{
+				"title":["","序号","违规事项","违规企业名称","上次上报时间","延迟时长","企业联系人","联系人部门","联系电话","违规地点","督办状态"],
+				"data":[{
+						"a": "18个月未上报",
+						"b": "内蒙古西部管道",
+						"c": "2001年3月",
+						"d": "2个月",
+						"e": "王志",
+						"f": "保护部",
+						"j": "18311360111",
+						"g":"呼市某区某街",
+						"h": "未督办"
+					}, {
+						"a": "18个月未上报",
+						"b": "某管道公司",
+						"c": "1998年3月",
+						"d": "2个月",
+						"e": "陈治",
+						"f": "保护部",
+						"j": "18311360111",
+						"g":"呼市某区某街",
+						"h": "未督办"
+					},{
+						"a": "18个月未上报",
+						"b": "某管道公司",
+						"c": "1998年3月",
+						"d": "2个月",
+						"e": "陈一",
+						"f": "保护部",
+						"j": "18311360111",
+						"g":"包头某区某街",
+						"h": "未督办"
+					}],
+			},
+			"success": 1
+		};
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+
+	var appDetail = new Vue({
+		el: "#app",
+		data: function () {
+			return {
+				titleData:{},
+				detailData:{},
+				dataType:"",
+			}
+		},
+		created: function () {
+			var that = this;
+			that.dataType = getParamter("dataType");
+			this.titleData  = dataList[this.dataType].title;
+			this.detailData = dataList[this.dataType].data;
+		},
+		methods: {
+			openDetail:function(idx){
+				parent.app.openDetail(idx);
+			}
+		},
+	});
+
+</script>
+</html>

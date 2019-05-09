@@ -1,0 +1,1 @@
+create or replace view v_role_unitnumber as select b.oid,b.role_name,b.description,b.role_type,b.unit_id,a.hierarchy,a.unit_name unitname from pri_unit a,pri_role b where a.oid=b.unit_id;

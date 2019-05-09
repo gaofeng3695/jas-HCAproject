@@ -1,0 +1,204 @@
+{
+  "description": "基于产品 JasOpenGIS 1.0",
+  "style": "lightblue",
+  "basePath": "",
+  "resources": [{
+      "type": "css",
+      "url": "basepath:../lib/openlayer_v5.0.2/ol.css"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/openlayer_v5.0.2/ol.js",
+      "id": "ol.js"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/icon.css"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/default/easyui.css"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery/jquery-1.12.4.min.js",
+      "id": "jquery.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/jquery.easyui.min.js",
+      "relyOn": "jquery.js",
+      "id": "easyui.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/locale/easyui-lang-zh_CN.js",
+      "relyOn": "easyui.js",
+      "id": "easyui-lang.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/proj4js/proj4_2.4.4.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/FileSaver.min.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:mapmodules.js"
+    },{
+      "type": "js",
+      "url": "basepath:mapstyles/default.js",
+      "relyOn": "ol.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:mapstyles/default.onepage.js",
+      "relyOn": "ol.js"
+    },  {
+      "type": "js",
+      "url": "basepath:mapstyles/mymapstyles.js",
+      "relyOn": "ol.js"
+    }
+  ],
+  "services": {},
+  "map": {
+    "id": "jasMap",
+    "scale": false,
+    "attribution": false,
+    "zoom": false,
+    "mapOptions": {
+      "center": [111.41, 43.82],
+      "level": 6,
+      "projection": "EPSG:4326",
+      "resolutions2": [{
+        "resolution": 0.703125,
+        "matrixId": "CHINA_CGCS_SM:0"
+      }, {
+        "resolution": 0.3515625,
+        "matrixId": "CHINA_CGCS_SM:1"
+      }, {
+        "resolution": 0.17578125,
+        "matrixId": "CHINA_CGCS_SM:2"
+      }, {
+        "resolution": 0.087890625,
+        "matrixId": "CHINA_CGCS_SM:3"
+      }, {
+        "resolution": 0.0439453125,
+        "matrixId": "CHINA_CGCS_SM:4"
+      }, {
+        "resolution": 0.02197265625,
+        "matrixId": "CHINA_CGCS_SM:5"
+      }, {
+        "resolution": 0.010986328125,
+        "matrixId": "CHINA_CGCS_SM:6"
+      }, {
+        "resolution": 0.0054931640625,
+        "matrixId": "CHINA_CGCS_SM:7"
+      }, {
+        "resolution": 0.00274658203125,
+        "matrixId": "CHINA_CGCS_SM:8"
+      }, {
+        "resolution": 0.001373291015625,
+        "matrixId": "CHINA_CGCS_SM:9"
+      }, {
+        "resolution": 0.0006866455078125,
+        "matrixId": "CHINA_CGCS_SM:10"
+      }]
+    },
+    "basemaps": {
+      "label": "基础底图",
+      "baseMapLayers": [{
+        "id": "china_shp",
+        "index": 0,
+        "label": "行政区划图",
+        "icon": "stylepath:images/basemap_shp.png",
+        "type": "Tile",
+        "source": "TileWMS",
+        "url": "http://gms.zyax.cn/geoserver/project_anjian/wms",
+        "params": {
+          "LAYERS2": "jasgroup:china_canton_op",
+          "LAYERS": "project_anjian:canton_neimenggu_dark"
+        }
+      }]
+    },
+    "optionallayers": [{
+      "id": "pipeline_data","visible":true,
+      "index": 0,
+      "label": "五公里",
+      "type": "Tile",
+      "source": "TileWMS",
+      "url": "http://gms.zyax.cn/geoserver/project_anjian/wms",
+      "params": {
+        "LAYERS": "project_anjian:neimenggu_demo_data"
+      }
+    },{
+      "id": "pipeline_data","visible":true,
+      "index": 0,
+      "label": "五公里",
+      "type": "Tile",
+      "source": "TileWMS",
+      "url": "http://gms.zyax.cn/geoserver/project_anjian/wms",
+      "params": {
+        "LAYERS": "project_anjian:neimenggu_pipedata"
+      }
+    },{
+      "id": "pd2_stationseries","visible":true,
+      "label": "线路段",
+      "index": 60,
+      "renderer": {
+        "style": "pipesegment"
+      },
+      "listener": {
+        "onHover": {
+          "responseType": "tip",
+          "template": "管线名称：${seriesname}"
+        },
+        "onDbClick":{
+          "responseType":"dialog",
+          "title":"中线桩",
+          "modal":false ,
+          "url":"pages/map/dialog-stake.html"
+        },
+        "onDbClick2":{
+          "responseType":"function",
+          "callback":"onLayerClicked"
+        },
+        "onClick":{
+          "responseType":"infowindow",
+          "title":"信息弹窗",
+          "content":"管线名称：${seriesname} ",
+          "callback":""
+        }
+      },
+      "maxScale":200000,
+      "outFields": "*",
+      "flash": true,
+      "strategy": "all"
+    },{
+      "id": "daq_median_stake",
+      "label": "中线桩2",
+      "index": 90,
+      "maxScale": 100000,
+      "renderer": {
+        "style": "centerlinestake"
+      },
+      "outFields": "*",
+      "flash": true,
+      "strategy": "all"
+    },{
+      "id": "daq_median_stake_polyline",
+      "label": "线路段",
+      "index": 60,
+      "renderer": {
+        "style": "pipesegment"
+      },
+      "outFields": "*",
+      "flash": true,
+      "strategy": "all"
+    }]
+  },
+  "proxy": [],
+  "modules": []
+}

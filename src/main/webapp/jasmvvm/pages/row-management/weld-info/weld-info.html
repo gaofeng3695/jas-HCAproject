@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>自定义表单配置</title>
+	<!-- <link rel="stylesheet" href="./libelement-ui/element-#0E2B4A/src/index.css"> -->
+	<link rel="stylesheet" href="./../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./../../../src/css/main.css">
+	<style>
+		.el-form-item {
+			margin-bottom: 0px;
+		}
+
+		.jasmap {
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<jas-list-wrapper slot="mainPanel">
+			<jas-search-for-list slot="search" :form="topSearch" :fields="fields" :fields-config="fieldsConfig" @search="searchList"></jas-search-for-list>
+			<jas-table-for-list ref="table" slot="list" :privilege-code="privilegeCode" :fields="tableFields" :form="topSearch" search-path="/jdbc/commonData/constructionWeld/getPage.do"
+			  :add-url="addUrl" :detail-url="detailUrl" delete-path="/jdbc/commonData/constructionWeld/delete.do" :class-name="className"
+			  :template-code="templateCode" @locate="locate"></jas-table-for-list>
+		</jas-list-wrapper>
+
+
+	</div>
+</body>
+
+<script src="./../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../lib/vue/vue.js"></script>
+<script src="./../../../lib/vue-multipane/vue-multipane.js"></script>
+<script src="./../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../common/components/jas-components.js"></script>
+<script src="./../../../common/js/jas-tools.js"></script>
+<script>
+	var vm = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				className: '',
+				templateCode: '',
+				addUrl: './pages/row-management/weld-info/dialogs/add.html',
+				detailUrl: './pages/row-management/weld-info/dialogs/detail.html',
+				privilegeCode: '',
+				topSearch: {
+					projectOid: '',
+					tendersOid: '',
+					pipelineOid: '',
+					pipeSegmentOrCrossOid: '', //线路段
+					weldCode: '',
+				},
+				fields: [ //
+					{
+						field: "projectOid",
+						name: '项目名称'
+					}, {
+						field: "tendersOid",
+						name: '标段名称'
+					}, {
+						field: "pipelineOid",
+						name: '管线名称'
+					}, {
+						field: "pipeSegmentOrCrossOid",
+						name: '线路段/穿跨越'
+					}, {
+						name: '焊口编号',
+						field: 'weldCode'
+					}
+				],
+				fieldsConfig: {
+					projectOid: {
+						type: 'select',
+						optionUrl: '/daq/privilege/getProjectList.do',
+						childSelect: ['tendersOid'],
+						childUrl: ['/daq/privilege/getTendersList.do'],
+					},
+					tendersOid: {
+						type: 'select',
+						childSelect: ['pipelineOid'],
+						childUrl: ['/daq/privilege/getPipelineListByTendersOid.do'],
+					},
+					pipelineOid: {
+						type: 'select',
+						childSelect: ['pipeSegmentOrCrossOid'],
+						childUrl: ['/daq/privilege/getPipeSegmentOrCrossList.do'],
+					},
+					pipeSegmentOrCrossOid: {
+						type: 'select',
+					},
+					weldCode:{
+						type:"input"
+					}
+				},
+				tableFields: [{
+						field: 'approveStatus',
+						name: '审核状态',
+						formatter: function (a, b, value, c) {
+							if (value == -1) return '驳回';
+							if (value == 0) return '未上报';
+							if (value == 1) return '待审核';
+							if (value == 2) return '通过';
+							return value;
+						}
+					}, {
+						name: '项目名称',
+						field: 'projectName'
+					}, {
+						name: '标段名称',
+						field: 'tendersName'
+					}, {
+						name: '管线名称',
+						field: 'pipelineName'
+					}, {
+						name: "线路段/穿跨越名称",
+						field: "pipeSegmentOrCrossName"
+					}, {
+						name: '焊口编号',
+						field: 'weldCode'
+					}, {
+						name: '焊口类型',
+						field: 'weldTypeName'
+					}, {
+						name: '焊接方式',
+						field: 'weldMethodName'
+					}, {
+						name: '桩号',
+						field: 'medianStakeCode'
+					}, {
+						name: '相对桩位置',
+						field: 'relativeMileage'
+					}, {
+						name: '前管件类型',
+						field: 'frontPipeTypeName'
+					}, {
+						name: '前管件编号',
+						field: 'frontPipeCode'
+					}, {
+						name: '后管件类型',
+						field: 'backPipeTypeName'
+					}, {
+						name: '后管件编号',
+						field: 'backPipeCode'
+					},
+					{
+						name: '焊条批号',
+						field: 'weldRodBatchNum'
+					}, {
+						name: '焊丝批号',
+						field: 'weldWireBatchNum'
+					}, {
+						name: '焊接工艺规格',
+						field: 'weldProduceCode'
+					}, {
+						name: '外观质量检查',
+						field: 'surfaceCheck',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '不合格';
+							if (cellvalue == '1') return '合格';
+							return cellvalue;
+						}
+					}, {
+						name: '盖面人员',
+						field: 'coverName'
+					}, {
+						name: '填充人员',
+						field: 'padderName'
+					}, {
+						name: '打底人员',
+						field: 'renderName'
+					}, {
+						name: '是否金口',
+						field: 'isGoldeJoint',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					}, {
+						name: '是否连头口',
+						field: 'isPipeHead',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否返修',
+						field: 'isRework',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否检测',
+						field: 'isDetection',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue < 0 ||cellvalue == 0) return '否';
+							if (cellvalue > 0) return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否补口',
+						field: 'isAnticorrosionCheck',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否割口',
+						field: 'isCut',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否测量',
+						field: 'isMeasure',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否回填',
+						field: 'isBackfill',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否地貌恢复',
+						field: 'isLandRestoration',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否存在切管',
+						field: 'hasCutPipe',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否变径',
+						field: 'hasReducer',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					},{
+						name: '是否有弯管',
+						field: 'hasBendPipe',
+						formatter: function (row, column, cellvalue, index) {
+							if (cellvalue == '0') return '否';
+							if (cellvalue == '1') return '是';
+							return cellvalue;
+						}
+					}, {
+						name: '施工日期',
+						field: 'constructDate'
+					}, {
+						name: '施工单位',
+						field: 'constructUnitName'
+					}, {
+						name: '施工机组代号',
+						field: 'workUnitCode'
+					},
+					{
+						name: '监理单位',
+						field: 'supervisionUnitName'
+					}, {
+						name: '监理工程师',
+						field: 'supervisionEngineer'
+					},
+					{
+						name: '采集人员',
+						field: 'collectionPerson'
+					}, {
+						name: '采集日期',
+						field: 'collectionDate'
+					}, {
+						name: '备注',
+						field: 'remarks'
+					}
+				],
+				domain: {
+					project: [], //项目
+					tenders: [], //标段
+					pipeline: [], //管线
+					pipeSegment: [],
+					welds: [] //焊口编号
+				}
+			}
+		},
+
+		mounted: function () {
+			var that = this;
+			var param = window.jasTools.base
+				.getParamsInUrl(location.href);
+			this.privilegeCode = param.privilegeCode;
+			this.templateCode = param.templateCode; //|| "stake-2";
+			this.className = param.className; // || 'cn.jasgroup.jasframework.acquisitiondata.scope.medianstake.query.MedianStakeQueryPage';
+		},
+		methods: {
+			searchList: function () {
+				this.$refs.table.search();
+			},
+			locate: function (row) {
+				var code = 'v_daq_construction_weld';
+				top.app.locate(row.oid, code);
+			},
+		},
+	});
+</script>
+
+</html>

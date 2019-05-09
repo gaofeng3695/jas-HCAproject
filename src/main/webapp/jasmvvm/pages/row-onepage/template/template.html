@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>施工数据采集</title>
+
+	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../src/css/main.css">
+	<style>
+		.panelitem {
+			height: 50%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="app">
+		<!-- <el-button style="position: absolute;top:4px;right:10px;" type="text">返回</el-button> -->
+		<jas-onepage-wrapper :ismax="ismax" :index="index">
+			<template slot="left">
+				<div class="panelitem">
+					<jas-panel-opacity title="警情报警">
+						<div style="height:100%;">
+							sadf hadsfj </div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem">
+					<jas-panel-opacity title="警情报警">
+						<div style="height:100%;">
+							sadf hadsfj </div>
+					</jas-panel-opacity>
+				</div>
+
+			</template>
+			<template slot="center">
+				<div style="height:100%;background:#ff990041;">
+					<div style="text-align: center">
+
+						<el-switch v-model="ismax" active-text="地图展开" inactive-text="地图收起">
+						</el-switch>
+						<br>
+						<el-button @click="showmodal">打开模态框</el-button>
+					</div>
+				</div>
+
+			</template>
+			<template slot="right">
+				<div class="panelitem">
+					<jas-panel-opacity title="实时警情报警"></jas-panel-opacity>
+				</div>
+				<div class="panelitem">
+					<jas-panel-opacity title="实时警情"></jas-panel-opacity>
+				</div>
+			</template>
+		</jas-onepage-wrapper>
+
+		<el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+
+			<span>这是一段信息</span>
+
+		</el-dialog>
+
+	</div>
+</body>
+<!-- import Vue before Element -->
+<script src="../../../lib/vue/vue.js"></script>
+<script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<!-- import JavaScript -->
+<script src="../../../lib/echarts/echarts.min.js"></script>
+<script src="../../../common/components/jas-components.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script src="../components/onepage-components.js"></script>
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: {
+			ismax: false,
+			index: 4,
+			dialogVisible: true,
+		},
+		watch: {
+			ismax: function (newval, oldval) {
+				if (newval) {
+					alert('执行全屏地图的操作方法')
+				} else {
+					alert('执行缩放地图的操作方法')
+				}
+			}
+
+		},
+		methods: {
+			showmodal: function () {
+				jasTools.onepageDialog.show({
+					width: '600px',
+					height: '600px',
+					title: '文件收藏',
+					src: 'dialogs/detail.html',
+					cbForClose: function () {
+						// that.requestList();
+					}
+				});
+			}
+		}
+	})
+</script>
+
+
+</html>

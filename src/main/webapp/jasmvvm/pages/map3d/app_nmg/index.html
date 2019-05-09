@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>三维地图展示</title>
+    <link rel="stylesheet" href="../../../lib/cesuim/Cesium-1.56.1/Widgets/widgets.css">
+    <link rel="stylesheet" href="demo/a.css">
+    <script src="../../../lib/cesuim/Cesium-1.56.1/Cesium.js"></script>
+    <script src="demo/a.js"></script>
+    <script>
+        let viewer = null;
+        let scene = null;
+        let wmsUrl = "http://gms.zyax.cn/geoserver/project_anjian/wms" ;
+        let wfsUrl = "http://gms.zyax.cn/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&maxFeatures=50&outputFormat=application%2Fjson&typeName=" ;
+        let layerName = "project_anjian:neimenggu_demo_data_3d";
+        let elevation = 1300 ;
+        let wfsServices= [
+            {
+                "id":"站场",
+                "layerName":"project_anjian:demo_pd_zhanchang",
+                "labelFieldName":"sitename",
+                "icon":"../../map/mapjs/images/renderer/nmg/changzhan.png",
+            },{
+                "id":"摄像头",
+                "layerName":"project_anjian:demo_pd_shexiangtou",
+                "labelFieldName":"id",
+                "icon":"../../map/mapjs/images/renderer/nmg/shexiangtou.png",
+            },{
+                "id":"地灾",
+                "layerName":"project_anjian:demo_pd_dizai",
+                "labelFieldName":"level",
+                "icon":"../../map/mapjs/images/renderer/nmg/dz_huapo_2.png",
+            },
+
+        ];
+        let init = function(){
+            //加载pipeline wms
+            var provider = new Cesium.WebMapServiceImageryProvider({
+                url: wmsUrl,
+                layers: layerName,
+                parameters: {
+                    service : 'WMS',
+                    format: 'image/png',
+                    transparent: true,
+                }
+            });
+            viewer.imageryLayers.addImageryProvider(provider);
+
+            var label = viewer.entities.add( {
+                name : "内蒙古",
+                code:"123456789",
+                position : Cesium.Cartesian3.fromDegrees( 111.758295240233,40.8158962199348 ,5000 ),
+                point : { //点
+                    pixelSize : 5,
+                    color : Cesium.Color.RED,
+                    outlineColor : Cesium.Color.WHITE,
+                    outlineWidth : 2
+                },
+                label : {
+                    //文字标签
+                    text : '呼和浩特市',
+                    font : '16pt monospace',
+                    style : Cesium.LabelStyle.FILL,
+                    outlineWidth : 2,
+                    verticalOrigin : Cesium.VerticalOrigin.BOTTOM, //垂直方向以底部来计算标签的位置
+                    pixelOffset : new Cesium.Cartesian2( 0, -9 )   //偏移量
+                }
+            } );
+
+            viewer.camera.setView({
+                destination : Cesium.Cartesian3.fromDegrees(116, 40, 10000000),
+                orientation: {
+                    heading : 0.0,
+                    pitch : - Cesium.Math.PI_OVER_TWO,
+                    roll : 0.0
+                }
+            });
+            //加载wfs 数据
+            for(let i = 0 ; i < wfsServices.length;i++ ){
+
+                loadWfsData(wfsServices[i]);
+
+            }
+
+        };
+        let loadWfsData = function(item){
+            var url = wfsUrl + item.layerName;
+            X.getGeoJSON(url, function(json){
+                var total = json.totalFeatures;
+                if(total > 0){
+                    var features = json.features ;
+                    for(let i = 0 ; i < total ;i++ ){
+                        var f = features[i];
+                        var coors = f.geometry.coordinates ;
+                        var prop = f.properties;
+                        addEntity(coors ,prop ,item);
+                    }
+                }
+            });
+        };
+        let addEntity = function(coor ,properties, wfsItem){
+            var field = wfsItem["labelFieldName"];
+            var label = properties[field] ? properties[field] : "";
+            viewer.entities.add( {
+                name : label,
+                code: wfsItem.id,
+                position : Cesium.Cartesian3.fromDegrees( coor[0],coor[1],elevation),
+//                label : {
+//                    //文字标签
+//                    text : '风机设备',
+//                    font : '14pt monospace',
+//                    style : Cesium.LabelStyle.FILL,
+//                    outlineWidth : 2,
+//                    verticalOrigin : Cesium.VerticalOrigin.BOTTOM, //垂直方向以底部来计算标签的位置
+//                    pixelOffset : new Cesium.Cartesian2( 0, -9 )   //偏移量
+//                },
+                billboard : {
+                    //图标
+                    image  : wfsItem.icon,
+                    width : 48,
+                    height : 48
+                }
+            } )
+//                .then( e => {
+//                e.billboard.disableDepthTestDistance = Number.POSITIVE_INFINITY; //去掉地形遮挡
+//
+//            });
+         };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            viewer = new Cesium.Viewer(
+                'cesium',
+                {
+                    homeButton: false,
+                    geocoder: false,
+                    baseLayerPicker: false,
+                    sceneModePicker: true,
+                    navigationHelpButton: false,
+                    animation: false,
+                    timeline: false,
+                    selectionIndicator: true,
+                    infoBox: true,
+                    terrainProvider: Cesium.createWorldTerrain(),
+                    //google china
+                    imageryProvider:new Cesium.UrlTemplateImageryProvider({
+                        url: "http://mt{s}.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali" ,
+                        subdomains:[0,1,2,3]
+                    })
+                }
+            );
+
+            init();
+            /*
+             * 鼠标点击事件
+             */
+            var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+            handler.setInputAction(function(click) {
+                var pick = viewer.scene.pick(click.position);
+                //选中某模型   pick选中的对象
+                if(pick && pick.id){
+                    alert(pick.id.code + " ," + pick.id.name);
+                }
+
+            }, Cesium.ScreenSpaceEventType.LEFT_CLICK  );
+        });
+    </script>
+</head>
+<body>
+    <div id="cesium"></div>
+
+</body>
+</html>

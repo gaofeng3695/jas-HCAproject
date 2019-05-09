@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>施工数据采集</title>
+
+	<link rel="stylesheet" href="./lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./src/css/main.css">
+	<style>
+		#app {
+			height: 100%;
+			background: #0e1833 url(src/images/bg.png) no-repeat;
+			background-size: cover;
+		}
+
+		.header {
+			/* background: #0f64c4; */
+			height: 110px;
+		}
+
+		.mainbody {
+			/* background: #597c56; */
+			height: calc(100% - 110px);
+			min-width: 1400px;
+		}
+
+		.leftcol,
+		.rightcol {
+			height: 100%;
+			min-width: 400px;
+			width: 26%;
+		}
+
+		.lefttop,
+		.leftbottom,
+		.righttop,
+		.rightbottom {
+			height: 50%;
+			padding:0 10px 10px;
+			box-sizing: border-box;
+		}
+
+		.innerheader{
+			background: #f9000000 url(src/images/title.png) no-repeat top center;
+			height: 100%
+		}
+
+	</style>
+
+
+
+</head>
+
+<body style="overflow:auto;">
+	<div id="app" style="min-height: 860px;">
+		<div class="header">
+			<div class="innerheader"></div>
+		</div>
+
+		<div class="mainbody jas-flex-box is-horizontal">
+			<div class="leftcol">
+				<div class="lefttop">
+					<div style="height: 100%;width:100%;">
+						<div style="height: 32px;background: #010609 url(src/images/paneltitle.png) repeat center center;border: 0;border-top: 1px solid #283f5f;border-bottom: 1px solid #2b2e3f;">
+							<span style="padding:0 0 0 10px;height: 100%;line-height: 30px;color: #6ee2ff;font-size: 16px;">实时警情</span>
+						</div>
+						<div style="height: calc(100% - 32px);box-sizing:border-box;background: #010609;border: 1px solid #010609;">
+
+						</div>
+					</div>
+
+				</div>
+				<div class="leftbottom">
+						<div style="height: 100%;width:100%;">
+								<div style="height: 32px;background: #010609 url(src/images/paneltitle.png) repeat center center;border: 0;border-top: 1px solid #283f5f;border-bottom: 1px solid #2b2e3f;">
+									<span style="padding:0 0 0 10px;height: 100%;line-height: 30px;color: #6ee2ff;font-size: 16px;">实时警情</span>
+								</div>
+								<div style="height: calc(100% - 32px);background: #010609;border: 1px solid #010609;">
+
+								</div>
+							</div>
+
+				</div>
+			</div>
+			<!-- 中间部分  开始 -->
+
+			<div class="is-grown">
+
+			</div>
+			<!-- 中间部分  结束 -->
+			<div class="rightcol">
+				<div class="righttop">
+					<div style="height: 100%;width:100%;">
+						<div style="height: 32px;background: #010609 url(src/images/paneltitle.png) repeat center center;border: 0;border-top: 1px solid #283f5f;border-bottom: 1px solid #2b2e3f;">
+							<span style="padding:0 0 0 10px;height: 100%;line-height: 30px;color: #6ee2ff;font-size: 16px;">实时警情</span>
+						</div>
+						<div style="height: calc(100% - 32px);background: #010609;border: 1px solid #010609;">
+
+						</div>
+					</div>
+
+				</div>
+				<div class="rightbottom">
+					<div style="height: 100%;width:100%;">
+						<div style="height: 32px;background: #010609 url(src/images/paneltitle.png) repeat center center;border: 0;border-top: 1px solid #283f5f;border-bottom: 1px solid #2b2e3f;">
+							<span style="padding:0 0 0 10px;height: 100%;line-height: 30px;color: #6ee2ff;font-size: 16px;">实时警情</span>
+						</div>
+						<div style="height: calc(100% - 32px);background: #010609;border: 1px solid #010609;">
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	</div>
+
+</body>
+<!-- import Vue before Element -->
+<script src="./lib/vue/vue.js"></script>
+<script src="./lib/jquery/jquery-1.12.4.min.js"></script>
+
+<!-- import JavaScript -->
+<script src="./lib/echarts/echarts.min.js"></script>
+<script src="./lib/echarts/chalk.js"></script>
+
+<script id="mapApi" src="./pages/map/mapjs/jasopengis.js"></script>
+<script src="./common/components/jas-components.js"></script>
+<script src="./common/js/jas-tools.js"></script>
+
+</html>

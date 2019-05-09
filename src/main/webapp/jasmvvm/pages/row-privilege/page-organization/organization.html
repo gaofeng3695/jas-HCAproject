@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>组织机构管理</title>
+	<!-- <link rel="stylesheet" href="./libelement-ui/element-#0E2B4A/src/index.css"> -->
+	<link rel="stylesheet" href="./../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./../../../src/css/main.css">
+	<style>
+		.resizepanel {
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+
+		.orgtitle {
+			height: 40px;
+			color: #fff;
+			background: #409EFF;
+			line-height: 40px;
+			/* padding: 0 0 0 15px; */
+			text-align: center;
+		}
+
+		.orgtool {
+			height: 40px;
+			/* border-bottom:1px solid #e4e7ed; */
+			text-align: right;
+			padding: 0 10px;
+			overflow: hidden;
+		}
+
+		.filterwrap {
+			padding: 10px 10px 0px 10px;
+		}
+
+		.content {
+			height: 100%;
+			padding: 0 10px;
+		}
+
+		.content .el-tabs__content {
+			width: 100%;
+			-webkit-box-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+			overflow: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak v-loading="loading.allLoading">
+
+		<jas-two-panel-resizer layout="vertical" length="300px">
+			<template slot="closePanel">
+				<div class="filterwrap">
+					<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+					</el-input>
+				</div>
+				<div class="orgtool">
+					<el-button type="text" @click="addNode">新增</el-button>
+					<el-button type="text" @click="editNode" :disabled="!currentNodeId || isFixed">修改</el-button>
+					<el-button type="text" @click="deleteNode" :disabled="!currentNodeId || isFixed">删除</el-button>
+				</div>
+				<el-tree class="is-grown" ref="orgtree" :data="orgnData" node-key="id" :props="defaultProps" :default-expanded-keys="[currentNodeId]"
+				  highlight-current @node-click="clicknode" :expand-on-click-node="false" :filter-node-method="filterNode"></el-tree>
+			</template>
+			<div class="content" slot="mainPanel">
+				<el-tabs v-model="activeName" class="jas-flex-box" style="height:100%;overflow: auto">
+					<el-tab-pane label="部门详情" name="details">
+						<div v-loading="loading.orgDetail">
+							<jas-detail-table :titles="detailTitle" :detail="detail" />
+						</div>
+					</el-tab-pane>
+					<el-tab-pane label="实施范围" name="scale">
+						<div v-loading="loading.scopeTree" v-show="!isFixed">
+							<!-- <div style="text-align: right;"> -->
+							<div style="border-bottom: 1px solid #ececec;padding:0 0 10px;">
+								<el-button size="small" type="primary" @click="requestSaveScope">保存</el-button>
+							</div>
+							<el-tree ref="tree" :data="scopeData.treeData" show-checkbox node-key="id" :default-expanded-keys="scopeData.expandedKeys"
+							  :default-checked-keys="scopeData.checkedKeys" :props="scopeData.defaultProps">
+							</el-tree>
+						</div>
+					</el-tab-pane>
+				</el-tabs>
+			</div>
+		</jas-two-panel-resizer>
+
+
+
+
+	</div>
+</body>
+
+<script src="./../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../lib/vue/vue.js"></script>
+<script src="./../../../lib/vue-multipane/vue-multipane.js"></script>
+
+<script src="./../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../common/components/jas-components.js"></script>
+<script src="./../../../common/js/jas-tools.js"></script>
+<script>
+	var vm = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				detail: null,
+				scopeData: {
+					treeData: [],
+					defaultProps: {
+						children: 'children',
+						label: 'text',
+					},
+					checkedKeys: [],
+					expandedKeys: []
+				},
+				detailTitle: [ //
+					{
+						name: '上级组织机构',
+						field: 'parentName',
+					}, {
+						name: '组织机构名称',
+						field: 'unitName',
+					}, {
+						name: '组织机构编号',
+						field: 'unitCode',
+					}, {
+						name: '顺序编号',
+						field: 'orderNum',
+					}, {
+						name: '组织机构类型',
+						field: 'unitType',
+					}, {
+						name: '联系电话',
+						field: 'phone',
+					}, {
+						name: '地址',
+						field: 'address',
+					}, {
+						name: '组织机构描述',
+						field: 'description',
+					},
+				],
+				loading: {
+					allLoading: false,
+					orgDetail: false,
+					scopeTree: false,
+				},
+				panelMoving: false,
+				panelShowed: true,
+				activeName: 'details',
+				filterText: '',
+				currentNode: '',
+				currentNodeId: '',
+
+				orgnData: [],
+				defaultProps: {
+					label: 'text',
+					orgnData: 'orgnData'
+				},
+
+			}
+		},
+		computed: {
+			isFixed: function () {
+				var arr = [
+					'e8109332-8a6e-4d16-8e73-549154818205',
+					'8432ae89-470e-4fb9-a351-f0f48eff5548',
+					'46b894cd-714c-4af8-8cf1-f3ea2db01a62',
+					'b7e5ff3c-8e3a-4bd7-89d0-d45189f8c2a6',
+					'29248863-3583-4b64-915c-c1472e87fba7',
+				];
+				return (arr.indexOf(this.currentNodeId) > -1);
+
+			}
+		},
+		watch: {
+			filterText: function (val) {
+				this.$refs.orgtree.filter(val);
+			}
+		},
+		mounted: function () {
+
+			this._requestTable();
+		},
+		methods: {
+			filterNode: function (value, data) {
+				if (!value) return true;
+				return data.text.indexOf(value) !== -1;
+			},
+			_requestTable: function () {
+				var that = this;
+				var url = jasTools.base.rootPath + "/jasframework/privilege/unit/getLeftTree.do?isroot=true";
+				jasTools.ajax.get(url, {}, function (data) {
+					that.orgnData = data[0].children;
+					that.$nextTick(function () {
+						if (!that.currentNodeId) {
+							that.currentNodeId = data[0].children[0].id;
+						}
+						that.$refs.orgtree.setCurrentKey(that.currentNodeId);
+						that._requestOrgDetail(that.currentNodeId);
+						that._requestScopeTree(that.currentNodeId);
+					})
+				});
+			},
+			_requestOrgDetail: function (oid) {
+				var that = this;
+				that.loading.orgDetail = true;
+				var url = jasTools.base.rootPath + "/jasframework/privilege/unit/findUnitById.do";
+				jasTools.ajax.get(url, {
+					oid: oid
+				}, function (data) {
+					setTimeout(function () {
+						that.loading.orgDetail = false;
+					}, 300)
+					that.detail = data;
+				});
+			},
+
+			_requestScopeTree: function (unitOid) {
+				var that = this;
+				that.loading.scopeTree = true;
+				var src = jasTools.base.rootPath + '/daq/implementScope/getImplementScopeTree.do';
+				jasTools.ajax.post(src, {
+					unitOid: unitOid
+				}, function (data) {
+					setTimeout(function () {
+						that.loading.scopeTree = false;
+					}, 300)
+					that.scopeData.treeData = data.rows;
+					var expandedKeys = that.getNodekeysByGrade(that.scopeData.treeData, 1);
+					that.scopeData.expandedKeys = expandedKeys;
+					that.scopeData.checkedKeys = that.getCheckedNodekeys(that.scopeData.treeData);
+
+				});
+			},
+			requestSaveScope: function () {
+				var that = this;
+				this.loading.allLoading = true;
+				var checkedNodes = this.$refs.tree.getCheckedNodes().filter(function (item) {
+					if (item.attributes && item.attributes.type > 0) return true;
+				});
+				var src = jasTools.base.rootPath + '/daq/implementScope/saveRef.do';
+				var arr = checkedNodes.map(function (item) {
+					return {
+						scopeOid: item.id,
+						projectOid: item.attributes.projectOid,
+						pipelineOid: item.attributes.pipelineOid,
+						tendersOid: item.attributes.tendersOid,
+						scopeType: item.attributes.type
+					};
+				});
+				jasTools.ajax.post(src, {
+					unitOid: this.currentNodeId, //标段oid
+					data: arr
+				}, function (data) {
+					setTimeout(function () {
+						that.loading.allLoading = false;
+					}, 0)
+					that._requestScopeTree(that.currentNodeId);
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '保存成功'
+					});
+				});
+			},
+			clicknode: function (node, b, c) {
+				// console.log(a, b, c)
+				this.currentNode = node;
+				this.currentNodeId = node.id;
+				this._requestOrgDetail(node.id);
+				this._requestScopeTree(node.id);
+			},
+
+
+
+
+
+
+
+
+			addNode: function (row) {
+				var that = this;
+				top.jasTools.dialog.show({
+					width: '60%',
+					height: '80%',
+					title: '新增组织机构',
+					src: './pages/row-privilege/page-organization/dialogs/add.html?pid=' + this.currentNodeId,
+					cbForClose: function (param) {
+						if (param == 1) {
+							that._requestTable();
+						}
+					}
+				});
+			},
+			editNode: function (row) {
+				var that = this;
+				top.jasTools.dialog.show({
+					width: '60%',
+					height: '80%',
+					title: '修改组织机构',
+					src: './pages/row-privilege/page-organization/dialogs/add.html?oid=' + this.currentNodeId,
+					cbForClose: function (param) {
+						if (param == 1) {
+							that._requestTable();
+						}
+					}
+				});
+			},
+			_requestDeleteNode: function (oid) {
+				var that = this;
+				var url = jasTools.base.rootPath + "/jasframework/privilege/unit/removeUnitById.do";
+				jasTools.ajax.get(url, {
+					oid: oid
+				}, function (data) {
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '删除成功！'
+					});
+					that._requestTable()
+				});
+			},
+
+			deleteNode: function () {
+				var that = this;
+				window.top.Vue.prototype.$confirm('您确定要删除本条数据吗？', '提示', {
+					type: 'warning',
+					callback: function (action) {
+						if (action === 'confirm') {
+							that._requestDeleteNode(that.currentNodeId);
+						}
+					}
+				});
+			},
+			getCheckedNodekeys: function (treeData) {
+				var checkedKeys = [];
+				var getCheckedKeysFromArr = function (arr) {
+					arr.forEach(function (item) {
+						if (item.checked) {
+							checkedKeys.push(item.id);
+						}
+						if (item.children) {
+							getCheckedKeysFromArr(item.children);
+						}
+					})
+				};
+				getCheckedKeysFromArr(treeData);
+				return checkedKeys;
+			},
+			getNodekeysByGrade: function (treeData, nGrade) {
+				var grades = [];
+				var getGradeKeysFromArr = function (arr, index) {
+					++index;
+					arr.forEach(function (item) {
+						if (grades[index]) {
+							grades[index].push(item.id)
+						} else {
+							grades[index] = [item.id]
+						}
+						if (item.children) {
+							getGradeKeysFromArr(item.children, index);
+						}
+					});
+				};
+				getGradeKeysFromArr(treeData, -1);
+				nGrade = nGrade < 1 ? 1 : nGrade;
+				nGrade = nGrade > grades.length ? grades.length : nGrade;
+				return grades[nGrade - 1];
+			},
+		},
+	});
+</script>
+
+</html>

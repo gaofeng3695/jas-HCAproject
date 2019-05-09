@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>内蒙古自治区油气长输管线安全监控平台</title>
+
+	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../../src/css/main.css">
+	<link rel="stylesheet" href="../../../src/css/onepage.css">
+	<style>
+		.panelitem {
+			height: 40%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.panelitem1 {
+			height: 60%;
+			padding: 0 10px 10px;
+			box-sizing: border-box;
+		}
+		.height-one{
+			height: 92px;
+			margin: 10px 0;
+			/*background: cyan*/
+		}
+		.height-two{
+			height: calc(100% - 105px);
+			/*background: yellow*/
+		}
+		.chart-dl{
+			font-size: 0;
+		}
+		.chart-dl dl{
+			width:25%;
+			height: 60px;
+			padding: 10px 0;
+			display: inline-block;
+			vertical-align: middle;
+			margin-bottom: 0;
+		}
+		.chart-dl dl dt,
+		.chart-dl dl dd{
+			height: 100%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.chart-dl dl dt img{
+			width: 40px;
+			height: 40px;
+		}
+		.chart-dl dl dd{
+			padding-left:10px; 
+		}
+		.chart-dl dl dd p{
+			padding: 0;
+			margin: 0;
+			line-height: 20px;
+			color: #03affe
+		}
+		.chart-dl dl dd p:last-child{
+			font-size: 18px;
+			color: #ffcc00
+		}
+		.chart-square{
+			padding: 10px 2px;
+			box-sizing:border-box;
+			border: 1px solid #375a78
+		}
+		.chart-circle{
+			/*height: 100%;*/
+			display: flex;
+    		justify-content: center;
+		}
+		.chart-square dl,
+		.chart-circle dl{
+			/*height: 100%;*/
+			display: inline-block;
+			vertical-align: middle;
+			position: relative;
+			margin: 0;
+		}
+		.chart-square  dl dd,
+		.chart-square  dl dt{
+			width: 98px;
+			height: 59px;
+		}
+		.chart-circle dl dd,
+		.chart-circle dl dt img{
+			width: 142px;
+		}
+		.chart-square dl dd,
+		.chart-circle dl dd{
+			position: absolute;
+			left: 0;
+			top: 0;
+			text-align: center;
+		}
+		.chart-square dl dd p,
+		.chart-circle dl dd p{
+				color: #fff
+		}
+		.chart-square dl dd p:first-child,
+		.chart-circle dl dd p:first-child{
+			margin: 0;
+			margin-top: 20px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		.chart-square dl dd p:first-child{
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 12px;
+		}
+		.chart-square dl dd p:last-child{
+			font-size: 16px;
+			color: #e7ffff;
+			font-weight: bold;
+			line-height:26px;
+		}
+		.marquee-box{
+			height: 100%;
+			padding: 15px;
+			border:1px solid #375a78;
+			box-sizing: border-box;
+			overflow: hidden;
+		}
+		legend{
+			color:#5695cb;
+			margin-left: 20px;
+		}
+		.marquee{
+			height: 100%;
+			overflow: hidden;
+			position: relative;
+		}
+		.marquee .marquee-content{
+			display: block;
+			width:100%;
+			height: 200%;
+			position: absolute;
+			overflow: hidden;
+			-webkit-animation: marquee 20s linear infinite;
+			animation: marquee 20s linear infinite;
+		}
+		.marquee p{
+			color: #72c1ea;
+			margin-bottom: 20px;
+		}
+		.marquee span{
+			color: #93eeff;
+			border-right: 1px solid #93eeff;
+			padding: 0 5px;
+		}
+		.marquee span:last-child{
+			color: #ffc000;
+			border-right: 0
+		}
+
+		@keyframes marquee {
+			from {
+				top: 0;
+			}
+			to {
+				top: -100%;
+			}
+		}
+
+		 .absolute-r{
+			position: absolute;
+			right: 20px;
+			top: 0;
+			}
+			.select-box{
+				height: 100%; 
+			}
+			.select-box .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn){
+				width: 120px;
+		}
+    
+			.select-box .btn{
+				padding: 3px 11px;
+			}
+			.select-box .search{
+				display: inline-block;
+				vertical-align: middle;
+				position: relative;
+			}
+			.select-box  .search-input{
+				height: 28px;
+				padding-right:25px; 
+				border-radius: 4px;
+			}
+			.select-box  .search-icon{
+				display: inline-block;
+				vertical-align: middle;
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				width: 25px;
+				height: 28px;
+				border-radius: 0 4px 4px 0;
+				background:#0d85d3 url("../image/search.png")no-repeat center center;
+				background-size: 16px 16px;
+			}
+
+			.select-box .search-input,
+			.btn-default,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				background: transparent;
+				border: 1px solid #4c535b;
+			}
+			.select-box .search-input:focus,
+			.btn-default:active:hover, .btn-default.active:hover, .open>.dropdown-toggle.btn-default:hover, .btn-default:active:focus, .btn-default.active:focus, .open>.dropdown-toggle.btn-default:focus, .btn-default:active.focus, .btn-default.active.focus, .open>.dropdown-toggle.btn-default.focus{
+				border: 1px solid #0d85d3;
+				outline: 0;
+			}
+				
+		.select-box button:-webkit-autofill{
+				-webkit-text-fill-color: #5695cb !important;
+				-webkit-box-shadow: 0 0 0px 1000px transparent  inset !important;
+				background-color:transparent;
+				background-image: none;
+				transition: background-color 50000s ease-in-out 0s; 
+			}
+			.center{
+				width: 100%;
+				height: 100%;
+				position: relative;
+			}
+		
+			.map-info{
+				position: absolute;
+				bottom: 0;
+				height: 25%;
+				width: 98%;
+				box-sizing: border-box;
+				color: #ffffff;
+				background-color: #060e224d;
+				line-height: 30px;
+				margin: 10px;
+				z-index:10;
+			}
+			.map-info p{
+				    text-indent: 30px;
+			}
+			.map-info span{
+				color: #ffc000;
+				font-size: 14px;
+			}
+			.rank-table-my{
+			    width:100%;
+			    /*height: 100%;*/
+			    text-align: center;
+			    border-spacing: 5px;
+			    border-collapse: separate;
+			}
+			.rank-table-my th{
+			    text-align: center;
+			    font-size: 12px;
+			    color: #f1f2ea;
+			}
+			.rank-table-my tr th,
+			.rank-table-my tr td{
+			    height:30px;
+			    line-height:30px;
+			    font-size: 12px;
+			    color:#f1f2ea;
+			}
+			.rank-table-my tr span{
+			    display: block;
+			}
+			.rank-table-my tbody tr:nth-child(odd) td{
+			    background: #111e2f;
+			}
+			.rank-table-my tbody tr:nth-child(even) td{
+			    background: #0a1727;
+			}
+			.rank-table-my tbody tr td:first-child{
+			    color:rgba(255,255,255,0.7);
+			}
+		.fieldset-body{
+	width:100%;
+	height:100%;
+	display: flex;
+	justify-content: space-between;
+	align-items:stretch
+}
+.fieldset-item{
+	flex-basis:50%;
+	display: flex;
+}
+.fieldset-item .item-img{
+	flex-basis:40%;
+	position:relative
+}
+.fieldset-item .item-img img{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate;
+	transform: translate(-50%,-50%);
+}
+.fieldset-item .item-info{
+	flex-basis:60%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.fieldset-item .item-info .item-title{
+	font-size: 12px;
+	color: #eeeeee;
+	line-height: 30px;
+}
+.fieldset-item .item-info .item-val{
+	font-size:32px;
+	color:#0ff1e9
+}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="app">
+		<jas-onepage-wrapper :ismax="ismax" :index="index">
+			<template slot="left">
+				<div class="panelitem1">
+					<jas-panel-opacity title="专题统计">
+						<div  style="height:100%;">
+							<div  id="ProjectStatistics" style="height:50%;">
+							</div>
+							<div id="ProjectStatisticsBar" style="height:50%;">
+							</div>
+							</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem">
+					<jas-panel-opacity title="高后果区内工地">
+						<div id="highscope" style="height:100%;"></div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+			<template slot="center" >
+				 <div class="center">
+				 	  <div class="switch-div">
+			        	 <el-switch
+                          style="display: block"
+                          v-model="value3"
+                          inactive-color="#33568a"
+                          inactive-text="5m"
+                          active-color="#ff2d2d"
+                          >
+                        </el-switch>
+                        <el-switch
+                          style="display: block"
+                          v-model="value4"
+                          inactive-color="#33568a"
+                          inactive-text ="50m"
+                          active-color="#ff7400"
+                          >
+                        </el-switch>
+                        <el-switch
+                          style="display: block"
+                          v-model="value5"
+                          inactive-color="#33568a"
+                          inactive-text="100m"
+                          active-color="#ffb719"
+                          > 
+                      	</el-switch>
+			          </div>
+			          <div class="select-div">
+							<el-select v-model="areaVal" @change="areaChange" placeholder="请选择" style="width:180px;margin-right: 10px;">
+								<el-option
+								v-for="item in areaOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+							<el-select v-model="companyVal" @change="companyChange"  placeholder="请选择" style="width:180px;">
+								<el-option
+								v-for="item in companyOption"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+								</el-option>
+							</el-select>
+					 </div>
+
+					 <!--图层操作按钮-->
+					 <div class="operate-div">
+						  <span class="max" @click="openMax"></span>
+						 <span class="yingxiang" @click="switchImageMap"></span>
+						 <span class="shiliang" @click="switchVecMap"></span>
+						 <span class="threeD" @click="open3D"></span>
+						 <span class="tuceng" @click="openTuCeng"></span>
+					 </div>
+					  <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent">
+					  		 <div class="map-info" v-show="!ismax" >
+					  		 <div style="height: 40px;background: #01060900 url(../../../src/images/line.png) no-repeat 10px 12px;">
+       				<span style="padding-left:24px;line-height: 40px;color: #fff;font-size: 16px;">今日施工</span>
+    			</div>
+							<table class="rank-table-my">
+								<thead>
+									<tr> 
+										<th>序号</th><th>施工范围</th> <th>施工地点</th> <th>所属单位</th><th>联系人</th><th>联系电话</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(item,index)  in detailData"> 
+										<td><span>{{index+1}}</span></td><td><span>{{item.constructionRange}}</span></td><td>{{item.constructionPlace}}</td> <td>{{item.unit}}</td><td>{{item.user}}</td><td>{{item.phone}}</td>
+										
+									</tr>
+								</tbody>
+							</table>
+					      </div>
+					  </div>
+				 </div>
+			</template>
+			<template slot="right">
+				<div class="panelitem1">
+					<jas-panel-opacity title="合规性提醒">
+						<div  style="height:100%;padding:10 10;">
+							<div class="height-one">
+													<div class="fieldset-body">
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-repaire.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">12<span style="font-size:16px;">  处</span></p>	
+										<p class="item-title">5m 重大工地未监管</p>
+									</div>	
+								</div>	
+								<div class="fieldset-item">
+									<div class="item-img">
+										<img src="./image/not-check.png" alt="">
+									</div>
+									<div class="item-info">
+										<p class="item-val">7<span style="font-size:16px;">  处</span></p>	
+										<p class="item-title">50m 重大工地未监管</p>
+									</div>	
+								</div>	
+							</div>	
+							</div>
+							<div class="height-two">
+								<div id="compliance" style="height:100%;"> </div>
+							</div>
+						</div>
+						</jas-panel-opacity>
+				</div>
+				<div class="panelitem">
+					<jas-panel-opacity title="督办整改">
+						<div id="rectification" style="height:100%;"> </div>
+					</jas-panel-opacity>
+				</div>
+			</template>
+		</jas-onepage-wrapper>
+	</div>
+
+	</div>
+
+</body>
+<!-- import Vue before Element -->
+<script src="../../../lib/vue/vue.js"></script>
+<script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<!-- import JavaScript -->
+<script src="../../../lib/echarts/echarts.min.js"></script>
+
+<script src="../../../common/components/jas-components.js"></script>
+<script src="../../../common/js/jas-tools.js"></script>
+<script src="../components/onepage-components.js"></script>
+
+<script id="mapApi" src="../../map/mapjs/jasopengis.js"></script>
+
+
+<script>
+	var app = new Vue({
+		el: '#app',
+		data: function () {
+			return {
+				ismax:false,
+				index:3,
+				 jasMap:null,
+					mapConfig:"config.onepage.json",
+	                layerId:"demo_pd_fengxian",//空间表layerId (表名)
+	                layerKeyName:"gid",//空间表layerId (表名)
+				value3: true,   // 地图切换按钮样式
+	            value4: true,
+	            value5: true,
+	            detailData:[],
+	            
+	            areaVal:"全自治区",
+				areaOption:[   // 下拉选选项值
+					{"label":"全自治区","value":"全自治区"},
+					{"label":"呼和浩特","value":"呼和浩特"},
+					{"label":"鄂尔多斯","value":"鄂尔多斯"},
+					{"label":"包头","value":"包头"},
+					{"label":"赤峰","value":"赤峰"},
+					{"label":"乌海","value":"乌海"},
+					{"label":"呼伦贝尔","value":"呼伦贝尔"},
+					{"label":"兴安盟","value":"兴安盟"},
+					{"label":"通辽","value":"通辽"},
+					{"label":"锡林郭勒盟","value":"锡林郭勒盟"},
+					{"label":"乌兰察布","value":"乌兰察布"},
+					{"label":"巴彦淖尔","value":"巴彦淖尔"},
+					{"label":"阿拉善盟","value":"阿拉善盟"},
+				],
+
+				companyVal:"全部企业",
+				companyOption:[   // 下拉选选项值
+					{"label":"全部企业","value":"全部企业"},
+					{"label":"内蒙古西部天然气管道运行有限公司","value":"内蒙古西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输气分公司","value":"中国石油天然气股份有限公司管道长庆输气分公司"},
+					{"label":"乌海华油天然气有限责任公司","value":"乌海华油天然气有限责任公司"},
+					{"label":"阿拉善盟深中能源发展有限公司","value":"阿拉善盟深中能源发展有限公司"},
+					{"label":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司","value":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司"},
+					{"label":"中国石油天然气股份有限公司管道长庆输油气分公司","value":"中国石油天然气股份有限公司管道长庆输油气分公司"},
+					{"label":"中国石油东部有限公司西气东输银川管理处","value":"中国石油东部有限公司西气东输银川管理处"},
+				],
+			}
+		},
+		watch: {
+			// 如果需要联动
+			areaVal: function (newval, oldval) {
+				
+			},
+			// 地图最大化的监控
+			ismax:function (newval, oldval) {
+				console.log("111111");
+				var that = this;
+				// if(newval){
+					// alert("执行全屏地图的操作方法")
+					this.$nextTick(function(){
+						that.jasMap.resizeMap()
+					})
+				// }else{
+				// 	// alert("执行缩放地图的操作方法")
+				// }
+			},
+		},
+		computed: {},
+		created: function () {
+			var that = this;
+			$(function(){
+				// 获取chart图表数据
+				that.getChartData();
+			});
+			  that.jasMap = new JasMap({
+	                appConfig:that.mapConfig
+	            });
+			
+		},
+		methods: {
+			getChartData:function () {
+				var that = this;
+
+				that.highscopeChart();//高后果区
+				that.projectStatisticsChart();//专题统计
+				that.complianceChart();
+				that.rectificationChart();//督办整改
+				that.projectStatisticsBarChart();
+				that.detailData=[
+									{"constructionRange":"5m","constructionPlace":"呼市新华大街50","unit":"内蒙古西部管道","user":"王建国","phone":"18162626363"},
+									{"constructionRange":"50m","constructionPlace":"呼市西二环30号","unit":"内蒙古西部管道","user":"张贷","phone":"18462644363"},
+									{"constructionRange":"100m","constructionPlace":"呼市玉泉区45号","unit":"内蒙古西部管道","user":"刘静","phone":"15562624363"}
+								]
+			},
+			projectStatisticsChart:function(){
+				var that =this;
+				if (!this.ChartProjectStatistics) {
+					this.ChartProjectStatistics = echarts.init(document.getElementById('ProjectStatistics'));
+					$(window).resize(function () {
+						that.ChartProjectStatistics.resize();
+					});
+				}
+				option = {
+					    title : {
+					        text: '',
+					        x:'center'
+					    },
+					    textStyle: {
+							color: "#5695cb",
+							fontSize: 12
+						},
+					    tooltip : {
+					        trigger: 'item',
+					        formatter: "{a} <br/>{b} : {c} ({d}%)"
+					    },
+					    legend: {
+					    	orient: 'horizontal',
+					        left: 'right',
+					        data: ['5m','50m','100m'],
+					        textStyle:{
+				                color:"#f1f2ea"
+				            },
+					    },
+					    series : [
+					        {
+					            name: '',
+					            type: 'pie',
+					            label: {
+					            	normal: {
+					            		show: true,
+					            		position: 'top',
+					            		 formatter: "{b}: {d}%",
+					            		textStyle:{
+					            			color:"#f1f2ea"
+					            		}
+					            	}
+
+					            },
+					            color:['#ff7400','#ffb719','#ff2d2d'],
+					            data:[
+					                {value:510, name:'100m'},
+					               	{value:335, name:'50m'},
+					                {value:134, name:'5m'},
+					            ]
+					        }
+					    ]
+					};
+				this.ChartProjectStatistics.setOption(option);
+			},
+			projectStatisticsBarChart:function(){
+				var that = this;
+				if (!this.ChartProjectStatisticsBar) {
+					this.ChartProjectStatisticsBar = echarts.init(document.getElementById('ProjectStatisticsBar'));
+					$(window).resize(function () {
+						that.ChartProjectStatisticsBar.resize();
+					});
+				}
+				// 指定图表的配置项和数据
+
+				    option = {
+		    		 textStyle:{
+							color:"#f1f2ea"					            	
+			            },
+						tooltip : {
+							trigger: 'axis',
+							axisPointer: {
+								type: 'shadow',
+								label: {
+									show: true
+								}
+							}
+						},
+						   legend: {
+						    	orient: 'horizontal',
+						        left: 'right',
+						        data: ['施工数量'],
+						        textStyle:{
+						        	color:"#f1f2ea"	
+					            },
+						    },
+						grid: {
+							top: '12%',
+							left: '8%',
+							right: '8%',
+							bottom:"12%"
+						},
+						
+						xAxis: [
+							{
+								type : 'category',
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								}, 
+								axisTick: {
+					                alignWithLabel: true
+					            },
+								data : ["呼和浩特","鄂尔多斯","包头市","赤峰市"]
+							}
+					],
+					yAxis: [
+							{
+								type : 'value',
+								name : '(个)',
+								splitLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+							}
+						],
+						series : [
+							{
+								name: '施工数量',
+								type: 'bar',
+								barWidth:35,
+								itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+										color: '#0a8fca'
+											}, {
+											offset: 1,
+											color: '#2c46b5'
+										}])
+
+									}
+								},
+								label: {
+									normal: {
+										show: true,
+										position: 'top',
+										textStyle:{
+											color:"#f1f2ea"
+										}
+									}
+								
+								},
+								// data:that.highscopeData.year1,
+								data: ["23","33","72","18"]
+							}
+						]
+					};
+
+				// 使用刚指定的配置项和数据显示图表。
+				this.ChartProjectStatisticsBar.setOption(option);
+			},
+			highscopeChart:function(){
+				var that = this;
+				if (!this.Charthighscope) {
+					this.Charthighscope = echarts.init(document.getElementById('highscope'));
+					$(window).resize(function () {
+						that.Charthighscope.resize();
+					});
+				}
+				// 指定图表的配置项和数据
+
+				    option = {
+						textStyle: {
+							color:"#f1f2ea"	,
+							fontSize: 12
+						},
+						tooltip : {
+							trigger: 'axis',
+							axisPointer: {
+								type: 'shadow',
+								label: {
+									show: true
+								}
+							}
+						},
+						legend: {
+							textStyle:{
+								color:"#f1f2ea"	
+							},
+							orient: 'horizontal',
+							 left: 'right',
+							data:['5m', '50m','100m']
+						},
+						grid: {
+							top: '12%',
+							left: '8%',
+							right: '8%',
+							bottom:"12%"
+						},
+						xAxis: [
+							{
+								type : 'category',
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+								data : ["Ⅰ 级高后果区","Ⅱ级高后果区","Ⅲ级高后果区"]
+							}
+					],
+					yAxis: [
+							{
+								type : 'value',
+								name : '(个)',
+								splitLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+								axisLine:{
+									lineStyle:{
+										color:"#5695cb"
+									}
+								},
+							}
+						],
+						series : [
+								{
+									name: '5m',
+									type: 'bar',
+									barWidth:25,
+									itemStyle:{
+										normal:{
+											color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+												offset: 0,
+												color: '#ff7400'
+												}, {
+												offset: 1,
+												color: '#ff2d2d'
+											}])
+								
+										}
+									},
+									label: {
+										normal: {
+											show: true,
+											position: 'top',
+											textStyle:{
+												color:"#f1f2ea"
+											}
+										}
+									
+									},
+									// data:that.highscopeData.year1,
+									data: ["7","12","42"]
+								},
+							{
+								name: '50m',
+								type: 'bar',
+								barWidth:25,
+								itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+											color: '#6950d2'
+											}, {
+											offset: 1,
+											color: '#9b4457'
+										}])
+
+									}
+								},
+								label: {
+									normal: {
+										show: true,
+										position: 'top',
+										textStyle:{
+											color:"#f1f2ea"
+										}
+									}
+								
+								},
+								// data:that.highscopeData.year1,
+								data: ["43","27","22"]
+							},{
+								name: '100m',
+								type: 'bar',
+								barWidth:25,
+								itemStyle:{
+									normal:{
+										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+											offset: 0,
+										color: '#0a8fca'
+											}, {
+											offset: 1,
+											color: '#2c46b5'
+										}])
+
+									}
+								},
+								label: {
+									normal: {
+										show: true,
+										position: 'top',
+										textStyle:{
+											color:"#f1f2ea"
+										}
+									}
+								
+								},
+								// data:that.highscopeData.year1,
+								data: ["73","33","72"]
+							},
+						]
+					};
+
+				// 使用刚指定的配置项和数据显示图表。
+				this.Charthighscope.setOption(option);
+			},
+			complianceChart:function(){
+				var that = this;
+				if (!this.Chartcompliance) {
+					this.Chartcompliance = echarts.init(document.getElementById('compliance'));
+					$(window).resize(function () {
+						that.Chartcompliance.resize();
+					});
+				}
+
+				 option = {
+							textStyle: {
+								color:"#f1f2ea"	,
+									fontSize: 12
+								},
+							tooltip : {
+								trigger: 'axis',
+								axisPointer: {
+									type: 'shadow',
+									label: {
+										show: true
+									}
+								}
+							},
+							legend: {
+								right:"0%",
+								top:"8%",
+								textStyle:{
+									color:"#f1f2ea"	
+								},
+								data:['施工中','已结束']
+							},
+							grid: {
+								top: '20%',
+								left: '8%',
+								right: '0%',
+								bottom:"12%"
+							},
+							xAxis: [
+									{
+										type : 'category',
+										axisLine:{
+											lineStyle:{
+												color:"#5695cb"
+											}
+										},
+										data : ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月",]
+									}
+							],
+							yAxis: [
+									{
+										type : 'value',
+										splitLine:{
+											lineStyle:{
+												color:"#5695cb"
+											}
+										},
+										axisLine:{
+											lineStyle:{
+												color:"#5695cb"
+											}
+										},
+									}
+								],
+								series : [
+									{
+										name: '施工中',
+										type: 'line',
+										symbol:'circle',
+										symbolSize:4,
+										label: {
+											normal: {
+												show: true,
+												position: 'top',
+												textStyle:{
+													color:"#f1f2ea"
+												}
+											}
+										},
+										itemStyle:{
+											normal: {
+												color:"#ffcc00"
+											} 
+										},
+										lineStyle:{
+										normal: {
+												color:"#ffcc00"
+											} 
+										},
+										// data:that.LegalMonitoringData.add,
+										data: ["49","15","20","36","49","28","59","76","55","44","34","21"]
+									},{
+										name: '已结束',
+										type: 'line',
+										symbol:'circle',
+										symbolSize:4,
+										label: {
+											normal: {
+												show: true,
+												position: 'top',
+												textStyle:{
+													color:"#f1f2ea"
+												}
+											}
+										},
+										itemStyle:{
+											normal: {
+												color:"#0f9ca5"
+											} 
+										},
+										lineStyle:{
+										normal: {
+												color:"#0f9ca5"
+											} 
+										},
+										// data:that.LegalMonitoringData.end,
+										data: ["34","29","35","48","56","69","41","50","31","46","23","53"]
+									}
+								]
+							};
+				this.Chartcompliance.setOption(option,true);
+			},
+			rectificationChart:function(){
+				var that =this;
+				if (!this.ChartRectification) {
+					this.ChartRectification = echarts.init(document.getElementById('rectification'));
+					$(window).resize(function () {
+						that.ChartRectification.resize();
+					});
+				}
+				var option = {
+					    tooltip: {
+					        trigger: 'item',
+					        formatter: "{b}: {c} ({d}%)"
+					    },
+					    legend: {
+					        orient: 'horizontal',
+					        left: 'right',
+					        data:['已整改','待整改'],
+					        textStyle:{
+								color:"#f1f2ea"					            	
+					        }
+					    },
+					    grid:{
+					    	left:0,
+					    	right:0,
+					    	top:0,
+					    	bottom:0
+					    },
+				        textStyle:{
+							color:"#f1f2ea"					            	
+				        },
+					    series: [
+					        {
+					            name:'',
+					            type:'pie',
+					            radius: ['35%', '60%'],
+					            avoidLabelOverlap: true,
+					            color:['#28ffd9','#ffea00'],
+					            label: {
+					                normal: {
+					                    show: true,
+					                    formatter: "{b}: {d}%",
+					                    position: 'top'
+					                },
+					                emphasis: {
+					                    show: true,
+					                    textStyle: {
+					                        fontSize: '15',
+					                        fontWeight: 'bold'
+					                    }
+					                }
+					            },
+					            labelLine: {
+					                normal: {
+					                    show: true
+					                }
+					            },
+					            data:[
+					                {value:680, name:'已整改'},
+					                {value:320, name:'待整改'}
+					            ]
+					        }
+					    ]
+					};
+
+				this.ChartRectification.setOption(option);
+			},
+			open3D:function(e){
+				window.open("../../../../jasmvvm/pages/map3d/app_nmg/index.html");
+			},
+			openMax:function(e){
+				// alert("地图最大化:"+this.ismax);
+				this.ismax = !this.ismax;
+			},
+			clearMap:function(e){
+				// alert("清除所有图层");
+			},
+            switchImageMap:function(e){
+                if(this.baseMap !== "google_img"){
+                    this.baseMap = "google_img";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+			},
+            switchVecMap:function(e){
+                if(this.baseMap !== "google_vec"){
+                    this.baseMap = "google_vec";
+                }else{
+                    this.baseMap = "dark_shp";
+                }
+                this.jasMap.switchBaseMap(this.baseMap);
+            },
+			openTuCeng:function(){
+				jasTools.selfDialog.show({
+					title: '图层列表',
+					src: '../common/mapList.html',
+					height: '265px',
+					width: '200px',
+					right:"27%",
+					top:"360px",
+				})
+			},
+			areaChange:function(){
+			},
+			companyChange:function(){
+			}
+		}
+	})
+</script>
+
+
+</html>

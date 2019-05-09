@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.rank-table th,
+		.rank-table td{
+			white-space: nowrap;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<table class="rank-table">
+			<thead>
+				<tr> 
+					<th>序号</th> <th>风险名称</th> <th>风险等级</th> <th>所属企业</th> 
+					<th>企业联系人</th> <th>联系人部门</th> <th>联系电话</th> <th>风险位置</th>
+					<th>防护措施</th> <th>风险可控程度</th> <th>跟踪状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index)  in detailData" @click="openDetail(index)"> 
+					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
+					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> <td>{{item.g}}</td> <td>{{item.h}}</td> <td>{{item.i}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<script>
+	var dataList = {
+			"data": [{
+				"a": "高后果区500内施工   ",
+				"b": "Ⅲ级",
+				"c": "内蒙古西部管道",
+				"d": "王志",
+				"e": "保护部",
+				"f": "18311360111",
+				"j": "呼市西部管道25#桩30米",
+				"g": "1天2巡",
+				"h": "可控度高",
+				"i": "今日已巡，正常"
+			}, {
+				"a": "高后果区交直流干扰",
+				"b": "Ⅲ级",
+				"c": "内蒙古西部天然气",
+				"d": "陈治",
+				"e": "保护部",
+				"f": "15111636891",
+				"j": "呼市西部管道25#桩31米",
+				"g": "一月一测",
+				"h": "可控度高",
+				"i": "正常"
+			}, {
+				"a": "高后果区滑坡",
+				"b": "Ⅲ级",
+				"c": "内蒙古西部管道",
+				"d": "陈一",
+				"e": "保护部",
+				"f": "18913602478",
+				"j": "呼市西部管道25#桩32米",
+				"g": "巡护",
+				"h": "可控度高",
+				"i": "正常"
+			}],
+			"success": 1,
+			"total": 3
+		};
+
+
+	var appDetail = new Vue({
+		el: "#app",
+		data: function () {
+			return {
+				detailData:{}
+			}
+		},
+		created: function () {
+			var that = this;
+			this.detailData = dataList.data;
+			// 测试代码
+		},
+		methods: {
+			openDetail:function(idx){
+				alert("在地图上展示改点:"+idx);
+				// console.log(parent.window);
+				// parent.window.aaa();
+				// parent.aaa();
+				parent.app.locationPoint(idx,"demo_pd_fengxian");
+			}
+		},
+	});
+
+</script>
+
+</html>

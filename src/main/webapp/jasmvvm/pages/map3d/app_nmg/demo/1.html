@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>显示地图</title>
+  <link rel="stylesheet" href="../../../../lib/cesuim/Cesium-1.56.1/Widgets/widgets.css">
+  <link rel="stylesheet" href="a.css">
+  <script src="a.js"></script>
+  <script src="../../../../lib/cesuim/Cesium-1.56.1/Cesium.js"></script>
+  <script>
+
+      window.addEventListener('DOMContentLoaded', () => {
+          let viewer = new Cesium.Viewer(
+              'cesium',
+              {
+                  homeButton: false,
+                  geocoder: false,
+                  baseLayerPicker: false,
+                  sceneModePicker: true,
+                  navigationHelpButton: false,
+                  animation: false,
+                  timeline: false,
+                  selectionIndicator: true,
+                  infoBox: true,
+                  terrainProvider: Cesium.createWorldTerrain(),
+                  //google china
+                  imageryProvider:new Cesium.UrlTemplateImageryProvider({
+                      url: "http://mt{s}.google.cn/vt/lyrs=s&hl=zh-CN&x={x}&y={y}&z={z}&s=Gali" ,
+                      subdomains:[0,1,2,3]
+                  })
+              }
+          );
+          X.getGeoJSON(
+              //'/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp:states&outputFormat=application%2Fjson',
+              //'http://192.168.50.105:8080/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              // 'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd_centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              // 'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd_pipesegment&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd2_fengxiandian&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.50.105:8080/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:pd_centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:demo_pd_dizai&maxFeatures=50&outputFormat=application%2Fjson',
+              //'demo/data.json',
+              //'http://geoserver.zyax.cn/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:province&maxFeatures=50&outputFormat=application%2Fjson',
+              "data240.json",
+              json => {
+                  console.info(json);
+                  //加载并显示矢量数据
+                  //文档见 cesium/Build/Documentation/GeoJsonDataSource.html
+                  Cesium.GeoJsonDataSource.load(
+                      json,
+                      {
+                          stroke: Cesium.Color.RED, //线的颜色
+                          fill: Cesium.Color.YELLOW, //填充颜色
+                          strokeWidth: 3 //线的粗细
+                      }
+                  ).then(dataSource => {
+                      viewer.dataSources.add(dataSource);
+                      let entities = dataSource.entities.values;
+                  });
+              }
+          );
+          //点 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:canton_county_capital&outputFormat=application%2Fjson
+          //线 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd2_stationseries&outputFormat=application%2Fjson
+          //面 /geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp:states&outputFormat=application%2Fjson
+          //有问题面 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:canton_province_neimenggu&outputFormat=application%2Fjson
+          X.getGeoJSON(
+              //'/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp:states&outputFormat=application%2Fjson',
+              // 'http://192.168.50.105:8080/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              // 'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd_centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              // 'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd_pipesegment&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd2_fengxiandian&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.50.105:8080/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:pd_centerlinestake&maxFeatures=50&outputFormat=application%2Fjson',
+              //'http://192.168.100.240:8081/geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:demo_pd_dizai&maxFeatures=50&outputFormat=application%2Fjson',
+              //'demo/data.json',
+              //'http://geoserver.zyax.cn/geoserver/jasgroup/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=jasgroup:province&maxFeatures=50&outputFormat=application%2Fjson',
+              'data105.json',
+              json => {
+                  console.info(json);
+                  //加载并显示矢量数据
+                  //文档见 cesium/Build/Documentation/GeoJsonDataSource.html
+                  Cesium.GeoJsonDataSource.load(
+                      json,
+                      {
+                          stroke: Cesium.Color.RED, //线的颜色
+                          fill: Cesium.Color.YELLOW, //填充颜色
+                          strokeWidth: 3 //线的粗细
+                      }
+                  ).then(dataSource => {
+                      viewer.dataSources.add(dataSource);
+                      let entities = dataSource.entities.values;
+                      viewer.zoomTo(entities);
+                  });
+              }
+          );
+
+          //相机位置的获取和设置
+          let test = document.querySelector('#test');
+          let getCameraInfoButton = test.querySelector('button:nth-child(1)');
+          let setCameraInfoButton = test.querySelector('button:nth-child(2)');
+          let cameraInfo;
+          getCameraInfoButton.addEventListener('click', () => {
+              cameraInfo = X.getCameraPosition(viewer.camera);
+              console.info('获取相机位置:', cameraInfo);
+              alert('相机信息已经打印在控制台,你可以移动视图换成其他相机位置,然后点恢复到获取位置测试.');
+              setCameraInfoButton.removeAttribute('disabled');
+          });
+          setCameraInfoButton.addEventListener('click', () => {
+              //显示指定相机位置
+              console.info('显示指定相机位置:', cameraInfo);
+              viewer.camera.setView({
+                  destination: Cesium.Cartesian3.fromDegrees(
+                      cameraInfo.destination.longitude,
+                      cameraInfo.destination.latitude,
+                      cameraInfo.destination.height
+                  ),
+                  orientation: {
+                      //使用单位为弧度:Radians, 弧度转角度使用 cesium/Build/Documentation/Math.html?classFilter=Math#.toDegrees
+                      heading: cameraInfo.orientation.heading, // 水平, default value is 0.0 (north)
+                      //使用单位为弧度:Radians, 弧度转角度使用 cesium/Build/Documentation/Math.html?classFilter=Math#.toDegrees
+                      pitch: cameraInfo.orientation.pitch,    // 垂直, default value (looking down)
+                      roll: cameraInfo.orientation.roll                             // 倾斜, default value
+                  }
+              });
+          });
+      });
+  </script>
+</head>
+<body>
+<div id="cesium"></div>
+
+<div id="test">
+  <button>获取相机位置</button>
+  <button disabled>恢复到获取位置</button>
+</div>
+
+</body>
+</html>

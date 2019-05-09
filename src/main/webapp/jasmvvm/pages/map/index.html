@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>施工数据采集</title>
+    <script id="mapApi" src="./mapjs/jasopengis.js"></script>
+    <script>
+        var  onLayerClicked  = function (e) {
+            //业务逻辑
+            var name = "pipeline_name" ;
+            var values = ["支线04"];
+            //
+            jasMap.updateLayer("daq_median_stake_polyline",{
+                fieldName: name ,
+                fieldValues:values
+            })
+        };
+        var jasMap = new JasMap({
+            onMapLoaded: function (e) {
+                this.showMapInfo();
+//                $(".click-btn").click(function(e){
+//                    var name = $(this).attr("data-fieldName");
+//                    var value = $(this).attr("data-fieldValue");
+//                    jasMap.updateLayer("",{
+//                        fieldName: name,
+//                        fieldValue: value
+//                    })
+//                })
+            },
+            onLayerAdded: function (e) {
+
+            }
+        });
+
+    </script>
+</head>
+
+<body>
+    <input value="click" type="button" onclick="onLayerClicked">
+    <div id="jasMap" class="jasmap" style="height:80%;width:60%;"></div>
+</body>
+
+</html>
