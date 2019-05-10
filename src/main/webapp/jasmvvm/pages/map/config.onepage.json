@@ -69,8 +69,8 @@
     "attribution": false,
     "zoom": false,
     "mapOptions": {
-      "center": [111.41, 43.82],
-      "level": 6,
+      "center": [105.40071683484005,32.575070914836274],
+      "level": 4,
       "projection": "EPSG:4326",
       "resolutions2": [{
         "resolution": 0.703125,
