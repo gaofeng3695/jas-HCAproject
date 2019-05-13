@@ -1,3 +1,62 @@
+﻿---
+DROP TABLE IF EXISTS SYS_ATTACHMENT;
+DROP TABLE IF EXISTS SYS_ATTACHMENTBUSINESSRELATION;
+DROP TABLE IF EXISTS custom_db_table;
+DROP TABLE IF EXISTS custom_db_table_fields;
+DROP TABLE IF EXISTS jasdoc_user_folder_ref;
+DROP TABLE IF EXISTS jasdoc_role_folder_ref;
+DROP TABLE IF EXISTS jasdoc_recyclebin;
+DROP TABLE IF EXISTS jasdoc_folder_share_user_ref;
+DROP TABLE IF EXISTS jasdoc_folder_share;
+DROP TABLE IF EXISTS jasdoc_folder;
+DROP TABLE IF EXISTS jasdoc_file_backup_recovery;
+DROP TABLE IF EXISTS jasdoc_file_share_user_ref;
+DROP TABLE IF EXISTS jasdoc_file_associated;
+DROP TABLE IF EXISTS jasdoc_file_classify_ref;
+DROP TABLE IF EXISTS jasdoc_file;
+DROP TABLE IF EXISTS jasdoc_file_history;
+DROP TABLE IF EXISTS jasdoc_file_share;
+DROP TABLE IF EXISTS jasdoc_file_folder_ref;
+DROP TABLE IF EXISTS jasdoc_file_favorite_ref;
+DROP TABLE IF EXISTS log_business;
+
+DROP TABLE IF EXISTS custom_fun_unique_validate;
+
+DROP view IF EXISTS act_id_membership ;
+DROP TABLE IF EXISTS pri_user_role_ref;
+
+DROP TABLE IF EXISTS sys_login_log;
+DROP TABLE IF EXISTS sys_excel_template;
+DROP TABLE IF EXISTS custom_fun_fields;
+DROP TABLE IF EXISTS custom_fun_function;
+
+DROP view IF EXISTS act_id_user;
+DROP TABLE IF EXISTS pri_user;
+
+DROP view IF EXISTS act_id_group;
+DROP TABLE IF EXISTS pri_role;
+
+DROP TABLE IF EXISTS log_operate;
+DROP TABLE IF EXISTS sys_domain;
+DROP TABLE IF EXISTS pri_role_func_privilege_ref;
+DROP TABLE IF EXISTS jasdoc_apply_file_ref;
+
+DROP view IF EXISTS act_custom_app ;
+DROP TABLE IF EXISTS pri_application;
+
+DROP TABLE IF EXISTS sys_spatial_object;
+DROP TABLE IF EXISTS custom_dict;
+DROP TABLE IF EXISTS pri_func_privilege;
+DROP TABLE IF EXISTS jasdoc_classify_folder;
+DROP TABLE IF EXISTS jasdoc_deleteindex;
+DROP TABLE IF EXISTS jasdoc_dept_folder_ref;
+DROP TABLE IF EXISTS jasdoc_download_apply;
+DROP TABLE IF EXISTS jasdoc_favorite_folder;
+
+DROP TABLE IF EXISTS pri_unit;
+
+
+
 /*******框架相关数据库begin********/
 CREATE TABLE SYS_ATTACHMENT (
 	oid VARCHAR (36) NOT NULL PRIMARY KEY,
@@ -15,7 +74,6 @@ CREATE TABLE SYS_ATTACHMENT (
 	modify_time TIMESTAMP (6),
 	active smallint not null default 1
 );
-
 CREATE TABLE SYS_ATTACHMENTBUSINESSRELATION (
 	oid VARCHAR (36) NOT NULL PRIMARY KEY,
 	attachment_id VARCHAR (36) NOT NULL,
@@ -119,9 +177,6 @@ comment on column custom_db_table.table_type is '值范围（-32768 到 +32767�
 comment on column custom_db_table.table_name_cn is '数据库表中文名称';
 comment on column custom_db_table.table_desc is '数据库表描述';
 comment on column custom_db_table.row_index is '排序字段';
-
-
-
 
 /** 自定义表单-数据库-表字段信息 */
 create table custom_db_table_fields(
@@ -278,6 +333,7 @@ comment on column custom_db_table_fields.row_index is '排序';
 
 
 /** 自定义表单-数据字典 */
+
 create table custom_dict(
 	oid varchar(36) not null primary key,
 	dict_type varchar(50) not null ,
@@ -436,6 +492,7 @@ COMMENT ON COLUMN pri_application.modify_user_name IS '最近修改人姓名';
 COMMENT ON COLUMN pri_application.modify_datetime IS '最近修改时间';
 
 COMMENT ON COLUMN pri_application.active IS '数据有效标识：1有效 0无效';
+
 
 CREATE TABLE pri_func_privilege (
 oid varchar(36)  NOT NULL,
@@ -769,6 +826,7 @@ COMMENT ON COLUMN pri_user.modify_datetime IS '最近修改时间';
 
 COMMENT ON COLUMN pri_user.active IS '数据有效标识：1有效 0无效';
 
+
 CREATE TABLE pri_user_role_ref (
 oid varchar(36)  NOT NULL,
 user_id varchar(36)  NOT NULL,
@@ -808,6 +866,7 @@ COMMENT ON COLUMN pri_user_role_ref.modify_user_name IS '最近修改人姓名';
 COMMENT ON COLUMN pri_user_role_ref.modify_datetime IS '最近修改时间';
 
 COMMENT ON COLUMN pri_user_role_ref.active IS '数据有效标识：1有效 0无效';
+
 
 CREATE TABLE sys_domain (
 oid varchar(36)  NOT NULL,
@@ -849,6 +908,8 @@ COMMENT ON COLUMN sys_domain.description IS '描述';
 
 CREATE INDEX index_sys_domain_domain_name_5 ON sys_domain USING btree (domain_name);
 
+
+
 CREATE TABLE sys_excel_template (
 oid varchar(36)  NOT NULL,
 excel_template_name varchar(50) ,
@@ -887,6 +948,7 @@ COMMENT ON COLUMN sys_excel_template.excel_template_path IS '模板存储路径'
 CREATE INDEX index_sys_excel_template_excel_template_code_6 ON sys_excel_template USING btree (excel_template_code);
 
 CREATE INDEX index_sys_excel_template_excel_template_name_5 ON sys_excel_template USING btree (excel_template_name);
+
 
 CREATE TABLE sys_login_log (
 oid varchar(36)  NOT NULL,
@@ -955,6 +1017,8 @@ COMMENT ON COLUMN sys_login_log.screen_dpi IS '屏幕分辨率';
 
 CREATE INDEX index_sys_login_log_oid_140 ON sys_login_log USING btree (oid);
 
+
+
 CREATE TABLE log_business (
 oid varchar(36)  NOT NULL,
 business_id varchar(36)  NOT NULL,
@@ -982,6 +1046,7 @@ COMMENT ON COLUMN log_business.opt_type IS '操作类型';
 COMMENT ON COLUMN log_business.detail IS '详情。详情。若是更新，必须是json数组：[{dataItem:自主外包费,newValue:1000.0,oldValue:50000.0}]），其他类型则无限制';
 
 COMMENT ON COLUMN log_business.remark IS '备注';
+
 
 CREATE TABLE log_operate (
 oid varchar(36)  NOT NULL,
@@ -1040,6 +1105,7 @@ COMMENT ON COLUMN log_operate.app_name IS '应用名称';
  * */
 
 /**域值表**/
+
 create table sys_spatial_object( 
 	oid varchar(36) not null primary key,
 	wkt  TEXT ,
@@ -1071,6 +1137,7 @@ comment on column sys_spatial_object.active is '是否有效';
  * 更新时间：
  */
 /**下载申请-文档关联表**/
+
 create table jasdoc_apply_file_ref (
 	eventid varchar(38) not null primary key,
 	applyeventid varchar(38),
@@ -1084,6 +1151,7 @@ comment on column jasdoc_apply_file_ref.fileeventid is '文件或文件夹id';
 comment on column jasdoc_apply_file_ref.filetype is '类型，0表示文件，1表示文件夹';
 
 /**文档分类信息**/
+
 create table jasdoc_classify_folder (
 	id varchar(36) not null primary key,
 	parentid varchar(36) not null,
@@ -1126,6 +1194,7 @@ doceventid varchar(38)
 );
 
 /**部门对文件夹授权**/
+
 create table jasdoc_dept_folder_ref (
 	id varchar(36) not null primary key,
 	deptid varchar(36),
@@ -1136,6 +1205,9 @@ comment on table jasdoc_dept_folder_ref is '部门对文件夹授权';
 comment on column jasdoc_dept_folder_ref.id is 'uuid';
 comment on column jasdoc_dept_folder_ref.deptid is '部门id';
 comment on column jasdoc_dept_folder_ref.folderid is '资源树节点id';
+
+
+
 
 /**文档下载申请表**/
 create table jasdoc_download_apply (
@@ -1159,6 +1231,7 @@ comment on column jasdoc_download_apply.remark is '备注';
 comment on column jasdoc_download_apply.title is '标题';
 comment on column jasdoc_download_apply.createusername is '申请人姓名';
 comment on column jasdoc_download_apply.updatedate is '修改日期';
+
 
 /**我的收藏夹表信息**/
 create table jasdoc_favorite_folder (
@@ -1199,6 +1272,7 @@ comment on column jasdoc_favorite_folder.ext_field5 is '备用字段';
 comment on column jasdoc_favorite_folder.description is '文件夹描述';
 
 /****/
+
 create table jasdoc_file (
 	eventid varchar(38) not null primary key,
 	folderid varchar(38),
@@ -1279,6 +1353,7 @@ comment on column jasdoc_file.isaddwatermark is '是否已经添加水印';
 comment on column jasdoc_file.updateusername is '修改者名称';
 
 /**文件关联表**/
+
 create table jasdoc_file_associated (
 	eventid varchar(38) not null,
 	fileid varchar(38) not null,
@@ -1296,6 +1371,7 @@ comment on column jasdoc_file_associated.associateddate is '关联日期';
 comment on column jasdoc_file_associated.associateduserid is '关联人id';
 
 /****/
+
 create table jasdoc_file_backup_recovery (
 	eventid varchar(38) not null primary key,
 	filedescription varchar(2000),
@@ -1317,6 +1393,7 @@ comment on column jasdoc_file_backup_recovery.backupdatabasepath is '备份路�
 comment on column jasdoc_file_backup_recovery.backupfilepath is '文件路径';
 
 /**文档与文档分类关联信息**/
+
 create table jasdoc_file_classify_ref (
 	fileid varchar(41) not null primary key,
 	folderid varchar(36) not null,
@@ -1328,6 +1405,7 @@ comment on column jasdoc_file_classify_ref.folderid is '父类id';
 comment on column jasdoc_file_classify_ref.eventid is '主键id';
 
 /**文档与收藏夹关联信息**/
+
 create table jasdoc_file_favorite_ref (
 	fileid varchar(41) not null,
 	folderid varchar(36) not null,
@@ -1339,6 +1417,7 @@ comment on column jasdoc_file_favorite_ref.folderid is '父类id';
 comment on column jasdoc_file_favorite_ref.eventid is '主键id';
 
 /***1.文档与文档分类关联信息； 2.文档与我的收藏夹关联信息。***/
+
 create table jasdoc_file_folder_ref (
 	fileid varchar(41) not null,
 	folderid varchar(36)  not null
@@ -1347,6 +1426,7 @@ comment on table jasdoc_file_folder_ref is '1.文档与文档分类关联信息�
 comment on column jasdoc_file_folder_ref.folderid is '节点id';
 
 /**文档历史**/
+
 create table jasdoc_file_history (
 	sid numeric(27),
 	eventid varchar(36) not null primary key,
@@ -1404,6 +1484,7 @@ comment on column jasdoc_file_history.versionreark is '版本描述';
 comment on column jasdoc_file_history.versionupdatetime is '版本更新时间';
 
 /**文档共享**/
+
 create table jasdoc_file_share (
 	id varchar(36) not null primary key,
 	fileid varchar(36),
@@ -1422,6 +1503,7 @@ comment on column jasdoc_file_share.overdate is '共享过期时间';
 comment on column jasdoc_file_share.shareprivilegetype is '共享权限类型';
 
 /**共享文档与用户关联表**/
+
 create table jasdoc_file_share_user_ref (
 	id varchar(36) not null primary key,
 	jasdoc_file_shear_id varchar(36),
@@ -1434,6 +1516,7 @@ comment on column jasdoc_file_share_user_ref.sharedid is '共享对象id';
 comment on column jasdoc_file_share_user_ref.sharedtype is '共享对象类型';
 
 /**文档中心**/
+
 create table jasdoc_folder (
 	id varchar(36) not null primary key,
 	parentid varchar(36) not null,
@@ -1480,6 +1563,7 @@ comment on column jasdoc_folder.createusername is '创建者名称';
 comment on column jasdoc_folder.updateusername is '修改者名称';
 
 /**文件夹共享表**/
+
 create table jasdoc_folder_share (
 	id varchar(36) not null primary key,
 	folderdid varchar(36),
@@ -1498,6 +1582,7 @@ comment on column jasdoc_folder_share.overdate is '共享过期时间';
 comment on column jasdoc_folder_share.shareprivilegetype is '共享权限类型';
 
 /**文件夹共享与用户关联表**/
+
 create table jasdoc_folder_share_user_ref (
 	id varchar(36) not null primary key,
 	jasdoc_folder_shear_id varchar(36),
@@ -1510,6 +1595,7 @@ comment on column jasdoc_folder_share_user_ref.sharedid is '共享对象id';
 comment on column jasdoc_folder_share_user_ref.sharedtype is '共享对象类型';
 
 /**回收站信息**/
+
 create table jasdoc_recyclebin (
 	id varchar(36) not null primary key,
 	recycleobjid varchar(36) not null,
@@ -1521,6 +1607,7 @@ create table jasdoc_recyclebin (
 comment on table jasdoc_recyclebin is '回收站信息';
 
 /**角色对文件夹授权**/
+
 create table jasdoc_role_folder_ref (
 	id varchar(40) not null primary key,
 	roleid varchar(40) not null,
@@ -1533,6 +1620,7 @@ comment on column jasdoc_role_folder_ref.roleid is '对象id';
 comment on column jasdoc_role_folder_ref.folderid is '节点id';
 
 /**用户对文件夹授权**/
+
 create table jasdoc_user_folder_ref (
 	id varchar(40) not null primary key,
 	userid varchar(40) not null,
