@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>内蒙古自治区油气长输管线安全监控平台</title>
+	<title>高后果区油气长输管线安全监控平台</title>
 
 	<link rel="stylesheet" href="../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
 	<link rel="stylesheet" href="../../../lib/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -22,166 +22,60 @@
 			box-sizing: border-box;
 		}
 		.panelitem2{
-			height: 60%;
+			height: 33%;
 			padding: 0 10px 10px;
 			box-sizing: border-box;
 		}
-		.panelitem3{
-			height: 40%;
-			padding: 0 10px 10px;
-			box-sizing: border-box;
+		.pipeline{
+			display:flex;
+			flex-direction:column;
+			width:86%;
+			margin:0 auto;
+			
 		}
-
-		.height-one{
-			height: 85px;
-			margin: 10px 0;
-		}
-		.height-two{
-			height: calc(100% - 105px);
-		}
-		.height-three{
-			height: 30%;
-			padding-bottom:10px;
-			box-sizing:border-box;
-			/*margin: 10px 0;*/
-		}
-		.height-four{
-			height:70%;
-		}
-		/*
-		 * 实时警情下方样式
-		 */
-		.chart-dl{
-			font-size: 0;
-		}
-		.chart-dl dl{
-			width:25%;
-			height: 60px;
-			padding: 10px 0;
-			display: inline-block;
-			vertical-align: middle;
-			margin-bottom: 0;
-		}
-		.chart-dl dl dt,
-		.chart-dl dl dd{
-			height: 100%;
-			display: inline-block;
-			vertical-align: middle;
-		}
-		.chart-dl dl dt img{
-			width: 40px;
-			height: 40px;
-		}
-		.chart-dl dl dd{
-			padding-left:10px; 
-		}
-		.chart-dl dl dd p{
-			padding: 0;
-			margin: 0;
-			line-height: 20px;
-			color: #03affe
-		}
-		.chart-dl dl dd p:last-child{
-			font-size: 18px;
-			color: #ffcc00
-		}
-		.chart-square{
-			height: 100%;
-		}
-		.chart-circle{
-			display: flex;
-		}
-		.chart-circle dl{
-			display: inline-block;
-			vertical-align: middle;
+		.pipelineList{
 			position: relative;
-			margin: 0;
+			height:25%;
+			border-right-style:solid;
+			border-bottom-style:solid;
+			border-left-style:solid;
+			border-width:1px;
+			border-color:#5695cb;
+			border-radius:10px;
+			box-shadow: #4f73ba -1px 1px 11px 2px inset;
+			margin-top:6px;
 		}
-		.chart-circle dl:hover{
-			cursor: pointer;
+		#first_pipeline{
+			border-top:solid 1px #5695cb;
 		}
-		.chart-circle dl dd,
-		.chart-circle dl dt img{
-			width: 94px;
+		.pipelineList li {
+		    font-size:12px;
+		    color:#fff;
+		    letter-spacing : 1pt;
+		    line-height:24px;
+		    padding: 0px 10px;
 		}
-		.chart-circle dl dd{
-			position: absolute;
-			left: 0;
-			top: 0;
-			text-align: center;
+		.icon{
+			float:right;
+			color:#0ff1e9;
 		}
-		.chart-circle dl dd p{
-				color: #fff
+		.icon i{
+			margin-right: 6px;	
 		}
-		.chart-circle dl dd p:first-child{
-			margin: 0;
-			margin-top: 20px;
-			font-weight: bold;
-			font-size: 20px;
+		#factor{
+			display:flex;
+			flex-direction:column;
+			justify-content:space-around;
 		}
-		.marquee-box{
-			height: 100%;
-			padding: 15px;
-			border:1px solid #375a78;
-			box-sizing: border-box;
-			overflow: hidden;
-		}
-		legend{
-			color:#5695cb;
-			font-size:14px;
+       
+		ul{
+		list-style-type:none;
+		 position: absolute;
+		 width:100%;
+		 top: 50%;
+		 transform:translate(0,-50%);
 		}
 		
-		/*
-		 * 风险动态样式
-		 */
-		.marquee{
-			height: 100%;
-			overflow: hidden;
-			position: relative;
-		}
-		.marquee .marquee-content{
-			display: block;
-			width:100%;
-			height: 200%;
-			position: absolute;
-			overflow: hidden;
-			-webkit-animation: marquee 20s linear infinite;
-			animation: marquee 20s linear infinite;
-		}
-		.marquee p{
-			color: #72c1ea;
-			margin-bottom: 20px;
-		}
-		.marquee span{
-			color: #93eeff;
-			border-right: 1px solid #93eeff;
-			padding: 0 5px;
-		}
-		.marquee span:last-child{
-			color: #ffc000;
-			border-right: 0
-		}
-
-		@keyframes marquee {
-			from {
-				top: 0;
-			}
-			to {
-				top: -100%;
-			}
-		}
-		/*
-		 * 下拉选盒子样式
-		 */
-		.absolute-l{
-			position: absolute;
-			left: 0;
-			top: 25px;
-			z-index: 10;
-		}
-		.select-box{
-			height: 30px; 
-		}
 			/*
 			 * 地图模块下面描述信息样式
 			 */
@@ -191,78 +85,143 @@
 				position: relative;
 			}
 			.map-info{
-				position: absolute;
-				bottom: 0;
-				height: 20%;
-				/* width: 100%; */
-				width: 98%;
-				padding: 36px;
-				box-sizing: border-box;
-				/* color: #72c1ea; */
-				color: #ffffff; 
+				width: 94%;
 				background-color: #060e224d;
-				line-height: 30px;
 				margin: 10px;
 				
 			}
 			.map-info p{
-				    text-indent: 30px;
+			 text-indent: 30px;
 			}
 			.map-info span{
 				color: #ffc000;
 				font-size: 14px;
 			}
-			/*
-			 * 合法合规监控
-			 */
-			.fieldset-body{
-				height:100%;
-				display: flex;
-				justify-content: space-around;
-				align-items: stretch;
+			.rank-table-my{
+			    width:100%;
+			    /*height: 100%;*/
+			    text-align: center;
+			    border-spacing: 5px;
+			    border-collapse: separate;
+			    z-index: 10;
 			}
-			.fieldset-group{
-				flex-basis: 46%;
-				border: 1px solid #375a78;
-				padding: 10px;
-    			box-sizing: border-box;
+			.rank-table-my th{
+			    text-align: center;
+			    font-size: 12px;
+			    color: #f1f2ea;
 			}
-			.fieldset-group:hover{
-				cursor: pointer;
+			.rank-table-my tr th,
+			.rank-table-my tr td{
+			    height:30px;
+			    line-height:30px;
+			    font-size: 12px;
+			    color:#f1f2ea;
 			}
+			.rank-table-my tr span{
+			    display: block;
+			}
+			.rank-table-my tbody tr:nth-child(odd) td{
+			    background: #111e2f;
+			}
+			.rank-table-my tbody tr:nth-child(even) td{
+			    background: #0a1727;
+			}
+			.rank-table-my tbody tr td:first-child{
+			    color:rgba(255,255,255,0.7);
+			}
+			
+			.fieldset-body-top{
+    width:100%;
+    height:50%;
+    display: flex;
+    justify-content: space-between;
+    align-items:stretch
+}
+.fieldset-item-top{
+    flex-basis:100%;
+    display: flex;
+}
 
-			.fieldset-group .fieldset-item span{
-				display:inline-block;
-				vertical-align:middle;
-				line-height: 30px;
-			}
+.fieldset-item-top .item-img{
+    flex-basis:40%;
+    position:relative
+}
+.fieldset-item-top .item-img img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate;
+    transform: translate(-50%,-50%);
+}
+.fieldset-item-top .item-info{
+    flex-basis:60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fieldset-item-top .item-info .item-title{
+    /* font-size: 13px; */
+    font-size: 16px;
+    color: #eeeeee;
+    line-height: 30px;
+}
+.fieldset-item-top .item-info .item-val span{
+    /* font-size: 15px; */
+    font-size: 16px;
+    color: #0ff1e9;
+}
+.fieldset-item-top .item-info .item-val{
+    font-size:32px;
+/*     font-size:24px; */
+    color:#0ff1e9
+}
 
-			.fieldset-group .weijian,
-			.fieldset-group .no-update,
-			.fieldset-group .weigui{
-				width:24px;
-				height:24px;
-			}
-			.fieldset-group .weijian{
-				background:url("./image/weijian.png")no-repeat center center;
-				background-size:24px 24px;
-			}
-			.fieldset-group .no-update{
-				background:url("./image/no-update.png")no-repeat center center;
-				background-size:24px 24px;
-			}
-			.fieldset-group .weigui{
-				background:url("./image/weigui.png")no-repeat center center;
-				background-size:24px 24px;
-			}
-			.fieldset-group .item-label{
-				margin:0 6px;
-				color: #eeeeee;
-			}
-			.fieldset-group .item-val{
-				font-size: 20px;
-    			color: #0ff1e9;
-			}
+.fieldset-body-top-one{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+.fieldset-item-top-one{
+    flex-basis:50%;
+    display: inline-block;
+}
+.fieldset-item-top-one .item-img{
+    flex-basis:50%;
+    position:relative
+}
+.fieldset-item-top-one .item-img img{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate;
+    transform: translate(-50%,-50%);
+}
+.fieldset-item-top-one .item-info{
+    flex-basis:60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fieldset-item-top-one .item-info .item-title{
+    /* font-size: 13px; */
+    font-size: 16px;
+    color: #eeeeee;
+    line-height: 30px;
+}
+.fieldset-item-top-one .item-info .item-val span{
+    /* font-size: 15px; */
+    font-size: 16px;
+    color: #0ff1e9;
+}
+.fieldset-item-top-one .item-info .item-val{
+    font-size:32px;
+/*     font-size:24px; */
+    color:#0ff1e9
+}
+			
+			
 	</style>
 </head>
 
@@ -271,50 +230,129 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="left">
 				<div class="panelitem">
-					<jas-panel-opacity title="实时警情">
-						<div  style="height:100%;">
-							<div class="height-one" style="overflow:hidden">
-								<div class="chart-circle" style=" position: relative;float: left;left: 50%; margin-left: -141px;">
-									<dl >
-										<dt><img src="./image/title-red.png" alt=""></dt>
-										<dd>
-											<p>1</p>
-											<p>I级</p>
-										</dd>
-									</dl>
-									<dl >
-										<dt><img src="./image/title-orange.png" alt=""></dt>
-										<dd>
-											<p>1</p>
-											<p>II级</p>
-										</dd>
-									</dl>
-									<dl @click="openRiskDetail">
-										<dt><img src="./image/title-yellow.png" alt=""></dt>
-										<dd>
-											<p>3</p>
-											<p>III级</p>
-										</dd>
-									</dl>
-								</div>
+					<jas-panel-opacity title="管线管理">
+						<div class="pipeline" style="height:100%;">
+							<div class="pipelineList" id="first_pipeline">
+								<ul >
+									<li><span>管线名称：</span>陕京四线
+									<div class="icon" style="color: #f02123;">未识别</div>
+									</li>
+									<li><span>管线长度：</span>123KM</li>
+									<li><span>最近评价时间：</span>2019年4月12日</li>
+								</ul>
 							</div>
-							<div class="height-two">
-								<fieldset  class="chart marquee-box">
-									<legend>风险动态</legend>
-									<div class="marquee">
-										<div class="marquee-content">
-											<p v-for="item in riskListData">{{item.desc}}<span>{{item.status1}}</span><span>{{item.status2}}</span><span>{{item.status3}}</span></p>
-										</div>
-									</div>
-								</fieldset>
+							<div class="pipelineList" >
+								<ul >
+									<li><span>管线名称：</span>京津线
+									<div class="icon">已识别</div>
+									</li>
+									<li><span>管线长度：</span>83.4KM</li>
+									<li><span>最近评价时间：</span>2018年6月13日
+									<div class="icon" style="color: #ffb719;">距下次识别还有27天</div>
+									</li>
+									
+								</ul>
 							</div>
-
+							<div class="pipelineList" >
+								<ul >
+									<li><span>管线名称：</span>秦京线
+									<div class="icon">已识别</div>
+									</li>
+									<li><span>管线长度：</span>324.6KM</li>
+									<li><span>最近评价时间：</span>2019年4月22日</li>
+								</ul>
+							</div>
+							<div class="pipelineList" >
+								<ul >
+									<li><span>管线名称：</span>潜荆线
+									<div class="icon">已识别</div>
+									</li>
+									<li><span>管线长度：</span>90KM</li>
+									<li><span>最近评价时间：</span>2019年2月14日</li>
+								</ul>
+							</div>
+							
+							
 						</div>
 					</jas-panel-opacity>
 				</div>
 				<div class="panelitem">
-					<jas-panel-opacity title="监管绩效考核">
-						<div id="performance" style="height:100%;"></div>
+					<jas-panel-opacity title="要素管理">
+						<div id="factorButton" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
+						<div id="factor" style="height: 100%;">
+                    		       <div style="height: 30%;">
+	                        <div class="fieldset-body-top">
+		                        <div class="fieldset-item-top">
+		                            <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/1.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">240<span> km<span></p>  
+	                                        <p class="item-title">独立民居</p>
+	                                    </div>  
+	                                </div>  
+	                                <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/2.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">87<span> km<span></p>  
+	                                        <p class="item-title">特定场所</p>
+	                                    </div>  
+	                                </div>  
+		                        </div>  
+		                    </div>
+	                    </div>
+	                           <div style="height: 30%;">
+	                        <div class="fieldset-body-top">
+		                        <div class="fieldset-item-top">
+		                            <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/2.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">120<span> km<span></p>  
+	                                        <p class="item-title">易燃易爆场所</p>
+	                                    </div>  
+	                                </div>  
+	                                <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/3.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">70<span> km<span></p>  
+	                                        <p class="item-title">商业区</p>
+	                                    </div>  
+	                                </div>  
+		                        </div>  
+		                    </div>
+	                    </div>
+	                           <div style="height: 30%;">
+	                        <div class="fieldset-body-top">
+		                        <div class="fieldset-item-top">
+		                            <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/3.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">242<span> km<span></p>  
+	                                        <p class="item-title">工业区</p>
+	                                    </div>  
+	                                </div>  
+	                                <div class="fieldset-item-top">
+	                                    <div class="item-img">
+	                                        <img src="./image/1.png" alt="">
+	                                    </div>
+	                                    <div class="item-info">
+	                                        <p class="item-val">72<span> km<span></p>  
+	                                        <p class="item-title">规划区</p>
+	                                    </div>  
+	                                </div>  
+		                        </div>  
+		                    </div>
+	                    </div>
+           				 </div>
 					</jas-panel-opacity>
 				</div>
 			</template>
@@ -350,25 +388,7 @@
 							> 
 						</el-switch>					
 					 </div>
-					 <!--图层筛选条件-->
-					 <div class="select-div">
-							<el-select v-model="areaVal" @change="areaChange" placeholder="请选择" style="width:180px;margin-right: 10px;">
-								<el-option
-								v-for="item in areaOption"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value">
-								</el-option>
-							</el-select>
-							<el-select v-model="companyVal" @change="companyChange"  placeholder="请选择" style="width:180px;">
-								<el-option
-								v-for="item in companyOption"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value">
-								</el-option>
-							</el-select>
-					 </div>
+			
 
 					 <!--图层操作按钮-->
 					 <div class="operate-div">
@@ -380,68 +400,36 @@
 					 </div>
 
 					  <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
-					 <div class="map-info" v-show="!ismax" >
- 							<!-- <p><font >内蒙古自治区管辖长输管线</font><span>30</span><font>条，规划设计管线</font><span>6800</span><font>公里在建管线长度</font><span>550</span><font>公里，在役管线总长度</font><span>5200</span><font>公里，其中，天然气管线</font><span>4000</span><font>公里，石油管线</font><span>1200</span><font>公里。各类型场站</font><span>30</span><font>个，阀室</font><span>300</span><font>座，输气压力</font><span>6~10</span><font>Mpa,气源主要接收来自中陕京四线天然气管道，长呼天然气管线，年供气能力达</font><span>200</span><font >亿立方米</font></p> -->
-							<p>内蒙古自治区管辖长输管线<span>30</span>条，规划设计管线<span>6800</span>公里在建管线长度<span>550</span>公里，在役管线总长度<span>5200</span>公里，其中，天然气管线<span>4000</span>公里，石油管线<span>1200</span>公里。各类型场站<span>30</span>个，阀室<span>300</span>座，输气压力<span>6~10</span>Mpa,气源主要接收来自中陕京四线天然气管道，长呼天然气管线，年供气能力达<span>200</span>亿立方米</p>
-						</div>
 				 </div>
 			</template>
 			<template slot="right">
 				<div class="panelitem2">
-					<jas-panel-opacity title="合法合规监控">
-						<div style="height:100%">
-							<div class="height-three">
-								<div class="chart-square">
-									<div class="fieldset-body">
-										<fieldset class="fieldset-group">
-											<legend>内检测区</legend>
-											<div class="fieldset-item" @click="showNeiJianCe">
-												<span class="weijian"></span><span class="item-label">过期未检</span><span class="item-val">800<span style="font-size:14px">&nbsp;Km</span></span>
-											</div>
-											<div class="fieldset-item" @click="showNeiJianCe">
-												<span class="weigui"></span><span class="item-label">违规企业</span><span class="item-val">3<span style="font-size:14px">&nbsp;家</span></span>
-											</div>
-										</fieldset>
-										<fieldset class="fieldset-group">
-											<legend>高后果区</legend>
-											<div class="fieldset-item" @click="showGaoHouGuo">
-												<span class="no-update"></span><span class="item-label">待更新 &nbsp;&nbsp;  </span><span class="item-val">500<span style="font-size:14px">&nbsp;个</span></span>
-											</div>
-											<div class="fieldset-item" @click="showGaoHouGuo">
-												<span class="weigui"></span><span class="item-label">违规企业</span><span class="item-val">3<span style="font-size:14px">&nbsp;家</span></span>
-											</div>
-										</fieldset>
-									</div>
-								</div>
-							</div>
-							<div class="height-four">
-								<!--<h6 class="chart-title" style="position: relative"> 
-									<div class="absolute-l select-box">
-										<el-select v-model="optVal1" placeholder="请选择" style="width:100px;">
-											<el-option
-											v-for="item in options1"
-											:key="item.value"
-											:label="item.label"
-											:value="item.value">
-											</el-option>
-										</el-select>
-										<el-select v-model="optVal2" placeholder="请选择" style="width:100px;">
-											<el-option
-											v-for="item in options2"
-											:key="item.value"
-											:label="item.label"
-											:value="item.value">
-											</el-option>
-										</el-select>
-									</div>
-								</h6>-->
-								<div id="legalMonitoring" style="height:100%;"> </div>
-							</div>
+					<jas-panel-opacity title="高后果区等级比例">
+						<div style="height:100%;">
+							<div id="thematic_statistics_pie" style="height:100%"></div>
 						</div>
 					</jas-panel-opacity>
 				</div>
-				<div class="panelitem3">
-					<jas-panel-opacity title="安全趋势图">
+				<div class="panelitem2">
+					<jas-panel-opacity title="高后果区信息">
+						<div class="map-info" v-show="!ismax">
+							<table class="rank-table-my">
+								<thead>
+									<tr> 
+										<th>序号</th> <th>项目名称</th> <th>I级高后果区</th><th>II级高后果区</th><th>III级高后果区</th><th>最近识别时间</th><th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr v-for="(item,index)  in detailData"> 
+										<td><span>{{index+1}}</span></td><td>{{item.projectName}}</td> <td>{{item.one}}</td><td>{{item.two}}</td><td>{{item.three}}</td><td>{{item.datetime}}</td><td><i class="fa fa-eye" style="color:#efc276" aria-hidden="true"></i></td>
+									</tr>
+								</tbody>
+							</table>
+					</div>
+					</jas-panel-opacity>
+				</div>
+				<div class="panelitem2">
+					<jas-panel-opacity title="高后果区数量变化图">
 						<div id="safeTrend" style="height:100%;"> </div>
 					</jas-panel-opacity>
 				</div>
@@ -481,70 +469,21 @@
 				value3: true,   // 地图切换按钮样式
 	            value4: true,
 	            value5: true,
-
-				optVal1:"",  // 下拉选值
-				optVal2:"",
-				options1:[   // 下拉选选项值
-					{"label":"全部高后果区","value":"0"},
-					{"label":"I级高后果区","value":"1"},
-					{"label":"II级高后果区","value":"2"},
-					{"label":"III级高后果区","value":"3"},
-				],
-				options2:[
-					{"label":"总览","value":"0"},
-					{"label":"2019","value":"2019"},
-					{"label":"2018","value":"2018"},
-					{"label":"2017","value":"2017"},
-				],
-
-				areaVal:"全自治区",
-				areaOption:[   // 下拉选选项值
-					{"label":"全自治区","value":"全自治区"},
-					{"label":"呼和浩特","value":"呼和浩特"},
-					{"label":"鄂尔多斯","value":"鄂尔多斯"},
-					{"label":"包头","value":"包头"},
-					{"label":"赤峰","value":"赤峰"},
-					{"label":"乌海","value":"乌海"},
-					{"label":"呼伦贝尔","value":"呼伦贝尔"},
-					{"label":"兴安盟","value":"兴安盟"},
-					{"label":"通辽","value":"通辽"},
-					{"label":"锡林郭勒盟","value":"锡林郭勒盟"},
-					{"label":"乌兰察布","value":"乌兰察布"},
-					{"label":"巴彦淖尔","value":"巴彦淖尔"},
-					{"label":"阿拉善盟","value":"阿拉善盟"},
-				],
-
-				companyVal:"全部企业",
-				companyOption:[   // 下拉选选项值
-					{"label":"全部企业","value":"全部企业"},
-					{"label":"内蒙古西部天然气管道运行有限公司","value":"内蒙古西部天然气管道运行有限公司"},
-					{"label":"中国石油天然气股份有限公司管道长庆输气分公司","value":"中国石油天然气股份有限公司管道长庆输气分公司"},
-					{"label":"乌海华油天然气有限责任公司","value":"乌海华油天然气有限责任公司"},
-					{"label":"阿拉善盟深中能源发展有限公司","value":"阿拉善盟深中能源发展有限公司"},
-					{"label":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司","value":"内蒙古兴洁天然气有限公司西部天然气管道运行有限公司"},
-					{"label":"中国石油天然气股份有限公司管道长庆输油气分公司","value":"中国石油天然气股份有限公司管道长庆输油气分公司"},
-					{"label":"中国石油东部有限公司西气东输银川管理处","value":"中国石油东部有限公司西气东输银川管理处"},
-				],
+	            detailData:[],
 
 			}
 		},
 		watch: {
 			// 如果需要联动
 			areaVal: function (newval, oldval) {
-				
 			},
 			// 地图最大化的监控
 			ismax:function (newval, oldval) {
 				console.log("111111");
 				var that = this;
-				// if(newval){
-					// alert("执行全屏地图的操作方法")
 					this.$nextTick(function(){
 						that.jasMap.resizeMap()
 					})
-				// }else{
-				// 	// alert("执行缩放地图的操作方法")
-				// }
 			},
 		},
 		computed: {},
@@ -553,18 +492,18 @@
 			$(function(){
 				// 获取chart图表数据
 				that.getChartData();
+				that.getThematicStatisticsPie();
+				that.detailData=[
+									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
+									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
+									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
+									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"}
+								];
 				
 			})
 
 			 var data = {
 						"status":1,
-						"riskList":[
-							{"desc":"2018-12-11,金山立交北侧295.44米[111961,25576]坐标，白石头沟生态旅游区附近第三方施工机械擦伤管道，管线工巡查巡检。","status1":"已签收","status2":"已派单","status3":"抢维修"},
-							{"desc":"2018-12-11,金山立交北侧295.44米[111961,25576]坐标，白石头沟生态旅游区附近第三方施工机械擦伤管道，管线工巡查巡检。","status1":"已签收","status2":"已派单","status3":"抢维修"},
-							{"desc":"2018-12-11,金山立交北侧295.44米[111961,25576]坐标，白石头沟生态旅游区附近第三方施工机械擦伤管道，管线工巡查巡检。","status1":"已签收","status2":"已派单","status3":"抢维修"},
-							{"desc":"2018-12-11,金山立交北侧295.44米[111961,25576]坐标，白石头沟生态旅游区附近第三方施工机械擦伤管道，管线工巡查巡检。","status1":"已签收","status2":"已派单","status3":"抢维修"},
-							{"desc":"2018-12-11,金山立交北侧295.44米[111961,25576]坐标，白石头沟生态旅游区附近第三方施工机械擦伤管道，管线工巡查巡检。","status1":"已签收","status2":"已派单","status3":"抢维修"},
-						],
 						"riskGrade":[
 							{"Num":"1","grade":"I级"},
 							{"Num":"1","grade":"II级"},
@@ -583,6 +522,7 @@
             that.jasMap = new JasMap({
                 appConfig:that.mapConfig
             });
+           
 		},
 		methods: {
 			getChartData:function () {
@@ -593,17 +533,7 @@
 				// 	if(data.status == 1){
 					    var data = {
 							"status":1,
-							"LegalMonitoring":{
-								"legend":[{"name":"内检测待检里程","icon":"circle"},{"name":"高后果区待更新","icon":"circle"}],
-								"month": ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
-								"add":["392","200","400","463","250","386","400","400","544","500","450","440"],
-								"end":["300","400","300","383","463","298","515","404","300","368","340","340"]
-							},
-							"Performance":{
-								"xAxisData":["呼和浩特","鄂尔多斯","包头市","赤峰市"],
-								"year1":["46","6","20","36"],
-								"year2":["78","14","60","50"]
-							},
+						
 							"SafeTrend":{
 								"month": ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],
 								"year1":["2.90","4.00","5.00","5.00","3.00","4.00","3.00","2.00","5.00","6.00","4.00","3.00"],
@@ -611,295 +541,14 @@
 							}
 						};
 
-						that.PerformanceData = data.Performance;
-						that.PerformanceChart();
-
-						that.LegalMonitoringData = data.LegalMonitoring;
-						that.LegalMonitoringChart();
+						
 
 						that.SafeTrendData = data.SafeTrend;
 						that.safeTrendChart();
 					// }
 				// });
 			},
-			PerformanceChart:function(){
-				var that = this;
-				if (!this.ChartPerformance) {
-					console.log(document.getElementById('performance'))
-					this.ChartPerformance = echarts.init(document.getElementById('performance'));
-					$(window).resize(function () {
-						that.ChartPerformance.resize();
-					});
-				}
-				// 指定图表的配置项和数据
-
-				    option = {
-						textStyle: {
-							color: "#5695cb",
-							fontSize: 12
-						},
-						tooltip : {
-							trigger: 'axis',
-							axisPointer: {
-								type: 'shadow',
-								label: {
-									show: true
-								}
-							}
-						},
-						legend: {
-							right:"0%",
-							textStyle:{
-								color:"#03affe"
-							},
-							data:['已整改', '未整改']
-						},
-						grid: {
-							top: '12%',
-							left: '10%',
-							right: '0%',
-							bottom:"12%"
-						},
-						xAxis: [
-							{
-								type : 'category',
-								axisLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-								data:that.PerformanceData.xAxisData,
-								// data : ["占压隐患","III级高后果区","重大工地","地灾风险","内检测"]
-							}
-					],
-					yAxis: [
-							{
-								type : 'value',
-								name : '(条)',
-								splitLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-								axisLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-							}
-						],
-						series : [
-							{
-								name: '已整改',
-								type: 'bar',
-								barWidth:25,
-								itemStyle:{
-									normal:{
-										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-											offset: 0,
-											color: '#6950d2'
-											}, {
-											offset: 1,
-											color: '#9b4457'
-										}])
-
-									}
-								},
-								label: {
-									normal: {
-										show: true,
-										position: 'top',
-										textStyle:{
-											color:"#f1f2ea"
-										}
-									}
-								
-								},
-								data:that.PerformanceData.year1,
-								// data: ["732","38","725","42","423"]
-							},
-							{
-								name: '未整改',
-								type: 'bar',
-								barWidth:25,
-								itemStyle:{
-									normal:{
-										color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-											offset: 0,
-											color: '#0a8fca'
-											}, {
-											offset: 1,
-											color: '#2c46b5'
-											
-										}])
-									}
-								},
-								label: {
-									normal: {
-										show: true,
-										position: 'top',
-										textStyle:{
-											color:"#f1f2ea"
-										}
-										
-									}
-								},
-								data:that.PerformanceData.year2,
-								// data: ["1159","158","1028","107","856"]
-							}
-						]
-					};
-
-				
-				// 使用刚指定的配置项和数据显示图表。
-				this.ChartPerformance.setOption(option);
-				this.ChartPerformance.on("click",function(parame){
-					that.showDuBanList();
-				})
-			},
-			LegalMonitoringChart:function(){
-				var that = this;
-				if (!this.ChartLegalMonitoring) {
-					this.ChartLegalMonitoring = echarts.init(document.getElementById('legalMonitoring'));
-					$(window).resize(function () {
-						that.ChartLegalMonitoring.resize();
-					});
-				}
-
-				 option = {
-					textStyle: {
-							color: "#5695cb",
-							fontSize: 12
-						},
-					tooltip : {
-						trigger: 'axis',
-						axisPointer: {
-							type: 'shadow',
-							label: {
-								show: true
-							}
-						}
-					},
-					legend: {
-						right:"0%",
-						top:"5%",
-						textStyle:{
-							color:"#03affe"
-						},
-						data:that.LegalMonitoringData.legend,
-						// data:[
-						// 	{name:'内检测待检里程',icon:"circle"},
-						// 	{name:'高后果区待更新',icon:"circle"}
-						// ]
-					},
-					grid: {
-						top: '30%',
-						left: '10%',
-						right: '10%',
-						bottom:"12%"
-					},
-					xAxis: [
-							{
-								name: '月份',
-								type : 'category',
-								axisLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-								data:that.LegalMonitoringData.month,
-								// data : ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月",]
-							}
-					],
-					yAxis: [
-							{
-								name: '内检测\n待检里程(Km)',
-								type : 'value',
-								splitLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-								axisLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								}
-							},
-							{
-								name: '高后果区\n待更新(个)',
-								type : 'value',
-								splitLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								},
-								axisLine:{
-									lineStyle:{
-										color:"#5695cb"
-									}
-								}
-							}
-						],
-						series : [
-							{
-								name: '内检测待检里程',
-								type: 'line',
-								symbol:'circle',
-								symbolSize:4,
-								label: {
-									normal: {
-										show: true,
-										position: 'top',
-										textStyle:{
-											color:"#f1f2ea"
-										}
-									}
-								},
-								itemStyle:{
-									normal: {
-										color:"#ffcc00"
-									} 
-								},
-								lineStyle:{
-								normal: {
-										color:"#ffcc00"
-									} 
-								},
-								data:that.LegalMonitoringData.add,
-								// data: ["492","56","700","563","599","486","698","764","953","644","0","0"]
-							},{
-								name: '高后果区待更新',
-								type: 'line',
-								symbol:'circle',
-								symbolSize:4,
-								yAxisIndex:1,
-								label: {
-									normal: {
-										show: true,
-										position: 'top',
-										textStyle:{
-											color:"#f1f2ea"
-										}
-									}
-								},
-								itemStyle:{
-									normal: {
-										color:"#0f9ca5"
-									} 
-								},
-								lineStyle:{
-								normal: {
-										color:"#0f9ca5"
-									} 
-								},
-								data:that.LegalMonitoringData.end,
-								// data: ["946","394","259","483","563","398","615","504","812","468","0","0"]
-							}
-						]
-					};
-				this.ChartLegalMonitoring.setOption(option,true);
-			},
+			
 			safeTrendChart:function(){
 				var that = this;
 				if (!this.ChartsafeTrend) {
@@ -989,16 +638,16 @@
 								},
 								lineStyle:{
 								normal: {
-										color:"#c6697c"
+										color:"#ff2d2d"
 									} 
 								},
 								itemStyle:{
 								normal: {
-										color:"#c6697c"
+										color:"#ff2d2d"
 									} 
 								},
 								// data:that.SafeTrendData.year1
-								data: ["2.90","4.00","5.00","5.00","3.00","4.00","3.00","2.00","5.00","6.00","4.00","3.00"]
+								data: ["2","4","5","5","3","4","3","2","5","6","4","3"]
 							},{
 								name: '2018',
 								type: 'line',
@@ -1018,22 +667,73 @@
 								},
 								lineStyle:{
 								normal: {
-										color:"#388fc5"
+										color:"#28ffd9"
 									} 
 								},
 								itemStyle:{
 								normal: {
-										color:"#388fc5"
+										color:"#28ffd9"
 									} 
 								},
 								
 								// data:that.SafeTrendData.year2
-								data: ["2.90","3.00","2.50","3.60","4.00","2.00","3.80","4.70","5.40","5.00","4.70","5.00"]
+								data: ["2","3","2","3","4","2","3","4","5","50","4","5"]
 							}
 						]
 					};
 			
 				this.ChartsafeTrend.setOption(option,true);
+			},
+			getThematicStatisticsPie:function(){
+				var that = this;
+				if(!this.thematicStatisticsPie){
+					that.thematicStatisticsPie = echarts.init(document.getElementById('thematic_statistics_pie'));
+					$(window).resize(function () {
+						that.thematicStatisticsPie.resize();
+					});
+				}
+				var option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'horizontal',
+				        left: 'right',
+				        data: ['Ⅰ级','Ⅱ级','Ⅲ级'],
+				        textStyle:{
+							color:"#f1f2ea"					            	
+				        }
+				    },
+				    textStyle:{
+						color:"#f1f2ea"					            	
+				    },
+				    series : [{
+			            name: '等级',
+			            type: 'pie',
+			            color:['#ff2d2d','#ff7400','#ffb719'],
+			            radius : '55%',
+			            data:[
+			                {value:75, name:'Ⅰ级'},
+			                {value:105, name:'Ⅱ级'},
+			                {value:154, name:'Ⅲ级'}
+			            ],
+			            label: {
+			                normal: {
+			                    show: true,
+			                    formatter: "{b}: {d}%",
+			                    position: 'top'
+			                },
+			                emphasis: {
+			                    shadowBlur: 10,
+			                    shadowOffsetX: 0,
+			                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                    }
+		            	}
+			        }]
+				};
+				this.thematicStatisticsPie.setOption(option);
+				
 			},
 			openRiskDetail:function(){
 				// $(".map-info").hide();
