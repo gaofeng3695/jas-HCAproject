@@ -231,11 +231,12 @@
 			<template slot="left">
 				<div class="panelitem">
 					<jas-panel-opacity title="管线管理">
+						<div id="pipelineButton" @click="pipelineMapPage" :style="[pipelineStyle]" @mouseover="isActive1=true" @mouseout="isActive1=false" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
 						<div class="pipeline" style="height:100%;">
 							<div class="pipelineList" id="first_pipeline">
 								<ul >
 									<li><span>管线名称：</span>陕京四线
-									<div class="icon" style="color: #f02123;">未识别</div>
+									<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>123KM</li>
 									<li><span>最近评价时间：</span>2019年4月12日</li>
@@ -244,7 +245,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>京津线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(2)]" @mouseover="isClick=2" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>83.4KM</li>
 									<li><span>最近评价时间：</span>2018年6月13日
@@ -256,7 +257,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>秦京线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(3)]" @mouseover="isClick=3" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>324.6KM</li>
 									<li><span>最近评价时间：</span>2019年4月22日</li>
@@ -265,7 +266,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>潜荆线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(4)]" @mouseover="isClick=4" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>90KM</li>
 									<li><span>最近评价时间：</span>2019年2月14日</li>
@@ -278,7 +279,7 @@
 				</div>
 				<div class="panelitem">
 					<jas-panel-opacity title="要素管理">
-						<div id="factorButton" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
+						<div id="factorButton" @click="gotoMapPage" :style="[activeStyle]" @mouseover="isActive=true" @mouseout="isActive=false" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
 						<div id="factor" style="height: 100%;">
                     		       <div style="height: 30%;">
 	                        <div class="fieldset-body-top">
@@ -288,7 +289,7 @@
 	                                        <img src="./image/1.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">240<span> km<span></p>  
+	                                        <p class="item-val">240<span> 处<span></p>  
 	                                        <p class="item-title">独立民居</p>
 	                                    </div>  
 	                                </div>  
@@ -297,7 +298,7 @@
 	                                        <img src="./image/2.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">87<span> km<span></p>  
+	                                        <p class="item-val">17<span> 处<span></p>  
 	                                        <p class="item-title">特定场所</p>
 	                                    </div>  
 	                                </div>  
@@ -312,7 +313,7 @@
 	                                        <img src="./image/2.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">120<span> km<span></p>  
+	                                        <p class="item-val">12<span> 处<span></p>  
 	                                        <p class="item-title">易燃易爆场所</p>
 	                                    </div>  
 	                                </div>  
@@ -321,7 +322,7 @@
 	                                        <img src="./image/3.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">70<span> km<span></p>  
+	                                        <p class="item-val">7<span> 处<span></p>  
 	                                        <p class="item-title">商业区</p>
 	                                    </div>  
 	                                </div>  
@@ -336,7 +337,7 @@
 	                                        <img src="./image/3.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">242<span> km<span></p>  
+	                                        <p class="item-val">24<span> 处<span></p>  
 	                                        <p class="item-title">工业区</p>
 	                                    </div>  
 	                                </div>  
@@ -345,7 +346,7 @@
 	                                        <img src="./image/1.png" alt="">
 	                                    </div>
 	                                    <div class="item-info">
-	                                        <p class="item-val">72<span> km<span></p>  
+	                                        <p class="item-val">7<span> 处<span></p>  
 	                                        <p class="item-title">规划区</p>
 	                                    </div>  
 	                                </div>  
@@ -470,6 +471,10 @@
 	            value4: true,
 	            value5: true,
 	            detailData:[],
+	            isActive:false,
+	            isActive1:false,
+	            isClick:'0',
+	            
 
 			}
 		},
@@ -479,14 +484,27 @@
 			},
 			// 地图最大化的监控
 			ismax:function (newval, oldval) {
-				console.log("111111");
 				var that = this;
 					this.$nextTick(function(){
 						that.jasMap.resizeMap()
 					})
 			},
 		},
-		computed: {},
+		computed: {
+			activeStyle:function(){
+				if(this.isActive){
+				return {color:'#0ff1e9'};
+				}
+				return {color:'#3a9ebf'};
+			},
+			pipelineStyle:function(){
+				if(this.isActive1){
+				return {color:'#0ff1e9'};
+				}
+				return {color:'#3a9ebf'};
+			},
+			
+		},
 		created: function () {
 			var that = this;
 			$(function(){
@@ -735,6 +753,22 @@
 				this.thematicStatisticsPie.setOption(option);
 				
 			},
+			gotoMapPage:function(){
+				location.href="../hca-operation/factorOperation.html";
+			},
+			pipelineMapPage:function(){
+				location.href="../hca-operation/factorOperation.html";
+			},
+			intoMap:function(){
+				location.href="../hca-operation/operation.html";
+			},
+			buttonStyle:function(index){
+				if(this.isClick==index){
+				return {color:'#03cd68'};
+				}
+				return {color:'#08744b'};
+			},
+			
 			openRiskDetail:function(){
 				// $(".map-info").hide();
 				// alert(jasTools.base.rootPath);
@@ -858,6 +892,7 @@
                 target[key] = idx + 1;
                 this.jasMap.flashGraphic( target ,this.layerId);
 			},
+			
 			openDetail:function(dataType){
 				jasTools.selfDialog.show({
 					title: '详情列表',
