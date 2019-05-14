@@ -31,9 +31,7 @@
 	<div id="app" v-cloak>
 		<el-row style="padding:15px 5px">
 			<el-button size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-pencil">修改</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button>
+		
 		  </el-row>
 		<table class="rank-table">
 			<thead>
@@ -45,7 +43,7 @@
 				<tr v-for="(item,index)  in detailData"> 
 					<td><input  name="boxs" type="checkbox"/></td>
 					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
-					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> 
+					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td><td><i size="small"  class="fa fa-info-circle">详情&emsp;</i><i size="small" class="fa fa-arrow-down">导入&emsp;</i><i size="small"  class="fa fa-pencil">修改&emsp;</i><i size="small"  class="fa fa-minus">删除</i><td> 
 				</tr>
 			</tbody>
 		</table>
@@ -60,7 +58,7 @@
 <script>
 	var dataList = {
 			"pipeline":{
-				"title":["","序号","项目名称","管线名称","管线编号","起始里程","终止里程","管道长度","最近识别时间"],
+				"title":["","序号","项目名称","管线名称","管线编号","起始里程","终止里程","管道长度","最近识别时间","操作"],
 				"data":[{
 						"a": "内蒙古项目",
 						"b": "内蒙古西部管道",
