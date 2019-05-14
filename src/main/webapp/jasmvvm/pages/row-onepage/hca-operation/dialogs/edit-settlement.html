@@ -117,6 +117,7 @@
 		},
 		methods: {
             cancel: function(){
+				this.jasMap.startPanMode();
                 top.jasTools.selfDialog.close();
             },
             createBuffer: function(){

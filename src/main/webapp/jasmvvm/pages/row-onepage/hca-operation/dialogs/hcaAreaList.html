@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.rank-table th,
+		.rank-table td{
+			white-space: nowrap;
+		}
+		.el-button--primary.is-plain{
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<el-row style="padding:15px 5px">
+			<el-button size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
+		</el-row>
+		<table class="rank-table">
+			<thead>
+				<tr>
+					<th v-for="item in titleData">{{item}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="(item,index)  in detailData" @click="openAreaList"> 
+					<td >{{index+1}}</td>
+					<td><span>{{item.versionName}}</span></td> 
+					<td><span>{{item.versionCode}}</span></td> 
+					<!-- <td><span>{{item.hasUsed}}</span></td>  -->
+					<td>
+						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
+						<i size="small"  class="fa fa-minus">删除</i>
+					</td>
+					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
+					<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button></td> -->
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="./../../../../common/components/jas-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+<script>
+// 获取数据集合
+var titleData = {
+	"areaField":[
+		"序号",
+		"版本名称",
+		"版本编号",
+		// "是否启用",
+		"操作"
+	]
+};
+var detailData=[
+	{
+		"versionName":1,
+		"versionCode":1,
+		"hasUsed":1,
+	}
+];
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+	var appDetail = new Vue({
+		el: "#app",
+		data: function () {
+			return {
+				titleData:{},
+				detailData:[],
+				dataType:"",
+			}
+		},
+		created: function () {
+			var that = this;
+			this.jasMap = parent.app.jasMap;
+			this.forBusiness = getParamter('forBusiness');
+			this.getDetails();
+			this.titleData = titleData.areaField;
+		},
+		methods: {
+			openDetail:function(idx){
+				parent.app.openDetail(idx);
+			},
+			getDetails: function(){
+				var that= this;
+				var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+				jasTools.ajax.post(url,{'forBusiness':that.forBusiness}, function (data) {
+					that.detailData = data.rows;
+				});
+			},
+			openAreaList: function(){
+				parent.app.showAreaDialog('1', '高后果区列表', '420px');
+			}
+		},
+	});
+
+</script>
+</html>
