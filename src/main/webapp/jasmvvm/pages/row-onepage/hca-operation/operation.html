@@ -83,7 +83,7 @@
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
 						<div class="item-btn" @click="createBh">要素标绘</div>
-						<div class="item-btn" @click="createRankCellData">地区等级划分</div>
+						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
 						<div class="item-btn" @click="createHcaArea">高后果区识别</div>
 						<div class="item-btn" @click="showHistoryList">历史数据</div>
 					</div>
@@ -106,8 +106,6 @@
 <script src="../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="../../../lib/element-ui/v2.4.1/index.min.js"></script>
 
-<!-- import JavaScript -->
-<script src="../../../lib/echarts/echarts.min.js"></script>
 
 <script src="../../../common/components/jas-components.js"></script>
 <script src="../../../common/js/jas-tools.js"></script>
@@ -256,7 +254,8 @@
 					title: '要素编辑工具',
 					src: './dialogs/edit-settlement.html',
 					height: '265px',
-					width: '290px',
+					// width: '290px',
+					width: '380px',
 					left:"10%",
 					top:"140px"
 				})
@@ -375,17 +374,18 @@
 							async:false,
 							onSuccess:function(re){
 								var result = JSON.parse(re);
-								if(result.msg==="ok"){
-									var count = result.data ? result.data.length : 0 ;
+								if(result.msg==="操作成功！"){
+									// var count = result.data ? result.data.length : 0 ;
+									var count = result.data ;
 									$.messager.show({
 										title:'提示',
-										msg:'地区等级导入成功，创建' +count+ "个识别单元" ,
+										msg:'地区等级生成成功，创建' +count+ "个地区" ,
 										timeout: 3000,
 										showType:'slide'
 									});
 									app.loadAreaRankData(result.data);
-									that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
-									that.jasMap.refreshLayerById( areaRankLayerId );
+									/* that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
+									that.jasMap.refreshLayerById( areaRankLayerId ); */
 								}else{
 									$.messager.alert({
 										title:'错误',
@@ -403,8 +403,8 @@
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
 				// this.jasMap.refreshLayerById( 'pd_arearank' );
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);
-				var pipeline = app.getPipeline();
-				app.zoomToLine(pipeline,"start");
+				/* var pipeline = app.getPipeline();
+				app.zoomToLine(pipeline,"start"); */
 				//设置表格
 				// app.refreshAreaRankDialog(data);
 				if(!Array.isArray(data)){
