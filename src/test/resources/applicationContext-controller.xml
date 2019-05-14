@@ -56,6 +56,8 @@
 			<mvc:exclude-mapping path="/**/daq/privilege/appLogin.do"/>
 			<mvc:exclude-mapping path="/**/daq/privilege/faceLogin.do"/>
 			<mvc:exclude-mapping path="/**/daq/privilege/getFaceInfo.do"/>
+			<mvc:exclude-mapping path="/**/jasgis/**/*.do"/>
+			<mvc:exclude-mapping path="/**/zone/**/*.do"/>
 			<bean class="cn.jasgroup.framework.script.interceptor.TokenInterceptor"/>
 	  	</mvc:interceptor>
 	</mvc:interceptors>

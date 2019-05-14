@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+        html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+        }
+        .content{
+            color:#f0f8ff;
+            padding: 10px;
+        }
+        
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+
+        <div class="content">
+			<div>
+				<h3>数据编辑</h3>
+				<el-row style="padding:15px 5px">
+					<el-button @click='draw' size="small" plain type="primary" >绘制</el-button>
+					<el-button @click='edit' size="small" plain type="primary" >编辑</el-button>
+					<el-button @click='del' size="small" plain type="primary" >删除</el-button>
+				</el-row>
+				<!-- <input class='cbt pan' type='button' value='导航'> -->
+			</div>
+            <div>
+				<h3>数据操作</h3>
+				<el-row style="padding:15px 5px">
+					<el-button @click='cbtCancel' size="small" plain type="primary" >撤销</el-button>
+					<el-button @click='saveEdit' size="small" plain type="primary" >保存编辑</el-button>
+					<el-button @click='saveAll' size="small" plain type="primary" >保存所有</el-button>
+				</el-row>
+			</div>
+        </div>
+        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 140px;">
+            <el-button size="small" @click="cancel()">取 消</el-button>
+            <el-button size="small" type="primary" @click="createBuffer()">确 定
+            </el-button>
+        </div>
+
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="../components/onepage-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+
+<script>
+	var app = new Vue({
+		el: "#app",
+		data: function () {
+			var that = this;
+			return {
+			}
+		},
+		created: function () {
+			var that = this;
+		},
+		methods: {
+            cancel: function(){
+                top.jasTools.selfDialog.close();
+            },
+            createBuffer: function(){
+				parent.app.createBuffer();
+			},
+			draw: function(){
+				// parent.app.draw();
+				// var _self = top.jasTools.selfDialog;
+				parent.app.jasMap.drawPolygon({
+					drawLayerId: this.currentSource,
+					onDrawEnd:function(evt){
+						var feature = evt.feature ;
+						var fId = feature.getId();
+						this.changedFeatures[fId] = feature;
+					}
+            	})
+			},
+			edit: function(){
+				parent.app.jasMap.editGraphic(this._self.currentSource, {
+					onSelected: function (feature ,attr) {
+						var fId = feature.getId();
+						this._self.changedFeatures[fId] = feature;
+						this._self.refreshAttrTable(feature,attr);
+					}
+				});
+			},
+			del: function(){
+
+			},
+			cbtCancel: function(){
+
+			},
+			saveEdit: function(){
+
+			},
+			saveAll: function(){
+
+			},
+			refreshAttrTable: function(){
+				var tbody = $("tbody", _self.attrDataGrid );
+				var fields = _self.sourceFieldsData[_self.currentSource];
+
+				$("input.attr-ipt" ,tbody).change();
+
+				if(JSON.stringify(attr) !== "{}"){
+					for(var i = 0 ; i < fields.length ; i++ ){
+						var field = fields[i]['field'];
+						var value = attr[field] ? attr[field]:'';
+						$("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
+					}
+				}else{
+					for(var i = 0 ; i < fields.length ; i++ ){
+						$("input.attr-ipt",tbody).val("");
+					}
+				}
+				//
+				$("input.attr-ipt" ,tbody).on("change",function(e){
+					var ipt = $(e.target);
+					var field = ipt.attr("data-field");
+					var value = ipt.val();            //设置要素的属性
+					feature.set(field,value);
+				});
+
+				if(attr && !attr["oid"] ){
+					var uuid = _self.mapApi.commonUtil.uuid();
+					$("input.attr-ipt[data-field='oid']" ,tbody).val(uuid).change();
+				}
+			}
+		},
+	});
+</script>
+
+</html>
