@@ -236,7 +236,7 @@
 							<div class="pipelineList" id="first_pipeline">
 								<ul >
 									<li><span>管线名称：</span>陕京四线
-									<div class="icon" style="color: #f02123;">未识别</div>
+									<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>123KM</li>
 									<li><span>最近评价时间：</span>2019年4月12日</li>
@@ -245,7 +245,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>京津线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(2)]" @mouseover="isClick=2" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>83.4KM</li>
 									<li><span>最近评价时间：</span>2018年6月13日
@@ -257,7 +257,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>秦京线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(3)]" @mouseover="isClick=3" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>324.6KM</li>
 									<li><span>最近评价时间：</span>2019年4月22日</li>
@@ -266,7 +266,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>潜荆线
-									<div class="icon">已识别</div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(4)]" @mouseover="isClick=4" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>90KM</li>
 									<li><span>最近评价时间：</span>2019年2月14日</li>
@@ -472,7 +472,9 @@
 	            value5: true,
 	            detailData:[],
 	            isActive:false,
-	            isActive1:false
+	            isActive1:false,
+	            isClick:'0',
+	            
 
 			}
 		},
@@ -482,7 +484,6 @@
 			},
 			// 地图最大化的监控
 			ismax:function (newval, oldval) {
-				console.log("111111");
 				var that = this;
 					this.$nextTick(function(){
 						that.jasMap.resizeMap()
@@ -501,7 +502,8 @@
 				return {color:'#0ff1e9'};
 				}
 				return {color:'#3a9ebf'};
-			}
+			},
+			
 		},
 		created: function () {
 			var that = this;
@@ -757,6 +759,16 @@
 			pipelineMapPage:function(){
 				location.href="../hca-operation/factorOperation.html";
 			},
+			intoMap:function(){
+				location.href="../hca-operation/operation.html";
+			},
+			buttonStyle:function(index){
+				if(this.isClick==index){
+				return {color:'#03cd68'};
+				}
+				return {color:'#08744b'};
+			},
+			
 			openRiskDetail:function(){
 				// $(".map-info").hide();
 				// alert(jasTools.base.rootPath);
@@ -880,6 +892,7 @@
                 target[key] = idx + 1;
                 this.jasMap.flashGraphic( target ,this.layerId);
 			},
+			
 			openDetail:function(dataType){
 				jasTools.selfDialog.show({
 					title: '详情列表',
