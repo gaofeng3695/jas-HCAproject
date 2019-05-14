@@ -252,25 +252,25 @@ JasMap.require(function(){
      */
     mapStyleTemplates.gas_station_style = new ol.style.Style({
         image: new ol.style.Icon({
-            src:getBasePath("hca-operation/images/icon_gas_station.png"),
+            src:getBasePath("image/icon_gas_station.png"),
             anchor: [0.5, 0.5]
         })
     });
     mapStyleTemplates.government_style = new ol.style.Style({
         image: new ol.style.Icon({
-            src:getBasePath("hca-operationimages/icon_government.png"),
+            src:getBasePath("image/icon_government.png"),
             anchor: [0.5, 0.5]
         })
     });
     mapStyleTemplates.hospital_style = new ol.style.Style({
         image: new ol.style.Icon({
-            src:getBasePath("hca-operation/images/icon_hospital.png"),
+            src:getBasePath("image/icon_hospital.png"),
             anchor: [0.5, 0.5]
         })
     });
     mapStyleTemplates.entertainment_style = new ol.style.Style({
         image: new ol.style.Icon({
-            src:getBasePath("hca-operation/images/icon_entertainment_place.png"),
+            src:getBasePath("image/icon_entertainment_place.png"),
             anchor: [0.5, 0.5]
         })
     });

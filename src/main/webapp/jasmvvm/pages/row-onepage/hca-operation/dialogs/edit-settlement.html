@@ -20,7 +20,10 @@
             color:#f0f8ff;
             padding: 10px;
         }
-        
+		.rank-table th,
+		.rank-table td{
+			white-space: nowrap;
+		}
 	</style>
 </head>
 
@@ -40,13 +43,17 @@
             <div>
 				<h3>数据操作</h3>
 				<el-row style="padding:15px 5px">
-					<el-button @click='cbtCancel' size="small" plain type="primary" >撤销</el-button>
+					<!-- <el-button @click='cbtCancel' size="small" plain type="primary" >撤销</el-button> -->
 					<el-button @click='saveEdit' size="small" plain type="primary" >保存编辑</el-button>
 					<el-button @click='saveAll' size="small" plain type="primary" >保存所有</el-button>
 				</el-row>
 			</div>
+            <div class='attrs' hidden>
+				<h3>属性编辑</h3>
+				<table class='grid' style='width: 100%;'></table>
+			</div>
         </div>
-        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 140px;">
+        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 6px;">
             <el-button size="small" @click="cancel()">取 消</el-button>
             <el-button size="small" type="primary" @click="createBuffer()">确 定
             </el-button>
@@ -62,61 +69,216 @@
 <script src="./../../../../common/js/jas-tools.js"></script>
 
 <script>
+	var changedFeatures = [];
+	var currentSource = 'pd_settlement';
+	var fields= [{
+					"title": "OID", "field": "oid"
+				}, {
+					"title": "名称", "field": "name"
+				}, {
+					"title": "编码", "field": "code"
+				}, {
+					"title": "户数", "field": "households"
+				}, {
+					"title": "人口", "field": "population"
+				},{
+					"title": "起始里程", "field": "start_mileage"
+				},{
+					"title": "结束里程", "field": "end_mileage"
+				},{
+					"title": "水平距离", "field": "horizontal_distance"
+				},{
+					"title": "垂直距离", "field": "vertical_distance"
+				},{
+					"title": "开始坐标x", "field": "start_x"
+				},{
+					"title": "开始坐标y", "field": "start_y"
+				},{
+					"title": "开始坐标y", "field": "start_y"
+				},{
+					"title": "要素类型", "field": "feature_type"
+				},{
+					"title": "建筑分布", "field": "building_type"
+				},{
+					"title": "备注", "field": "description"
+				}]
 	var app = new Vue({
 		el: "#app",
 		data: function () {
 			var that = this;
 			return {
+				
 			}
 		},
 		created: function () {
 			var that = this;
+			this.jasMap = parent.app.jasMap;
+			this.currentSource = currentSource;
 		},
 		methods: {
             cancel: function(){
                 top.jasTools.selfDialog.close();
             },
             createBuffer: function(){
-				parent.app.createBuffer();
+				//parent.app.createBuffer();
+				top.jasTools.selfDialog.close();
 			},
 			draw: function(){
+				$('.attrs').hide();
 				// parent.app.draw();
 				// var _self = top.jasTools.selfDialog;
-				parent.app.jasMap.drawPolygon({
-					drawLayerId: this.currentSource,
+				this.jasMap.drawPolygon({
+					drawLayerId: currentSource,
 					onDrawEnd:function(evt){
 						var feature = evt.feature ;
 						var fId = feature.getId();
-						this.changedFeatures[fId] = feature;
+						changedFeatures[fId] = feature;
 					}
             	})
 			},
 			edit: function(){
-				parent.app.jasMap.editGraphic(this._self.currentSource, {
+				this.jasMap.editGraphic(currentSource, {
 					onSelected: function (feature ,attr) {
 						var fId = feature.getId();
-						this._self.changedFeatures[fId] = feature;
-						this._self.refreshAttrTable(feature,attr);
+						changedFeatures[fId] = feature;
+						$('.attrs').show();
+						console.log(attr)
+						app.initAttrTable();
+						app.refreshAttrTable(feature,attr);
 					}
 				});
 			},
 			del: function(){
+				var that = this;
+				var options = {
+					onDelete: function(feature){
+						if(feature){
+							var oid = feature.get("oid") ;
+							var name = feature.get("name") ;
+							var msg = "确定要删除要素" + name + " ？";
+							top.$.messager.confirm("确认", msg , function (r) {
+								if (r) {
+									var oids = [];
+									oids.push(oid);
+									that.jasMap.simpleAjaxLoader({
+										url:"../../../../jasgis/" + currentSource + "/delete.do",
+										data:JSON.stringify(oids),
+										onSuccess:function(re){
+											var result = JSON.parse(re);
+											var count =  result.data;
+											top.$.messager.show({
+												title:'提示',
+												msg:'成功删除' + count + "个居民区" ,
+												timeout: 3000,
+												showType:'slide'
+											});
+										}
+									})
+								}
+							});
 
+						}
+					}
+				};
+            	this.jasMap.deleteGraphic(currentSource ,options);
 			},
 			cbtCancel: function(){
 
 			},
+			getFeatures: function(){
+				var result = [];
+				for(var key in changedFeatures){
+					var feature = changedFeatures[key] ;
+					result.push(feature);
+				}
+				return result;
+			},
 			saveEdit: function(){
-
+				var features = app.getFeatures();
+				app.saveSettlementData(features);
 			},
 			saveAll: function(){
-
+				var source = this.jasMap.getLayerById(currentSource).getSource();
+				var features = source.getFeatures();
+				app.saveSettlementData(features);
 			},
-			refreshAttrTable: function(){
-				var tbody = $("tbody", _self.attrDataGrid );
-				var fields = _self.sourceFieldsData[_self.currentSource];
+			saveSettlementData: function(features){
+				var that = this;
+				var common = that.jasMap.commonUtil;
+				var size = features.length ;
+				if(size === 0){
+					parent.$.messager.show({
+						title:'提示',
+						msg:'没有需要保存的要素' ,
+						timeout: 3000,
+						showType:'slide'
+					});
+					return
+				}
+				//
+				var geojson = this.jasMap.commonUtil.toGeoJson(features);//先只处理GeoJSON格式数据
+				var geomObj = JSON.parse(geojson) ;
+				geomObj.pipelineKeyValue = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
+				geomObj.pipelineKeyName = "eventid";
+				//
+				var msg = "确认保存"+ size +"个居民区？";
+				parent.$.messager.confirm("确认", msg , function (r) {
+					if (r) {
+						common.simpleAjaxLoader({
+							url: "../../../../zone/settlement/save.do",
+							data: JSON.stringify(geomObj) ,
+							onSuccess: function(res){
+								var result = JSON.parse(res) ;
+								that.jasMap.updateLayer("pd_settlement");
+								top.$.messager.show({
+									title:'提示',
+									msg:result.msg  ,
+									timeout: 3000,
+									showType:'slide'
+								});
+							},
+							onError: function(){
+								top.$.messager.alert({
+									title:'错误',
+									msg:'数据保存出错',
+									timeout: 3000,
+									showType:'slide'
+								});
+							}
+						});
+					}
+				});
+			},
+			initAttrTable : function(){
+				var table =  $("table.grid");
+				$("input.attr-ipt" ,table).change();
+				table.empty();
 
-				$("input.attr-ipt" ,tbody).change();
+				table.append("<tbody></tbody>");
+
+				var tbody = $("tbody", table);
+
+				for (var i = 0; i < fields.length; i++) {
+					if(i % 2 === 0 ){
+						tbody.append("<tr></tr>") ;
+					}
+					var tr = $("tr",tbody).last();
+					var item = fields[i];
+					var td_title = "<td class='td-title'><label>" + item.title + "</label></td>";
+					var td_ipt = "<td><input style='width:100px' class='attr-ipt' type='text' data-field='" + item.field +"'></td>";
+					tr.append(td_title);
+					tr.append(td_ipt);
+				}
+			},
+			refreshAttrTable: function(feature ,attr){
+				var tbody = $("tbody", $('.grid')[0] );
+
+				for(var i = 0 ; i < fields.length ; i++ ){
+					var field = fields[i]['field'];
+					var value = attr[field] ? attr[field]:'';
+					$("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
+				}
+				/* $("input.attr-ipt" ,tbody).change();
 
 				if(JSON.stringify(attr) !== "{}"){
 					for(var i = 0 ; i < fields.length ; i++ ){
@@ -128,7 +290,7 @@
 					for(var i = 0 ; i < fields.length ; i++ ){
 						$("input.attr-ipt",tbody).val("");
 					}
-				}
+				} */
 				//
 				$("input.attr-ipt" ,tbody).on("change",function(e){
 					var ipt = $(e.target);
@@ -138,7 +300,7 @@
 				});
 
 				if(attr && !attr["oid"] ){
-					var uuid = _self.mapApi.commonUtil.uuid();
+					var uuid = this.jasMap.commonUtil.uuid();
 					$("input.attr-ipt[data-field='oid']" ,tbody).val(uuid).change();
 				}
 			}
