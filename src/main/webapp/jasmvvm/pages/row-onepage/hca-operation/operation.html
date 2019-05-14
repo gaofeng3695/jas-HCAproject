@@ -61,7 +61,6 @@
 				margin: 26px 1px 0px;
 			}
 			.top-center{
-				background-color: red;
 				z-index: 20;
 				height: 50px;
 				width: 366px;
@@ -91,9 +90,9 @@
 					<div class="operate-div" style="top:110px">
 						<!-- <span class="max" @click="openMax"></span> -->
 						<!-- <span class="yingxiang" @click="switchImageMap"></span> -->
-						<span class="shiliang" @click="switchVecMap"></span>
+						<!-- <span class="shiliang" @click="switchVecMap"></span> -->
 						<!-- <span class="threeD" @click="open3D"></span> -->
-						<span class="tuceng" @click="openTuCeng"></span>
+						<!-- <span class="tuceng" @click="openTuCeng"></span> -->
 					</div>
 					<div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
 				 </div>
@@ -241,6 +240,7 @@
 			},
 			createBh: function(){
 				//显示图层
+				this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
@@ -377,11 +377,15 @@
 								if(result.msg==="操作成功！"){
 									// var count = result.data ? result.data.length : 0 ;
 									var count = result.data ;
-									$.messager.show({
+									/* $.messager.show({
 										title:'提示',
 										msg:'地区等级生成成功，创建' +count+ "个地区" ,
 										timeout: 3000,
 										showType:'slide'
+									}); */
+									Vue.prototype.$message({
+										type: 'success',
+										message: '地区等级生成成功，创建' +count+ "个地区"
 									});
 									app.loadAreaRankData(result.data);
 									/* that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
@@ -401,6 +405,7 @@
 				});	
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
+				app.showAreaDialog('0', '地区等级列表', '150px');
 				// this.jasMap.refreshLayerById( 'pd_arearank' );
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);
 				/* var pipeline = app.getPipeline();
@@ -423,6 +428,17 @@
 					this.jasMap.addPolygonGraphic(geom,options);
 				}
 			},
+			showAreaDialog: function(forBusiness, title, top){
+				window.jasTools.selfDialog.show({
+					title: title,
+					src: './dialogs/areaList.html?forBusiness=' + forBusiness,
+					height: '265px',
+					// width: '290px',
+					width: '544px',
+					right:"4%",
+					top: top
+				})
+			},
 			refreshAreaRankDialog: function(data){
 				var module = this.jasMap.getModuleById("areaRankManager");
 				if(!module){
@@ -444,32 +460,41 @@
 						"presure":p
 					}
 				};
-				this.jasMap.commonUtil.simpleAjaxLoader({
-					url:"../../../../zone/data/analysis.do",
-					data:JSON.stringify(postData),
-					contentType:"application/json",
-					method :"post",
-					async :false,
-					onSuccess :function(re){
-						var result = JSON.parse(re);
-						$.messager.show({
-							title:'提示',
-							msg:result.msg,
-							timeout: 3000,
-							showType:'slide'
+				/* Vue.prototype.$message({
+					type: 'success',
+					message: '计算中'
+				}); */
+				var that = this;
+				var common = this.jasMap.commonUtil;
+				$.messager.confirm("确认", '生成新的高后果区？' , function (r) {
+					if (r) {
+						common.simpleAjaxLoader({
+							url:"../../../../zone/data/analysis.do",
+							data:JSON.stringify(postData),
+							contentType:"application/json",
+							method :"post",
+							async :false,
+							onSuccess :function(re){
+								var result = JSON.parse(re);
+								Vue.prototype.$message({
+									type: 'success',
+									message: result.msg
+								});
+								if(result.data > 0){
+									app.loadZoneCell();
+									app.showAreaDialog('1', '高后果区列表', '420px');
+								}
+							},
+							onError :function(){
+		
+							}
 						});
-						if(result.data > 0){
-							app.loadZoneCell();
-						}
-					},
-					onError :function(){
-
 					}
-				});
+				})
 			},
 			loadZoneCell: function(){
 				//刷新地图
-				this.jasMap.updateLayer("pd_zonerankcell",{
+				this.jasMap.refreshLayerById("pd_zonerankcell",{
 					show:true
 				});
 				//更新表格
@@ -537,7 +562,16 @@
 				});
 			},
 			showHistoryList: function(){
-				console.log('5')
+				window.jasTools.selfDialog.show({
+					id: 'hcaAreaList',
+					title: '高后果区历史版本数据',
+					src: './dialogs/hcaAreaList.html?forBusiness=1',
+					height: '265px',
+					// width: '290px',
+					width: '544px',
+					left:"35%",
+					bottom:"22px"
+				})
 			},
 			getRightOne: function(){
 				
