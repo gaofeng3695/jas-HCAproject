@@ -351,10 +351,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 									app.createRankCellData();
 								},
 								onError: function(){
-									that.$alert({
-										title:'error',
-										msg:'数据生成出错'
-									});
+									that.$alert('数据处理出错', '提示')
 								}
 							});
 						}
