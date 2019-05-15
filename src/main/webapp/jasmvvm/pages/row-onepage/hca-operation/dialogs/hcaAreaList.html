@@ -39,15 +39,15 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(item,index)  in detailData" @click="openAreaList"> 
-					<td >{{index+1}}</td>
-					<td><span>{{item.versionName}}</span></td> 
-					<td><span>{{item.versionCode}}</span></td> 
+				<tr v-for="(item,index)  in detailData"> 
+					<td @click="openAreaList">{{index+1}}</td>
+					<td @click="openAreaList"><span>{{item.versionName}}</span></td> 
+					<td @click="openAreaList"><span>{{item.versionCode}}</span></td> 
 					<!-- <td><span>{{item.hasUsed}}</span></td>  -->
 					<td>
 						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
 						<i size="small"  class="fa fa-minus">删除 &emsp;</i>
-						<i size="small"  class="fa fa-file-text-o">生成报告</i>
+						<i size="small"  @click='previewFile' class="fa fa-file-text-o">生成报告</i>
 					</td>
 					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
 					<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button></td> -->
@@ -138,6 +138,14 @@ var detailData=[
 			},
 			openAreaList: function(){
 				parent.app.showAreaDialog('1', '高后果区列表', '420px');
+			},
+			previewFile : function(){
+				top.jasTools.selfDialogNew.show({
+					title: '分析报告',
+					src: './dialogs/preview_file.html',
+					height: '740px',
+					width: '35%',
+				})
 			}
 		},
 	});
