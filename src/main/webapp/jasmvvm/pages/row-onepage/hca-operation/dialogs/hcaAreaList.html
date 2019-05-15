@@ -139,9 +139,17 @@ var detailData=[
 			},
 			openAreaList: function(){
 				var title = '地区等级列表';
+				var layerId = 'pd_arearank';
+				if(this.forBusiness == "0"){
+					this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+				}
 				if(this.forBusiness == "1"){
 					title = '高后果区列表';
+					layerId = 'pd_zonerankcell';
+					this.jasMap.layerVisibleSwitch('pd_arearank',false);
 				}
+				this.jasMap.layerVisibleSwitch(layerId,true);
+				this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 				parent.app.showAreaDialog(this.forBusiness, title, '420px');
 			},
 			previewFile : function(){
