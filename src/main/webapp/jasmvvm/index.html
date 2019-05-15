@@ -14,22 +14,17 @@
 	<link rel="stylesheet" href="../jasframework/common/lib/easyui/themes/icon.css" />
 	<link rel="stylesheet" href="../jasframework/common/css/common.css" />
 	<!-- <link rel="stylesheet" href="../jasframework/common/css/main.css" type="text/css" /> -->
-	<!-- 老框架的样式依赖END -->
 
+	<!-- 老框架的样式依赖END -->
 	<link rel="stylesheet" href="./lib/element-ui/v2.4.1/theme-chalk/index.min.css">
 	<link rel="stylesheet" href="./lib/font-awesome-4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./src/css/main.css">
 	<link rel="stylesheet" href="./src/css/index.css">
-
-
-
-
 </head>
 
 <body>
 	<div id="app" v-cloak>
 		<el-container class="outerwrapper">
-
 			<el-header class="headerwrapper">
 				<!-- header 开始 -->
 				<div class="header">
@@ -88,7 +83,6 @@
 				<!-- header 结束 -->
 
 			</el-header>
-
 			<el-container style="height: 0%;">
 				<loading-bar :on-error-done="errorDone" :on-progress-done="progressDone" :progress="progress" :direction="direction" :error="error">
 				</loading-bar>
@@ -273,13 +267,9 @@
 					</el-container>
 				</el-main>
 			</el-container>
-
-
 			<!-- <nav-menu :nav-menus="item.subs" /> -->
 		</el-container>
-
 	</div>
-
 </body>
 <!-- import Vue before Element -->
 <script src="./lib/vue/vue.js"></script>
@@ -304,7 +294,5 @@
 <script src="./common/components/jas-components.js"></script>
 <script src="./common/js/jas-tools.js"></script>
 <script id="mapApi" src="./pages/map/mapjs/jasopengis.js"></script>
-
 <script src="./src/js/index.js"></script>
-
 </html>
