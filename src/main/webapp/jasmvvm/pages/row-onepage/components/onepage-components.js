@@ -111,7 +111,7 @@ Vue.component('jas-onepage-wrapper', { //value 值 支持逗号分隔 的多选�
     '<div style="position:relative;height: 100%;background: #0e1833 url(../../../src/images/bg.min.png) no-repeat;background-size: cover;min-height: 860px;min-width: 1596px;">',
     '	<div style="height: 110px;position: absolute;z-index:9;top: 0;width: 100%;min-width: 1596px;">',
     '   <el-button style="position: absolute;top:-2px;right:10px;z-index: 2;" type="text" @click="checkout" >退出</el-button>',
-    '		<div style="background: #f9000000 url(../../../src/images/title02.png) no-repeat top center;height: 100%">',
+    '		<div style="background: #f9000000 url(../../../src/images/title_hca.png) no-repeat top center;height: 100%">',
     '   <div @click="clickHome" style="width:600px;height:60px;margin:0 auto;cursor:pointer;"></div>',
     '   <div style="position: absolute;top:0;right:50%;margin-right:320px;">',
     '     <div @mouseover="mouseover(0)" @mouseout="mouseout(0)" @click="clickTitle(0)" :style="[itemstyle,formatStye(0)]" >基础信息</div>',

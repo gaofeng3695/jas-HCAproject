@@ -61,14 +61,12 @@
 				margin: 26px 1px 0px;
 			}
 			.top-center{
-				background-color: red;
 				z-index: 20;
-				height: 50px;
-				width: 366px;
 				position: absolute;
-				left: 40%;
-				color: #ffffff;
-				font-size: 16px;
+				background: url(../../../src/images/title.png);
+				left: calc(50% - 327px);
+				height: 89px;
+    			width: 654px;
 			}
 	</style>
 </head>
@@ -78,7 +76,7 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center">高后果区分析系统</div>
+					 <div class="top-center"></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>

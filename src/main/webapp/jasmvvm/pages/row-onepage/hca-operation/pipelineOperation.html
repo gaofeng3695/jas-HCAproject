@@ -61,14 +61,12 @@
 				margin: 26px 1px 0px;
 			}
 			.top-center{
-				background-color: red;
 				z-index: 20;
-				height: 50px;
-				width: 366px;
 				position: absolute;
-				left: 40%;
-				color: #ffffff;
-				font-size: 16px;
+				background: url(../../../src/images/title.png);
+				left: calc(50% - 327px);
+				height: 89px;
+    			width: 654px;
 			}
 	</style>
 </head>
@@ -78,7 +76,7 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center">高后果区分析系统</div>
+					 <div class="top-center"></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="pipelineOperation">管线管理</div>
@@ -152,13 +150,15 @@
         },
 		methods: {
 			pipelineOperation:function(){
-					jasTools.selfDialogNew.show({
+				window.jasTools.selfDialog.show({
 						title: '管线信息列表',
 						// src: './dialogs/detail2.html',
 						src: './dialogs/pipelineDetailList.html?dataType=pipeline',
 						height: '300px',
 						// width: '800px',
 						width: '48%',
+						bottom:'10px',
+						left:'25%',
 					})
 			},
 			zoomToLine: function(line ,zoomType){
