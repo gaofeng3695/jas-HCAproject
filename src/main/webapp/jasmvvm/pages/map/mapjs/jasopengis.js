@@ -2842,11 +2842,11 @@ var JasMap = null ,M = null;
                         var layerConfig = layersConfig[j];
                         createOptionalLayer(layerConfig);
                     }
+                    _class.optionalLayersConfig = layersConfig;
                     eventManager.publishEvent(_this.Events.OptionalLayersLoaded ,{
                         "flashLayers":_flashLayers,
                         "layers":_class.optionalLayers
                     });
-                    _class.optionalLayersConfig = layersConfig;
                 }
             };
             var createOptionalLayer = function(layerConfig ){

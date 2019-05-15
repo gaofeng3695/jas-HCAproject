@@ -181,13 +181,16 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 		created: function () {
 			var that = this;
 			that.jasMap = new JasMap({
-                appConfig:that.mapConfig
+                appConfig:that.mapConfig,
+                onOptionalLayersLoaded:function(){
+                    that.jasMap.updateLayer('pd_pipesegment',{
+                        "show":true,
+                        "fieldName":"eventid",
+                        "fieldValues":[pipelineOid]
+                    })
+				}
             });
-			this.jasMap.updateLayer('pd_pipesegment',{
-				"show":true,
-				"fieldName":"eventid",
-				"fieldValue":pipelineOid
-			})
+
 		},
         watch: {
             // 如果需要联动

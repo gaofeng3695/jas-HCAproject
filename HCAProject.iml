@@ -176,7 +176,7 @@
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Maven: cn.jasgroup.jasframework:jasframework-data-authority:3.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: cn.jasgroup.gis:jasgis-opengis:1.0-RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: cn.jasgroup.gis:jasgis-opengis:1.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-geojson:19.0" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
@@ -195,10 +195,10 @@
     <orderEntry type="library" name="Maven: org.geotools:gt-cql:19.0" level="project" />
     <orderEntry type="library" name="Maven: org.geotools.jdbc:gt-jdbc-postgis:19.0" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-jdbc:19.0" level="project" />
+    <orderEntry type="library" name="Maven: org.geotools:gt-shapefile:19.0" level="project" />
     <orderEntry type="library" name="Maven: org.geotools:gt-data:19.0" level="project" />
     <orderEntry type="library" name="Maven: com.vividsolutions:jts-core:1.14.0" level="project" />
-    <orderEntry type="library" name="Maven: cn.jasgroup.gis:jasgis-opengis-core:1.0-RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: cn.jasgroup.gis:jasgis-core:3.0.0-RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: cn.jasgroup.gis:jasgis-core:3.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:9.4-1201-jdbc4" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:4.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.3.4.RELEASE" level="project" />
