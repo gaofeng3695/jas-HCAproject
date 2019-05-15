@@ -63,14 +63,12 @@
 				margin: 26px 1px 0px;
 			}
 			.top-center{
-				background-color: red;
 				z-index: 20;
-				height: 50px;
-				width: 366px;
 				position: absolute;
-				left: 40%;
-				color: #ffffff;
-				font-size: 16px;
+				background: url(../../../src/images/title.png);
+				left: calc(50% - 327px);
+				height: 89px;
+    			width: 654px;
 			}
 			.rank-table-my{
 			    width:100%;
@@ -111,7 +109,7 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center">高后果区分析系统</div>
+					 <div class="top-center"></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBh">要素标绘</div>
@@ -132,12 +130,12 @@
 							<table class="rank-table-my">
 								<thead>
 									<tr> 
-										<th>序号</th><th>项目名称</th> <th>管线名称</th> <th>要素编号</th><th>起始里程</th><th>终止里程</th><th>要素类型</th><th>户数</th><th>采集时间</th>
+										<th>序号</th> <th>管线名称</th> <th>要素编号</th><th>起始里程</th><th>终止里程</th><th>要素类型</th><th>户数</th><th>采集时间</th><th>采集人员</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="(item,index)  in detailData"> 
-										<td><span>{{index+1}}</span></td><td>{{item.a}}</td><td>{{item.b}}</td><td>{{item.c}}</td><td>{{item.d}}</td><td>{{item.e}}</td><td>{{item.f}}</td><td>{{item.g}}</td><td>{{item.h}}</td>
+										<td><span>{{index+1}}</span></td><td>{{item.b}}</td><td>{{item.c}}</td><td>{{item.d}}</td><td>{{item.e}}</td><td>{{item.f}}</td><td>{{item.g}}</td><td>{{item.h}}</td><td>{{item.a}}</td>
 								</tbody>
 							</table>
 					      </div>
@@ -199,10 +197,10 @@
                 appConfig:that.mapConfig
             });
 			that.detailData=[
-								{"a":"内蒙古西部管道","b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"独立民居","g":"25","h":"2019年4月15日"},
-								{"a":"内蒙古西部管道","b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"商业区","g":"7","h":"2019年4月15日"},
-								{"a":"内蒙古西部管道","b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"工业区","g":"5","h":"2019年4月15日"},
-								{"a":"内蒙古西部管道","b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"特定场所","g":"9","h":"2019年4月15日"},
+								{"b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"独立民居","g":"25","h":"2019年4月15日","a":"张三"},
+								{"b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"商业区","g":"7","h":"2019年4月15日","a":"王建东"},
+								{"b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"工业区","g":"5","h":"2019年4月15日","a":"李逗"},
+								{"b":"陕京四线","c":"GHS02937","d":"Fh0001","e":"Fh9019","f":"特定场所","g":"9","h":"2019年4月15日","a":"张鹏飞"},
 							]
 		},
         watch: {
@@ -294,6 +292,7 @@
 			},
 			createBh: function(){
 				//显示图层
+				this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
