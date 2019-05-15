@@ -68,6 +68,9 @@
 				height: 89px;
     			width: 654px;
 			}
+			.top-center:hover{
+				cursor: pointer;
+			}
 	</style>
 </head>
 
@@ -76,7 +79,7 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center"></div>
+					 <div class="top-center" @click='urlHref'></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="pipelineOperation">管线管理</div>
@@ -278,6 +281,9 @@
 					};
 					this.jasMap.addPolygonGraphic(geom,options);
 				}
+			},
+			urlHref: function(){
+				location.href="../total/total.html";
 			},
 			refreshAreaRankDialog: function(data){
 				var module = this.jasMap.getModuleById("areaRankManager");
