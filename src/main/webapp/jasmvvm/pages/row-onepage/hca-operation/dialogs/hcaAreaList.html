@@ -31,10 +31,7 @@
 	<div id="app" v-cloak>
 		<el-row style="padding:15px 5px">
 			<el-button size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-pencil">修改</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button>
-		  </el-row>
+		</el-row>
 		<table class="rank-table">
 			<thead>
 				<tr>
@@ -42,10 +39,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(item,index)  in detailData"> 
-					<td><input  name="boxs" type="checkbox"/></td>
-					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
-					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> 
+				<tr v-for="(item,index)  in detailData" @click="openAreaList"> 
+					<td >{{index+1}}</td>
+					<td><span>{{item.versionName}}</span></td> 
+					<td><span>{{item.versionCode}}</span></td> 
+					<!-- <td><span>{{item.hasUsed}}</span></td>  -->
+					<td>
+						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
+						<i size="small"  class="fa fa-minus">删除</i>
+					</td>
+					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
+					<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button></td> -->
 				</tr>
 			</tbody>
 		</table>
@@ -58,60 +62,30 @@
 <script src="./../../../../common/components/jas-components.js "></script>
 <script src="./../../../../common/js/jas-tools.js"></script>
 <script>
-	var dataList = {
-			"pipeline":{
-				"title":["","序号","项目名称","管线名称","管线编号","起始里程","终止里程","管道长度","最近识别时间"],
-				"data":[{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					}],
-			},
-			"success": 1
-		};
-
+// 获取数据集合
+var titleData = {
+	"areaField":[
+		"序号",
+		"版本名称",
+		"版本编号",
+		// "是否启用",
+		"操作"
+	]
+};
+var detailData=[
+	{
+		"versionName":1,
+		"versionCode":1,
+		"hasUsed":1,
+	}
+];
 /**
  * @desc 获取访问路径中某个参数
  * 
  * @param paramName 参数名
  * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
  */
-function getParamter(paramName, url) {
+ function getParamter(paramName, url) {
 	var seachUrl = window.location.search.replace("?", "");
 	if (url != null) {
 		var index = url.indexOf('?');
@@ -134,25 +108,35 @@ function getParamter(paramName, url) {
 	}
 	return "";
 }
-
 	var appDetail = new Vue({
 		el: "#app",
 		data: function () {
 			return {
 				titleData:{},
-				detailData:{},
+				detailData:[],
 				dataType:"",
 			}
 		},
 		created: function () {
 			var that = this;
-			that.dataType = getParamter("dataType");
-			this.titleData  = dataList[this.dataType].title;
-			this.detailData = dataList[this.dataType].data;
+			this.jasMap = parent.app.jasMap;
+			this.forBusiness = getParamter('forBusiness');
+			this.getDetails();
+			this.titleData = titleData.areaField;
 		},
 		methods: {
 			openDetail:function(idx){
 				parent.app.openDetail(idx);
+			},
+			getDetails: function(){
+				var that= this;
+				var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+				jasTools.ajax.post(url,{'forBusiness':that.forBusiness}, function (data) {
+					that.detailData = data.rows;
+				});
+			},
+			openAreaList: function(){
+				parent.app.showAreaDialog('1', '高后果区列表', '420px');
 			}
 		},
 	});

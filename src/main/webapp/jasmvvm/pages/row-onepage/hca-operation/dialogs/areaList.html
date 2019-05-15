@@ -29,12 +29,6 @@
 
 <body>
 	<div id="app" v-cloak>
-		<el-row style="padding:15px 5px">
-			<el-button size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-pencil">修改</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
-			<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button>
-		  </el-row>
 		<table class="rank-table">
 			<thead>
 				<tr>
@@ -42,10 +36,12 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(item,index)  in detailData"> 
-					<td><input  name="boxs" type="checkbox"/></td>
-					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
-					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td> 
+				<tr v-for="(item,index)  in detailData" @click='locate(item)'> 
+					<td >{{index+1}}</td> 
+					<td><span>{{item.name}}</span></td> 
+					<td>{{item.rank}}</td> 
+					<td>{{item.startMileage}}</td> 
+					<td>{{item.endMileage}}</td> 
 				</tr>
 			</tbody>
 		</table>
@@ -58,60 +54,29 @@
 <script src="./../../../../common/components/jas-components.js "></script>
 <script src="./../../../../common/js/jas-tools.js"></script>
 <script>
-	var dataList = {
-			"pipeline":{
-				"title":["","序号","项目名称","管线名称","管线编号","起始里程","终止里程","管道长度","最近识别时间"],
-				"data":[{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					},
-					{
-						"a": "内蒙古项目",
-						"b": "内蒙古西部管道",
-						"c": "15FC0",
-						"d": "15FC001",
-						"e": "15FC090",
-						"f": "123KM",
-						"j": "2019年4月12",
-						
-					}],
-			},
-			"success": 1
-		};
-
+var titleData = {
+	"areaField":[
+		"序号",
+		"编号",
+		"等级",
+		"起始里程",
+		"结束里程"
+	],
+	"hcaAreaField": [
+		"序号",
+		"编号",
+		"等级",
+		"起始里程",
+		"结束里程"
+	]
+};
 /**
  * @desc 获取访问路径中某个参数
  * 
  * @param paramName 参数名
  * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
  */
-function getParamter(paramName, url) {
+ function getParamter(paramName, url) {
 	var seachUrl = window.location.search.replace("?", "");
 	if (url != null) {
 		var index = url.indexOf('?');
@@ -134,7 +99,6 @@ function getParamter(paramName, url) {
 	}
 	return "";
 }
-
 	var appDetail = new Vue({
 		el: "#app",
 		data: function () {
@@ -146,13 +110,55 @@ function getParamter(paramName, url) {
 		},
 		created: function () {
 			var that = this;
-			that.dataType = getParamter("dataType");
-			this.titleData  = dataList[this.dataType].title;
-			this.detailData = dataList[this.dataType].data;
+			this.jasMap = parent.app.jasMap;
+			this.forBusiness = getParamter('forBusiness');
+			this.getDetails();
+			if(this.forBusiness==0){
+				this.titleData = titleData.areaField;
+			}else{
+				this.titleData = titleData.hcaAreaField;
+			}
 		},
 		methods: {
 			openDetail:function(idx){
 				parent.app.openDetail(idx);
+			},
+			getDetails: function(){
+				var that= this;
+				var sourceName = 'pd_arearank';
+				if(this.forBusiness == 1){
+					sourceName = 'pd_zonerankcell';
+				}
+				this.jasMap.commonUtil.simpleAjaxLoader({
+					url:"../../../../zone/" + sourceName + "/query.do",
+					data:JSON.stringify({
+						where :"rank is not null",
+						returnGeometry:false
+					}),
+					method:"post",
+					async:false,
+					contentType:"application/json",
+					onSuccess:function(re){
+						var result = JSON.parse(re);
+						var collection =  JSON.parse(result.data.features)  ;
+						var features = collection.features;
+						var data = [];
+						if(Array.isArray(features)){
+							for(var i = 0 ; i < features.length ; i++){
+								var properties = features[i].properties ;
+								properties.startMileage = properties.start_mileage ;
+								properties.endMileage = properties.end_mileage ;
+								properties.index = i + 1;
+								data.push(properties);
+							}
+						}
+						that.detailData = data;
+						console.log(data)
+					}
+				});
+			},
+			locate: function(item){
+				
 			}
 		},
 	});

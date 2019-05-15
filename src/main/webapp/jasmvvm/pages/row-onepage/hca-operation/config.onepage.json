@@ -1,0 +1,238 @@
+{
+  "description": "基于产品 JasOpenGIS 1.0",
+  "style": "lightblue",
+  "basePath": "",
+  "resources": [{
+    "type": "css",
+    "url": "basepath:../lib/openlayer_v5.0.2/ol.css"
+  },
+    {
+      "type": "js",
+      "url": "basepath:../lib/openlayer_v5.0.2/ol.js",
+      "id": "ol.js"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/icon.css"
+    },
+    {
+      "type": "css",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/themes/default/easyui.css"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery/jquery-1.12.4.min.js",
+      "id": "jquery.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/jquery.easyui.min.js",
+      "relyOn": "jquery.js",
+      "id": "easyui.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/jquery-easyui/1.5.2/locale/easyui-lang-zh_CN.js",
+      "relyOn": "easyui.js",
+      "id": "easyui-lang.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/proj4js/proj4_2.4.4.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:../lib/FileSaver.min.js"
+    },
+
+    {
+      "type": "js",
+      "url": "basepath:mapmodules.js"
+    },{
+      "type": "js",
+      "url": "basepath:mapstyles/default.js",
+      "relyOn": "ol.js"
+    },
+    {
+      "type": "js",
+      "url": "basepath:mapstyles/default.onepage.js",
+      "relyOn": "ol.js"
+    },  {
+      "type": "js",
+      "url": "mymapstyles.js",
+      "relyOn": "ol.js"
+    }
+  ],
+  "map": {
+    "id": "jasMap",
+    "scale": false,
+    "attribution": false,
+    "zoom": false,
+    "mapOptions": {
+      "center": [105.40071683484005,32.575070914836274],
+      "level": 4,
+      "projection": "EPSG:4326"
+    },
+    "basemaps": {
+      "label": "基础底图",
+      "baseMapLayers": [{
+        "id": "google_img",
+        "index": 1,
+        "label": "谷歌影像",
+        "icon": "stylepath:images/basemap_img.png",
+        "type": "Tile",
+        "source": "google-image"
+      },{
+        "id": "google_vec",
+        "index": 1,
+        "label": "谷歌矢量",
+        "icon": "stylepath:images/basemap_img.png",
+        "type": "Tile",
+        "source": "google-vec"
+      }]
+    },
+    "optionallayers":[{
+      "id":"layerSet001",
+      "label":"业务图层",
+      "layerSet":[
+        {
+           "id":"pd_centerlinestake",
+           "label":"中线桩",
+           "index":33,
+           "outFields":"oid,stakenumber,mileage,administrativedivision,lineid",
+           "maxScale":50000,
+           "listener":{
+              "onHover":{
+                "responseType":"tip",
+                "template":"桩号：${stakenumber},<br>里程：${mileage}"
+              },
+              "onClick":{
+                "responseType":"infoWindow",
+                "title":"信息弹窗",
+                "content":"桩号：${stakenumber}<br>里程：${mileage}<br>位置：${administrativedivision}"
+              }
+            },
+           "renderer":{
+              "style":"centerlinestake" ,
+              "labelStyle":"secondLevelPointLabelStyle",
+              "labelField":"stakenumber"
+           }
+      }, {
+          "id":"pd_pipesegment",
+          "label":"管线",
+          "index":20,
+          "outFields":"eventid,pipesegmentname",
+          "declutter":true,
+          "strategy":"all",
+          "renderer":{
+            "style":"pipesegment2" ,
+            "labelStyle":"lineLabelStyle",
+            "labelField":"pipesegmentname"
+          },
+          "listener":{
+            "onDbClick":{
+              "responseType":"dialog",
+              "title":"线路段",
+              "url":"local/dialog-pipesegment.html"
+            }
+          }
+      }, {
+          "id":"bufferLayerId",
+          "label":"识别区缓冲区",
+          "index":11,
+          "loader":"none",
+          "renderer":{
+            "style":"pipesegment"
+          }
+        },{
+          "id":"pd_settlement","visible":false,
+          "label":"居民区","outFields":"*", "renderer":{
+            "style":"polygon_renderer_by_settlement"
+          },
+          "index":11
+        },{
+          "id":"pd_arearankcell","visible":false,"flash":true,
+          "label":"地区等级识别单元","outFields":"*",
+          "index":11,
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
+            }
+          }
+        }, {
+          "id":"pd_arearank",
+          "label":"地区等级",
+          "outFields":"oid,rank,start_mileage,end_mileage,description",
+          "visible":false,"flash":true,
+          "index":11,
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "地区等级：${rank},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
+            }
+          },
+          "renderer":{
+            "style":"polygon_renderer_by_arearank"
+          }
+        }, {
+          "id":"pd_zonerankcell","label":"高后果区识别单元", "outFields":"*",
+          "visible":false,
+          "index":11,
+          "renderer":{
+            "style":"hca_renderer_by_rank_style"
+          },"listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "高后果等级：${rank},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
+            }
+          }
+        }
+      ]
+  },{
+    "id":"layerSet002",
+    "label":"特定场所",
+    "layerSet":[
+      {
+        "id":"pd_government",
+        "label":"政府机构",
+        "outFields":"","strategy":"bbox",
+        "visible":false,
+        "renderer":{
+          "style":"government_style"
+        },
+        "index":31
+      }, {
+        "id":"pd_hospital",
+        "label":"医疗院所","strategy":"bbox",
+        "outFields":"",
+        "visible":false,
+        "renderer":{
+          "style":"hospital_style"
+        },
+        "index":31
+      },{
+        "id":"pd_gas_station",
+        "index":31,"strategy":"bbox",
+        "label":"加油站",
+        "outFields":"",
+        "visible":false,
+        "renderer":{
+          "style":"gas_station_style"
+        }
+      },{
+        "id":"pd_entertainment_place",
+        "index":31,"strategy":"bbox",
+        "label":"娱乐场所",
+        "outFields":"",
+        "visible":false,
+        "renderer":{
+          "style":"entertainment_style"
+        }
+      }
+    ]
+  }
+  ]
+},
+"modules":[]
+}
