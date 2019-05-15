@@ -157,7 +157,7 @@
 							var oid = feature.get("oid") ;
 							var name = feature.get("name") ;
 							var msg = "确定要删除要素" + name + " ？";
-							top.$.messager.confirm("确认", msg , function (r) {
+							parent.app.$confirm("确认", msg , function (r) {
 								if (r) {
 									var oids = [];
 									oids.push(oid);
@@ -167,11 +167,9 @@
 										onSuccess:function(re){
 											var result = JSON.parse(re);
 											var count =  result.data;
-											top.$.messager.show({
-												title:'提示',
-												msg:'成功删除' + count + "个居民区" ,
-												timeout: 3000,
-												showType:'slide'
+											parent.app.$message({
+												type:'success',
+												message:'成功删除' + count + "个居民区" ,
 											});
 										}
 									})
@@ -208,12 +206,13 @@
 				var common = that.jasMap.commonUtil;
 				var size = features.length ;
 				if(size === 0){
-					parent.$.messager.show({
+					/* parent.$.messager.show({
 						title:'提示',
 						msg:'没有需要保存的要素' ,
 						timeout: 3000,
 						showType:'slide'
-					});
+					}); */
+					parent.app.$alert('没有需要保存的要素', '提示')
 					return
 				}
 				//
@@ -223,30 +222,34 @@
 				geomObj.pipelineKeyName = "eventid";
 				//
 				var msg = "确认保存"+ size +"个居民区？";
-				parent.$.messager.confirm("确认", msg , function (r) {
-					if (r) {
-						common.simpleAjaxLoader({
-							url: "../../../../zone/settlement/save.do",
-							data: JSON.stringify(geomObj) ,
-							onSuccess: function(res){
-								var result = JSON.parse(res) ;
-								that.jasMap.updateLayer("pd_settlement");
-								top.$.messager.show({
-									title:'提示',
-									msg:result.msg  ,
-									timeout: 3000,
-									showType:'slide'
-								});
-							},
-							onError: function(){
-								top.$.messager.alert({
-									title:'错误',
-									msg:'数据保存出错',
-									timeout: 3000,
-									showType:'slide'
-								});
-							}
-						});
+				parent.app.$confirm(msg,  "提示", {
+					type: 'warning',
+					callback: function (action) {
+						if (action === 'confirm') {
+							var loading = parent.app.$loading({
+								lock: true,
+								text: '处理居民数据中......',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.7)'
+							})
+							common.simpleAjaxLoader({
+								url: "../../../../zone/settlement/save.do",
+								data: JSON.stringify(geomObj) ,
+								async: true,
+								onSuccess: function(res){
+									loading.close();
+									var result = JSON.parse(res) ;
+									that.jasMap.updateLayer("pd_settlement");
+									parent.app.$message({
+										type:'success',
+										message:result.msg
+									});
+								},
+								onError: function(){
+									parent.app.$alert('数据处理出错', '提示')
+								}
+							});
+						}
 					}
 				});
 			},
