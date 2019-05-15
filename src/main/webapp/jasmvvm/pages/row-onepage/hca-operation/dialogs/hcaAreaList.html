@@ -38,7 +38,7 @@
 					<th v-for="item in titleData">{{item}}</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody style='width:100%; height:100px;overflow-y:scroll;'>
 				<tr v-for="(item,index)  in detailData"> 
 					<td @click="openAreaList">{{index+1}}</td>
 					<td @click="openAreaList"><span>{{item.versionName}}</span></td> 
@@ -47,6 +47,7 @@
 					<td>
 						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
 						<i size="small"  class="fa fa-minus">删除 &emsp;</i>
+						<i size="small"  class="fa fa-minus">导入 &emsp;</i>
 						<i size="small"  @click='previewFile' class="fa fa-file-text-o">生成报告</i>
 					</td>
 					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
@@ -137,7 +138,11 @@ var detailData=[
 				});
 			},
 			openAreaList: function(){
-				parent.app.showAreaDialog('1', '高后果区列表', '420px');
+				var title = '地区等级列表';
+				if(this.forBusiness == "1"){
+					title = '高后果区列表';
+				}
+				parent.app.showAreaDialog(this.forBusiness, title, '420px');
 			},
 			previewFile : function(){
 				top.jasTools.selfDialogNew.show({
