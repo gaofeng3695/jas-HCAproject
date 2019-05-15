@@ -86,7 +86,9 @@
 						<div class="item-btn" @click="createBh">要素标绘</div>
 						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
 						<div class="item-btn" @click="createHcaArea">高后果区识别</div>
-						<div class="item-btn" @click="showHistoryList">历史数据</div>
+						<div class="item-btn" @click="showHistoryBtn">历史数据</div>
+						<div hidden class="item-btn history" @click="showHistoryList(0)">地区等级数据</div>
+						<div hidden class="item-btn history" @click="showHistoryList(1)">高后果区数据</div>
 					</div>
 					<!--图层操作按钮-->
 					<div class="operate-div" style="top:110px">
@@ -181,13 +183,16 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 		created: function () {
 			var that = this;
 			that.jasMap = new JasMap({
-                appConfig:that.mapConfig
+                appConfig:that.mapConfig,
+                onOptionalLayersLoaded:function(){
+                    that.jasMap.updateLayer('pd_pipesegment',{
+                        "show":true,
+                        "fieldName":"eventid",
+                        "fieldValues":[pipelineOid]
+                    })
+				}
             });
-			this.jasMap.updateLayer('pd_pipesegment',{
-				"show":true,
-				"fieldName":"eventid",
-				"fieldValue":pipelineOid
-			})
+
 		},
         watch: {
             // 如果需要联动
@@ -321,6 +326,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function (action) {
 						if (action === 'confirm') {
+							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '处理居民数据中......',
@@ -346,10 +352,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 									app.createRankCellData();
 								},
 								onError: function(){
-									that.$alert({
-										title:'error',
-										msg:'数据生成出错'
-									});
+									that.$alert('数据处理出错', '提示')
 								}
 							});
 						}
@@ -508,6 +511,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function(action){
 						if (action === 'confirm') {
+							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '识别中',
@@ -609,8 +613,36 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					strategy:"all"
 				});
 			},
-			showHistoryList: function(){
-				window.jasTools.selfDialog.show({
+			showHistoryBtn: function(){
+				$('.history').show();
+			},
+			showHistoryList: function(forBusiness){
+				$('.history').hide();
+				if(forBusiness == "0"){
+					window.jasTools.selfDialog.show({
+						id: 'hcaAreaList',
+						title: '地区等级历史版本数据',
+						src: './dialogs/hcaAreaList.html?forBusiness=0',
+						height: '265px',
+						// width: '290px',
+						width: '544px',
+						left:"35%",
+						bottom:"22px"
+					})
+				}
+				if(forBusiness == "1"){
+					window.jasTools.selfDialog.show({
+						id: 'hcaAreaList',
+						title: '高后果区历史版本数据',
+						src: './dialogs/hcaAreaList.html?forBusiness=1',
+						height: '265px',
+						// width: '290px',
+						width: '544px',
+						left:"35%",
+						bottom:"22px"
+					})
+				}
+				/* window.jasTools.selfDialog.show({
 					id: 'hcaAreaList',
 					title: '高后果区历史版本数据',
 					src: './dialogs/hcaAreaList.html?forBusiness=1',
@@ -619,7 +651,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					width: '544px',
 					left:"35%",
 					bottom:"22px"
-				})
+				}) */
 			},
 			getRightOne: function(){
 				
