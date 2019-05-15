@@ -2441,7 +2441,6 @@ Vue.component('jas-approve-dialog', {
 	}
 });
 
-
 Vue.component('jas-remarks', {
 	props: {
 		remarks: {
