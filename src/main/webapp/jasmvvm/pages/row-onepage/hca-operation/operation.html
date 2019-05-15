@@ -64,9 +64,12 @@
 				z-index: 20;
 				position: absolute;
 				background: url(../../../src/images/title.png);
-				left: calc(50% - 327px);
-				height: 89px;
-    			width: 654px;
+ 				left: calc(50% - 327px);
+ 				height: 89px;
+     			width: 654px;
+			}
+			.top-center:hover{
+				cursor: pointer;
 			}
 	</style>
 </head>
@@ -76,7 +79,7 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center"></div>
+					 <div class="top-center" @click='urlHref'></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
@@ -131,6 +134,38 @@
 </script>
 
 <script>
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+
+var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
+
 	var app = new Vue({
 		el: '#app',
 		data: function () {
@@ -148,7 +183,11 @@
 			that.jasMap = new JasMap({
                 appConfig:that.mapConfig
             });
-			
+			this.jasMap.updateLayer('pd_pipesegment',{
+				"show":true,
+				"fieldName":"eventid",
+				"fieldValue":pipelineOid
+			})
 		},
         watch: {
             // 如果需要联动
@@ -169,6 +208,9 @@
             },
         },
 		methods: {
+			urlHref: function(){
+				location.href="../total/total.html";
+			},
 			createBufferDialog: function(){
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
@@ -186,7 +228,7 @@
 					url:"../../../../zone/area.do",
 					data:JSON.stringify({
 						"pipesegmentTableName":"pd_pipesegment",
-						"pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+						"pipesegmentKeyValue":pipelineOid,
 						"pipesegmentKeyName":"eventid",
 						"bufferDistance":radius
 					}),
@@ -273,80 +315,79 @@
 			randomSettlementData: function(){
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				var msg = "确认处理居民区数据？";
+				var msg = "确认重新生成地区等级？";
 				var settlementLayerId = "pd_settlement";
-				$.messager.confirm("确认", msg , function (r) {
-					if (r) {
-						common.simpleAjaxLoader({
-							url: "../../../../zone/settlement/random.do",
-							data: JSON.stringify({
-								source: settlementLayerId,
-								population:true ,//重置人口
-								buildingType:true//重置建筑类型
-							}) ,
-							onSuccess: function(res){
-								var result = JSON.parse(res) ;
-								$.messager.show({
-									title:'提示',
-									msg:result.msg  ,
-									timeout: 3000,
-									showType:'slide'
-								});
-								that.jasMap.updateLayer(settlementLayerId);
-								app.createRankCellData();
-							},
-							onError: function(){
-								$.messager.alert({
-									title:'错误',
-									msg:'数据生成出错',
-									timeout:3000,
-									showType:'slide'
-								});
-							}
-						});
+				that.$confirm(msg , "提示", {
+					type: 'warning',
+					callback: function (action) {
+						if (action === 'confirm') {
+							var loading = that.$loading({
+								lock: true,
+								text: '处理居民数据中......',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.7)'
+							})
+							common.simpleAjaxLoader({
+								url: "../../../../zone/settlement/random.do",
+								data: JSON.stringify({
+									source: settlementLayerId,
+									population:true ,//重置人口
+									buildingType:true//重置建筑类型
+								}) ,
+								async: true,
+								onSuccess: function(res){
+									var result = JSON.parse(res) ;
+									loading.close();
+									that.$message({
+										title:'success',
+										message:result.msg
+									});
+									that.jasMap.updateLayer(settlementLayerId);
+									app.createRankCellData();
+								},
+								onError: function(){
+									that.$alert({
+										title:'error',
+										msg:'数据生成出错'
+									});
+								}
+							});
+						}
 					}
 				});
 			},
 			createRankCellData: function(e){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
 				var that = this;
 				var common = this.jasMap.commonUtil;
-           		$.messager.confirm("确认", "计算识别单元的里程值和长度，确定生成单元？" , function (r) {
-				// $.messager.confirm("确认", "确认生成新版本地区等级？" , function (r) {
-					if (r) {
-						var data = {
-							sourceName: "pd_arearankcell" ,
-							pipeSourceName: "pd_pipesegment" ,
-							settlementSourceName: "pd_settlement" ,
-							pipeKeyValue: "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5" ,
-							pipeKeyName: "eventid",
-							bufferDistance: this.bufferValue,
-							deleteFlag: true,
-							geomName: "geom"
-						};
-						common.simpleAjaxLoader({
-							url: "../../../../zone/rank/cell/init.do",
-							data: JSON.stringify(data) ,
-							onSuccess:function(res){
-								var result = JSON.parse(res) ;
-								//
-								// that.jasMap.refreshLayerById("pd_arearankcell");
-								that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
-
-								//结果展示面板
-								app.createArea();
-							},
-							onError:function(){
-								$.messager.alert({
-									title:'错误',
-									msg:'数据处理出错',
-									timeout: 3000,
-									showType:'slide'
-								});
-							}
-						});
-					}else{
-	// 					console.log($('.el-button.el-tooltip.item.el-button--default.el-button--small'));
-	//                	$('.el-button.el-tooltip.item.el-button--default.el-button--small').trigger()
+				var loading = that.$loading({
+					lock: true,
+					text: '识别单元划分中......',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})   
+				var data = {
+					sourceName: "pd_arearankcell" ,
+					pipeSourceName: "pd_pipesegment" ,
+					settlementSourceName: "pd_settlement" ,
+					pipeKeyValue: pipelineOid ,
+					pipeKeyName: "eventid",
+					bufferDistance: this.bufferValue,
+					deleteFlag: true,
+					geomName: "geom"
+				};
+				common.simpleAjaxLoader({
+					url: "../../../../zone/rank/cell/init.do",
+					data: JSON.stringify(data) ,
+					onSuccess:function(res){
+						var result = JSON.parse(res) ;
+						// that.jasMap.refreshLayerById("pd_arearankcell");
+						loading.close();
+						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
+						//结果展示面板
+						app.createArea();
+					},
+					onError:function(){
+						that.$alert('数据处理出错', '提示')
 					}
 				});
 			},
@@ -356,52 +397,53 @@
 				var data = {
 					"dataSize":200,
 					"pipesegmentTableName":"pd_pipesegment",
-					"pipeKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+					"pipeKeyValue":pipelineOid,
 					"pipeKeyName":"eventid",
 					"bufferDistance":radius
 				};
 				var areaRankLayerId = "pd_arearank";
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				$.messager.confirm("确认", msg , function (r) {
-					if (r) {
-						common.simpleAjaxLoader({
-							url:"../../../../zone/rank/analysis.do",
-							data:JSON.stringify(data),
-							contentType:"application/json",
-							method:"post",
-							async:false,
-							onSuccess:function(re){
-								var result = JSON.parse(re);
-								if(result.msg==="操作成功！"){
-									// var count = result.data ? result.data.length : 0 ;
-									var count = result.data ;
-									/* $.messager.show({
-										title:'提示',
-										msg:'地区等级生成成功，创建' +count+ "个地区" ,
-										timeout: 3000,
-										showType:'slide'
-									}); */
-									Vue.prototype.$message({
-										type: 'success',
-										message: '地区等级生成成功，创建' +count+ "个地区"
-									});
-									app.loadAreaRankData(result.data);
-									/* that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
-									that.jasMap.refreshLayerById( areaRankLayerId ); */
-								}else{
-									$.messager.alert({
-										title:'错误',
-										msg:result.msg
-									});
+				/* that.$confirm(msg,  "提示", {
+					type: 'warning',
+					callback:  function (action) {
+						if (action === 'confirm') { */
+							var loading = that.$loading({
+								lock: true,
+								text: '重新生成地区等级......',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.7)'
+							})
+							common.simpleAjaxLoader({
+								url:"../../../../zone/rank/analysis.do",
+								data:JSON.stringify(data),
+								contentType:"application/json",
+								method:"post",
+								async:true,
+								onSuccess:function(re){
+									var result = JSON.parse(re);
+									if(result.msg==="操作成功！"){
+										// var count = result.data ? result.data.length : 0 ;
+										var count = result.data ;
+										loading.close();
+										that.$message({
+											type: 'success',
+											message: '地区等级生成成功，创建' +count+ "个地区"
+										});
+										app.loadAreaRankData(result.data);
+										/* that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
+										that.jasMap.refreshLayerById( areaRankLayerId ); */
+									}else{
+										that.$alert('错误', '提示')
+									}
+								},
+								onError:function(){
+									//
 								}
-							},
-							onError:function(){
-								//
-							}
-						});
+							});
+						/* }
 					}
-				});	
+				});	 */
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
 				app.showAreaDialog('0', '地区等级列表', '150px');
@@ -431,7 +473,8 @@
 				window.jasTools.selfDialog.show({
 					title: title,
 					src: './dialogs/areaList.html?forBusiness=' + forBusiness,
-					height: '265px',
+					// height: '265px',
+					height: '290px',
 					// width: '290px',
 					width: '544px',
 					right:"4%",
@@ -459,35 +502,41 @@
 						"presure":p
 					}
 				};
-				/* Vue.prototype.$message({
-					type: 'success',
-					message: '计算中'
-				}); */
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				$.messager.confirm("确认", '生成新的高后果区？' , function (r) {
-					if (r) {
-						common.simpleAjaxLoader({
-							url:"../../../../zone/data/analysis.do",
-							data:JSON.stringify(postData),
-							contentType:"application/json",
-							method :"post",
-							async :false,
-							onSuccess :function(re){
-								var result = JSON.parse(re);
-								Vue.prototype.$message({
-									type: 'success',
-									message: result.msg
-								});
-								if(result.data > 0){
-									app.loadZoneCell();
-									app.showAreaDialog('1', '高后果区列表', '420px');
+				that.$confirm('生成新的高后果区？',  "提示",  {
+					type: 'warning',
+					callback: function(action){
+						if (action === 'confirm') {
+							var loading = that.$loading({
+								lock: true,
+								text: '识别中',
+								spinner: 'el-icon-loading',
+								background: 'rgba(0, 0, 0, 0.7)'
+							});
+							common.simpleAjaxLoader({
+								url:"../../../../zone/data/analysis.do",
+								data:JSON.stringify(postData),
+								contentType:"application/json",
+								method :"post",
+								async :true,
+								onSuccess :function(re){
+									var result = JSON.parse(re);
+									loading.close();
+									that.$message({
+										type: 'success',
+										message: result.msg
+									});
+									if(result.data > 0){
+										app.loadZoneCell();
+										app.showAreaDialog('1', '高后果区列表', '460px');
+									}
+								},
+								onError :function(){
+			
 								}
-							},
-							onError :function(){
-		
-							}
-						});
+							});
+						}
 					}
 				})
 			},
@@ -505,7 +554,7 @@
 					url:"../../../../zone/area.do",
 					data:JSON.stringify({
 						"pipesegmentTableName":"pd_pipesegment",
-						"pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+						"pipesegmentKeyValue":pipelineOid,
 						"pipesegmentKeyName":"eventid",
 						"bufferDistance":radius
 					}),
