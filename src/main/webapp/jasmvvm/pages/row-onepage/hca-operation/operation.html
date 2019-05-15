@@ -326,6 +326,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function (action) {
 						if (action === 'confirm') {
+							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '处理居民数据中......',
@@ -510,6 +511,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function(action){
 						if (action === 'confirm') {
+							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '识别中',
