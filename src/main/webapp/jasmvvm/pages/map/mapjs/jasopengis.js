@@ -366,12 +366,12 @@ var JasMap = null ,M = null;
                 return result ;
             }
             if(typeof featureId === "string"){
-                var fid = layerId + '.' + featureId;
+                var fid = commonUtil.getFeatureId(featureId ,layerId);
                 var target = source.getFeatureById(fid);
                 target && result.push(target);
             }else if(Array.isArray(featureId)){
                 for(var key in featureId){
-                    var fid = layerId + '.' + featureId[key];
+                    var fid = commonUtil.getFeatureId( featureId[key] ,layerId);
                     var t = source.getFeatureById(fid);
                     t && result.push(t);
                 }
@@ -3921,6 +3921,13 @@ var JasMap = null ,M = null;
             };
             _class.toGeoJson = function(features){
                 return new ol.format.GeoJSON().writeFeatures(features);
+            };
+            _class.getFeatureId = function(id ,layerId){
+                if(id.indexOf(layerId) === 0 ){
+                    return id ;
+                }else{
+                    return layerId + "." + id ;
+                }
             }
         }
         apiInit();
