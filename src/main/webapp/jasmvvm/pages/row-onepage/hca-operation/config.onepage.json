@@ -142,7 +142,7 @@
           "index":11,
           "loader":"none",
           "renderer":{
-            "style":"pipesegment"
+            "style":"bufferarea"
           }
         },{
           "id":"pd_settlement","visible":false,

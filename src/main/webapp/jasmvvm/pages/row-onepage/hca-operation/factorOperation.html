@@ -238,37 +238,51 @@
 			urlHref: function(){
 				location.href="../total/total.html";
 			},
-			createBuffer: function(){
-				var radius=app.bufferValue;
+			createBuffer: function(radius, piplineOid){
 				var that = this;
 				this.jasMap.commonUtil.simpleAjaxLoader({
 					url:"../../../../zone/area.do",
 					data:JSON.stringify({
 						"pipesegmentTableName":"pd_pipesegment",
-						"pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+						"pipesegmentKeyValue":piplineOid,
 						"pipesegmentKeyName":"eventid",
 						"bufferDistance":radius
 					}),
 					contentType:"application/json",
 					method:"post",
-					async:false,
+					async:true,
 					onSuccess:function(result){
 						var json = JSON.parse(result);
 						var format = new ol.format.WKT();
 						var geom = format.readGeometryFromText(json.data);
 						var options = {
 							layerId:'bufferLayerId',
-							style:'defaultBufferAreaStyle'
+							style:'bufferarea'
 						};
-						that.jasMap.clearGraphicsLayer('bufferLayerId');
+						// that.jasMap.clearGraphicsLayer('bufferLayerId');
 						that.jasMap.addPolygonGraphic(geom,options);
-						var pipeline = app.getPipeline();
+						/* var pipeline = app.getPipeline();
 						app.zoomToLine(pipeline,"start");
-						var mileage = pipeline.getCoordinates()[0].length;//! size
+						var mileage = pipeline.getCoordinates()[0].length;//! siz */
 						// 窗口关闭
-						jasTools.selfDialog.close();
+						app.onZoneBufferOpacityChanged();
 					}
 				});
+			},
+			onZoneBufferOpacityChanged: function(){
+				var layer = this.jasMap.getLayerById('bufferLayerId');
+				var source = layer.getSource();
+				var features = source.getFeatures();
+				for(var i = 0 ; i < features .length ; i++){
+					var feature = features[i];
+					var style = feature.getStyle();
+					var fillColor = style.getFill().getColor();
+					fillColor = this.jasMap.commonUtil.rgbaToArray(fillColor);
+					// fillColor[3] = '0.0';
+					style.getFill().setColor(fillColor);
+					//style.getFill().setColor([255,0,0,0.8]);
+					feature.changed();
+				}
 			},
 			zoomToLine: function(line ,zoomType){
 				if(zoomType === "start") {
@@ -298,16 +312,19 @@
 			},
 			createBh: function(){
 				//显示图层
-				this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-				var gasStationId = "pd_gas_station";
+				app.createBuffer(200, "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5");
+				app.createBuffer(200, "7c473241-5640-47a6-b343-22616eec5861");
+				app.createBuffer(200, "1a0df2e4-46f1-4814-b63c-983172c105c7");
+				this.jasMap.zoomAt('111.96716309' ,'34.52178955' ,15);
+				/* var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
 				var governmentId = "pd_government";
-				this.jasMap.layerVisibleSwitch('pd_settlement', true);
 				this.jasMap.layerVisibleSwitch(gasStationId,true)
 				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
-				this.jasMap.layerVisibleSwitch(governmentId,true)
+				this.jasMap.layerVisibleSwitch(governmentId,true) */
+				this.jasMap.layerVisibleSwitch('pd_settlement', true);
 				window.jasTools.selfDialog.show({
 					title: '要素编辑工具',
 					src: './dialogs/edit-settlement.html',
