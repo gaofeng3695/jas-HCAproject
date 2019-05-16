@@ -252,7 +252,7 @@ button {
 .login-title {
     width: 612px;
     height: 165px;
-    background: url(../images/login_title.png) no-repeat center center;
+    /* background: url(../images/login_title.png) no-repeat center center; */
     background-size: 100% 100%;
     position: relative;
     margin: 0px auto;
