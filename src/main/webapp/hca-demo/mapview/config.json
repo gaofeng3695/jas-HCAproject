@@ -1,0 +1,309 @@
+{
+  "appName":"高后果区评价技术预演",
+  "description":"",
+  "style":"lightblue",
+  "context":{
+    "tdt-key":"46631a6a7eeeefecf46ebc480483d9ca"
+  },
+  "resources":[
+    { "type":"css","url":"basepath:../lib/openlayer_v5.3.0/ol.css"},
+    { "type":"js","url":"basepath:../lib/openlayer_v5.3.0/ol.js","id":"ol.js" },
+    { "type":"css","url":"basepath:../lib/jquery-easyui/1.5.2/themes/icon.css"},
+    { "type":"css","url":"basepath:../lib/jquery-easyui/1.5.2/themes/default/easyui.css"},
+    { "type":"js","url":"basepath:../lib/jquery/jquery-1.12.4.min.js","id":"jquery.js"  },
+    { "type":"js","url":"basepath:../lib/jquery-easyui/1.5.2/jquery.easyui.min.js","relyOn":"jquery.js" ,"id":"easyui.js"  },
+    { "type":"js","url":"basepath:../lib/jquery-easyui/1.5.2/locale/easyui-lang-zh_CN.js","relyOn":"easyui.js" ,"id":"easyui-lang.js"  },
+    { "type":"js","url":"basepath:../lib/proj4js/proj4_2.4.4.js"},
+    { "type":"js","url":"basepath:../lib/FileSaver.min.js"},
+    { "type":"js","url":"basepath:mapmodules.js"  ,"relyOn":"easyui.js" },
+    { "type":"js","url":"basepath:mapstyles/default.js" ,"relyOn":"ol.js"  },
+    { "type":"js","url":"mymapstyles.js" ,"relyOn":"ol.js"  },
+    { "type":"js","url":"mymodules.js" ,"relyOn":"easyui.js"  }
+  ],
+  "map":{
+    "id":"jasMap",
+    "attribution":false,
+    "mapOptions":{
+      "center":[112.11308202, 33.97836435],
+      "level":9,
+      "projection":"EPSG:4326"
+    },
+    "basemaps":{
+      "label": "基础底图",
+      "baseMapLayers": [{
+        "id":"globe_img" ,
+        "label":"全球影像图",
+        "icon":"stylepath:images/basemap_img.png",
+        "type":"Tile",
+        "source":"google-image"
+      },{
+        "id":"globe_shp" ,
+        "icon":"stylepath:images/basemap_shp.png",
+        "index":2,
+        "label":"全球矢量图",
+        "type":"Tile",
+        "source":"google-vec"
+      }]
+    },
+    "optionallayers":[{
+        "id":"layerSet001",
+        "label":"业务图层",
+        "layerSet":[{
+             "id":"pd_centerlinestake",
+             "label":"中线桩",
+             "index":33,
+             "outFields":"oid,stakenumber,mileage,administrativedivision,lineid",
+             "maxScale":50000,
+             "listener":{
+                "onHover":{
+                  "responseType":"tip",
+                  "template":"桩号：${stakenumber},<br>里程：${mileage}"
+                },
+                "onClick":{
+                  "responseType":"infoWindow",
+                  "title":"信息弹窗",
+                  "content":"桩号：${stakenumber}<br>里程：${mileage}<br>位置：${administrativedivision}"
+                }
+              },
+             "renderer":{
+                "style":"centerlinestake" ,
+                "labelStyle":"secondLevelPointLabelStyle",
+                "labelField":"stakenumber"
+             }
+        }, {
+            "id":"pd_pipesegment",
+            "label":"管线",
+            "index":20,
+            "outFields":"eventid,pipesegmentname",
+            "declutter":true,
+            "strategy":"all",
+            "renderer":{
+              "style":"pipesegment2" ,
+              "labelStyle":"lineLabelStyle",
+              "labelField":"pipesegmentname"
+            },
+            "listener":{
+              "onDbClick":{
+                "responseType":"dialog",
+                "title":"线路段",
+                "url":"local/dialog-pipesegment.html"
+              }
+            }
+        }, {
+            "id":"bufferLayerId",
+            "label":"识别区缓冲区",
+            "index":11,
+            "loader":"none",
+            "renderer":{
+              "style":"pipesegment"
+            }
+          },{
+            "id":"pd_settlement","visible":false,
+            "label":"居民区","outFields":"*",
+            "renderer":{
+              "style":"polygon_renderer_by_settlement"
+            },
+            "index":11
+          },{
+            "id":"pd_arearankcell","visible":false,"flash":true,
+            "label":"地区等级识别单元","outFields":"*",
+            "index":11,
+            "listener": {
+              "onHover": {
+                "responseType": "tip",
+                "template": "开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
+              }
+            }
+          }, {
+            "id":"pd_arearank",
+            "label":"地区等级",
+            "outFields":"oid,rank,start_mileage,end_mileage,description",
+            "visible":false,"flash":true,
+            "index":11,
+            "listener": {
+              "onHover": {
+                "responseType": "tip",
+                "template": "地区等级：${rank},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
+              }
+            },
+            "renderer":{
+              "style":"polygon_renderer_by_arearank"
+            }
+          }, {
+            "id":"pd_zonerankcell","label":"高后果区识别单元", "outFields":"*",
+            "visible":false,
+            "index":11,
+            "renderer":{
+              "style":"hca_renderer_by_rank_style"
+            },"listener": {
+              "onHover": {
+                "responseType": "tip",
+                "template": "高后果等级：${rank},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
+              }
+            }
+          }
+        ]
+    },{
+      "id":"layerSet002",
+      "label":"特定场所",
+      "layerSet":[
+        {
+          "id":"pd_government",
+          "label":"政府机构",
+          "outFields":"","strategy":"bbox",
+          "visible":false,
+          "renderer":{
+            "style":"government_style"
+          },
+          "index":31
+        }, {
+          "id":"pd_hospital",
+          "label":"医疗院所","strategy":"bbox",
+          "outFields":"",
+          "visible":false,
+          "renderer":{
+            "style":"hospital_style"
+          },
+          "index":31
+        },{
+          "id":"pd_gas_station",
+          "index":31,"strategy":"bbox",
+          "label":"加油站",
+          "outFields":"",
+          "visible":false,
+          "renderer":{
+            "style":"gas_station_style"
+          }
+        },{
+          "id":"pd_entertainment_place",
+          "index":31,"strategy":"bbox",
+          "label":"娱乐场所",
+          "outFields":"",
+          "visible":false,
+          "renderer":{
+            "style":"entertainment_style"
+          }
+        }
+      ]
+    }
+    ]
+  },
+  "modules":[{
+    "id":"baseMapToolsBar","label":"地图工具条","class":"BaseMapToolsBar","icon":"","controller":true,"container":"map",
+    "moduleSet":[{
+      "type":"api","target":"zoomHome","label":"地图复位","index":"","icon":"stylepath:images/reset.png"
+    },{
+      "type":"api","target":"startPanMode","label":"地图导航","index":"","icon":"stylepath:images/mapPan.png"
+    },{
+      "type":"api","target":"zoomIn","label":"拖拽放大地图","index":"","icon":"stylepath:images/zoomIn.png"
+    },{
+      "type":"api","target":"zoomOut","label":"拖拽缩小地图","index":"","icon":"stylepath:images/zoomOut.png"
+    },{
+      "type":"api","target":"drawLineAndGetLength","label":"距离测量","index":"","icon":"stylepath:images/measureDistance.png","toggle":true
+    },{
+      "type":"api","target":"drawPolygonAndGetArea","label":"面积测量","index":"","icon":"stylepath:images/measureArea.png","toggle":true
+    },{
+      "type":"api","target":"clearAllGraphics","label":"清除标记","index":"","icon":"stylepath:images/clear.png"
+    },{
+      "type":"module","target":"coorsPosition","index":"","toggle":true
+    },{
+      "type":"module","target":"drawBox","index":"","toggle":true
+    },{
+      "type":"module","target":"layerListTree","index":"","toggle":true
+    },{
+      "type":"module","target":"circleQuery","index":"","toggle":true
+    },{
+      "type":"module","target":"polygonQuery","index":"","toggle":true
+    },{
+      "type":"api","target":"export","label":"导出图片","index":"","toggle":true,"icon":"stylepath:images/export.png"
+    }]
+  },{
+    "id":"layerListTree","label":"图层控制","class":"LayerListTree","icon":"stylepath:images/layers.png","enable":true,"container":"map"
+  },{
+    "id":"drawBox","label":"标绘","class":"DrawBox","icon":"stylepath:images/draw.png","enable":true
+  },{
+    "id":"coorsPosition","label":"坐标定位","class":"CoorsPosition","icon":"stylepath:images/quicklocate.png","enable":true
+  },{
+    "id":"baseMapsGallary","label":"底图切换","class":"BaseMapsGallary","icon":"stylepath:images/queryByPolygon.png","enable":true,
+    "options":{
+      "folded":false
+    }
+  },{
+    "id":"overViewMap","label":"鹰眼图","class":"OverViewMap","icon":"stylepath:images/queryByPolygon.png","enable":true,
+    "options":{
+      "url":"http://192.168.100.51:6080/arcgis/rest/services/%E8%A1%8C%E6%94%BF%E5%8C%BA%E5%88%92/MapServer"
+    }
+  },{
+    "id":"mapPrint","label":"地图打印","class":"MapPrint","icon":"stylepath:images/queryByPolygon.png","enable":false
+  },{
+    "id":"mapExport","label":"地图导出","class":"MapExport","icon":"stylepath:images/export.png","enable":true
+  },{
+    "id":"legendBox","class":"LegendBox","enable":false
+  },{
+    "id":"circleQuery","label":"圆查询","class":"CircleQuery",
+    "options":{
+      "showResultPanel":true,
+      "indexEnable":true,
+      "positionEnable":true,
+      "columns":[{
+        "field":"name","title":"名称","width":100,"align":"center"
+      },{
+        "field":"pipeline_oid","title":"线路段","width":100,"align":"center"
+      }],
+      "query":[{
+        "source":"pd_centerlinestake",
+        "sourceLabel":"中线桩",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"stakenumber,lineid"
+      },{
+        "source":"pd_station",
+        "sourceLabel":"站场",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"name,lineid"
+      },{
+        "source":"pd_valveroom",
+        "sourceLabel":"阀室",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"name,lineid"
+      }]
+    }
+  },{
+    "id":"polygonQuery","class":"PolygonQuery","enable":true,
+    "options":{
+      "showResultPanel":true,
+      "indexEnable":true,
+      "positionEnable":true,
+      "columns":[{
+        "field":"name","title":"名称","width":100,"align":"center"
+      },{
+        "field":"pipeline_oid","title":"线路段","width":100,"align":"center"
+      }],
+      "query":[{
+        "source":"pd_centerlinestake",
+        "sourceLabel":"中线桩",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"stakenumber,lineid"
+      },{
+        "source":"pd_station",
+        "sourceLabel":"站场",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"name,lineid"
+      },{
+        "source":"pd_valveroom",
+        "sourceLabel":"阀室",
+        "columnFields":"name,pipeline_oid",
+        "outFields":"name,lineid"
+      }]
+    }
+  },{
+    "id":"areaRankManager","class":"AreaRankManager","enable":true
+  },{
+    "id":"bufferArea","class":"bufferArea","enable":true
+  },{
+    "id":"hcaDataManager","class":"HcaDataManager","enable":true
+  },{
+    "id":"hcaEditorBox","class":"HcaEditorBox","enable":true
+  },{
+    "id":"rankCellResult","class":"RankCellResult","enable":true
+  }]
+}

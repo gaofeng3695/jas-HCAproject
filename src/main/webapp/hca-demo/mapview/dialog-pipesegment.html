@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <div id="dialog-Pipesegment-main">
+        <table id="info-table"> </table>
+    </div>
+    <script>
+        var dialogPipesegmentInit = function(e){
+            //
+            //var attr = JasMap.DialogParams["pd_pipesegment"]["click"];
+            var options = $("#map-dialog").dialog("options");
+            var attr = options["queryParams"];
+            var eventid = attr["eventid"];
+
+            $.ajax({
+                type:"post",
+                url:"./jasgis/pd_pipesegment/query.do?where=eventid=\'" + eventid +"\'&outFields=*&token=a121f973-5ed3-45c3-9874-031232a2a809&inSR=4490&outSR=4490",
+                success:function(str){
+                    var $tb = $("#info-table");
+                    var fec = JSON.parse(str);
+                    var features = fec.features;
+                    for(var i = 0 ; i < features.length ; i++){
+                        var prop = features[i].properties;
+                        for(var key in prop){
+                            var item = "<tr><td><label> " + key +"</label></td><td><span>" + prop[key]+"</span></td></tr>";
+                            $tb.append(item);
+                        }
+                    }
+                }
+            })
+        };
+        dialogPipesegmentInit();
+    </script>
+</body>
+</html>

@@ -156,12 +156,22 @@
 						if(feature){
 							var oid = feature.get("oid") ;
 							var name = feature.get("name") ;
+                            if(!oid) {
+                                top.$.messager.show({
+                                    title:'提示',
+                                    msg:'成功删除' + 1 + "个居民区" ,
+                                    timeout: 3000,
+                                    showType:'slide'
+                                });
+                                return
+                            }
+
 							var msg = "确定要删除要素" + name + " ？";
 							top.$.messager.confirm("确认", msg , function (r) {
 								if (r) {
 									var oids = [];
 									oids.push(oid);
-									that.jasMap.simpleAjaxLoader({
+									that.jasMap.commonUtil.simpleAjaxLoader({
 										url:"../../../../jasgis/" + currentSource + "/delete.do",
 										data:JSON.stringify(oids),
 										onSuccess:function(re){
@@ -173,6 +183,7 @@
 												timeout: 3000,
 												showType:'slide'
 											});
+											that.jasMap.refreshLayerById(currentSource);
 										}
 									})
 								}
