@@ -36,12 +36,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(item,index)  in detailData" @click='locate(item)'> 
-					<td >{{index+1}}</td> 
+				<tr v-for="(item,index)  in detailData" > 
+					<td>{{index+1}}</td> 
 					<td><span>{{item.name}}</span></td> 
 					<td>{{item.rank}}</td> 
 					<td>{{item.startMileage}}</td> 
 					<td>{{item.endMileage}}</td> 
+					<td  @click='locate(item)'><i style='cursor: pointer;' size="small"  class="fa fa-map-marker"> 定位</i></td> 
 				</tr>
 			</tbody>
 		</table>
@@ -60,14 +61,16 @@ var titleData = {
 		"编号",
 		"等级",
 		"起始里程",
-		"结束里程"
+		"结束里程",
+		"定位"
 	],
 	"hcaAreaField": [
 		"序号",
 		"编号",
 		"等级",
 		"起始里程",
-		"结束里程"
+		"结束里程",
+		"定位"
 	]
 };
 /**
@@ -153,12 +156,13 @@ var titleData = {
 							}
 						}
 						that.detailData = data;
-						console.log(data)
 					}
 				});
 			},
 			locate: function(item){
-				
+				this.jasMap.flashGraphic(item.oid,'pd_arearank' ,{
+					deep:2
+				});
 			}
 		},
 	});

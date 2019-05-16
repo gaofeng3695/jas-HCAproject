@@ -102,19 +102,19 @@
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
 						<div class="item-btn" @click="createBh">要素标绘</div>
-						<div class="item-btn" @click="showHistoryBtn(0)">地区等级划分</div>
+						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
 						<div class="item-btn" @click="showHistoryBtn(1)">高后果区识别</div>
 						<!-- <div class="item-btn" @click="showHistoryBtn">历史数据</div>
 						<div hidden class="item-btn history" @click="showHistoryList(0)">历史数据</div>
 						<div hidden class="item-btn history" @click="showHistoryList(1)">历史数据</div> -->
 					</div>
-					<div hidden class="area-div area">
+					<!-- <div hidden class="area-div area">
 						<div hidden class="item-btn area" @click="showHistoryList(0)">历史数据</div>
 						<div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
-					</div>
+					</div> -->
 					<div hidden class="hca-div hca">
-						<div hidden class="item-btn hca" @click="showHistoryList(1)">历史数据</div>
-						<div hidden class="item-btn hca" @click="createHcaArea">重新识别</div>
+						<div hidden class="item-btn hca" @click="showHistoryList(0)">历史地区等级</div>
+						<div hidden class="item-btn hca" @click="createHcaArea">当前地区等级</div>
 					</div>
 					<!--图层操作按钮-->
 					<div class="operate-div" style="top:110px">
@@ -283,7 +283,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						var geom = format.readGeometryFromText(json.data);
 						var options = {
 							layerId:'bufferLayerId',
-							style:'defaultBufferAreaStyle'
+							style:'bufferarea'
 						};
 						that.jasMap.clearGraphicsLayer('bufferLayerId');
 						that.jasMap.addPolygonGraphic(geom,options);
@@ -291,9 +291,25 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						app.zoomToLine(pipeline,"start");
 						var mileage = pipeline.getCoordinates()[0].length;//! size
 						// 窗口关闭
+						app.onZoneBufferOpacityChanged();
 						jasTools.selfDialog.close();
 					}
 				});
+			},
+			onZoneBufferOpacityChanged: function(){
+				var layer = this.jasMap.getLayerById('bufferLayerId');
+				var source = layer.getSource();
+				var features = source.getFeatures();
+				for(var i = 0 ; i < features .length ; i++){
+					var feature = features[i];
+					var style = feature.getStyle();
+					var fillColor = style.getFill().getColor();
+					fillColor = this.jasMap.commonUtil.rgbaToArray(fillColor);
+					// fillColor[3] = '0.1';
+					style.getFill().setColor(fillColor);
+					//style.getFill().setColor([255,0,0,0.8]);
+					feature.changed();
+				}
 			},
 			zoomToLine: function(line ,zoomType){
 				if(zoomType === "start") {
@@ -325,7 +341,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				$('.hca').hide();
 				$('.area').hide();
 				//显示图层
-				this.jasMap.zoomAt('110.56044198' ,'34.54878806' ,15);
+				this.jasMap.zoomAt('110.56310713' ,'34.54671800' ,18);
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
@@ -361,6 +377,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			randomSettlementData: function(){
+				app.showAreaDialogCreate('0', '地区等级列表', '150px');
 				var that = this;
 				var common = this.jasMap.commonUtil;
 				var msg = "确认重新生成地区等级？";
@@ -450,49 +467,40 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var areaRankLayerId = "pd_arearank";
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				/* that.$confirm(msg,  "提示", {
-					type: 'warning',
-					callback:  function (action) {
-						if (action === 'confirm') { */
-							var loading = that.$loading({
-								lock: true,
-								text: '重新生成地区等级......',
-								spinner: 'el-icon-loading',
-								background: 'rgba(0, 0, 0, 0.7)'
-							})
-							common.simpleAjaxLoader({
-								url:"../../../../zone/rank/analysis.do",
-								data:JSON.stringify(data),
-								contentType:"application/json",
-								method:"post",
-								async:true,
-								onSuccess:function(re){
-									var result = JSON.parse(re);
-									if(result.msg==="操作成功！"){
-										// var count = result.data ? result.data.length : 0 ;
-										var count = result.data ;
-										loading.close();
-										that.$message({
-											type: 'success',
-											message: '地区等级生成成功，创建' +count+ "个地区"
-										});
-										app.loadAreaRankData(result.data);
-										/* that.jasMap.layerVisibleSwitch( areaRankLayerId ,true)
-										that.jasMap.refreshLayerById( areaRankLayerId ); */
-									}else{
-										that.$alert('错误', '提示')
-									}
-								},
-								onError:function(){
-									//
-								}
+				var loading = that.$loading({
+					lock: true,
+					text: '重新生成地区等级......',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				})
+				common.simpleAjaxLoader({
+					url:"../../../../zone/rank/analysis.do",
+					data:JSON.stringify(data),
+					contentType:"application/json",
+					method:"post",
+					async:true,
+					onSuccess:function(re){
+						var result = JSON.parse(re);
+						if(result.msg==="操作成功！"){
+							// var count = result.data ? result.data.length : 0 ;
+							var count = result.data ;
+							loading.close();
+							that.$message({
+								type: 'success',
+								message: '地区等级生成成功，创建' +count+ "个地区"
 							});
-						/* }
+							app.loadAreaRankData(result.data);
+						}else{
+							that.$alert('错误', '提示')
+						}
+					},
+					onError:function(){
+						//
 					}
-				});	 */
+				});
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
-				app.showAreaDialog('0', '地区等级列表', '150px');
+				app.showAreaDialogCreate('0', '地区等级列表', '150px');
 				// this.jasMap.refreshLayerById( 'pd_arearank' );
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);
 				/* var pipeline = app.getPipeline();
@@ -515,6 +523,18 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					this.jasMap.addPolygonGraphic(geom,options);
 				}
 			},
+			showAreaDialogCreate: function(forBusiness, title, top){
+				window.jasTools.selfDialog.show({
+					title: title,
+					src: './dialogs/areaListCreate.html?forBusiness=' + forBusiness,
+					// height: '265px',
+					height: '290px',
+					// width: '290px',
+					width: '544px',
+					right:"4%",
+					top: top
+				})
+			},
 			showAreaDialog: function(forBusiness, title, top){
 				window.jasTools.selfDialog.show({
 					title: title,
@@ -536,6 +556,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				module.refresh(data);
 			},
 			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
+				$('.hca').hide();
 				var d = 1100;	// 管径
 				var p = 88;	// 管道最大压强
 				var postData = {
