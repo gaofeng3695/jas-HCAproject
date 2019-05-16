@@ -296,6 +296,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
 				this.jasMap.layerVisibleSwitch(governmentId,true)
+				var that = this;
 				window.jasTools.selfDialog.show({
 					title: '要素编辑工具',
 					src: './dialogs/edit-settlement.html',
@@ -303,7 +304,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					// width: '290px',
 					width: '380px',
 					left:"10%",
-					top:"140px"
+					top:"140px",
+					cbForClose: function(){
+						that.jasMap.startPanMode();
+					}
 				})
 				
 			},
