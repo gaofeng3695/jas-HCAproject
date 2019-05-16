@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../src/css/main.css">
+	<style>
+        html,body,
+		#app{
+			width: 100%;
+			height: 100%;
+			background:transparent;
+        }
+        .content{
+            color:#f0f8ff;
+            padding: 10px;
+        }
+        
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+
+		<div class="content">
+			<div class='attrs'>
+				<h3>属性编辑</h3>
+				<table class='grid' style='width: 100%;'>
+					<!-- <tr>
+						<td class='td-title'><label>OID</label></td>
+						<td><input style='width:100px' class='attr-ipt' type='text' value='' id='oid'></td>
+						<td class='td-title'><label>名称</label></td>
+						<td><input style='width:100px' class='attr-ipt' type='text' data-field='name'></td>
+					</tr>
+					<tr>
+						<td class='td-title'><label>编码</label></td>
+						<td><input style='width:100px' class='attr-ipt' type='text' data-field='code'></td>
+						<td class='td-title'><label>户数</label></td>
+						<td><input style='width:100px' class='attr-ipt' type='text' data-field='households'></td>
+					</tr> -->
+				</table>
+			</div>
+		</div>
+		<div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 6px;">
+			<el-button size="small" @click="cancel()">取 消</el-button>
+			<el-button size="small" type="primary" @click="createBuffer()">确 定
+			</el-button>
+		</div>
+
+	</div>
+</body>
+<script src="./../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../lib/vue/vue.js"></script>
+<script src="./../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+
+<script src="../components/onepage-components.js "></script>
+<script src="./../../../../common/js/jas-tools.js"></script>
+
+<script>
+
+var changedFeatures = [];
+var currentSource = 'pd_settlement';
+var fields= [{
+				"title": "OID", "field": "oid"
+			}, {
+				"title": "名称", "field": "name"
+			}, {
+				"title": "编码", "field": "code"
+			}, {
+				"title": "户数", "field": "households"
+			}, {
+				"title": "人口", "field": "population"
+			},{
+				"title": "起始里程", "field": "start_mileage"
+			},{
+				"title": "结束里程", "field": "end_mileage"
+			},{
+				"title": "水平距离", "field": "horizontal_distance"
+			},{
+				"title": "垂直距离", "field": "vertical_distance"
+			},{
+				"title": "开始坐标x", "field": "start_x"
+			},{
+				"title": "开始坐标y", "field": "start_y"
+			},{
+				"title": "开始坐标y", "field": "start_y"
+			},{
+				"title": "要素类型", "field": "feature_type"
+			},{
+				"title": "建筑分布", "field": "building_type"
+			}];
+	var app = new Vue({
+		el: "#app",
+		data: function () {
+			var that = this;
+			return {
+			}
+		},
+		created: function () {
+            var that = this;
+			parent.app.bufferValue=200;
+			this.jasMap = parent.app.jasMap;
+			var feature = parent.app.feature;
+			console.log(feature)
+			var featureAttr = parent.app.featureAttr;
+			this.initAttrTable(feature, featureAttr);
+			this.refreshAttrTable(feature, featureAttr);
+		},
+		methods: {
+            cancel: function(){
+                top.jasTools.selfDialog.close();
+            },
+			initAttrTable : function(feature ,featureAttr){
+				var table =  $("table.grid");
+				$("input.attr-ipt" ,table).change();
+				table.empty();
+
+				table.append("<tbody></tbody>");
+
+				var tbody = $("tbody", table);
+
+				for (var i = 0; i < fields.length; i++) {
+					if(i % 2 === 0 ){
+						tbody.append("<tr></tr>") ;
+					}
+					var tr = $("tr",tbody).last();
+					var item = fields[i];
+					var td_title = "<td class='td-title'><label>" + item.title + "</label></td>";
+					var td_ipt = "<td><input style='width:100px' class='attr-ipt' type='text' id='" + item.field +"'></td>";
+					tr.append(td_title);
+					tr.append(td_ipt);
+				}
+			},
+			refreshAttrTable: function(feature ,attr){
+				/* var uuid = this.jasMap.commonUtil.uuid();
+				$("#oid" ).val("uuid"); */
+				console.log($('.grid').find('input'))
+				console.log(attr);
+				var tbody = $("tbody", $('.grid')[0] );
+				for(var i = 0 ; i < fields.length ; i++ ){
+					var field = fields[i]['field'];
+					var value = attr[field] ? attr[field]:'';
+					$("input#" + field+".attr-ipt" ,tbody).val(value);
+				}
+				$("input.attr-ipt" ,tbody).change();
+
+				if(JSON.stringify(attr) !== "{}"){
+					for(var i = 0 ; i < fields.length ; i++ ){
+						var field = fields[i]['field'];
+						var value = attr[field] ? attr[field]:'';
+						// $("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
+						console.log(value)
+						$("input#" + field+".attr-ipt" ,tbody).val(value);
+						console.log($("input#" + field+".attr-ipt" ,tbody).val())
+					}
+				}else{
+					for(var i = 0 ; i < fields.length ; i++ ){
+						$("input.attr-ipt",tbody).val("");
+					}
+				}
+				//
+				/* $("input.attr-ipt" ,tbody).on("change",function(e){
+					var ipt = $(e.target);
+					var field = ipt.attr("id");
+					var value = ipt.val();            //设置要素的属性
+					feature.set(field,value);
+				}); */
+
+				if(attr && !attr["oid"] ){
+					var uuid = this.jasMap.commonUtil.uuid();
+					$("input#oid.attr-ipt" ,tbody).val(uuid).change();
+				}
+			}
+		},
+	});
+</script>
+
+</html>
