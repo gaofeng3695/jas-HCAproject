@@ -50,6 +50,24 @@
 				line-height: 34px;
 				z-index: 10;
 			}
+			.area-div {
+				position: absolute;
+				top: 226px;
+				left: 143px;
+				display: inline-block;
+				box-sizing: border-box;
+				line-height: 34px;
+				z-index: 10;
+			}
+			.hca-div {
+				position: absolute;
+				top: 300px;
+				left: 143px;
+				display: inline-block;
+				box-sizing: border-box;
+				line-height: 34px;
+				z-index: 10;
+			}
 			.item-btn{
 				cursor: pointer;
 				color: rgb(184, 222, 255);
@@ -84,11 +102,19 @@
 					<div class="operate-left-div">
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
 						<div class="item-btn" @click="createBh">要素标绘</div>
-						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
-						<div class="item-btn" @click="createHcaArea">高后果区识别</div>
-						<div class="item-btn" @click="showHistoryBtn">历史数据</div>
-						<div hidden class="item-btn history" @click="showHistoryList(0)">地区等级数据</div>
-						<div hidden class="item-btn history" @click="showHistoryList(1)">高后果区数据</div>
+						<div class="item-btn" @click="showHistoryBtn(0)">地区等级划分</div>
+						<div class="item-btn" @click="showHistoryBtn(1)">高后果区识别</div>
+						<!-- <div class="item-btn" @click="showHistoryBtn">历史数据</div>
+						<div hidden class="item-btn history" @click="showHistoryList(0)">历史数据</div>
+						<div hidden class="item-btn history" @click="showHistoryList(1)">历史数据</div> -->
+					</div>
+					<div hidden class="area-div area">
+						<div hidden class="item-btn area" @click="showHistoryList(0)">历史数据</div>
+						<div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
+					</div>
+					<div hidden class="hca-div hca">
+						<div hidden class="item-btn hca" @click="showHistoryList(1)">历史数据</div>
+						<div hidden class="item-btn hca" @click="createHcaArea">重新识别</div>
 					</div>
 					<!--图层操作按钮-->
 					<div class="operate-div" style="top:110px">
@@ -227,6 +253,15 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			createBuffer: function(){
+				var gasStationId = "pd_gas_station";
+				var entertainmentPlaceId = "pd_entertainment_place";
+				var hospitalId = "pd_hospital";
+				var governmentId = "pd_government";
+				this.jasMap.layerVisibleSwitch('pd_settlement', true);
+				this.jasMap.layerVisibleSwitch(gasStationId,true)
+				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
+				this.jasMap.layerVisibleSwitch(hospitalId,true)
+				this.jasMap.layerVisibleSwitch(governmentId,true)
 				var radius=app.bufferValue;
 				var that = this;
 				this.jasMap.commonUtil.simpleAjaxLoader({
@@ -330,7 +365,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function (action) {
 						if (action === 'confirm') {
-							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '处理居民数据中......',
@@ -515,7 +550,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function(action){
 						if (action === 'confirm') {
-							this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
 								text: '识别中',
@@ -617,11 +652,20 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					strategy:"all"
 				});
 			},
-			showHistoryBtn: function(){
-				$('.history').show();
+			showHistoryBtn: function(forBusiness){
+				if(forBusiness == "0"){
+					//$('.operate-right-div:last-of-type').hide();
+					$('.hca').hide();
+					$('.area').show();
+				}
+				if(forBusiness == "1"){
+					$('.area').hide();
+					$('.hca').show();
+				}
 			},
 			showHistoryList: function(forBusiness){
-				$('.history').hide();
+				$('.area').hide();
+				$('.hca').hide();
 				if(forBusiness == "0"){
 					window.jasTools.selfDialog.show({
 						id: 'hcaAreaList',
@@ -700,7 +744,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 }
                 this.jasMap.switchBaseMap(this.baseMap);
             },
-
+			
 		}
 	})
 </script>

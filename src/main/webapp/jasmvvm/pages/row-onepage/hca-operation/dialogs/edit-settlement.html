@@ -48,10 +48,10 @@
 					<el-button @click='saveAll' size="small" plain type="primary" >保存所有</el-button>
 				</el-row>
 			</div>
-            <div class='attrs' hidden>
+            <!-- <div class='attrs' hidden>
 				<h3>属性编辑</h3>
 				<table class='grid' style='width: 100%;'></table>
-			</div>
+			</div> -->
         </div>
         <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 6px;">
             <el-button size="small" @click="cancel()">取 消</el-button>
@@ -138,14 +138,26 @@
             	})
 			},
 			edit: function(){
+				var that = this;
 				this.jasMap.editGraphic(currentSource, {
 					onSelected: function (feature ,attr) {
+						// top.jasTools.selfDialog.close();
 						var fId = feature.getId();
 						changedFeatures[fId] = feature;
 						$('.attrs').show();
-						console.log(attr)
-						app.initAttrTable();
-						app.refreshAttrTable(feature,attr);
+						parent.app.feature = feature;
+						parent.app.featureAttr = attr;
+						// app.initAttrTable();
+						// app.refreshAttrTable(feature,attr);
+						top.jasTools.selfDialog.show({
+							title: '要素属性编辑',
+							src: './dialogs/settlement.html',
+							height: '283px',
+							// width: '290px',
+							width: '544px',
+							left:"35%",
+							top:"142px"
+						})
 					}
 				});
 			},
@@ -277,40 +289,7 @@
 					tr.append(td_ipt);
 				}
 			},
-			refreshAttrTable: function(feature ,attr){
-				var tbody = $("tbody", $('.grid')[0] );
-
-				for(var i = 0 ; i < fields.length ; i++ ){
-					var field = fields[i]['field'];
-					var value = attr[field] ? attr[field]:'';
-					$("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
-				}
-				/* $("input.attr-ipt" ,tbody).change();
-
-				if(JSON.stringify(attr) !== "{}"){
-					for(var i = 0 ; i < fields.length ; i++ ){
-						var field = fields[i]['field'];
-						var value = attr[field] ? attr[field]:'';
-						$("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
-					}
-				}else{
-					for(var i = 0 ; i < fields.length ; i++ ){
-						$("input.attr-ipt",tbody).val("");
-					}
-				} */
-				//
-				$("input.attr-ipt" ,tbody).on("change",function(e){
-					var ipt = $(e.target);
-					var field = ipt.attr("data-field");
-					var value = ipt.val();            //设置要素的属性
-					feature.set(field,value);
-				});
-
-				if(attr && !attr["oid"] ){
-					var uuid = this.jasMap.commonUtil.uuid();
-					$("input.attr-ipt[data-field='oid']" ,tbody).val(uuid).change();
-				}
-			}
+			
 		},
 	});
 </script>
