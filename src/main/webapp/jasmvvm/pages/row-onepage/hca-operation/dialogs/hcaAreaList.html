@@ -47,7 +47,7 @@
 					<td>
 						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
 						<i size="small"  class="fa fa-minus">删除 &emsp;</i>
-						<i size="small"  class="fa fa-minus">导入 &emsp;</i>
+						<i size="small"  @click='importFile' class="fa fa-arrow-down">导入 &emsp;</i>
 						<i size="small"  @click='previewFile' class="fa fa-file-text-o">生成报告</i>
 					</td>
 					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
@@ -157,6 +157,14 @@ var detailData=[
 					title: '分析报告',
 					src: './dialogs/preview_file.html',
 					height: '740px',
+					width: '35%',
+				})
+			},
+			importFile: function(){
+				top.jasTools.dialog.show({
+					title: '导入',
+					src: './dialogs/upload.html?forbusiness='+this.forBusiness,
+					height: '488px',
 					width: '35%',
 				})
 			}
