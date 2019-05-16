@@ -125,7 +125,7 @@
 						<!-- <span class="threeD" @click="open3D"></span> -->
 						<!-- <span class="tuceng" @click="openTuCeng"></span> -->
 					</div>
-			 <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent;">
+			 <div id="jasMap" class="" style="height:100%;width:100%;background: transparent;">
 					  	<div class="map-info" v-show="!ismax" >
 					  		 <div style="height: 40px;background: #01060900 url(../../../src/images/line.png) no-repeat 10px 12px;">
        							<span style="padding-left:24px;line-height: 40px;color: #fff;font-size: 16px;">要素单元信息</span>
@@ -133,12 +133,13 @@
 							<table class="rank-table-my">
 								<thead>
 									<tr> 
-										<th>序号</th> <th>管线名称</th> <th>要素编号</th><th>起始里程</th><th>终止里程</th><th>要素类型</th><th>户数</th><th>采集时间</th><th>采集人员</th>
+										<th>序号</th> <th>管线名称</th> <th>要素编号</th><th>起始里程</th><th>终止里程</th><th>要素类型</th><th>户数</th><th>采集时间</th><th>采集人员</th><th>操作</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr v-for="(item,index)  in detailData"> 
 										<td><span>{{index+1}}</span></td><td>{{item.b}}</td><td>{{item.c}}</td><td>{{item.d}}</td><td>{{item.e}}</td><td>{{item.f}}</td><td>{{item.g}}</td><td>{{item.h}}</td><td>{{item.a}}</td>
+										<td @click='locate(item)'><i style='cursor: pointer;' size="small"  class="fa fa-map-marker"> 定位</i></td>
 								</tbody>
 							</table>
 					      </div>
@@ -657,7 +658,11 @@
                 }
                 this.jasMap.switchBaseMap(this.baseMap);
             },
-
+			locate: function(item){
+				this.jasMap.flashGraphic('0f8ff61b-94f0-4e40-afa9-0efde4c03c6d', 'pd_settlement',{
+					deep:2
+				});
+			}
 		}
 	})
 </script>

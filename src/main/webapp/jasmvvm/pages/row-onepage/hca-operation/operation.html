@@ -264,6 +264,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
 				this.jasMap.layerVisibleSwitch(governmentId,true)
+				this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
+				this.jasMap.layerVisibleSwitch('pd_arearank',false)
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
 				var radius=app.bufferValue;
 				var that = this;
 				this.jasMap.commonUtil.simpleAjaxLoader({
@@ -377,7 +380,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			randomSettlementData: function(){
-				app.showAreaDialogCreate('0', '地区等级列表', '150px');
+				// app.showAreaDialogCreate('0', '地区等级列表', '150px');
 				var that = this;
 				var common = this.jasMap.commonUtil;
 				var msg = "确认重新生成地区等级？";
