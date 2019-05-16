@@ -30,20 +30,7 @@
 		<div class="content">
 			<div class='attrs'>
 				<h3>属性编辑</h3>
-				<table class='grid' style='width: 100%;'>
-					<!-- <tr>
-						<td class='td-title'><label>OID</label></td>
-						<td><input style='width:100px' class='attr-ipt' type='text' value='' id='oid'></td>
-						<td class='td-title'><label>名称</label></td>
-						<td><input style='width:100px' class='attr-ipt' type='text' data-field='name'></td>
-					</tr>
-					<tr>
-						<td class='td-title'><label>编码</label></td>
-						<td><input style='width:100px' class='attr-ipt' type='text' data-field='code'></td>
-						<td class='td-title'><label>户数</label></td>
-						<td><input style='width:100px' class='attr-ipt' type='text' data-field='households'></td>
-					</tr> -->
-				</table>
+				<table class='grid' style='width: 100%;'></table>
 			</div>
 		</div>
 		<div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 6px;">
@@ -99,23 +86,21 @@ var fields= [{
 		data: function () {
 			var that = this;
 			return {
+				featureAttr: {}
 			}
 		},
 		created: function () {
             var that = this;
 			parent.app.bufferValue=200;
 			this.jasMap = parent.app.jasMap;
-			var feature = parent.app.feature;
-			console.log(feature)
-			var featureAttr = parent.app.featureAttr;
-			this.initAttrTable(feature, featureAttr);
-			this.refreshAttrTable(feature, featureAttr);
+			this.featureAttr = parent.app.featureAttr;
+			this.initAttrTable();
 		},
 		methods: {
             cancel: function(){
                 top.jasTools.selfDialog.close();
             },
-			initAttrTable : function(feature ,featureAttr){
+			initAttrTable : function(){
 				var table =  $("table.grid");
 				$("input.attr-ipt" ,table).change();
 				table.empty();
@@ -131,51 +116,16 @@ var fields= [{
 					var tr = $("tr",tbody).last();
 					var item = fields[i];
 					var td_title = "<td class='td-title'><label>" + item.title + "</label></td>";
-					var td_ipt = "<td><input style='width:100px' class='attr-ipt' type='text' id='" + item.field +"'></td>";
+					var td_ipt = "<td><input style='width:100px' v-model='featureAttr." +item.field+ "' class='attr-ipt' type='text' id='" + item.field +"'></td>";
+					if(item.field == 'oid' && !(this.featureAttr.oid)){
+						var uuid = this.jasMap.commonUtil.uuid();
+						td_ipt = "<td><input style='width:100px' class='attr-ipt' type='text' id='oid' value='" + uuid +"'></td>";
+					}
+					
 					tr.append(td_title);
 					tr.append(td_ipt);
 				}
 			},
-			refreshAttrTable: function(feature ,attr){
-				/* var uuid = this.jasMap.commonUtil.uuid();
-				$("#oid" ).val("uuid"); */
-				console.log($('.grid').find('input'))
-				console.log(attr);
-				var tbody = $("tbody", $('.grid')[0] );
-				for(var i = 0 ; i < fields.length ; i++ ){
-					var field = fields[i]['field'];
-					var value = attr[field] ? attr[field]:'';
-					$("input#" + field+".attr-ipt" ,tbody).val(value);
-				}
-				$("input.attr-ipt" ,tbody).change();
-
-				if(JSON.stringify(attr) !== "{}"){
-					for(var i = 0 ; i < fields.length ; i++ ){
-						var field = fields[i]['field'];
-						var value = attr[field] ? attr[field]:'';
-						// $("input.attr-ipt[data-field='" + field+"']",tbody).val(value);
-						console.log(value)
-						$("input#" + field+".attr-ipt" ,tbody).val(value);
-						console.log($("input#" + field+".attr-ipt" ,tbody).val())
-					}
-				}else{
-					for(var i = 0 ; i < fields.length ; i++ ){
-						$("input.attr-ipt",tbody).val("");
-					}
-				}
-				//
-				/* $("input.attr-ipt" ,tbody).on("change",function(e){
-					var ipt = $(e.target);
-					var field = ipt.attr("id");
-					var value = ipt.val();            //设置要素的属性
-					feature.set(field,value);
-				}); */
-
-				if(attr && !attr["oid"] ){
-					var uuid = this.jasMap.commonUtil.uuid();
-					$("input#oid.attr-ipt" ,tbody).val(uuid).change();
-				}
-			}
 		},
 	});
 </script>
