@@ -168,27 +168,36 @@
 						if(feature){
 							var oid = feature.get("oid") ;
 							var name = feature.get("name") ;
+                            if(!oid) {
+                                top.$.messager.show({
+                                    title:'提示',
+                                    msg:'成功删除' + 1 + "个居民区" ,
+                                    timeout: 3000,
+                                    showType:'slide'
+                                });
+                                return
+                            }
+
 							var msg = "确定要删除要素" + name + " ？";
-							parent.app.$confirm(msg, "提示",  
-							{
-								type: 'warning',
-								callback: function (action) {
-									if (action === 'confirm') {
-										var oids = [];
-										oids.push(oid);
-										that.jasMap.simpleAjaxLoader({
-											url:"../../../../jasgis/" + currentSource + "/delete.do",
-											data:JSON.stringify(oids),
-											onSuccess:function(re){
-												var result = JSON.parse(re);
-												var count =  result.data;
-												parent.app.$message({
-													type:'success',
-													message:'成功删除' + count + "个居民区" ,
-												});
-											}
-										})
-									}
+							top.$.messager.confirm("确认", msg , function (r) {
+								if (r) {
+									var oids = [];
+									oids.push(oid);
+									that.jasMap.commonUtil.simpleAjaxLoader({
+										url:"../../../../jasgis/" + currentSource + "/delete.do",
+										data:JSON.stringify(oids),
+										onSuccess:function(re){
+											var result = JSON.parse(re);
+											var count =  result.data;
+											top.$.messager.show({
+												title:'提示',
+												msg:'成功删除' + count + "个居民区" ,
+												timeout: 3000,
+												showType:'slide'
+											});
+											that.jasMap.refreshLayerById(currentSource);
+										}
+									})
 								}
 							})
 						}
@@ -221,13 +230,12 @@
 				var common = that.jasMap.commonUtil;
 				var size = features.length ;
 				if(size === 0){
-					/* parent.$.messager.show({
+					parent.$.messager.show({
 						title:'提示',
 						msg:'没有需要保存的要素' ,
 						timeout: 3000,
 						showType:'slide'
-					}); */
-					parent.app.$alert('没有需要保存的要素', '提示')
+					});
 					return
 				}
 				//

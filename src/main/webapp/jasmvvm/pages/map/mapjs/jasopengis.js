@@ -706,7 +706,6 @@ var JasMap = null ,M = null;
                 "yoffset": 0,
                 "center": false
             };
-
         };
         _this.removeGraphics = function(layerId , featureIds){
             var layer = _this.getLayerById(layerId);
@@ -1734,6 +1733,7 @@ var JasMap = null ,M = null;
                         if(ly && ly.callback){
                             ly.callback({
                                 layerId:layerId,
+                                layer:ly.layer,
                                 attributes:feature.getProperties() ,
                                 feature:feature,
                                 pixel:pixel ,
@@ -2147,13 +2147,14 @@ var JasMap = null ,M = null;
 
                 };
                 var onClicked = function(e){
-                    var fId = e.feature.getId();
-                    _this.removeGraphics(e.layerId,[fId]);
+                    var feature = e.feature;
+                    var layer = e.layer ;
+                    var source = layer.getSource();
+                    source.removeFeature(feature);
                     if(params.onDelete && typeof params.onDelete === 'function'){
                         params.onDelete(e.feature);
                     }
                 };
-                //_this.removeEventListener(deleteListener);
                 deleteListener = _this.addLayerClickEventListener(targetLayer.get('id'),onClicked);
                 return;
             };
@@ -2917,8 +2918,8 @@ var JasMap = null ,M = null;
                 _this.subscribe( _this.Events .OptionalLayerReload ,onOptionalLayerReload);
             };
             _class.refreshLayerById = function(layerId,options){
-                //var visible = _this.getLayerVisible(layerId);
-                var visible = options.show;
+                var v = _this.getLayerVisible(layerId);
+                var visible = ( options && options.show !== undefined ) ? options.show : v;
                 var flg = _class.removeLayerById(layerId ,true);
                 if(flg){
                     var layerConfig = getLayerConfigById(layerId);
@@ -3042,7 +3043,8 @@ var JasMap = null ,M = null;
                 var id = "";
                 if(dotIndex >= 0 ){
                     id = featureId.substring( dotIndex + 1);
-                }               var attributes = feature.getProperties();
+                }
+                var attributes = feature.getProperties();
                 attributes.id = id;
             };
             _class.getLayerIdByFeature = function(feature){
@@ -3899,7 +3901,17 @@ var JasMap = null ,M = null;
                 return result;
             };
             _class.rgbaToArray = function(str){
-
+                if(!Array.isArray(str)){
+                    var idx1 = str.indexOf("(") + 1 ;
+                    var idx2 = str.indexOf(")") ;
+                    var colorArray = str.substring(idx1 ,idx2).split(",") ;
+                    colorArray.map(function(v){
+                        return parseFloat(v) ;
+                    });
+                    return colorArray;
+                }else{
+                    return str ;
+                }
             };
             _class.uuid = function (len, radix) {
                 var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(''), uuid = [], i;
