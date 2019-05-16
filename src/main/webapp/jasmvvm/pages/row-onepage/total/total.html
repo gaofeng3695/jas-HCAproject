@@ -220,8 +220,46 @@
 /*     font-size:24px; */
     color:#0ff1e9
 }
-			
-			
+ i:hover{
+			cursor: pointer;
+		}		
+			.fieldset-body{
+	width:100%;
+	height:100%;
+	display: flex;
+	justify-content: space-between;
+	align-items:stretch
+}
+.fieldset-item{
+	flex-basis:50%;
+	display: flex;
+}
+.fieldset-item .item-img{
+	flex-basis:40%;
+	position:relative
+}
+.fieldset-item .item-img img{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate;
+	transform: translate(-50%,-50%);
+}
+.fieldset-item .item-info{
+	flex-basis:60%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.fieldset-item .item-info .item-title{
+	font-size: 16px;
+	color: #eeeeee;
+	line-height: 30px;
+}
+.fieldset-item .item-info .item-val{
+	font-size:32px;
+	color:#0ff1e9
+}		
 	</style>
 </head>
 
@@ -233,10 +271,32 @@
 					<jas-panel-opacity title="管线管理">
 						<div id="pipelineButton" @click="pipelineMapPage" :style="[pipelineStyle]" @mouseover="isActive1=true" @mouseout="isActive1=false" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
 						<div class="pipeline" style="height:100%;">
+						<div style="height:25%" >
+								<div class="fieldset-body">
+							<div class="fieldset-item">
+								<div class="item-img">
+									<img src="./image/not-check.png" alt="">
+								</div>
+								<div class="item-info">
+									<p class="item-val">5<span style="font-size:16px;">  条</span></p>	
+									<p class="item-title">本年度已识别</p>
+								</div>	
+							</div>	
+							<div class="fieldset-item">
+								<div class="item-img">
+									<img src="./image/not-repaire.png" alt="">
+								</div>
+								<div class="item-info">
+									<p class="item-val">3<span style="font-size:16px;">  条</span></p>	
+									<p class="item-title">本年度未识别</p>
+								</div>	
+							</div>	
+						</div>	
+							</div>
 							<div class="pipelineList" id="first_pipeline">
 								<ul >
 									<li><span>管线名称：</span>陕京四线
-									<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
+									<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>123KM</li>
 									<li><span>最近评价时间：</span>2019年4月12日</li>
@@ -245,7 +305,7 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>京津线
-									<div class="icon">已识别&emsp;<i :style="[buttonStyle(2)]" @mouseover="isClick=2" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(2)]" @mouseover="isClick=2" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>83.4KM</li>
 									<li><span>最近评价时间：</span>2018年6月13日
@@ -257,23 +317,12 @@
 							<div class="pipelineList" >
 								<ul >
 									<li><span>管线名称：</span>秦京线
-									<div class="icon">已识别&emsp;<i :style="[buttonStyle(3)]" @mouseover="isClick=3" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
+									<div class="icon">已识别&emsp;<i :style="[buttonStyle(3)]" @mouseover="isClick=3" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
 									</li>
 									<li><span>管线长度：</span>324.6KM</li>
 									<li><span>最近评价时间：</span>2019年4月22日</li>
 								</ul>
 							</div>
-							<div class="pipelineList" >
-								<ul >
-									<li><span>管线名称：</span>潜荆线
-									<div class="icon">已识别&emsp;<i :style="[buttonStyle(4)]" @mouseover="isClick=4" @mouseout="isClick=0"  @click="intoMap" class="fa fa-search" aria-hidden="true"></i></div>
-									</li>
-									<li><span>管线长度：</span>90KM</li>
-									<li><span>最近评价时间：</span>2019年2月14日</li>
-								</ul>
-							</div>
-							
-							
 						</div>
 					</jas-panel-opacity>
 				</div>
@@ -422,7 +471,7 @@
 								</thead>
 								<tbody>
 									<tr v-for="(item,index)  in detailData"> 
-										<td><span>{{index+1}}</span></td><td>{{item.projectName}}</td> <td>{{item.one}}</td><td>{{item.two}}</td><td>{{item.three}}</td><td>{{item.datetime}}</td><td><i class="fa fa-eye" style="color:#efc276" aria-hidden="true"></i></td>
+										<td><span>{{index+1}}</span></td><td>{{item.projectName}}</td> <td>{{item.one}}</td><td>{{item.two}}</td><td>{{item.three}}</td><td>{{item.datetime}}</td><td><i class="fa fa-eye" @click='previewFile' style="color:#efc276" aria-hidden="true"></i></td>
 									</tr>
 								</tbody>
 							</table>
@@ -513,9 +562,9 @@
 				that.getThematicStatisticsPie();
 				that.detailData=[
 									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
-									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
-									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
-									{"projectName":"西南管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"}
+									{"projectName":"京津管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
+									{"projectName":"内蒙管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"},
+									{"projectName":"福建管线","one":"12处","two":"23处","three":"45处","datetime":"2019年3月"}
 								];
 				
 			})
@@ -764,11 +813,18 @@
 			},
 			buttonStyle:function(index){
 				if(this.isClick==index){
-				return {color:'#03cd68'};
+				return {color:'#6df9c2'};
 				}
-				return {color:'#08744b'};
+				return {color:'#53bf95'};
 			},
-			
+			previewFile : function(){
+				top.jasTools.selfDialogNew.show({
+					title: '分析报告',
+					src: './dialogs/preview_file.html',
+					height: '740px',
+					width: '35%',
+				})
+			},
 			openRiskDetail:function(){
 				// $(".map-info").hide();
 				// alert(jasTools.base.rootPath);
