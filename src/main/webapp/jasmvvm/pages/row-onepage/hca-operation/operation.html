@@ -243,6 +243,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				location.href="../total/total.html";
 			},
 			createBufferDialog: function(){
+				$('.hca').hide();
+				$('.area').hide();
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
 					src: './dialogs/buffer.html',
@@ -320,8 +322,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
+				$('.hca').hide();
+				$('.area').hide();
 				//显示图层
-				this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+				this.jasMap.zoomAt('110.56044198' ,'34.54878806' ,15);
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
@@ -335,7 +339,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.selfDialog.show({
 					title: '要素编辑工具',
 					src: './dialogs/edit-settlement.html',
-					height: '265px',
+					height: '280px',
 					// width: '290px',
 					width: '380px',
 					left:"10%",
@@ -368,7 +372,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
-								text: '处理居民数据中......',
+								text: '分析数据中......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
