@@ -29,6 +29,11 @@
 
 <body>
 	<div id="app" v-cloak>
+		<div hidden id="btn">
+			<el-row style="padding:15px 5px">
+				<el-button size="small" plain type="primary" icon="fa fa-file-text-o" @click='previewFile'>生成报告</el-button>
+			</el-row>
+		</div>
 		<table class="rank-table">
 			<thead>
 				<tr>
@@ -118,8 +123,11 @@ var titleData = {
 			this.getDetails();
 			if(this.forBusiness==0){
 				this.titleData = titleData.areaField;
+				this.layerId = 'pd_arearank';
 			}else{
 				this.titleData = titleData.hcaAreaField;
+				this.layerId = 'pd_zonerankcell';
+				$('#btn').show();
 			}
 		},
 		methods: {
@@ -160,10 +168,18 @@ var titleData = {
 				});
 			},
 			locate: function(item){
-				this.jasMap.flashGraphic(item.oid,'pd_arearank' ,{
+				this.jasMap.flashGraphic(item.oid, this.layerId ,{
 					deep:2
 				});
-			}
+			},
+			previewFile : function(){
+				top.jasTools.selfDialogNew.show({
+					title: '分析报告',
+					src: './dialogs/preview_file.html',
+					height: '740px',
+					width: '35%',
+				})
+			},
 		},
 	});
 
