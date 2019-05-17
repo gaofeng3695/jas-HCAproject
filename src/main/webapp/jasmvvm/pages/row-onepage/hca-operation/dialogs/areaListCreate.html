@@ -137,11 +137,12 @@ var titleData = {
 			},
 			saveData: function(){
 				var that = this;
+				var $obj = window.top.Vue;
 				window.top.Vue.prototype.$confirm('是否保存当前版本数据？', '提示',{
 					type: 'warning',
 					callback: function(action){
 						if(action === 'confirm'){
-							window.top.Vue.prototype.$message({
+							$obj.prototype.$message({
 								type:'success',
 								message: 'ok'
 							});
