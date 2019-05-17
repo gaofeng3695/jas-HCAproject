@@ -173,7 +173,7 @@
 						var oid = feature.get("oid") ;
 						var name = feature.get("name") ? feature.get("name") :'未命名' ;
 						var msg = "确定要删除要素" + name + " ？";
-						top.$.messager.confirm("确认", msg , function (r) {
+						/* top.$.messager.confirm("确认", msg , function (r) {
 							if (!r) {
 							    return ;
 							}
@@ -205,7 +205,51 @@
 									doDelete && typeof doDelete === "function" && doDelete();
 								}
 							})
-						})
+						}) */
+						parent.app.$confirm(msg, '提示', {
+							type: 'warning',
+							callback: function(action){
+								if (!action) {
+							    return ;
+							}
+                            if( !oid ) {
+                                /* top.$.messager.show({
+                                    title:'提示',
+                                    msg:'成功删除' + 1 + "个居民区" ,
+                                    timeout: 3000,
+                                    showType:'slide'
+								}); */
+								top.app.$message({
+									type:'success',
+									message:'成功删除1个居民区'
+								});
+								doDelete && typeof doDelete === "function" && doDelete();
+                                return
+                            }
+                            //else
+							var oids = [];
+							oids.push(oid);
+							that.jasMap.commonUtil.simpleAjaxLoader({
+								url:"../../../../jasgis/" + currentSource + "/delete.do",
+								data:JSON.stringify(oids),
+								onSuccess:function(re){
+									var result = JSON.parse(re);
+									var count =  result.data;
+									/* top.$.messager.show({
+										title:'提示',
+										msg:'成功删除' + count + "个居民区" ,
+										timeout: 3000,
+										showType:'slide'
+									}); */
+									top.app.$message({
+										type:'success',
+										message:'成功删除' + count + "个居民区"
+									});
+									doDelete && typeof doDelete === "function" && doDelete();
+								}
+							})
+							}
+						});
 					}
 				};
             	this.jasMap.deleteGraphic(currentSource ,options);
