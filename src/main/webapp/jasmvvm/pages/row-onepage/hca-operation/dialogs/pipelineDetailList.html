@@ -43,7 +43,8 @@
 				<tr v-for="(item,index)  in detailData"> 
 					<td><input  name="boxs" type="checkbox"/></td>
 					<td >{{index+1}}</td> <td><span>{{item.a}}</span></td> <td>{{item.b}}</td> 
-					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td><td><i size="small"  class="fa fa-info-circle">详情&emsp;</i><i size="small" class="fa fa-arrow-down">导入&emsp;</i><i size="small"  class="fa fa-pencil">修改&emsp;</i><i size="small"  class="fa fa-minus">删除</i><td> 
+					<td>{{item.c}}</td>   <td>{{item.d}}</td> <td>{{item.e}}</td> <td>{{item.f}}</td> <td>{{item.j}}</td><td><i size="small"  class="fa fa-info-circle">详情&emsp;</i><i size="small" class="fa fa-arrow-down">导入&emsp;</i><i size="small"  class="fa fa-pencil">修改&emsp;</i><i size="small"  class="fa fa-minus">删除</i>
+						&emsp;	<i @click='locate(item)' style='cursor: pointer;' size="small"  class="fa fa-map-marker"> 定位</i><td> 
 				</tr>
 			</tbody>
 		</table>
@@ -67,7 +68,7 @@
 						"e": "15FC090",
 						"f": "123KM",
 						"j": "2019年4月12",
-						
+						"oid": 'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
 					},
 					{
 						"a": "内蒙古项目",
@@ -77,7 +78,7 @@
 						"e": "15FC090",
 						"f": "123KM",
 						"j": "2019年4月12",
-						
+						"oid": '7c473241-5640-47a6-b343-22616eec5861'
 					},
 					{
 						"a": "内蒙古项目",
@@ -87,7 +88,7 @@
 						"e": "15FC090",
 						"f": "123KM",
 						"j": "2019年4月12",
-						
+						"oid": '1a0df2e4-46f1-4814-b63c-983172c105c7'
 					},
 					{
 						"a": "内蒙古项目",
@@ -97,7 +98,7 @@
 						"e": "15FC090",
 						"f": "123KM",
 						"j": "2019年4月12",
-						
+						"oid": 'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
 					}],
 			},
 			"success": 1
@@ -147,12 +148,19 @@ function getParamter(paramName, url) {
 			that.dataType = getParamter("dataType");
 			this.titleData  = dataList[this.dataType].title;
 			this.detailData = dataList[this.dataType].data;
+			this.jasMap = parent.app.jasMap;
 		},
 		methods: {
 			openDetail:function(idx){
 				parent.app.openDetail(idx);
+			},
+			locate: function(item){
+				this.jasMap.flashGraphic(item.oid, 'pd_pipesegment',{
+					deep:2
+				});
 			}
 		},
+		
 	});
 
 </script>

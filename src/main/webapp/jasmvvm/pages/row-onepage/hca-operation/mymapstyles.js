@@ -17,6 +17,15 @@ JasMap.require(function(){
             color: 'rgba(225, 0, 255, 1)'
         })
     });
+    mapStyleTemplates.bufferarea = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: '#ff0000',
+            width: 2
+        }),
+        fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.3)'
+        })
+    });
     /**
      * 线路段渲染
      * @param feature

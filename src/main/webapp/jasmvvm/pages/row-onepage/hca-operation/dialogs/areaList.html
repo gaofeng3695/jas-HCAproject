@@ -29,6 +29,11 @@
 
 <body>
 	<div id="app" v-cloak>
+		<div hidden id="btn">
+			<el-row style="padding:15px 5px">
+				<el-button size="small" plain type="primary" icon="fa fa-file-text-o" @click='previewFile'>生成报告</el-button>
+			</el-row>
+		</div>
 		<table class="rank-table">
 			<thead>
 				<tr>
@@ -36,12 +41,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="(item,index)  in detailData" @click='locate(item)'> 
-					<td >{{index+1}}</td> 
+				<tr v-for="(item,index)  in detailData" > 
+					<td>{{index+1}}</td> 
 					<td><span>{{item.name}}</span></td> 
 					<td>{{item.rank}}</td> 
 					<td>{{item.startMileage}}</td> 
 					<td>{{item.endMileage}}</td> 
+					<td  @click='locate(item)'><i style='cursor: pointer;' size="small"  class="fa fa-map-marker"> 定位</i></td> 
 				</tr>
 			</tbody>
 		</table>
@@ -60,14 +66,16 @@ var titleData = {
 		"编号",
 		"等级",
 		"起始里程",
-		"结束里程"
+		"结束里程",
+		"定位"
 	],
 	"hcaAreaField": [
 		"序号",
 		"编号",
 		"等级",
 		"起始里程",
-		"结束里程"
+		"结束里程",
+		"定位"
 	]
 };
 /**
@@ -115,8 +123,11 @@ var titleData = {
 			this.getDetails();
 			if(this.forBusiness==0){
 				this.titleData = titleData.areaField;
+				this.layerId = 'pd_arearank';
 			}else{
 				this.titleData = titleData.hcaAreaField;
+				this.layerId = 'pd_zonerankcell';
+				$('#btn').show();
 			}
 		},
 		methods: {
@@ -153,13 +164,22 @@ var titleData = {
 							}
 						}
 						that.detailData = data;
-						console.log(data)
 					}
 				});
 			},
 			locate: function(item){
-				
-			}
+				this.jasMap.flashGraphic(item.oid, this.layerId ,{
+					deep:2
+				});
+			},
+			previewFile : function(){
+				top.jasTools.selfDialogNew.show({
+					title: '分析报告',
+					src: './dialogs/preview_file.html',
+					height: '740px',
+					width: '35%',
+				})
+			},
 		},
 	});
 
