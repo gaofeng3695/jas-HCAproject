@@ -126,54 +126,15 @@ JasMap.require(function(){
     });
 
     mapStyleTemplates.polygon_renderer_by_settlement = function(feature ) {
-        if(!styleManager.polygon_renderer_by_settlement_style){
-            styleManager.polygon_renderer_by_settlement_style = {};
-        }
-        var attr = feature.get('population');
-        var rank = "a" ;
-        if(attr >= 53){
-            rank = "a" ;
-        }else if(attr > 15){
-            rank = "b" ;
-        }else if(attr > 0){
-            rank = "c" ;
-        } else {
-            rank = "d" ;
-        }
-        if(!styleManager.polygon_renderer_by_settlement_style[rank]){
-            //var color = styleManager.randomColor();
-            var color = null;
-            var fillColor = null;
-            switch (rank){
-                case "a":
-                    color = 'rgba(255,0,0,0.7)' ;
-                    break ;
-                case "b":
-                    color = 'rgba(255,255,0,0.7)' ;
-                    break ;
-                case "c":
-                    color = 'rgba(0,255,0,0.7)' ;
-                    break ;
-                default:
-                    color = 'rgba(255,180,0,1)' ;
-            }
-            if(rank === "d"){
-                fillColor = 'rgba(255,180,0,0.6)' ;
-            }else{
-                fillColor = color;
-            }
-            var style = new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                    color:  color  ,
-                    width: 2
-                }),
-                fill: new ol.style.Fill({
-                    color:  fillColor
-                })
-            });
-            styleManager.polygon_renderer_by_settlement_style[rank] = style;
-        }
-        return styleManager.polygon_renderer_by_settlement_style[rank]
+        return  new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: 'rgba(0,255,0,1)'  ,
+                width: 2
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(0,255,0,0.6)'
+            })
+        });
     };
 
     /**
@@ -190,50 +151,34 @@ JasMap.require(function(){
             //
             //var color = styleManager.randomColor();
             var color = null;
+            var fillColor = null ;
             switch (attr){
                 case "III":
                     color = [255,0,0,.7];
                     break ;
                 case "II":
-                    color = [255,255,0,.7];
+                    color = [255,155,0,.7];
                     break ;
                 case "I":
-                    color = [0,0,255,.7];
+                    color = [255,255,0,.7];
                     break ;
                 default:
-                    color=null;
+                    color=[255,255,0,0];
             }
-            var fillColor = null ;
-            var style = null ;
-            if(color){
-                fillColor = [].concat(color);
-                fillColor[3] = 0.5 ;
-                style = new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: color ,
-                        width: 2
-                    }),
-                    fill: new  ol.style.Fill({
-                        color: fillColor
-                    })
-                });
-            }else{
-                color = [0,0,0,.7];
-                fillColor = [].concat(color);
-                fillColor[3] = 0.2 ;
-                style = new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: color ,
-                        width: 2
-                    }),
-                    fill: new  ol.style.Fill({
-                        color: fillColor
-                    })
-                });
-            }
+            fillColor = [].concat(color);
+            fillColor[3] = fillColor[3] !== 0 ? 0.5 :0;
+            var style = new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    color: color ,
+                    width: 2
+                }),
+                fill: new  ol.style.Fill({
+                    color: fillColor
+                })
+            });
             styleManager.hca_renderer_by_rank_style[attr] = style;
         }
-        return styleManager.hca_renderer_by_rank_style[attr]
+        return styleManager.hca_renderer_by_rank_style[attr];
     };
 
     mapStyleTemplates[jasMap.Keys.defaultHighlightStyleName] = new  ol.style.Style({

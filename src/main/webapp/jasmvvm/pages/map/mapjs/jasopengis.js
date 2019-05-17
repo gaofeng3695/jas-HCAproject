@@ -1718,6 +1718,7 @@ var JasMap = null ,M = null;
                 }
                 interaction = new ol.interaction.Select({
                     condition: ol.events.condition.click,
+                    style:null,
                     layers:_class.getClickLayers()
                 });
                 interaction.on("select",function(e){
@@ -1737,7 +1738,10 @@ var JasMap = null ,M = null;
                                 attributes:feature.getProperties() ,
                                 feature:feature,
                                 pixel:pixel ,
-                                coordinate:coordinate
+                                coordinate:coordinate,
+                                doClearGraphic:function(){
+                                    interaction.getFeatures().clear();
+                                }
                             });
                         }
                     }
@@ -2152,7 +2156,7 @@ var JasMap = null ,M = null;
                     var source = layer.getSource();
                     source.removeFeature(feature);
                     if(params.onDelete && typeof params.onDelete === 'function'){
-                        params.onDelete(e.feature);
+                        params.onDelete(e);
                     }
                 };
                 deleteListener = _this.addLayerClickEventListener(targetLayer.get('id'),onClicked);
