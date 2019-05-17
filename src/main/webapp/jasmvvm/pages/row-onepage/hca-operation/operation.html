@@ -397,13 +397,15 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function (action) {
 						if (action === 'confirm') {
+							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,false);
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							const loading = that.$loading({
 								lock: true,
-								text: '要素单元矩形合并......',
+								text: '合并要素单元......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
+							// app.loaddingLayer('合并要素单元......');
 							common.simpleAjaxLoader({
 								url: "../../../../zone/settlement/random.do",
 								data: JSON.stringify({
@@ -414,16 +416,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								async: true,
 								onSuccess: function(res){
 									var result = JSON.parse(res) ;
-									loading.close();
 									/* that.$message({
 										title:'success',
 										message:result.msg
 									}); */
 									that.jasMap.updateLayer(settlementLayerId);
-									setTimeout(function(){
-										loading.close();
-									},2000);
-									app.createRankCellData();
+									app.createRankCellData(loading);
 								},
 								onError: function(){
 									that.$alert('数据处理出错', '提示')
@@ -433,18 +431,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					}
 				});
 			},
-			createRankCellData: function(){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
-				setTimeout(function(){
-					loading.close();
-				},2000);
+			createRankCellData: function(loading){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				loading = that.$loading({
-					lock: true,
-					text: '识别单元划分中......',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				})   
 				var data = {
 					sourceName: "pd_arearankcell" ,
 					pipeSourceName: "pd_pipesegment" ,
@@ -455,37 +444,29 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					deleteFlag: true,
 					geomName: "geom"
 				};
-				/* setTimeout(function(){
-					loading.close();
-				},1000); */
-				loading = that.$loading({
-					lock: true,
-					text: '识别单元合并......',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				}) 
+				loading.text='划分识别单元......';
 				common.simpleAjaxLoader({
 					url: "../../../../zone/rank/cell/init.do",
 					data: JSON.stringify(data) ,
-					async: true,
+					async:true,
 					onSuccess:function(res){
 						var result = JSON.parse(res) ;
 						// that.jasMap.refreshLayerById("pd_arearankcell");
-						// loading.close();
 						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
+						loading.text='合并识别单元......';
 						that.$message({
 							title:'success',
 							message:'合并识别单元'
 						});
 						//结果展示面板
-						app.createArea();
+						app.createArea(loading);
 					},
 					onError:function(){
 						that.$alert('数据处理出错', '提示')
 					}
 				});
 			},
-			createArea: function(){
+			createArea: function(loading){
 				var msg = "确认重新生成地区等级？";
 				var radius = app.bufferValue;
 				var data = {
@@ -498,12 +479,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var areaRankLayerId = "pd_arearank";
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				loading = that.$loading({
+				/* loading = that.$loading({
 					lock: true,
 					text: '重新生成地区等级......',
 					spinner: 'el-icon-loading',
 					background: 'rgba(0, 0, 0, 0.7)'
-				})
+				}) */
+				loading.text='重新生成地区等级......';
+				// app.loaddingLayer('重新生成地区等级......');
 				common.simpleAjaxLoader({
 					url:"../../../../zone/rank/analysis.do",
 					data:JSON.stringify(data),
@@ -609,10 +592,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
-								text: '识别中',
+								text: '提取管径与压强信息......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							});
+							setTimeout(function(){
+								loading.text='计算影响区域......'
+							}, 1000);
 							common.simpleAjaxLoader({
 								url:"../../../../zone/data/analysis.do",
 								data:JSON.stringify(postData),
@@ -621,7 +607,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								async :true,
 								onSuccess :function(re){
 									var result = JSON.parse(re);
-									loading.close();
+									loading.text='划分高后果区......';
+									setTimeout(function(){
+										loading.close();
+									}, 1000);
 									that.$message({
 										type: 'success',
 										message: result.msg
@@ -800,7 +789,16 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 }
                 this.jasMap.switchBaseMap(this.baseMap);
             },
-			
+			loaddingLayer: function(info){
+				var that = this;
+				var options = {
+					lock: true,
+					text: info,
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				}
+				that.$loading(options) 
+			}
 		}
 	})
 </script>
