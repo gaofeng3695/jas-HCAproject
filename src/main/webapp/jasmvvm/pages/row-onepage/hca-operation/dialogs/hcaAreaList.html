@@ -24,6 +24,9 @@
 			color:#b5ddff;
 			background: #0567ad78;
 		}
+		.pointer{
+			cursor: pointer;
+		}
 	</style>
 </head>
 
@@ -45,10 +48,10 @@
 					<td @click="openAreaList"><span>{{item.versionCode}}</span></td> 
 					<!-- <td><span>{{item.hasUsed}}</span></td>  -->
 					<td>
-						<i size="small"  class="fa fa-info-circle">详情&emsp;</i>
-						<i size="small"  class="fa fa-minus">删除 &emsp;</i>
-						<i size="small"  @click='importFile' class="fa fa-arrow-down">导入 &emsp;</i>
-						<i size="small"  @click='previewFile' class="fa fa-file-text-o">生成报告</i>
+						<i size="small"  @click='useLayer' class="fa fa-info-circle pointer">启用&emsp;</i>
+						<!-- <i size="small"  class="fa fa-minus">删除 &emsp;</i> -->
+						<i size="small"  @click='importFile' class="fa fa-arrow-down pointer">导入 &emsp;</i>
+						<i size="small"  @click='previewFile' class="fa fa-file-text-o pointer">生成报告</i>
 					</td>
 					<!-- <td><el-button size="small" plain type="primary" icon="fa fa-info-circle">详情</el-button>
 					<el-button size="small" plain type="primary" icon="fa fa-minus">删除</el-button></td> -->
@@ -167,6 +170,14 @@ var detailData=[
 					height: '488px',
 					width: '35%',
 				})
+			},
+			useLayer: function(){
+				var that = this;
+				that.jasMap.layerVisibleSwitch('pd_arearank',false);
+				that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_arearank',true);
+				}, 1000)
 			}
 		},
 	});
