@@ -447,7 +447,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					deleteFlag: true,
 					geomName: "geom"
 				};
-				loading.text='划分识别单元......';
+				loading.text='空间相交计算......';
 				common.simpleAjaxLoader({
 					url: "../../../../zone/rank/cell/init.do",
 					data: JSON.stringify(data) ,
@@ -456,7 +456,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						var result = JSON.parse(res) ;
 						// that.jasMap.refreshLayerById("pd_arearankcell");
 						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
-						loading.text='合并识别单元......';
+						loading.text='识别单元计算......';
 						that.$message({
 							title:'success',
 							message:'合并识别单元'
@@ -595,12 +595,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							var loading = that.$loading({
 								lock: true,
-								text: '提取管径与压强信息......',
+								text: '计算影响区域......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							});
 							setTimeout(function(){
-								loading.text='计算影响区域......'
+								loading.text='空间相交计算......'
 							}, 1000);
 							common.simpleAjaxLoader({
 								url:"../../../../zone/data/analysis.do",
@@ -610,7 +610,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								async :true,
 								onSuccess :function(re){
 									var result = JSON.parse(re);
-									loading.text='划分高后果区......';
+									loading.text='高后果区计算......';
 									setTimeout(function(){
 										loading.close();
 									}, 1000);
