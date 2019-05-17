@@ -188,6 +188,7 @@ var titleData = {
 				});
 			},
 			locate: function(item){
+				this.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,false);
 				this.jasMap.flashGraphic(item.oid,'pd_arearank' ,{
 					deep:2
 				});
