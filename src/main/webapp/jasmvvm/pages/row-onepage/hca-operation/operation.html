@@ -89,6 +89,14 @@
 			.top-center:hover{
 				cursor: pointer;
 			}
+			.el-icon-loading{
+				font-size: 50px;
+			}
+			.el-loading-spinner .el-loading-text {
+				color: #409EFF;
+				margin: 3px 0;
+				font-size: 33px;
+			}
 	</style>
 </head>
 
@@ -390,9 +398,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					callback: function (action) {
 						if (action === 'confirm') {
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-							var loading = that.$loading({
+							const loading = that.$loading({
 								lock: true,
-								text: '分析数据中......',
+								text: '要素单元矩形合并......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
@@ -407,11 +415,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								onSuccess: function(res){
 									var result = JSON.parse(res) ;
 									loading.close();
-									that.$message({
+									/* that.$message({
 										title:'success',
 										message:result.msg
-									});
+									}); */
 									that.jasMap.updateLayer(settlementLayerId);
+									setTimeout(function(){
+										loading.close();
+									},2000);
 									app.createRankCellData();
 								},
 								onError: function(){
@@ -422,10 +433,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					}
 				});
 			},
-			createRankCellData: function(e){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
+			createRankCellData: function(){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
+				setTimeout(function(){
+					loading.close();
+				},2000);
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				var loading = that.$loading({
+				loading = that.$loading({
 					lock: true,
 					text: '识别单元划分中......',
 					spinner: 'el-icon-loading',
@@ -441,14 +455,28 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					deleteFlag: true,
 					geomName: "geom"
 				};
+				/* setTimeout(function(){
+					loading.close();
+				},1000); */
+				loading = that.$loading({
+					lock: true,
+					text: '识别单元合并......',
+					spinner: 'el-icon-loading',
+					background: 'rgba(0, 0, 0, 0.7)'
+				}) 
 				common.simpleAjaxLoader({
 					url: "../../../../zone/rank/cell/init.do",
 					data: JSON.stringify(data) ,
+					async: true,
 					onSuccess:function(res){
 						var result = JSON.parse(res) ;
 						// that.jasMap.refreshLayerById("pd_arearankcell");
-						loading.close();
+						// loading.close();
 						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
+						that.$message({
+							title:'success',
+							message:'合并识别单元'
+						});
 						//结果展示面板
 						app.createArea();
 					},
@@ -470,7 +498,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var areaRankLayerId = "pd_arearank";
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				var loading = that.$loading({
+				loading = that.$loading({
 					lock: true,
 					text: '重新生成地区等级......',
 					spinner: 'el-icon-loading',
