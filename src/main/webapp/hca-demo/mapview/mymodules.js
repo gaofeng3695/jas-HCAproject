@@ -598,13 +598,14 @@ var HcaEditorBox = function(options) {
                     if(feature){
                         var oid = feature.get("oid") ;
                         var name = feature.get("name") ;
+
                         var msg = "确定要删除要素" + name + " ？";
                         $.messager.confirm("确认", msg , function (r) {
                             if (r) {
                                 var oids = [];
                                 oids.push(oid);
                                 common.simpleAjaxLoader({
-                                    url:"jasgis/" + _self.currentSource + "/delete.do",
+                                    url:"/HCAProject/jasgis/" + _self.currentSource + "/delete.do",
                                     data:JSON.stringify(oids),
                                     onSuccess:function(re){
                                         var result = JSON.parse(re);

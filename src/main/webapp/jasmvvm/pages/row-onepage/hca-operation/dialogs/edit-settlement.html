@@ -164,43 +164,48 @@
 			del: function(){
 				var that = this;
 				var options = {
-					onDelete: function(feature){
-						if(feature){
-							var oid = feature.get("oid") ;
-							var name = feature.get("name") ;
-                            if(!oid) {
+					onDelete: function(e){
+					    var feature = e.feature ;
+					    var doDelete = e.doClearGraphic ;
+						if(!feature){
+						    return ;
+						}
+						var oid = feature.get("oid") ;
+						var name = feature.get("name") ? feature.get("name") :'未命名' ;
+						var msg = "确定要删除要素" + name + " ？";
+						top.$.messager.confirm("确认", msg , function (r) {
+							if (!r) {
+							    return ;
+							}
+                            if( !oid ) {
                                 top.$.messager.show({
                                     title:'提示',
                                     msg:'成功删除' + 1 + "个居民区" ,
                                     timeout: 3000,
                                     showType:'slide'
                                 });
+								doDelete && typeof doDelete === "function" && doDelete();
                                 return
                             }
-
-							var msg = "确定要删除要素" + name + " ？";
-							top.$.messager.confirm("确认", msg , function (r) {
-								if (r) {
-									var oids = [];
-									oids.push(oid);
-									that.jasMap.commonUtil.simpleAjaxLoader({
-										url:"../../../../jasgis/" + currentSource + "/delete.do",
-										data:JSON.stringify(oids),
-										onSuccess:function(re){
-											var result = JSON.parse(re);
-											var count =  result.data;
-											top.$.messager.show({
-												title:'提示',
-												msg:'成功删除' + count + "个居民区" ,
-												timeout: 3000,
-												showType:'slide'
-											});
-											that.jasMap.refreshLayerById(currentSource);
-										}
-									})
+                            //else
+							var oids = [];
+							oids.push(oid);
+							that.jasMap.commonUtil.simpleAjaxLoader({
+								url:"../../../../jasgis/" + currentSource + "/delete.do",
+								data:JSON.stringify(oids),
+								onSuccess:function(re){
+									var result = JSON.parse(re);
+									var count =  result.data;
+									top.$.messager.show({
+										title:'提示',
+										msg:'成功删除' + count + "个居民区" ,
+										timeout: 3000,
+										showType:'slide'
+									});
+									doDelete && typeof doDelete === "function" && doDelete();
 								}
 							})
-						}
+						})
 					}
 				};
             	this.jasMap.deleteGraphic(currentSource ,options);

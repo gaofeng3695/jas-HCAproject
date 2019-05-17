@@ -196,7 +196,7 @@
       {
         "id":"pd_government",
         "label":"政府机构",
-        "maxScale":500000,
+        "maxScale":100000,
         "outFields":"","strategy":"bbox",
         "visible":false,
         "renderer":{
@@ -208,7 +208,7 @@
         "label":"医疗院所","strategy":"bbox",
         "outFields":"",
         "visible":false,
-        "maxScale":500000,
+        "maxScale":100000,
         "renderer":{
           "style":"hospital_style"
         },
@@ -217,7 +217,7 @@
         "id":"pd_gas_station",
         "index":31,"strategy":"bbox",
         "label":"加油站",
-        "maxScale":500000,
+        "maxScale":100000,
         "outFields":"",
         "visible":false,
         "renderer":{
@@ -227,7 +227,7 @@
         "id":"pd_entertainment_place",
         "index":31,"strategy":"bbox",
         "label":"娱乐场所",
-        "maxScale":500000,
+        "maxScale":100000,
         "outFields":"",
         "visible":false,
         "renderer":{

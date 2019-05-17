@@ -371,7 +371,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								text: '处理居民数据中......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
-							})
+							});
 							common.simpleAjaxLoader({
 								url: "../../../../zone/settlement/random.do",
 								data: JSON.stringify({
@@ -406,7 +406,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					text: '识别单元划分中......',
 					spinner: 'el-icon-loading',
 					background: 'rgba(0, 0, 0, 0.7)'
-				})   
+				});
 				var data = {
 					sourceName: "pd_arearankcell" ,
 					pipeSourceName: "pd_pipesegment" ,
@@ -422,7 +422,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					data: JSON.stringify(data) ,
 					onSuccess:function(res){
 						var result = JSON.parse(res) ;
-						// that.jasMap.refreshLayerById("pd_arearankcell");
+						//that.jasMap.refreshLayerById("pd_arearankcell");
 						loading.close();
 						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
 						//结果展示面板
@@ -455,7 +455,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								text: '重新生成地区等级......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
-							})
+							});
 							common.simpleAjaxLoader({
 								url:"../../../../zone/rank/analysis.do",
 								data:JSON.stringify(data),
