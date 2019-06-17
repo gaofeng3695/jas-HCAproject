@@ -3,6 +3,8 @@ package cn.jasgroup.hcas.controller;
 import cn.jasgroup.framework.data.result.BaseResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
 import cn.jasgroup.gis.data.Feature;
+import cn.jasgroup.gis.data.FeatureCollection;
+import cn.jasgroup.gis.data.FeatureObject;
 import cn.jasgroup.gis.data.GeometryType;
 import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
 import cn.jasgroup.gis.dataaccess.LayerQueryParam;
@@ -95,15 +97,14 @@ public class ZoneController extends BaseController {
         String geomFieldName = "geom" ;
         //
         StringBuffer querySql = new StringBuffer();
-        //SELECT St_asewkt(ST_SETSRID(ST_Buffer(ST_GeogFromText(:geom), :bufferRadius),:srid)) as geom from
         querySql.append(" SELECT st_astext(ST_SETSRID(ST_Buffer(ST_GeogFromText(St_asewkt(t.geom)), ?   ),? )) as geom from ") ;
         querySql.append( pipelineSourceName ) ;
         querySql.append(" as t where ") ;
         querySql.append( pipelineKeyName ) ;
         querySql.append( "=?" ) ;
-        Object[] paramsArray = { bufferDistance   ,srid ,pipelineOid };
+        Object[] paramsArray = { bufferDistance ,srid ,pipelineOid };
         Map<String ,Object> resultMap = jdbcTemplate.queryForMap(querySql.toString() ,paramsArray);
-        baseResult.setData(resultMap.get("geom").toString());
+        baseResult.setData( resultMap.get("geom").toString());
         return baseResult ;
     }
 
@@ -144,19 +145,21 @@ public class ZoneController extends BaseController {
         StringUtil.time("识别单元划分");
         String pipelineSourceName = MapUtil.getString(params,"pipeSourceName","pd_pipesegment");
         String sourceName = MapUtil.getString(params,"sourceName","pd_arearankcell");
-        String settlementSourceName = MapUtil.getString(params,"settlementSourceName","pd_arearank");
+        String settlementSourceName = MapUtil.getString(params,"settlementSourceName","pd_settlement");
         String pipelineOid = MapUtil.getString(params,"pipeKeyValue");
         String pipelineKeyName = MapUtil.getString( params,"pipeKeyName","eventid");
         double bufferDistance = MapUtil.getDouble( params,"bufferDistance",CongfigRankAreaBufferDistance);// m
         Boolean deleteFlag = MapUtil.getBoolean( params,"deleteFlag",true);
         String geomName = MapUtil.getString(params ,"geomName" ,"geom") ;
+        String areaSettlementSourceName = MapUtil.getString(params ,"areaSettlementSourceName" ,"pd_areasettlement") ;
 
         //查询管线实际里程
         double realMileage = queryRealMileage(pipelineSourceName,pipelineKeyName,pipelineOid,geomName);
         logger.info("管线{}实际里程为{}千米" ,pipelineOid ,realMileage);
 
         //1、查询要素单元
-        Feature[] featuresBeforeMerge = querySettlementData(settlementSourceName,geomName);
+        Feature[] featuresBeforeMerge =  queryAndCutSettlementDataByPipeBuffer(areaSettlementSourceName,settlementSourceName,0,realMileage,bufferDistance ,pipelineSourceName,pipelineOid,pipelineKeyName,geomName);
+        //Feature[] featuresBeforeMerge = querySettlementData(settlementSourceName,geomName);
         int sizeBeforeMerge = featuresBeforeMerge.length ;
         logger.info("查询到{}处要素单元" ,sizeBeforeMerge);
         StringUtil.time("合并要素单元");
@@ -185,18 +188,15 @@ public class ZoneController extends BaseController {
         Map<String,Object> lastCoreCell = null ;
         for(int i = 0 ; i < cellsSize ; i++){
             Map<String,Object> cell = dataList.get(i) ;
-
             Integer population = MapUtil.getInt(cell,"population",0);
             Integer households = (int)( population / CongfigHouseholdsPopulationRadio) ;
             Double middleMileage = MapUtil.getDouble(cell , "middle_mileage" );
             cell.put("households" ,households);
-
             if( population >= CongfigCoreCellPopulationCondition1 || households >= CongfigCoreCellHouseholdsCondition1){
                 cell.put("cell_type" ,1); // 1：核心识别单元 ，2：标准识别单元 ，3：独立识别单元
                 if( (middleMileage - lastCoreCellMiddleMileage) < CongfigCoreCellStandardLength){
                     lastCoreCell = mergeCoreCell(lastCoreCell,cell);
-                }
-                else{
+                }else{
                     if(lastCoreCell != null){
                         coreCells.add(lastCoreCell);
                     }
@@ -205,11 +205,7 @@ public class ZoneController extends BaseController {
                 lastCoreCellMiddleMileage = MapUtil.getDouble(lastCoreCell,"middle_mileage");
             }
         }
-        //判断最后一个cell
-//        int lastCellType = MapUtil.getInt( dataList.get(cellsSize - 1),"cell_type" ,0 );
-//        if( lastCellType == 1 ){
-//            coreCells.add( lastCoreCell );
-//        }
+
         //核心识别单元边界处理,不足2公里，前后延申至2公里 ；相邻核心识别单元有遮盖，保留顺油气方向边界
         lastCoreCell = null ;
         double lastEndMileage = 0d ;
@@ -290,10 +286,8 @@ public class ZoneController extends BaseController {
             feature.setGeometry(wkt);
             cellFeatures.add(feature);
         }
-
         StringUtil.timeEnd("生成识别单元" ,"成功创建" + cellFeatures.size() + "个识别单元。");
         StringUtil.timeEnd("识别单元划分",String.format("识别单元划分结束 ，供生成%d个识别单元 ，其中%d个核心识别单元，%d个标准识别单元，%d个独立识别单元",cellFeatures.size() ,coreSize,standardSize,indiSize));
-
         //5、保存识别单元
         StringUtil.time("保存识别单元");
         if(deleteFlag){
@@ -373,10 +367,10 @@ public class ZoneController extends BaseController {
         param.setOutFields("*");
         param.setSrsname( areaCellSourceName );
         param.setOrderBy( "start_mileage" );
-        Map<String,Object> queryResult = geodataAccessService.query(param);// 空间查询
-        String featureCollectionString = MapUtil.getString(queryResult, "features");
-        Feature[] features = JsonAndFeatureTranslate.jsonToFeatures(featureCollectionString);
-        Integer featureSize = features.length ;
+        param.setOutputFormat( null );
+        FeatureCollection queryResult = geodataAccessService.query(param);// 空间查询
+        Feature[] features = queryResult.getFeatures().toArray(new Feature[0]);
+        Integer featureSize = features.length  ;
 
         double totalMileage = queryRealMileage(pipeSourceName,pipelineKeyName,pipelineOid,geomName);
 
@@ -608,9 +602,8 @@ public class ZoneController extends BaseController {
         param.setSrsname(sourceName);
         param.setGeometryType(GeometryType.POLYGON.name());
 
-        Map<String,Object> queryResult = geodataAccessService.query(param);// 空间查询
-        String featureCollectionString = MapUtil.getString(queryResult, "features");
-        Feature[] features = JsonAndFeatureTranslate.jsonToFeatures(featureCollectionString);
+        FeatureCollection featureCollection = geodataAccessService.query(param);// 空间查询
+        Feature[] features = featureCollection.getFeatures().toArray(new Feature[0] );
         //叠加人口数据
         double totalPopulation = 0d;
         double totalHouseholds = 0d;
@@ -870,21 +863,15 @@ public class ZoneController extends BaseController {
         param.setSrsname( hcaCellSourceName );
         param.setOutputFormat("WKT");
         param.setOutFields("*");
-        Map<String,Object> areaResult = geodataAccessService.query(param);
-        String data = (String) areaResult.get("features");
-        JSONObject jsonObject =  JSON.parseObject(data);
-        JSONArray featureCollection = jsonObject.getJSONArray("features");
-
-        StringUtil.timeEnd("查询识别单元数据",String.format("查询到 %d条识别单元" ,featureCollection.size()));
+        FeatureCollection featureCollection = geodataAccessService.query(param);
+        StringUtil.timeEnd("查询识别单元数据",String.format("查询到 %d条识别单元" ,featureCollection.getSize()));
 
         //2、计算识别单元高后果区等级
-        for(int i = 0 ; i < featureCollection.size() ; i++){
-            JSONObject feature = featureCollection.getJSONObject(i);
-            JSONObject geom = feature.getJSONObject("geometry");
-            JSONObject pro = feature.getJSONObject("properties");
+        for(int i = 0 ; i < featureCollection.getSize(); i++){
+            Feature feature = (Feature) featureCollection.getFeatures().get(i);
             Feature f = new Feature() ;
-            f.setGeometry( jsonToWkt(geom.toJSONString())); //这里geom是geojson格式
-            f.setAttributes( pro.getInnerMap());// ??
+            f.setGeometry( feature.getGeometry()); //这里geom是geojson格式
+            f.setAttributes( feature.getAttributes());// ??
             featureList.add(f);
         }
         //a 、由地区等级判断 ,查询与识别单元相交的地区等级数据
@@ -899,17 +886,14 @@ public class ZoneController extends BaseController {
             layerQueryParam.setGeometry(feature.getGeometry().toString());
             layerQueryParam.setGeometryType(GeometryType.POLYGON.name());
 
-            Map<String,Object> queryResult = geodataAccessService.query(layerQueryParam);
-            String d = (String) queryResult.get("features");
-            JSONObject fJsonObject = JSON.parseObject(d);
-            JSONArray areaRankArray = fJsonObject.getJSONArray("features");
+            FeatureCollection queryResult = geodataAccessService.query(layerQueryParam);
             int maxRankInt = 0;
             Map<String,Object> attr = new HashMap<>() ;
-            if( areaRankArray.size() > 0){
-                for(int j = 0 ;j < areaRankArray.size() ;j++){
-                    JSONObject areaRank = areaRankArray.getJSONObject(j);
-                    JSONObject pro = areaRank.getJSONObject("properties");
-                    String rank = pro.getString(RankFieldName);
+            if( queryResult.getSize() > 0){
+                for(int j = 0 ;j < queryResult.getSize() ;j++){
+                    Feature f = (Feature) queryResult.getFeatures().get(j);
+                    Map<String,Object> a = f.getAttributes();
+                    String rank = MapUtil.getString(a,RankFieldName);
                     int rankInt = getRankIntValue(rank);
                     if( rankInt > maxRankInt){
                         maxRankInt = rankInt;
@@ -955,12 +939,10 @@ public class ZoneController extends BaseController {
             layerQueryParam.setOutFields("gid");
             layerQueryParam.setGeometry(feature.getGeometry().toString());
             layerQueryParam.setGeometryType(GeometryType.POLYGON.name());
-            Map<String,Object> queryResult =   geodataAccessService.query(layerQueryParam);
-            String d = (String) queryResult.get("features");
-            JSONObject fJsonObject =  JSON.parseObject(d);
+            FeatureCollection queryResult =   geodataAccessService.query(layerQueryParam);
 
-            JSONArray array = fJsonObject.getJSONArray("features");
-            if(array != null && array.size() > 0 ){
+            Feature[] array = queryResult.getFeatures().toArray(new Feature[0] );
+            if(array != null && array.length > 0 ){
                 //
                 //Map<String,Object> attr = attributes.getInnerMap();
                 //feature.setAttributes(attr);
@@ -996,19 +978,17 @@ public class ZoneController extends BaseController {
                 layerQueryParam.setGeometry(feature.getGeometry().toString());
                 layerQueryParam.setGeometryType(GeometryType.POLYGON.name());
 
-                Map<String,Object> queryResult = geodataAccessService.query(layerQueryParam);
-                String d = (String) queryResult.get("features");
-                JSONObject resultJson = (JSONObject) JSON.parse(d);
-                JSONArray array = resultJson.getJSONArray("features");
-                if(array != null && array.size() > 0){
+                FeatureCollection   queryResult = geodataAccessService.query(layerQueryParam);
+                Feature[] array = queryResult.getFeatures().toArray(new Feature[0]);
+                if(array != null && array.length > 0){
                     if(diameter > 762 && presure > 6.9) {
                         feature.getAttributes().put(RankFieldName, "II");
                     }else {
                         feature.getAttributes().put(RankFieldName, "I");
                     }
-                    for(int z = 0 ; z < array.size() ;z++){
-                        JSONObject ff = array.getJSONObject(z);
-                        pointList.add(ff.getString("geometry"));
+                    for(int z = 0 ; z < array.length;z++){
+                        Feature ff = array[z];
+                        pointList.add((String) ff.getAttributes().get("geometry"));
                     }
                 }
             }
@@ -1141,7 +1121,6 @@ public class ZoneController extends BaseController {
         //Feature[] featureArray = mergeFeatureData(featuresBeforeMerge) ;
         //int sizeAfterMerge = featureArray.length ;
         //message.append("合并后要素数量：").append(featureArray.length).append("\r");
-
         //2、属性数据预处理
         prepareSettlementData(featureArray);
         //3、要素编号
@@ -1170,9 +1149,8 @@ public class ZoneController extends BaseController {
         layerQueryParam.setSrsname(sourceName);
         layerQueryParam.setOutFields("*");
 
-        Map<String,Object> queryResult = geodataAccessService.query(layerQueryParam) ;
-        String featureCollectionString = MapUtil.getString(queryResult, "features");
-        Feature[] features = JsonAndFeatureTranslate.jsonToFeatures(featureCollectionString);
+        FeatureCollection queryResult = geodataAccessService.query(layerQueryParam) ;
+        Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
         int i = 0 ;
         double maxArea = 0d;
         double minArea = Double.POSITIVE_INFINITY  ;
@@ -1212,14 +1190,99 @@ public class ZoneController extends BaseController {
         save(sourceName,features);
         return  baseResult;
     }
+    /**
+     * 根据识别区查询并设置
+     * @return
+     */
+    public Feature[] queryAndCutSettlementDataByPipeBuffer( String areaSettlementSource  ,String settlementSource ,double startMileage ,double endMileage ,double bufferDistance,String pipelineSourceName ,String pipeKeyValue ,String pipeKeyName ,String pipeGeomName) throws Exception {
+        List<Feature> result = new ArrayList<>() ;
+        List<Feature> orignResult = new ArrayList<>() ;
+        //1、由管线及缓冲半径创建识别区
+        String bufferPolygonWKT = queryBufferArea(startMileage,endMileage,bufferDistance ,pipelineSourceName,pipeKeyValue,pipeKeyName,pipeGeomName);
+        //2、查询相交的居民地
+        StringUtil.time("查询识别区域相交的居民地");
+        LayerQueryParam param = new LayerQueryParam() ;
+        param.setSrsname(settlementSource);
+        param.setOutFields("*");
+        param.setGeometryType(GeometryType.POLYGON.name());
+        param.setGeometry(GeometryUtil.abraseSRID(bufferPolygonWKT)) ;
+
+        FeatureCollection queryResult = geodataAccessService.query(param) ;
+        Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
+
+        StringUtil.timeEnd("查询识别区域相交的居民地");
+        logger.info("识别区域内查询到{}处居民地",features.length );
+        //3、相交计算
+        StringUtil.time("识别区域居民地相交计算");
+        Geometry buffer = GeometryUtil.fromWKT( bufferPolygonWKT );
+        for(int i = 0 ; i < features.length ; i++){
+            Feature feature = features[i];
+            Geometry g = (Geometry) feature.getGeometry();
+            Geometry[] gg = new Geometry[]{g} ;
+            Geometry[] geometries = geometryService.intersect(gg, buffer);
+            if(geometries != null && geometries .length > 0 && geometries[0] instanceof Polygon){ // 相交计算的结果可能是点或线
+                Polygon polygon = (Polygon) geometries[0];
+                Map<String,Object> attr = feature.getAttributes();
+                Feature f = new Feature() ;
+                f.setGeometry(polygon);
+                f.setAttributes(attr);
+                result.add(f);
+                orignResult.add(feature);
+            }
+        }
+        StringUtil.timeEnd("查询识别区域相交的居民地");
+        //4、计算面积及起止里程值，获取人口
+        Feature[] fs = result.toArray(new Feature[0]);
+        StringUtil.time("重新计算居民地前后里程");
+        calculateMileage(fs,pipelineSourceName,pipeKeyValue,pipeKeyName,pipeGeomName);
+        StringUtil.timeEnd("重新计算居民地前后里程");
+        //
+        StringUtil.time("重新计算居民地人口");
+        int size = result.size() * 2;
+        Geometry[] geometries = new Geometry[size ] ;
+        for(int i = 0  ; i < result.size() ; i++){
+            geometries[i] = (Geometry) result.get(i).getGeometry();
+        }
+        for( int i = size -1 ,j=0 ; i >=0 ; i--,j++){
+            geometries[i] = (Geometry) orignResult.get(j).getGeometry();
+        }
+        List<AreaAndLength> areaAndLengths = geometryService.areasAndLengths(geometries) ;
+        int halfSize = size / 2;
+        for(int i = 0 ; i < halfSize ;i++){
+            int j = size - i ;
+            Feature originFeature = orignResult.get(i);
+            int originPopulation = MapUtil.getInt( originFeature.getAttributes(),"population");
+            double originArea = areaAndLengths.get(j).getArea() ;
+            double area = areaAndLengths.get(i).getArea();
+            Double population = area / originArea * originPopulation;
+            //
+            result.get(i) .getAttributes().put("population",population.intValue());
+        }
+        StringUtil.timeEnd("重新计算居民地人口");
+        //5、保存
+        String clearSql = "delete from " + areaSettlementSource;
+        int flg = namedParameterJdbcTemplate.update(clearSql, new HashMap<String,Object>());
+        log.info("清空{}条缓冲区居民地数据",flg);
+        Feature[] features1 = result.toArray(new Feature[0]);
+        int[] add = geodataAccessService.addFeatures(areaSettlementSource,features1) ;
+        log.info("保存{}条缓冲区居民地数据",MathUtil.sum(add));
+
+        return features1;
+    }
+    /**
+     *
+     * @param sourceName
+     * @param geomName
+     * @return
+     * @throws Exception
+     */
     private Feature[] querySettlementData(String sourceName,String geomName) throws Exception {
         LayerQueryParam layerQueryParam = new LayerQueryParam();
         layerQueryParam.setSrsname(sourceName);
         layerQueryParam.setOutFields("*");
         layerQueryParam.setOrderBy("start_mileage");
-        Map<String,Object> queryResult = geodataAccessService.query(layerQueryParam) ;
-        String data = (String) queryResult.get("features");
-        Feature[] features = JsonAndFeatureTranslate.jsonToFeatures(data) ;
+        FeatureCollection queryResult = geodataAccessService.query(layerQueryParam) ;
+        Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
         return features ;
     }
     private void prepareSettlementData(Feature[] features ){
@@ -1350,6 +1413,7 @@ public class ZoneController extends BaseController {
             return null;
         }
     }
+
     private Geometry mergeGeometry(Polygon geo1 , Polygon geo2){
         Point[] pointArray1 = geo1.getCoordinates();
         Point[] pointArray2 = geo2.getCoordinates();
@@ -1360,10 +1424,12 @@ public class ZoneController extends BaseController {
         System.arraycopy( pointArray2,0,pointArray1,size1 ,size2 );
         return geometryService.convexHull(pointArray1);
     }
-    //计算里程值、垂直距离、水平距离
-    private void calculateMileage(Feature[] features ,String source ,String keyValue,String keyName,String geomName){
+    /**
+     * 计算里程值、垂直距离、水平距离
+     */
+    private void calculateMileage(Feature[] features ,String pipelineSourceName ,String keyValue,String keyName,String geomName){
 
-        Map<String,Object> pipelineDataMap = queryPipelineData( source,keyValue,keyName,geomName );
+        Map<String,Object> pipelineDataMap = queryPipelineData( pipelineSourceName,keyValue,keyName,geomName );
         String pipelineString = MapUtil.getString(pipelineDataMap,"wkt" );
         double totalMileage = MapUtil.getDouble(pipelineDataMap,"mileage" );
         //计算每个点的
@@ -1418,19 +1484,10 @@ public class ZoneController extends BaseController {
 
         }
     }
+
     private Map<String,Object> queryPipelineData(String source ,String keyValue,String keyName,String geomName){
         Map<String,Object> result = new HashMap<>() ;
         //1、重新计算和更新管线里程
-        /*
-         update pd_pipesegment set geom=(
-             ST_AddMeasure( geom,0,
-                (
-                    select st_length(st_setsrid(st_geogfromtext(st_asewkt(geom)),4490))/1000 length from pd_pipesegment where eventid='fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
-                )
-             )
-         ) where eventid='fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
-         */
-
         StringBuffer updateSql = new StringBuffer() ;
         updateSql.append("update ").append(source).append(" set ").append(geomName).append("=(ST_AddMeasure(").append(geomName).append(",0,(select st_length(st_setsrid(st_geogfromtext(st_asewkt(").append(geomName).append(")),4490))/1000 length from ").append(source).append(" where ").append(keyName).append("=:").append(keyName).append("))) where ").append(keyName).append("=:").append(keyName) ;
         Map<String,Object> mileageParam = new HashMap<>() ;
@@ -1456,7 +1513,6 @@ public class ZoneController extends BaseController {
         result.put("wkt",wkt);
         return  result;
     }
-
     /**
      * 识别单元生成逻辑：
      -- 1、查询地区等级单元数据
@@ -1488,18 +1544,16 @@ public class ZoneController extends BaseController {
         param.setReturnGeometry( true );
         param.setOrderBy("start_mileage");
         param.setOutFields("*");
-        Map<String,Object> areaResult = geodataAccessService.query(param);
-        String data = (String) areaResult.get("features");
-        JSONObject areaRestultObject = JSON.parseObject(data);
-        JSONArray features = areaRestultObject.getJSONArray("features");
-        logger.info("查询到{}条地区等级数据",features.size()) ;
+        FeatureCollection areaResult = geodataAccessService.query(param);
+        Feature[] features =areaResult.getFeatures().toArray(new  Feature[0]);
+        logger.info("查询到{}条地区等级数据",features.length) ;
         //
         List<Object[]> cellDatalist = new ArrayList<>();
-        for(int i = 0 ; i < features.size() ; i++){
-            JSONObject feature = features.getJSONObject(i) ;
-            JSONObject properties = feature.getJSONObject("properties");
-            double startMileage = properties.getDoubleValue(startMileageField) ;
-            double endMileage = properties.getDoubleValue(endMileageField) ;
+        for(int i = 0 ; i < features.length ; i++){
+            Feature feature = features[i] ;
+            Map properties = feature.getAttributes();
+            double startMileage = MapUtil.getDouble(properties,startMileageField) ;
+            double endMileage = MapUtil.getDouble(properties,endMileageField) ;
             // 计算缓冲区
             String wkt = queryBufferArea(startMileage,endMileage,bufferDistance, pipelineSourceName,pipelineOid,pipelineKeyName,geomFieldName);
             String uuid = UUID.randomUUID().toString();

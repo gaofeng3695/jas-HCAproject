@@ -60,8 +60,8 @@ JasMap.require(function(){
         var name = feature.get('rank');
         var colorArray = {
             '四级地区':[255,0,0,255],
-            '三级地区':[255,255,0,255],
-            '二级地区':[0,0,255,255],
+            '三级地区':[255,155,0,255],
+            '二级地区':[255,255,0,255],
             '一级地区':[0,255,0,255]
         };
         if(!styleManager.polygon_renderer_by_arearank_style[name]){
