@@ -57,7 +57,7 @@ var Constants = {
         "graphicCreateError": "图形创建出错 ，请检查数据结构！",
         "getDistanceError": "计算距离出错！",
         "getAreaError": "计算面积出错！",
-        "invalidFlashData": "无效的闪烁规则！",
+        "invalidFlashData": "无效的闪烁规则，请确定传入参数是否正确！",
         "featureNotFound": "没有查询到目标要素，请检查查询条件！",
         "geometryNotFound": "没有查询到空间坐标数据！",
         "queryError": "查询出错！",
@@ -65,7 +65,7 @@ var Constants = {
         "repeatIdError": "重复ID",
         "hasNoIdError": "ID不存在",
         "hasNoLabelPropertyError": "图层没有包含标注所需要的属性字段，请检查图层的outFields配置",
-        "hasNoStyleError": "样式不存在",
+        "hasNoStyleError": "样式不存在，要素图层可能无法显示。请检查json配置是否引入了要素样式相关js文件！",
         "hasNoProj4js": "自定义投影需要引入proj4.js",
         "hasNoJqueryEasyUILib": "需要引入jquery easyUI依赖",
         "hasNoConfigDataError":"配置不存在",
@@ -371,7 +371,7 @@ var JasMap = null ,M = null;
                 target && result.push(target);
             }else if(Array.isArray(featureId)){
                 for(var key in featureId){
-                    var fid = commonUtil.getFeatureId( featureId[key] ,layerId);
+                    var fid = commonUtil.getFeatureId(featureId[key] ,layerId);
                     var t = source.getFeatureById(fid);
                     t && result.push(t);
                 }
@@ -453,7 +453,7 @@ var JasMap = null ,M = null;
                     if(typeof re === 'string' || re.type === "FeatureCollection"){
                         result = new ol.format.GeoJSON().readFeatures(re);
                     }else if(re.data && re.data.features){
-                        result = new ol.format.GeoJSON().readFeatures(re.data.features);//先只处理GeoJSON格式数据
+                        result = new ol.format.GeoJSON().readFeatures(re.data);//先只处理GeoJSON格式数据
                     }
                     if(typeof callback === "function"){
                         callback(result);
@@ -706,6 +706,7 @@ var JasMap = null ,M = null;
                 "yoffset": 0,
                 "center": false
             };
+
         };
         _this.removeGraphics = function(layerId , featureIds){
             var layer = _this.getLayerById(layerId);
@@ -1718,7 +1719,6 @@ var JasMap = null ,M = null;
                 }
                 interaction = new ol.interaction.Select({
                     condition: ol.events.condition.click,
-                    style:null,
                     layers:_class.getClickLayers()
                 });
                 interaction.on("select",function(e){
@@ -2617,8 +2617,7 @@ var JasMap = null ,M = null;
                                         if( typeof re === 'string' || re.type === "FeatureCollection"){
                                             features = source.getFormat().readFeatures(re);
                                         }else if(re.data && re.data.features){
-                                            var f = re.data.features;
-                                            features = source.getFormat().readFeatures(f);
+                                            features = source.getFormat().readFeatures(re.data);
                                         }
                                         if(features){
                                             source.addFeatures(features);
@@ -2677,8 +2676,7 @@ var JasMap = null ,M = null;
                                     if( typeof re === 'string' || re.type === "FeatureCollection"){
                                         features = source.getFormat().readFeatures(re);
                                     }else if(re.data && re.data.features){
-                                        var f = re.data.features;
-                                        features = source.getFormat().readFeatures(f);
+                                        features = source.getFormat().readFeatures(re.data);
                                     }
                                     if(features){
                                         source.addFeatures(features);
@@ -3888,12 +3886,12 @@ var JasMap = null ,M = null;
                 return url.match(pattern) ? url.replace(eval('/(([?]?|[&]?)'+ arg+'=)([^&]*)/gi'), replaceText) : ( url.match('[\?]') && replaceText ? url+'&'+replaceText : url+'?'+replaceText);
             };
             _class.prepareSqlValue = function(v){
-               if( typeof(v) ==="string"){
-                   return "'" + v + "'";
-               } else if( !isNaN(v)){
-                   return new Number(v);
-               }
-               return v;
+                if( typeof(v) ==="string"){
+                    return "'" + v + "'";
+                } else if( !isNaN(v)){
+                    return new Number(v);
+                }
+                return v;
             };
             _class.cloneProperties = function(obj){
                 var result = {};

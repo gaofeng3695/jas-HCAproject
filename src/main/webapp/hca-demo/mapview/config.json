@@ -105,6 +105,13 @@
             },
             "index":11
           },{
+            "id":"pd_areasettlement","visible":false,
+            "label":"缓冲区居民区","outFields":"*",
+            "renderer":{
+              "style":"polygon_renderer_by_settlement"
+            },
+            "index":11
+          },{
             "id":"pd_arearankcell","visible":false,"flash":true,
             "label":"地区等级识别单元","outFields":"*",
             "index":11,

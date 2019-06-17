@@ -1026,4 +1026,4 @@ var bufferArea = function(options){
     };
     
     
-}
+};

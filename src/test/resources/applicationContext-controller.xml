@@ -19,7 +19,7 @@
 	http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 	
 	<context:component-scan base-package="cn.jasgroup.**.controller"/>
-	
+
 	<task:executor id="executor" pool-size="5" />  
     <task:scheduler id="scheduler" pool-size="10" />  
     <task:annotation-driven executor="executor" scheduler="scheduler" />
@@ -58,6 +58,7 @@
 			<mvc:exclude-mapping path="/**/daq/privilege/getFaceInfo.do"/>
 			<mvc:exclude-mapping path="/**/jasgis/**/*.do"/>
 			<mvc:exclude-mapping path="/**/zone/**/*.do"/>
+			<mvc:exclude-mapping path="/**/analysis/**/*.do"/>
 			<bean class="cn.jasgroup.framework.script.interceptor.TokenInterceptor"/>
 	  	</mvc:interceptor>
 	</mvc:interceptors>
