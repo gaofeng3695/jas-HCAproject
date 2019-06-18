@@ -108,8 +108,9 @@
 					 <div class="top-center" @click='urlHref'></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
+						<div class="item-btn" @click="pipelineOperation">管线管理</div>
 						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
-						<div class="item-btn" @click="createBh">要素标绘</div>
+						<div class="item-btn" @click="createBh">构筑物管理</div>
 						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
 						<div class="item-btn" @click="showHistoryBtn(1)">高后果区识别</div>
 						<!-- <div class="item-btn" @click="showHistoryBtn">历史数据</div>
@@ -250,6 +251,18 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			urlHref: function(){
 				location.href="../total/total.html";
 			},
+			pipelineOperation:function(){
+				window.jasTools.selfDialog.show({
+						title: '管线信息列表',
+						// src: './dialogs/detail2.html',
+						src: './dialogs/pipelineDetailList.html?dataType=pipeline',
+						height: '300px',
+						// width: '800px',
+						width: '48%',
+						bottom:'10px',
+						left:'25%',
+					})
+			},
 			createBufferDialog: function(){
 				$('.hca').hide();
 				$('.area').hide();
@@ -378,7 +391,16 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						that.jasMap.startPanMode();
 					}
 				})
-				
+				window.jasTools.selfDialog.show({
+					title: '构筑物信息列表',
+					// src: './dialogs/detail2.html',
+					src: './dialogs/pipelineDetailList.html?dataType=pipeline',
+					height: '300px',
+					// width: '800px',
+					width: '48%',
+					bottom:'10px',
+					left:'25%',
+				})
 			},
 			draw: function(){
 				this.jasMap.drawPolygon({
