@@ -75,7 +75,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 	/**
 	 * 备注 
 	 */
-	private String remark; 
+	private String remarks; 
 
 
 	public String getProjectOid() {
@@ -159,13 +159,13 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("geoState");
 	}
 
-	public String getRemark() {
-		return remark; 
+	public String getRemarks() {
+		return remarks; 
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark; 
-		super.setField("remark");
+	public void setRemark(String remarks) {
+		this.remarks = remarks; 
+		super.setField("remarks");
 	}
 
 }
