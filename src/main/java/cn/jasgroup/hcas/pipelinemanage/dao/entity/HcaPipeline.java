@@ -136,7 +136,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		return outsideDiameter; 
 	}
 
-	public void setOutsidePipeDiameter(Double outsideDiameter) {
+	public void setOutsideDiameter(Double outsideDiameter) {
 		this.outsideDiameter = outsideDiameter; 
 		super.setField("outsideDiameter");
 	}
@@ -145,7 +145,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		return pressure; 
 	}
 
-	public void setMaximumAllowablePressure(Double pressure) {
+	public void setPressure(Double pressure) {
 		this.pressure = pressure; 
 		super.setField("pressure");
 	}
@@ -163,7 +163,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		return remarks; 
 	}
 
-	public void setRemark(String remarks) {
+	public void setRemarks(String remarks) {
 		this.remarks = remarks; 
 		super.setField("remarks");
 	}
