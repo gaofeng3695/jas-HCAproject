@@ -135,7 +135,7 @@ public class HcaPipelineBo extends CommonBaseBo {
 		return outsideDiameter;
 	}
 
-	public void setOutsidePipeDiameter(Double outsideDiameter) {
+	public void setOutsideDiameter(Double outsideDiameter) {
 		this.outsideDiameter = outsideDiameter;
 	}
 
