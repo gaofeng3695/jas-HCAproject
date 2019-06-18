@@ -60,12 +60,12 @@ public class HcaPipeline extends CommonJdbcEntity {
 	/**
 	 * 管道外管径 
 	 */
-	private Double outsidePipeDiameter; 
+	private Double outsideDiameter; 
 
 	/**
 	 * 管线稳态运行时允许的最大压力 
 	 */
-	private Double maximumAllowablePressure; 
+	private Double pressure; 
 
 	/**
 	 * 空间数据状态 
@@ -132,22 +132,22 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("pipelineLength");
 	}
 
-	public Double getOutsidePipeDiameter() {
-		return outsidePipeDiameter; 
+	public Double getOutsideDiameter() {
+		return outsideDiameter; 
 	}
 
-	public void setOutsidePipeDiameter(Double outsidePipeDiameter) {
-		this.outsidePipeDiameter = outsidePipeDiameter; 
-		super.setField("outsidePipeDiameter");
+	public void setOutsidePipeDiameter(Double outsideDiameter) {
+		this.outsideDiameter = outsideDiameter; 
+		super.setField("outsideDiameter");
 	}
 
-	public Double getMaximumAllowablePressure() {
-		return maximumAllowablePressure; 
+	public Double getPressure() {
+		return pressure; 
 	}
 
-	public void setMaximumAllowablePressure(Double maximumAllowablePressure) {
-		this.maximumAllowablePressure = maximumAllowablePressure; 
-		super.setField("maximumAllowablePressure");
+	public void setMaximumAllowablePressure(Double pressure) {
+		this.pressure = pressure; 
+		super.setField("pressure");
 	}
 
 	public String getGeoState() {
