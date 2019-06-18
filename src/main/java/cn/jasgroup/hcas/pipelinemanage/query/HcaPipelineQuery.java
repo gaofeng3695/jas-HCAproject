@@ -40,7 +40,7 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.oid,t.project_oid,pro.project_name,t.pipeline_name, t.pipeline_code,t.start_mileage,t.end_mileage,\n"
-				+ "t.pipeline_length,t.outside_pipe_diameter,t.maximum_allowable_pressure,t.remark,\n"
+				+ "t.pipeline_length,t.outside_diameter,t.pressure,t.remarks,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_pipeline t\n"
 				+ " LEFT JOIN (select oid,project_name,enterprise_id from hca_project where active=1) pro\n"
