@@ -14,37 +14,17 @@ import cn.jasgroup.jasframework.base.data.CommonBaseBo;
  * @since JDK 1.80
  */
 
-public class HcaElementUnitBo extends CommonBaseBo {
+public class HcaBuildingsBo extends CommonBaseBo {
 
 	/**
 	 * 数据oid 
 	 */
 	private String oid;
-
-	/**
-	 * 项目ID 
-	 */
-	private String projectOid;
 	
 	/**
-	 * 项目name 
+	 * 构筑物编号 
 	 */
-	private String projectName;
-
-	/**
-	 * 管线ID 
-	 */
-	private String pipelineOid;
-	
-	/**
-	 * 管线name
-	 */
-	private String pipelineName;
-
-	/**
-	 * 要素编号 
-	 */
-	private String elementCode;
+	private String buildingCode;
 
 	/**
 	 * 起始里程 
@@ -77,19 +57,20 @@ public class HcaElementUnitBo extends CommonBaseBo {
 	private Double pointy;
 
 	/**
-	 * 要素类型 
+	 * 构筑物类型 
 	 */
-	private String elementType;
-
+	private String buildingType;
+	
 	/**
-	 * 要素类型name
+	 * 构筑物类型 name
 	 */
-	private String elementTypeName;
+	private String buildingTypeName;
 
 	/**
 	 * 建筑分布 
 	 */
 	private String buildingDistribution;
+	
 
 	/**
 	 * 建筑分布name
@@ -99,7 +80,7 @@ public class HcaElementUnitBo extends CommonBaseBo {
 	/**
 	 * 户数 
 	 */
-	private Double numberOfHouseholds;
+	private Double households;
 
 	/**
 	 * 人口 
@@ -115,11 +96,37 @@ public class HcaElementUnitBo extends CommonBaseBo {
 	 * 采集人员 
 	 */
 	private String collectPerson;
+	
+	/**
+	 * 病床数 
+	 */
+	private Double beds;
+	
+	/**
+	 * 地址
+	 */
+	private String address;
+	
+	/**
+	 * 中心点x
+	 */
+	private Double centerx;
+	
+	/**
+	 * 中心点y
+	 */
+	private Double centery;
+
+	/**
+	 * 空间数据状态 
+	 */
+	private String geoState;
 
 	/**
 	 * 备注 
 	 */
 	private String remarks;
+
 
 	public String getOid() {
 		return oid;
@@ -127,30 +134,6 @@ public class HcaElementUnitBo extends CommonBaseBo {
 
 	public void setOid(String oid) {
 		this.oid = oid;
-	}
-
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-	}
-
-	public String getPipelineOid() {
-		return pipelineOid;
-	}
-
-	public void setPipelineOid(String pipelineOid) {
-		this.pipelineOid = pipelineOid;
-	}
-
-	public String getElementCode() {
-		return elementCode;
-	}
-
-	public void setElementCode(String elementCode) {
-		this.elementCode = elementCode;
 	}
 
 	public Double getStartMileage() {
@@ -201,22 +184,6 @@ public class HcaElementUnitBo extends CommonBaseBo {
 		this.pointy = pointy;
 	}
 
-	public String getElementType() {
-		return elementType;
-	}
-
-	public void setElementType(String elementType) {
-		this.elementType = elementType;
-	}
-
-	public String getElementTypeName() {
-		return elementTypeName;
-	}
-
-	public void setElementTypeName(String elementTypeName) {
-		this.elementTypeName = elementTypeName;
-	}
-
 	public String getBuildingDistribution() {
 		return buildingDistribution;
 	}
@@ -231,14 +198,6 @@ public class HcaElementUnitBo extends CommonBaseBo {
 
 	public void setBuildingDistributionName(String buildingDistributionName) {
 		this.buildingDistributionName = buildingDistributionName;
-	}
-
-	public Double getNumberOfHouseholds() {
-		return numberOfHouseholds;
-	}
-
-	public void setNumberOfHouseholds(Double numberOfHouseholds) {
-		this.numberOfHouseholds = numberOfHouseholds;
 	}
 
 	public Double getPopulation() {
@@ -274,20 +233,76 @@ public class HcaElementUnitBo extends CommonBaseBo {
 		this.remarks = remarks;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public String getBuildingCode() {
+		return buildingCode;
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setBuildingCode(String buildingCode) {
+		this.buildingCode = buildingCode;
 	}
 
-	public String getPipelineName() {
-		return pipelineName;
+	public String getBuildingType() {
+		return buildingType;
 	}
 
-	public void setPipelineName(String pipelineName) {
-		this.pipelineName = pipelineName;
+	public void setBuildingType(String buildingType) {
+		this.buildingType = buildingType;
+	}
+
+	public String getBuildingTypeName() {
+		return buildingTypeName;
+	}
+
+	public void setBuildingTypeName(String buildingTypeName) {
+		this.buildingTypeName = buildingTypeName;
+	}
+
+	public Double getHouseholds() {
+		return households;
+	}
+
+	public void setHouseholds(Double households) {
+		this.households = households;
+	}
+
+	public Double getBeds() {
+		return beds;
+	}
+
+	public void setBeds(Double beds) {
+		this.beds = beds;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public Double getCenterx() {
+		return centerx;
+	}
+
+	public void setCenterx(Double centerx) {
+		this.centerx = centerx;
+	}
+
+	public Double getCentery() {
+		return centery;
+	}
+
+	public void setCentery(Double centery) {
+		this.centery = centery;
+	}
+
+	public String getGeoState() {
+		return geoState;
+	}
+
+	public void setGeoState(String geoState) {
+		this.geoState = geoState;
 	}
 
 }
