@@ -253,15 +253,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			},
 			pipelineOperation:function(){
 				window.jasTools.selfDialog.show({
-						title: '管线信息列表',
-						// src: './dialogs/detail2.html',
-						src: './dialogs/pipelineDetailList.html?dataType=pipeline',
-						height: '300px',
-						// width: '800px',
-						width: '48%',
-						bottom:'10px',
-						left:'25%',
-					})
+					title: '管线信息列表',
+					src: './dialogs/pipelineManage/pipelineDetailList.html?dataType=pipeline',
+					height: '70%',
+					width: '80%',
+					bottom:'10px',
+					left:'15%'
+				})
 			},
 			createBufferDialog: function(){
 				$('.hca').hide();
@@ -740,24 +738,22 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					window.jasTools.selfDialog.show({
 						id: 'hcaAreaList',
 						title: '地区等级历史版本数据',
-						src: './dialogs/hcaAreaList.html?forBusiness=0',
-						height: '265px',
-						// width: '290px',
-						width: '544px',
-						left:"35%",
-						bottom:"22px"
+						src: './dialogs/hcaAreaVersion/hcaAreaList.html?forBusiness=0',
+						height: '70%',
+						width: '80%',
+						bottom:'10px',
+						left:'15%'
 					})
 				}
 				if(forBusiness == "1"){
 					window.jasTools.selfDialog.show({
 						id: 'hcaAreaList',
 						title: '高后果区历史版本数据',
-						src: './dialogs/hcaAreaList.html?forBusiness=1',
-						height: '265px',
-						// width: '290px',
-						width: '544px',
-						left:"35%",
-						bottom:"22px"
+						src: './dialogs/hcaAreaVersion/hcaAreaList.html?forBusiness=1',
+						height: '70%',
+						width: '80%',
+						bottom:'10px',
+						left:'15%'
 					})
 				}
 				/* window.jasTools.selfDialog.show({

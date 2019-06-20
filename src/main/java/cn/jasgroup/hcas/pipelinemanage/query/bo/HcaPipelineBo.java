@@ -16,17 +16,6 @@ public class HcaPipelineBo extends CommonBaseBo {
 	 * 主键oid 
 	 */
 	private String oid;
-
-	/**
-	 * 项目ID 
-	 */
-	private String projectOid; 
-	
-	/**
-	 * 项目名称 
-	 */
-	private String projectName; 
-
 	/**
 	 * 管线名称 
 	 */
@@ -73,22 +62,6 @@ public class HcaPipelineBo extends CommonBaseBo {
 
 	public void setOid(String oid) {
 		this.oid = oid;
-	}
-
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
 	}
 
 	public String getPipelineName() {
