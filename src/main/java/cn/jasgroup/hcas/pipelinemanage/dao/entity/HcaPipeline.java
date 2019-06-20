@@ -27,15 +27,6 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 @CommonDeleteConfig(scene="/hcapipeline/delete")
 @JdbcEntity(name="hca_pipeline")
 public class HcaPipeline extends CommonJdbcEntity {
-	/**
-	 * 项目ID
-	 */
-	private String projectOid; 
-
-	/**
-	 * 管线名称 
-	 */
-	private String pipelineName; 
 
 	/**
 	 * 管线编号 
@@ -77,24 +68,6 @@ public class HcaPipeline extends CommonJdbcEntity {
 	 */
 	private String remarks; 
 
-
-	public String getProjectOid() {
-		return projectOid; 
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid; 
-		super.setField("projectOid");
-	}
-
-	public String getPipelineName() {
-		return pipelineName; 
-	}
-
-	public void setPipelineName(String pipelineName) {
-		this.pipelineName = pipelineName; 
-		super.setField("pipelineName");
-	}
 
 	public String getPipelineCode() {
 		return pipelineCode; 

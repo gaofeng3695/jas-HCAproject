@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>添加管线信息</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+
+	<style>
+		html,
+		body {
+			width: 100%;
+		}
+
+		#app {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+			background:transparent;
+		}
+
+		.content {
+			height: calc(100% - 40px);
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.el-input-number,
+		.el-cascader,
+		.el-select {
+			width: 100%;
+		}
+
+		.dialog-footer {
+			padding-top: 8px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>
+
+		<jas-dialog-wrapper>
+			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="150px">
+				<jas-base-group-title name="基本信息"></jas-base-group-title>
+				<el-row :gutter="10">
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="管线名称" prop="pipelineName">
+							<el-input v-model="tableFormData.pipelineName" clearable placeholder="请输入管线名称" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="管线编号" prop="pipelineCode">
+							<el-input v-model="tableFormData.pipelineCode" clearable placeholder="请输入管线编号" size="small"></el-input>
+						</el-form-item>
+					</el-col>		
+				</el-row>
+				<el-row>	
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="起始里程" prop="startMileage">
+							<el-input v-model="tableFormData.startMileage" clearable placeholder="请输入起始里程" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="终止里程" prop="endMileage">
+							<el-input v-model="tableFormData.endMileage" clearable placeholder="请输入终止里程" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+				</el-row>	
+				<el-row>	
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="管道长度" prop="pipelineLength">
+							<el-input v-model="tableFormData.pipelineLength" clearable placeholder="请输入管道长度" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+						<el-form-item label="管道外管径(mm)" prop="outsidePipeDiameter">
+							<el-input v-model="tableFormData.outsidePipeDiameter" clearable placeholder="请输入管道外管径" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+				</el-row>	
+				<el-row>	
+					<el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+						<el-form-item label="管线稳态运行时允许的最大压力(mpa)" prop="maximumAllowablePressure">
+							<el-input v-model="tableFormData.maximumAllowablePressure" clearable placeholder="请输入管线稳态运行时允许的最大压力" size="small"></el-input>
+						</el-form-item>
+					</el-col>	
+				</el-row>				
+				<jas-base-group-title name="其他信息"></jas-base-group-title>
+				<el-row>
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+						<el-form-item label="备注" prop="remark">
+							<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" :rows="2" size="small" v-model="tableFormData.remark"></el-input>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+			<div slot="footer" >
+				<el-button size="small" @click="cancel()">取 消</el-button>
+				<el-button size="small" :disabled="but_disabled" type="primary" @click="submit('tableFormData')">确 定</el-button>
+			</div>
+		</jas-dialog-wrapper>
+
+
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+	var app = new Vue({
+		el: "#app",
+		data: function () {
+			var that = this;
+			return {
+				but_disabled:false,				
+				rules: {
+					pipelineName: [{
+						required: true,
+						message: '请输入管线名称',
+						trigger: 'blur'
+					}],
+					pipelineCode: [{
+						required: true,
+						message: '请输入管线编号',
+						trigger: 'blur'
+					}],
+					startMileage: [{
+						required: true,
+						message: '请输入起始里程',
+						trigger: 'blur',
+						rules: [{
+					        type: 'number',
+					        max: 999999.999,
+					        min: 0,
+					        precision: 3
+					    }]
+					}],
+					endMileage: [{
+				        required: true,
+						message: '请输入终止里程',
+						trigger: 'blur',
+						rules: [{
+					        type: 'number',
+					        max: 999999.999,
+					        min: 0,
+					        precision: 3
+					    }]
+					}],
+					pipelineLength: [{
+						required: true,
+						message: '请输入管道长度',
+						trigger: 'blur',
+						rules: [{
+					        type: 'number',
+					        max: 999999.999,
+					        min: 0,
+					        precision: 3
+					    }]
+					}],
+					outsidePipeDiameter: [{
+						required: true,
+						message: '请输入管道外管径',
+						trigger: 'blur',
+						rules: [{
+					        type: 'number',
+					        max: 9999999999999999,
+					        min: 0,
+					        precision: 0
+					    }]
+					}],
+					maximumAllowablePressure: [{
+						required: true,
+						message: '请输入管线稳态运行时允许的最大压力',
+						trigger: 'blur',
+						rules: [{
+					        type: 'number',
+					        max: 999999.999,
+					        min: 0,
+					        precision: 3
+					    }]
+					}]
+				},
+				tableFormData: {
+					"pipelineName": "", 
+					"pipelineCode": "", 
+					"startMileage": "", 
+					"endMileage": "",
+					"pipelineLength": "", 
+					"outsidePipeDiameter": "", 
+					"maximumAllowablePressure": "", 
+					"remark": ""
+				},
+				dataList: [{
+					"pipelineName": "内蒙古项目",
+					"pipelineCode": "内蒙古西部管道",
+					"startMileage": "15FC0",
+					"endMileage": "15FC001",
+					"pipelineLength": "15FC090",
+					"outsidePipeDiameter": "123KM",
+					"maximumAllowablePressure": "123KM",
+					"remark": "2019年4月12",
+					"oid": 'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
+				},
+				{
+					"pipelineName": "内蒙古项目",
+					"pipelineCode": "内蒙古西部管道",
+					"startMileage": "15FC0",
+					"endMileage": "15FC001",
+					"pipelineLength": "15FC090",
+					"outsidePipeDiameter": "123KM",
+					"maximumAllowablePressure": "123KM",
+					"remark": "2019年4月12",
+					"oid": '7c473241-5640-47a6-b343-22616eec5861'
+				},
+				{
+					"pipelineName": "内蒙古项目",
+					"pipelineCode": "内蒙古西部管道",
+					"startMileage": "15FC0",
+					"endMileage": "15FC001",
+					"pipelineLength": "15FC090",
+					"outsidePipeDiameter": "123KM",
+					"maximumAllowablePressure": "123KM",
+					"remark": "2019年4月12",
+					"oid": '1a0df2e4-46f1-4814-b63c-983172c105c7'
+				},
+				{
+					"pipelineName": "内蒙古项目",
+					"pipelineCode": "内蒙古西部管道",
+					"startMileage": "15FC0",
+					"endMileage": "15FC001",
+					"pipelineLength": "15FC090",
+					"outsidePipeDiameter": "123KM",
+					"maximumAllowablePressure": "123KM",
+					"remark": "2019年4月12",
+					"oid": 'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'
+				}]
+			}
+		},
+			
+		computed: {
+		},
+		mounted: function () {
+			var param = window.jasTools.base.getParamsInUrl(location.href);
+			if (param.oid) {
+				this.isEdit = true;
+				this.oid = param.oid;
+				this.tableFormData.oid = this.oid;
+				this.requestDetail(param.oid);
+			}
+		},
+		methods: {
+			submit: function (formName) {
+				var that = this;
+				this.$refs[formName].validate(function (valid) {
+					if (valid) {
+						that.save();
+					}
+				});
+			},
+			requestDetail: function (oid) {
+				var that = this;
+	/* 		    var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
+				jasTools.ajax.get(url, {
+					oid: oid
+				}, function (data) {
+					that.tableFormData = data.data;
+				});  */
+				that.tableFormData = that.dataList[0];
+
+			},
+			save: function () {
+				var that = this;
+				var msg = "";
+				if (!this.isEdit) {
+					msg = "增加成功";
+					url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/save.do";
+				} else {
+					msg = "修改成功";
+					url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/update.do";
+				}
+				that.but_disabled = true;				
+				jasTools.ajax.post(url, that.tableFormData, function (data) {
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: msg
+					});
+					that.cancel(1);
+				},function(data){
+					if(data.status!=-1){
+						that.but_disabled = false;
+					}
+				});
+			},
+			cancel: function (param) {
+				window.parent.jasTools.dialog.close(param);
+			}
+		},
+	});
+</script>
+
+</html>
