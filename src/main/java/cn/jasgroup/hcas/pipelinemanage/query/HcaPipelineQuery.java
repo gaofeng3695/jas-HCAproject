@@ -20,9 +20,9 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 public class HcaPipelineQuery extends BaseJavaQuery {
 
 	/**
-	 * 数据oid集合
+	 * oid
 	 */
-	private List<String> oids;
+	private String oid;
 	/**
 	 * 管线名称
 	 */
@@ -36,28 +36,28 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.* from hca_pipeline t where t.active=1 ";
-		if (StringUtils.isNotBlank(pipelineCode)) {
-			sql += " and t.pipeline_code like :pipelineCode ";
+		if (StringUtils.isNotBlank(oid)) {
+			sql += " and t.oid = :oid ";
+		}else{
+			if (StringUtils.isNotBlank(pipelineCode)) {
+				sql += " and t.pipeline_code like :pipelineCode ";
+			}
+			if (StringUtils.isNotBlank(pipelineName)) {
+				sql += " and t.pipeline_name like :pipelineName ";
+			}
 		}
-		if (StringUtils.isNotBlank(pipelineName)) {
-			sql += " and t.pipeline_name like :pipelineName ";
-		}
-		if (null != oids && oids.size() > 0) {
-			sql += " and t.oid in (:oids) ";
-		}
-		
 		sql += " order by t.create_datetime desc";
 		return sql;
 	}
 
-	public List<String> getOids() {
-		return oids;
+	public String getOid() {
+		return oid;
 	}
-
-	public void setOids(List<String> oids) {
-		this.oids = oids;
+	
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
-
+	
 	public String getPipelineName() {
 		if (StringUtils.isNotBlank(pipelineName)) {
 			return '%' + pipelineName + '%';
