@@ -73,15 +73,15 @@
 					field: 'pipelineLength',					
 				}, {
 					name: '管道外管径(mm)',
-					field: 'outsidePipeDiameter',
+					field: 'outsideDiameter',
 				}, {
 					name: '管线稳态运行时允许的最大压力(mpa)',
-					field: 'maximumAllowablePressure',
+					field: 'pressure',
 				}
 			],
 			field2: [{
 				name: '备注',
-				field: 'remark',
+				field: 'remarks',
 			}]
 		}
 	};
@@ -108,9 +108,9 @@
 		methods: {
 			getDetailByOid: function (oid) {
 				var that = this;
-				var url = jasTools.base.rootPath + "/hcapipeline/getPage.do";
-				jasTools.ajax.get(url, {
-					oids: oid,
+				var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
+				jasTools.ajax.post(url, {
+					oid: oid,
 				}, function (data) {
 					that.detail = data.rows[0];
 				}); 
