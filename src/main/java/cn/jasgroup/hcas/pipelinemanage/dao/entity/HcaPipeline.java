@@ -34,6 +34,11 @@ public class HcaPipeline extends CommonJdbcEntity {
 	private String pipelineCode; 
 
 	/**
+	 * 管线名称 
+	 */
+	private String pipelineName; 
+	
+	/**
 	 * 起始里程 
 	 */
 	private Double startMileage; 
@@ -76,6 +81,14 @@ public class HcaPipeline extends CommonJdbcEntity {
 	public void setPipelineCode(String pipelineCode) {
 		this.pipelineCode = pipelineCode; 
 		super.setField("pipelineCode");
+	}
+
+	public String getPipelineName() {
+		return pipelineName;
+	}
+
+	public void setPipelineName(String pipelineName) {
+		this.pipelineName = pipelineName;
 	}
 
 	public Double getStartMileage() {
