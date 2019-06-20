@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.el-table, .el-table th, .el-table tr, .el-table td {
+		    border: 0;
+			background:transparent;
+			
+		}	
+		.el-table--striped .el-table__body tr.el-table__row--striped td {
+			background-color: rgba(148, 144, 144, 0.3);
+		}
+		.el-table::before {
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 0px;
+		}
+		.el-table__fixed-right-patch {
+			background:transparent;
+		}
+		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+		.el-input__inner {
+		    height: 30px;
+		    line-height: 30px;
+		    border: 1px solid #466599;
+		    color: #b5ddff;
+		}
+		.el-input, .el-input__inner {
+		    background: transparent;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+		    background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		*::-webkit-scrollbar {width:7px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+		*::-webkit-scrollbar-track {background-color:#f0f6ff;  } /*定义滚动条轨道 内阴影+圆角*/
+		*::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>		
+	<jas-list-wrapper ref="mylist">
+        <div slot="search">
+			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
+				<el-row>
+					<el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="12">
+						<el-form-item label="编号" prop="pipelineCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.pipelineCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="12">
+						<el-form-item style="float:right;margin-bottom: 0px;">
+							<el-button size="small" @click="requestList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+		</div>
+		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
+			<div style="padding: 15px 0;">
+				<span class="fr">
+					<el-tooltip class="item" content="刷新" placement="top">
+						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
+					</el-tooltip>
+					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
+					</el-tooltip>
+					<el-tooltip v-show="!isClosed" class="item" content="收起搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
+					</el-tooltip>
+				</span>
+			</div>
+			<div class="is-grown">
+				<el-table ref="mytable"  stripe v-loading="loading"
+					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
+					<el-table-column label="序号" type="index" align="center" width="50">
+					</el-table-column>											
+					<el-table-column label="编号"  prop="pipelineCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					</el-table-column>						
+					<el-table-column label="等级"  prop="pipelineName" min-width="100px" show-overflow-tooltip align="center" header-align="center" >
+					</el-table-column>
+					<el-table-column label="起始里程" prop="startMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<template scope="scope"> 
+	                    <el-input v-if="scope.row.edit" size="mini" v-model="scope.row.startMileage" placeholder=""></el-input>
+	                    <span v-else>{{scope.row.startMileage}}</span>
+	                </template>
+					</el-table-column>
+					<el-table-column label="结束里程" prop="endMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<template scope="scope"> 
+	                    <el-input v-if="scope.row.edit" size="mini" v-model="scope.row.endMileage" placeholder=""></el-input>
+	                    <span v-else>{{scope.row.endMileage}}</span>
+	                </template>
+					</el-table-column>
+					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center" min-width="250px">
+						<template slot-scope="scope">
+							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
+							<el-button @click="editMileage(scope.row)" v-show="scope.row.isShowEditBtn" type="text" size="small" icon="fa fa-pencil">编辑</el-button>
+							<el-button @click="saveMileage(scope.row)" v-show="scope.row.isShowSaveBtn" type="text" size="small" icon="fa fa-floppy-o">保存</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<div style="padding: 15px 0 0;" class="clearfix">
+				<el-pagination class="fr" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+				</el-pagination>
+			</div>
+		</div>
+		</jas-list-wrapper>
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {			
+			loading: false,
+			isClosed: false,
+			isShowBtn: false,
+			form: {},
+			tableData: [],
+			pageSize: 10,
+			currentPage: 1,
+			total: 0,
+			
+			headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			}
+		}
+	},
+	created: function () {
+		this.jasMap = parent.app.jasMap;
+		this.forBusiness = getParamter('forBusiness');
+		this.requestList(0);
+		if(this.forBusiness==0){
+			this.layerId = 'pd_arearank';
+			this.isShowBtn = false;
+		}else{
+			this.layerId = 'pd_zonerankcell';
+			this.isShowBtn = true;
+		}
+	},
+	methods: {
+		requestList: function(param){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
+			jasTools.ajax.post(url,{
+				forBusiness:that.forBusiness,
+				pipelineCode: that.form.pipelineCode,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+				data.rows.forEach(function(item,index){
+					item.edit=false;
+					item.isShowSaveBtn=false;
+					item.isShowEditBtn=true;
+				})
+			});
+		},
+		editMileage: function(row) {
+			row.edit=true;
+	 	    row.isShowSaveBtn=true;
+	 	    row.isShowEditBtn=false;
+        },
+        saveMileage:function(row){
+			this.updateMileage(row);
+        },
+	    updateMileage: function (row) {
+			var that = this;
+			url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/update.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data.status==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '修改成功'
+					});
+					that.requestList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '修改失败'
+					});
+				}
+			});
+	    },
+
+		locate: function(item){
+			this.jasMap.flashGraphic(item.oid, this.layerId ,{
+				deep:2
+			});
+		},
+		
+		toggleSearch: function () {
+			this.$refs['mylist'].toggleSearch();
+			this.isClosed = this.$refs['mylist'].isClosed;
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestList();
+		},
+	},
+});
+
+</script>
+</html>
