@@ -1,4 +1,4 @@
-package cn.jasgroup.hcas.versionmaanage.entity;
+package cn.jasgroup.hcas.versionmaanage.dao.entity;
 
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
