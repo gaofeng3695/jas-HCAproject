@@ -18,7 +18,7 @@
 		}
 		.el-table, .el-table th, .el-table tr, .el-table td {
 		    border: 0;
-			background:transparent;
+			background:#060e22f2;
 			
 		}	
 		.el-table--striped .el-table__body tr.el-table__row--striped td {
@@ -33,6 +33,12 @@
 		.el-table__fixed-right-patch {
 			background:transparent;
 		}
+		
+		.el-table__fixed-right::before, .el-table__fixed::before {
+		    background-color: transparent;;
+		}
+		
+		
 		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
 			color:#b5ddff;
 			background: #0567ad78;
@@ -57,7 +63,7 @@
 			color:#fff;
 		}
 		*::-webkit-scrollbar {width:7px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-		*::-webkit-scrollbar-track {background-color:#f0f6ff;  } /*定义滚动条轨道 内阴影+圆角*/
+		 /**::-webkit-scrollbar-track {background-color:#f0f6ff;  }定义滚动条轨道 内阴影+圆角*/
 		*::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
 	</style>
 </head>
@@ -66,19 +72,19 @@
 	<div id="app" v-cloak>		
 	<jas-list-wrapper ref="mylist">
 		<div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
+			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row>
-					<el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6">
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
 						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
 							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6">
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
 						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
 							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="btnSize.sm" :md="btnSize.md" :lg="btnSize.lg" :xl="btnSize.xl">
+					<el-col :xs="24" :sm="24" :md="6" :lg="12" :xl="12">
 						<el-form-item style="float:right;margin-bottom: 0px;">
 							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
 							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
@@ -106,26 +112,26 @@
 			<div class="is-grown">
 				<el-table ref="mytable" @row-dblclick="openAreaList" stripe v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-					<el-table-column label="序号" type="index" align="center" width="50">
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
-					<el-table-column label="版本名称"  prop="versionName" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					<el-table-column label="版本名称"  prop="versionName" min-width="170px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>						
 					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
 					</el-table-column>
 					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
-					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="180px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>						
 					<el-table-column label="是否启用" prop="hasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
 					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
 					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="250px">
+					<el-table-column label="操作" align="center" min-width="310px" fixed="right">
 						<template slot-scope="scope">
 						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
 						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
 						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
-						<el-button @click='useLayer' type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
+						<el-button @click='enableUse(scope.row)' v-show="scope.row.isEdit" type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
 						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
 						</template>
 					</el-table-column>
@@ -187,12 +193,7 @@ var vm = new Vue({
 			pageSize: 10,
 			currentPage: 1,
 			total: 0,
-			btnSize: {
-				sm: 0,
-				md: 0,
-				lg: 0,
-				xl: 0,
-			},
+			
 			headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
@@ -203,7 +204,6 @@ var vm = new Vue({
 		}
 	},
 	created: function () {
-		this.setFieldsPattern();		
 		this.jasMap = parent.app.jasMap;
 		this.forBusiness = getParamter('forBusiness');
 		this.requestVersionList(0);
@@ -213,10 +213,10 @@ var vm = new Vue({
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
 			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
 				title: '新增地区等级历史版本信息',
 				src: baseSrc,
 				cbForClose: function () {
@@ -228,10 +228,10 @@ var vm = new Vue({
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
 			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
 				title: '修改地区等级历史版本信息',
 				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
@@ -247,10 +247,10 @@ var vm = new Vue({
 				pageCode: 'file'
 			});
 			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
 				title: '地区等级历史版本信息详情',
 				src: src,
 			});
@@ -303,6 +303,13 @@ var vm = new Vue({
 				that.total = data.total;
 				that.tableData = data.rows;
 				that.loading = false;
+				data.rows.forEach(function(item,index){
+					if(item.hasUsed == 1){
+						item.isEdit=false;
+					}else{
+						item.isEdit=true;
+					}
+				})
 			});
 		},
 		
@@ -337,21 +344,30 @@ var vm = new Vue({
 				width: '35%',
 			})
 		},
-		useLayer: function(){
+		enableUse: function(row) {
 			var that = this;
+			row.hasUsed = 1;
+			url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '启用成功'
+					});
+					that.requestVersionList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'waring',
+						message: '启用失败'
+					});
+				}
+			});
 			that.jasMap.layerVisibleSwitch('pd_arearank',false);
 			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
 			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 			setTimeout(function(){
 				that.jasMap.layerVisibleSwitch('pd_arearank',true);
-			}, 1000)
-		},
-		setFieldsPattern: function () {
-			var nFields = 5;
-			this.btnSize.sm = 24 - (24 * nFields) % 24;
-			this.btnSize.md = 24 - (12 * nFields) % 24;
-			this.btnSize.lg = 24 - (8 * nFields) % 24;
-			this.btnSize.xl = 24 - (6 * nFields) % 24;
+			}, 1000);
 		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();

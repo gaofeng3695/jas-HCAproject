@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.jasgroup.hcas.areamanage.dao.entity.HcaArea;
-import cn.jasgroup.hcas.versionmaanage.entity.HcaVersion;
+import cn.jasgroup.hcas.versionmaanage.dao.entity.HcaVersion;
 import cn.jasgroup.jasframework.dataaccess.base.BaseJdbcDao;
 import cn.jasgroup.jasframework.engine.jdbc.dao.CommonDataJdbcDao;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
