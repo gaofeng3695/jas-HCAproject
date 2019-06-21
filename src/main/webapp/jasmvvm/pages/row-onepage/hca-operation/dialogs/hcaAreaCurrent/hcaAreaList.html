@@ -65,23 +65,18 @@
 <body>
 	<div id="app" v-cloak>		
 	<jas-list-wrapper ref="mylist">
-		<div slot="search">
+        <div slot="search">
 			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
 				<el-row>
-					<el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6">
-						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
-							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
+					<el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="12">
+						<el-form-item label="编号" prop="pipelineCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.pipelineCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="6">
-						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="btnSize.sm" :md="btnSize.md" :lg="btnSize.lg" :xl="btnSize.xl">
+					<el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="12">
 						<el-form-item style="float:right;margin-bottom: 0px;">
-							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
-							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
+							<el-button size="small" @click="requestList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -89,11 +84,10 @@
 		</div>
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
-				<el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-down">导入</el-button>
+				<el-button v-show="isShowBtn" @click='previewFile' size="small"plain type="primary" icon="fa fa-file-text-o">生成报告</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestVersionList(0)"></el-button>
+						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
 					</el-tooltip>												
 					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
 						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
@@ -104,29 +98,23 @@
 				</span>
 			</div>
 			<div class="is-grown">
-				<el-table ref="mytable" @row-dblclick="seeDetail" stripe v-loading="loading"
+				<el-table ref="mytable" @row-dblclick="openDetail" stripe v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
 					<el-table-column label="序号" type="index" align="center" width="50">
 					</el-table-column>											
-					<el-table-column label="版本名称"  prop="versionName" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					<el-table-column label="编号"  prop="pipelineCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
 					</el-table-column>						
-					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					<el-table-column label="等级"  prop="pipelineName" min-width="100px" show-overflow-tooltip align="center" header-align="center" >
 					</el-table-column>
-					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="起始里程" prop="startMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
-					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="120px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>						
-					<el-table-column label="是否启用" prop="hasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="结束里程" prop="endMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
 					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
 					</el-table-column>
 					<el-table-column label="操作" align="center" min-width="250px">
 						<template slot-scope="scope">
-						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
-						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
-						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
-						<el-button @click='useLayer' type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
-						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
+							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -182,17 +170,14 @@ var vm = new Vue({
 		return {			
 			loading: false,
 			isClosed: false,
+			isShowBtn: false,
 			form: {},
+			
 			tableData: [],
 			pageSize: 10,
 			currentPage: 1,
 			total: 0,
-			btnSize: {
-				sm: 0,
-				md: 0,
-				lg: 0,
-				xl: 0,
-			},
+			
 			headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
@@ -203,85 +188,20 @@ var vm = new Vue({
 		}
 	},
 	created: function () {
-		this.setFieldsPattern();		
 		this.jasMap = parent.app.jasMap;
 		this.forBusiness = getParamter('forBusiness');
-		this.requestVersionList(0);
+		this.requestList(0);
+		//this.getDetails();
+		if(this.forBusiness==0){
+			this.layerId = 'pd_arearank';
+			this.isShowBtn = false;
+		}else{
+			this.layerId = 'pd_zonerankcell';
+			this.isShowBtn = true;
+		}
 	},
 	methods: {
-		addArea: function(){
-			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
-			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
-				title: '新增地区等级历史版本信息',
-				src: baseSrc,
-				cbForClose: function () {
-					that.requestVersionList(0);
-				}
-			});
-		},
-		editArea: function(row){
-			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
-			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
-				title: '修改地区等级历史版本信息',
-				src: baseSrc + '?oid=' + row.oid,
-				cbForClose: function () {
-					that.requestVersionList(0);
-				}
-			});
-		},
-		seeDetail: function (row) {
-			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/detail.html';
-			var src = jasTools.base.setParamsToUrl(baseSrc, {
-				oid: row.oid,
-				pageCode: 'file'
-			});
-			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
-				bottom:'15%',						
-				left:'25%',
-				title: '地区等级历史版本信息详情',
-				src: src,
-			});
-		},
-		deleteArea: function (row) {
-			var that = this;
-			var afterDelete = function () {
-				top.Vue.prototype.$message({
-					type: 'success',
-					message: '删除成功'
-				});
-				that.requestVersionList(0);
-			};
-			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
-				type: 'warning',
-				callback: function (action) {
-					if (action === 'confirm') {
-						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
-						jasTools.ajax.post(url, {
-							oid:row.oid
-						}, function (data) {
-							afterDelete();
-						});
-					}
-				}
-			});
-		},
-		openDetail:function(idx){
-			parent.app.openDetail(idx);
-		},
-		requestVersionList: function(param){
+		requestList: function(param){
 			var that= this;
 			if (param == 1 || param == 0) {
 				that.form = {};
@@ -293,11 +213,10 @@ var vm = new Vue({
 				that.currentPage = 1;
 			}
 			that.loading = true;
-			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
 			jasTools.ajax.post(url,{
 				forBusiness:that.forBusiness,
-				versionName: that.form.versionName,
-				versionCode: that.form.versionCode,
+				pipelineCode: that.form.pipelineCode,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
@@ -308,20 +227,47 @@ var vm = new Vue({
 				that.loading = false;
 			});
 		},
-		openAreaList: function(){
-			var title = '地区等级列表';
-			var layerId = 'pd_arearank';
-			if(this.forBusiness == "0"){
-				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+
+		openDetail:function(idx){
+			parent.app.openDetail(idx);
+		},
+		getDetails: function(){
+			var that= this;
+			var sourceName = 'pd_arearank';
+			if(this.forBusiness == 1){
+				sourceName = 'pd_zonerankcell';
 			}
-			if(this.forBusiness == "1"){
-				title = '高后果区列表';
-				layerId = 'pd_zonerankcell';
-				this.jasMap.layerVisibleSwitch('pd_arearank',false);
-			}
-			this.jasMap.layerVisibleSwitch(layerId,true);
-			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-			parent.app.showAreaDialog(this.forBusiness, title, '420px');
+			this.jasMap.commonUtil.simpleAjaxLoader({
+				url:"../../../../zone/" + sourceName + "/query.do",
+				data:JSON.stringify({
+					where :"rank is not null",
+					returnGeometry:false
+				}),
+				method:"post",
+				async:false,
+				contentType:"application/json",
+				onSuccess:function(re){
+					var result = JSON.parse(re);
+					var collection =  JSON.parse(result.data.features)  ;
+					var features = collection.features;
+					var data = [];
+					if(Array.isArray(features)){
+						for(var i = 0 ; i < features.length ; i++){
+							var properties = features[i].properties ;
+							properties.startMileage = properties.start_mileage ;
+							properties.endMileage = properties.end_mileage ;
+							properties.index = i + 1;
+							data.push(properties);
+						}
+					}
+					that.detailData = data;
+				}
+			});
+		},
+		locate: function(item){
+			this.jasMap.flashGraphic(item.oid, this.layerId ,{
+				deep:2
+			});
 		},
 		previewFile : function(){
 			top.jasTools.selfDialogNew.show({
@@ -331,41 +277,18 @@ var vm = new Vue({
 				width: '35%',
 			})
 		},
-		importFile: function(){
-			top.jasTools.dialog.show({
-				title: '导入',
-				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
-				height: '488px',
-				width: '35%',
-			})
-		},
-		useLayer: function(){
-			var that = this;
-			that.jasMap.layerVisibleSwitch('pd_arearank',false);
-			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
-			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-			setTimeout(function(){
-				that.jasMap.layerVisibleSwitch('pd_arearank',true);
-			}, 1000)
-		},
-		setFieldsPattern: function () {
-			var nFields = 5;
-			this.btnSize.sm = 24 - (24 * nFields) % 24;
-			this.btnSize.md = 24 - (12 * nFields) % 24;
-			this.btnSize.lg = 24 - (8 * nFields) % 24;
-			this.btnSize.xl = 24 - (6 * nFields) % 24;
-		},
+		
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();
 			this.isClosed = this.$refs['mylist'].isClosed;
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;
-			this.requestVersionList();
+			this.requestList();
 		},
 		handleCurrentChange: function (val) {
 			this.currentPage = val;
-			this.requestVersionList();
+			this.requestList();
 		},
 	},
 });

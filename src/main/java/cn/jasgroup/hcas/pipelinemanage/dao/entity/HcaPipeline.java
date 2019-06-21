@@ -89,6 +89,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 
 	public void setPipelineName(String pipelineName) {
 		this.pipelineName = pipelineName;
+		super.setField("pipelineName");
 	}
 
 	public Double getStartMileage() {
