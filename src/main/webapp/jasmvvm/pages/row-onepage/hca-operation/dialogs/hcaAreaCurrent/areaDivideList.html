@@ -18,7 +18,7 @@
 		}
 		.el-table, .el-table th, .el-table tr, .el-table td {
 		    border: 0;
-			background:transparent;
+			background:#060e22f2;
 			
 		}	
 		.el-table--striped .el-table__body tr.el-table__row--striped td {
@@ -33,6 +33,12 @@
 		.el-table__fixed-right-patch {
 			background:transparent;
 		}
+		
+		.el-table__fixed-right::before, .el-table__fixed::before {
+		    background-color: transparent;;
+		}
+		
+		
 		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
 			color:#b5ddff;
 			background: #0567ad78;
@@ -57,7 +63,7 @@
 			color:#fff;
 		}
 		*::-webkit-scrollbar {width:7px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-		*::-webkit-scrollbar-track {background-color:#f0f6ff;  } /*定义滚动条轨道 内阴影+圆角*/
+		 /**::-webkit-scrollbar-track {background-color:#f0f6ff;  }定义滚动条轨道 内阴影+圆角*/
 		*::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
 	</style>
 </head>
@@ -66,14 +72,14 @@
 	<div id="app" v-cloak>		
 	<jas-list-wrapper ref="mylist">
         <div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
+			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row>
-					<el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="12">
+					<el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="12">
 						<el-form-item label="编号" prop="pipelineCode" style="margin-bottom: 15px ">
 							<el-input v-model="form.pipelineCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="12">
+					<el-col :xs="24" :sm="12" :md="12" :lg="18" :xl="12">
 						<el-form-item style="float:right;margin-bottom: 0px;">
 							<el-button size="small" @click="requestList(1)">重置</el-button>
 							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
@@ -84,6 +90,7 @@
 		</div>
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
+				<el-button @click='previewFile' size="small"plain type="primary" icon="fa fa-file-text-o">生成报告</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
 						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
@@ -99,19 +106,19 @@
 			<div class="is-grown">
 				<el-table ref="mytable"  stripe v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-					<el-table-column label="序号" type="index" align="center" width="50">
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
-					<el-table-column label="编号"  prop="pipelineCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					<el-table-column label="编号"  prop="pipelineCode" min-width="180px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>						
-					<el-table-column label="等级"  prop="pipelineName" min-width="100px" show-overflow-tooltip align="center" header-align="center" >
+					<el-table-column label="等级"  prop="pipelineName" min-width="110px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>
-					<el-table-column label="起始里程" prop="startMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="起始里程" prop="startMileage" min-width="130px" show-overflow-tooltip align="center" header-align="center">
 					<template scope="scope"> 
 	                    <el-input v-if="scope.row.edit" size="mini" v-model="scope.row.startMileage" placeholder=""></el-input>
 	                    <span v-else>{{scope.row.startMileage}}</span>
 	                </template>
 					</el-table-column>
-					<el-table-column label="结束里程" prop="endMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="结束里程" prop="endMileage" min-width="130px" show-overflow-tooltip align="center" header-align="center">
 					<template scope="scope"> 
 	                    <el-input v-if="scope.row.edit" size="mini" v-model="scope.row.endMileage" placeholder=""></el-input>
 	                    <span v-else>{{scope.row.endMileage}}</span>
@@ -119,7 +126,7 @@
 					</el-table-column>
 					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
 					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="250px">
+					<el-table-column label="操作" align="center" min-width="180px" fixed="right">
 						<template slot-scope="scope">
 							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
 							<el-button @click="editMileage(scope.row)" v-show="scope.row.isShowEditBtn" type="text" size="small" icon="fa fa-pencil">编辑</el-button>
@@ -259,7 +266,7 @@ var vm = new Vue({
 					that.requestList(0);
 				}else{
 					top.Vue.prototype.$message({
-						type: 'success',
+						type: 'waring',
 						message: '修改失败'
 					});
 				}
@@ -271,7 +278,15 @@ var vm = new Vue({
 				deep:2
 			});
 		},
-		
+
+		previewFile : function(){
+			top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+			})
+		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();
 			this.isClosed = this.$refs['mylist'].isClosed;
