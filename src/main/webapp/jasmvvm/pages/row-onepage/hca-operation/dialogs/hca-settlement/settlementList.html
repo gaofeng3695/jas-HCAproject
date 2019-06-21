@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.el-table, .el-table th, .el-table tr, .el-table td {
+		    border: 1px solid #454b54bd;
+			background:#0d1326;
+			
+		}	
+		.el-table--striped .el-table__body tr.el-table__row--striped td {
+			background-color: rgba(148, 144, 144, 0.3);
+		}
+		.el-table::before {
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 0px;
+		}
+		.el-table__fixed-right-patch {
+			background:#0d1326;
+		}
+		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+		.el-input__inner {
+		    height: 30px;
+		    line-height: 30px;
+		    border: 1px solid #466599;
+		    color: #b5ddff;
+		}
+		.el-input, .el-input__inner {
+		    background: transparent;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+		    background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		*::-webkit-scrollbar {width:7px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+		*::-webkit-scrollbar-track {background-color:#f0f6ff;  } /*定义滚动条轨道 内阴影+圆角*/
+		*::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>		
+	<jas-list-wrapper ref="mylist">
+		<jas-search-for-list slot="search" :form="topSearch" :fields="fields" :fields-config="fieldsConfig" @search="requestList(3)"></jas-search-for-list>
+
+		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
+			<div style="padding: 15px 0;">
+				<!-- <el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button> -->
+				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-down">导入</el-button>
+				<span class="fr">
+					<el-tooltip class="item" content="刷新" placement="top">
+						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
+					</el-tooltip>												
+					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
+					</el-tooltip>
+					<el-tooltip v-show="!isClosed" class="item" content="收起搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
+					</el-tooltip>
+				</span>
+			</div>
+			<div class="is-grown">
+				<el-table ref="mytable" @row-dblclick="seeDetail" stripe v-loading="loading"  @selection-change="handleSelectionChange"
+					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
+					<el-table-column type="selection" width="55" align="center" fixed></el-table-column>',
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
+					</el-table-column>											
+					<template v-for="(item,index)  in tableFields">
+						<el-table-column :key="item.oid" :fixed="index=== 0?true:false" :label="item.name" :prop="item.field" :formatter="item.formatter" min-width="130px" show-overflow-tooltip align="center" sortable="custom" >
+					</template>
+					<el-table-column label="操作" align="center" min-width="250px" fixed="right" fixed>
+						<template slot-scope="scope">
+						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
+						<el-button @click="editItem(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
+						<el-button @click="deleteItem(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
+						<el-button @click='locate(scope.row)' type="text" size="small" icon="fa fa-info-circle pointer">定位</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<div style="padding: 15px 0 0;" class="clearfix">
+				<el-pagination class="fr" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+				</el-pagination>
+			</div>
+		</div>
+		</jas-list-wrapper>
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {	
+			searchPath: '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/data.json',
+			loading: false,
+			isClosed: false,
+			form: {},
+			tableData: [],
+			pageSize: 10,
+			currentPage: 1,
+			total: 0,
+			btnSize: {
+				sm: 0,
+				md: 0,
+				lg: 0,
+				xl: 0,
+			},
+			headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			},
+			topSearch: {
+				buildingCode: '',
+				startMileage: '',
+				endMileage: '',
+				buildingType: ''
+			},
+			fields: [
+				{
+					name:'构筑物编号',
+					field: "buildingCode"
+				}, {
+					field: "startMileage",
+					name: '起始里程'
+				}, {
+					name: '终止里程',
+					field: "endMileage"
+				}, {
+					name: '构筑物类型',
+					field: "buildingType"
+				}
+			],
+			fieldsConfig: {
+				buildingCode: {
+					type:"input"
+				},
+				startMileage: {
+					type: 'input',
+				},
+				endMileage: {
+					type: 'input',
+				},
+				buildingType: {
+					type: 'select',
+					domainName: 'building_type_domain'
+				}
+			},
+			tableFields: [
+				{
+					"name": "构筑物编号",
+					"field": "buildingCode"
+				},
+				{
+					"name": "起始里程",
+					"field": "startMileage"
+				},
+				{
+					"name": "终止里程",
+					"field": "endMileage"
+				},
+				{
+					"name": "水平距离",
+					"field": "horizontalDistance"
+				},
+				{
+					"name": "垂直距离",
+					"field": "verticalDistance"
+				},
+				{
+					"name": "起始坐标x",
+					"field": "pointx"
+				},
+				{
+					"name": "起始坐标y",
+					"field": "pointy"
+				},
+				{
+					"name": "构筑物类型",
+					"field": "buildingType"
+				},
+				{
+					"name": "建筑分布",
+					"field": "buildingDistribution"
+				},
+				{
+					"name": "户数",
+					"field": "households"
+				},
+				{
+					"name": "人口",
+					"field": "population"
+				},
+				{
+					"name": "地址",
+					"field": "address"
+				},
+				{
+					"name": "备注",
+					"field": "remarks"
+				}
+			]
+		}
+	},
+	created: function () {
+		this.setFieldsPattern();		
+		this.jasMap = parent.app.jasMap;
+		this.requestList(2);
+	},
+	methods: {
+		searchList: function () {
+			this.$emit('search', this.fields);
+		},
+		/* addItem: function(){
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
+			top.jasTools.selfDialog.show({
+				width: '60%',
+				height: '50%',
+				bottom:'20%',						
+				left:'25%',
+				title: '新增地区等级历史版本信息',
+				src: baseSrc,
+				cbForClose: function () {
+					that.requestList(0);
+				}
+			});
+		}, */
+		editItem: function(row){
+			// 定位到对应构筑物，进入编辑状态，弹出编辑框
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+			top.jasTools.selfDialog.show({
+				title: '要素属性编辑',
+				src: baseSrc,
+				height: '283px',
+				// width: '290px',
+				//width: '544px',
+				width: '37%',
+				left:"35%",
+				top:"142px",
+				cbForClose: function () {
+					that.requestList(0);
+				}
+			});
+		},
+		seeDetail: function (row) {
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/detail.html';
+			var src = jasTools.base.setParamsToUrl(baseSrc, {
+				oid: row.oid,
+				pageCode: 'file'
+			});
+			top.jasTools.selfDialog.show({
+				width: '37%',
+				height: '47%',
+				bottom:'20%',						
+				left:'31%',
+				title: '构筑物详情',
+				src: src,
+			});
+		},
+		deleteItem: function (row) {
+			var that = this;
+			var afterDelete = function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: '删除成功'
+				});
+				that.requestList(0);
+			};
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
+				type: 'warning',
+				callback: function (action) {
+					if (action === 'confirm') {
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
+						jasTools.ajax.post(url, {
+							oid:row.oid
+						}, function (data) {
+							afterDelete();
+						});
+					}
+				}
+			});
+		},
+		openDetail:function(idx){
+			parent.app.openDetail(idx);
+		},
+		requestList: function(param){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+			//var url = jasTools.base.rootPath + "/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/data.json";
+			jasTools.ajax.post(url,{
+				buildingCode:that.form.buildingCode,
+				startMeliage: that.form.startMeliage,
+				endMeliage: that.form.endMeliage,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+			});
+		},
+		importFile: function(){
+			top.jasTools.dialog.show({
+				title: '导入',
+				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
+				height: '488px',
+				width: '35%',
+			})
+		},
+		useLayer: function(){
+			var that = this;
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			setTimeout(function(){
+				that.jasMap.layerVisibleSwitch('pd_arearank',true);
+			}, 1000)
+		},
+		setFieldsPattern: function () {
+			var nFields = 5;
+			this.btnSize.sm = 24 - (24 * nFields) % 24;
+			this.btnSize.md = 24 - (12 * nFields) % 24;
+			this.btnSize.lg = 24 - (8 * nFields) % 24;
+			this.btnSize.xl = 24 - (6 * nFields) % 24;
+		},
+		toggleSearch: function () {
+			this.$refs['mylist'].toggleSearch();
+			this.isClosed = this.$refs['mylist'].isClosed;
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestList();
+		},
+		locate: function(item){
+			this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+				deep:2
+			});
+		},
+		handleSelectionChange: function (val) {
+			this.oids = val.map(function (item) {
+				return item.oid;
+			});
+			this.rows = val;
+		},
+	},
+});
+
+</script>
+</html>

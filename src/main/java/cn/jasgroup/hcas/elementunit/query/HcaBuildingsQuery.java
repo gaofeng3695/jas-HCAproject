@@ -38,16 +38,17 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 
 	@Override
 	public String getQuerySql() {
-		String sql = "select t.oid,t.element_code,t.start_mileage,t.end_mileage,\n"
+		String sql = "select t.oid,t.building_code,t.start_mileage,t.end_mileage,\n"
 				+ "t.horizontal_distance,t.vertical_distance,t.pointx,t.pointy,t.building_type,t.building_distribution,\n"
-				+ "d01.code_name as building_type_name, d02.code_name as building_distribution_name,\n"
-				+ "t.number_of_households,t.population,to_char(t.collect_date, 'yyyy-MM-dd') as collect_date,t.collect_person,t.remarks,\n"
+				+ "d01.code_name as building_type_name, "
+//				+ "d02.code_name as building_distribution_name,\n"
+				+ "t.households,t.population,to_char(t.collect_date, 'yyyy-MM-dd') as collect_date,t.collect_person,t.remarks,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_buildings t\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_type_domain' order by ordinal) d01\n"
-				+ " on d01.code_id=t.element_type\n"
-				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_distribution_domain' order by ordinal) d02\n"
-				+ " on d02.code_id=t.building_distribution\n"
+				+ " on d01.code_id=t.building_type\n"
+//				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_distribution_domain' order by ordinal) d02\n"
+//				+ " on d02.code_id=t.building_distribution\n"
 				+ " where t.active=1";
 		if (StringUtils.isNotBlank(buildingCode)) {
 			sql += " and t.building_code like :elementCode ";
