@@ -40,13 +40,13 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,\n"
-				+ "t.area_code,t.regiona_level,d01.code_name as regiona_level_name,\n"
+				+ "t.area_code,t.region_level,d01.code_name as region_level_name,\n"
 				+ "t.start_mileage,t.end_mileage,t.area_length,t.remarks,t.description,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_area t\n"
 				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip\n"
 				+ " on t.pipeline_oid = pip.oid\n"
-				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='regiona_level_domain' order by ordinal) d01\n"
+				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain' order by ordinal) d01\n"
 				+ " on d01.code_id=t.regiona_level\n"
 				+ " where t.active=1 ";
 		if (StringUtils.isNotBlank(pipelineOid)) {
