@@ -24,17 +24,9 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 	 */
 	private List<String> oids;
 	/**
-	 * 项目oid
-	 */
-	private String projectOid;
-	/**
 	 * 管线oid
 	 */
 	private String pipelineOid;
-	/**
-	 * 地区等级区域oid
-	 */
-	private String areaOid;
 	/**
 	 * 高后果区编号
 	 */
@@ -50,29 +42,19 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 
 	@Override
 	public String getQuerySql() {
-		String sql = "select t.oid,t.project_oid,pro.project_name,t.pipeline_oid,pip.pipeline_name,t.area_oid,\n"
-				+ "a.area_code,t.high_impact_area_code,t.high_impact_area_name,t.high_impact_level,\n"
-				+ "d01.code_name as high_impact_level_name,t.high_impact_area_description,\n"
-				+ "t.start_mileage,t.end_mileage,t.length,t.remarks,\n"
+		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,t.version_oid,\n"
+				+ "t.high_impact_area_code,t.high_impact_area_name,t.high_impact_level,\n"
+				+ "d01.code_name as high_impact_level_name,t.description,\n"
+				+ "t.start_mileage,t.end_mileage,t.hca_length,t.remarks,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_high_impact_area t\n"
 				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip\n"
 				+ " on t.pipeline_oid = pip.oid\n"
-				+ " LEFT JOIN (select oid,project_name,enterprise_id from hca_project where active=1) pro\n"
-				+ " on t.project_oid = pro.oid\n"
-				+ " LEFT JOIN (select oid,area_code from hca_area where active=1) a\n"
-				+ " on t.area_oid = a.oid\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='high_impact_level_domain' order by ordinal) d01\n"
 				+ " on d01.code_id=t.high_impact_level\n"
-				+ " where t.active=1 and t.is_history=0 ";
-		if (StringUtils.isNotBlank(projectOid)) {
-			sql += " and t.project_oid = :projectOid ";
-		}
+				+ " where t.active=1";
 		if (StringUtils.isNotBlank(pipelineOid)) {
 			sql += " and t.pipeline_oid = :pipelineOid ";
-		}
-		if (StringUtils.isNotBlank(areaOid)) {
-			sql += " and t.area_oid = :areaOid ";
 		}
 		if (StringUtils.isNotBlank(highImpactAreaCode)) {
 			sql += " and t.high_impact_area_code like :highImpactAreaCode ";
@@ -98,28 +80,12 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 		this.oids = oids;
 	}
 
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-	}
-
 	public String getPipelineOid() {
 		return pipelineOid;
 	}
 
 	public void setPipelineOid(String pipelineOid) {
 		this.pipelineOid = pipelineOid;
-	}
-
-	public String getAreaOid() {
-		return areaOid;
-	}
-
-	public void setAreaOid(String areaOid) {
-		this.areaOid = areaOid;
 	}
 
 	public String getHighImpactAreaCode() {
