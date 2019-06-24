@@ -334,14 +334,17 @@ var vm = new Vue({
 				src: './dialogs/preview_file.html',
 				height: '740px',
 				width: '35%',
+				left:'35%',
 			})
 		},
 		importFile: function(){
-			top.jasTools.dialog.show({
-				title: '导入',
+			top.jasTools.selfDialog.show({
 				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
-				height: '488px',
-				width: '35%',
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'35%',
+				title: '导入',
 			})
 		},
 		enableUse: function(row) {
