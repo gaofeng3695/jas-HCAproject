@@ -89,7 +89,7 @@ public class HcaArea extends CommonJdbcEntity {
 		return regionLevel; 
 	}
 
-	public void setRegionaLevel(String regionLevel) {
+	public void setRegionLevel(String regionLevel) {
 		this.regionLevel = regionLevel; 
 		super.setField("regionLevel");
 	}
