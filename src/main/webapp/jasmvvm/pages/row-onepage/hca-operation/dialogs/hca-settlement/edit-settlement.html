@@ -40,23 +40,23 @@
 				</el-row>
 				<!-- <input class='cbt pan' type='button' value='导航'> -->
 			</div>
-           <!--  <div>
+           <div>
 				<h3>数据操作</h3>
 				<el-row style="padding:15px 5px">
 					<el-button @click='saveEdit' size="small" plain type="primary" >保存编辑</el-button>
 					<el-button @click='saveAll' size="small" plain type="primary" >保存所有</el-button>
 				</el-row>
-			</div> -->
+			</div>
             <!-- <div class='attrs' hidden>
 				<h3>属性编辑</h3>
 				<table class='grid' style='width: 100%;'></table>
 			</div> -->
         </div>
-        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 6px;">
+        <!-- <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 11px;">
             <el-button size="small" @click="cancel()">取 消</el-button>
+        </div> -->
             <!-- <el-button size="small" type="primary" @click="createBuffer()">确 定
             </el-button> -->
-        </div>
 
 	</div>
 </body>
@@ -133,6 +133,15 @@
 						var feature = evt.feature ;
 						var fId = feature.getId();
 						changedFeatures[fId] = feature;
+						var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+						top.jasTools.selfDialog.show({
+							title: '构筑物属性编辑',
+							src: baseSrc,
+							height: '283px',
+							width: '37%',
+							left:"35%",
+							top:"142px"
+						});
 					}
             	})
 			},
@@ -156,9 +165,9 @@
 							left:"35%",
 							top:"142px"
 						}) */
-						var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+						var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+attr.oid;
 						top.jasTools.selfDialog.show({
-							title: '要素属性编辑',
+							title: '构筑物属性编辑',
 							src: baseSrc,
 							height: '283px',
 							width: '37%',

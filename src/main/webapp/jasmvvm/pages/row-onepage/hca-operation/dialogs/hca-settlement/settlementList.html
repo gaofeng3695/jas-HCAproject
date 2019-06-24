@@ -262,7 +262,7 @@ var vm = new Vue({
 		editItem: function(row){
 			// 定位到对应构筑物，进入编辑状态，弹出编辑框
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+row.oid;
 			top.jasTools.selfDialog.show({
 				title: '构筑物属性编辑',
 				src: baseSrc,
@@ -302,11 +302,11 @@ var vm = new Vue({
 				});
 				that.requestList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
+			window.top.Vue.prototype.$confirm('您确定要删除删除构筑物信息吗？', '提示', {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
-						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/delete.do";
 						jasTools.ajax.post(url, {
 							oid:row.oid
 						}, function (data) {
