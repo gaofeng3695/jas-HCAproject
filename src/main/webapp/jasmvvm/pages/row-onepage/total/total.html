@@ -305,8 +305,8 @@
 						</div>
 						<div style="height:75%;width:100%">
 						<template>
-						    <el-carousel indicator-position="outside" :loop="false"> 
-						        <el-carousel-item v-for="item1 in 500" :key="item1">
+						    <el-carousel indicator-position="outside" :loop="false" :autoplay="false" @change="changePageNo">  
+						        <el-carousel-item v-for="item1 in pages" :key="pageNo" >
 									<div class="pipelineList" style="width:85%;margin-left:35px;" v-for="item in pipelineData">
 										<ul style="margin-top:5px;margin-bottom:5px;">
 											<li><span>管线名称：</span>{{item.pipelineName}}
@@ -320,30 +320,9 @@
 						    </el-carousel>
 						</template>
 						</div>
-<!-- 							<div class="pipelineList" >
-									<ul >
-										<li><span>管线名称：</span>京津线
-										<div class="icon">已识别&emsp;<i :style="[buttonStyle(2)]" @mouseover="isClick=2" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
-										</li>
-										<li><span>管线长度：</span>83.4KM</li>
-										<li><span>最近评价时间：</span>2018年6月13日
-										<div class="icon" style="color: #ffb719;">距下次识别还有27天</div>
-										</li>
-										
-									</ul>
-								</div>
-								<div class="pipelineList" >
-									<ul >
-										<li><span>管线名称：</span>秦京线
-										<div class="icon">已识别&emsp;<i :style="[buttonStyle(3)]" @mouseover="isClick=3" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
-										</li>
-										<li><span>管线长度：</span>324.6KM</li>
-										<li><span>最近评价时间：</span>2019年4月22日</li>
-									</ul>
-								</div> -->
-							</div>
 						</div>
 					</jas-panel-opacity>
+					</div>
 				</div>
 				<div class="panelitem" style="height:40%">
 					<jas-panel-opacity title="要素管理" style="margin-top:20px;">
@@ -577,8 +556,11 @@
 	            isActive:false,
 	            isActive1:false,
 	            isClick:'0',
-	            pipelineData:{}
-
+	            pipelineData:{},
+	            pageNo:1,
+	            pageSize:3,
+	            currentPage:1,
+				pages:1,
 			}
 		},
 		watch: {
@@ -1013,19 +995,23 @@
 					isDetail:true, 
 				})
 			},
-			requestList: function () { // 0刷新  1重置  2搜索
+			requestList: function () { 
 				var that = this;
 				var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
 	 			jasTools.ajax.post(url, {
-					pageNo: 1,
+					pageNo: that.currentPage,
 					pageSize: 3,
-					page: 1,
+					page: that.currentPage,
 					rows: 3,
 				}, function (data) {
+					that.pages = Math.ceil(data.total/3);
 					that.pipelineData = data.rows;
 				});   
-
 			},
+			changePageNo: function(a,b){
+				this.currentPage = a+1;
+				this.requestList();
+			}
 		}
 	})
 </script>
