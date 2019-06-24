@@ -17,14 +17,6 @@ public class HcaAreaBo extends CommonBaseBo {
 	 */
 	private String oid;
 
-	/**
-	 * 项目ID 
-	 */
-	private String projectOid; 
-	/**
-	 * 项目name 
-	 */
-	private String projectName; 
 
 	/**
 	 * 管线ID 
@@ -35,11 +27,6 @@ public class HcaAreaBo extends CommonBaseBo {
 	 * 管线name 
 	 */
 	private String pipelineName; 
-
-//	/**
-//	 * 识别单元ID 
-//	 */
-//	private String identificationUnitOid; 
 
 	/**
 	 * 地区编号 
@@ -69,12 +56,12 @@ public class HcaAreaBo extends CommonBaseBo {
 	/**
 	 * 长度 
 	 */
-	private Double length; 
+	private Double areaLength; 
 
 	/**
-	 * 是否历史数据 
+	 * 描述
 	 */
-	private Integer isHistory; 
+	private String description; 
 
 	/**
 	 * 空间数据状态 
@@ -86,21 +73,6 @@ public class HcaAreaBo extends CommonBaseBo {
 	 */
 	private String remarks;
 
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
 
 	public String getPipelineOid() {
 		return pipelineOid;
@@ -117,14 +89,6 @@ public class HcaAreaBo extends CommonBaseBo {
 	public void setPipelineName(String pipelineName) {
 		this.pipelineName = pipelineName;
 	}
-
-//	public String getIdentificationUnitOid() {
-//		return identificationUnitOid;
-//	}
-//
-//	public void setIdentificationUnitOid(String identificationUnitOid) {
-//		this.identificationUnitOid = identificationUnitOid;
-//	}
 
 	public String getAreaCode() {
 		return areaCode;
@@ -158,20 +122,12 @@ public class HcaAreaBo extends CommonBaseBo {
 		this.endMileage = endMileage;
 	}
 
-	public Double getLength() {
-		return length;
+	public Double getAreaLength() {
+		return areaLength;
 	}
 
-	public void setLength(Double length) {
-		this.length = length;
-	}
-
-	public Integer getIsHistory() {
-		return isHistory;
-	}
-
-	public void setIsHistory(Integer isHistory) {
-		this.isHistory = isHistory;
+	public void setAreaLength(Double areaLength) {
+		this.areaLength = areaLength;
 	}
 
 	public String getGeoState() {
@@ -204,6 +160,14 @@ public class HcaAreaBo extends CommonBaseBo {
 
 	public void setOid(String oid) {
 		this.oid = oid;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	} 
 
 }

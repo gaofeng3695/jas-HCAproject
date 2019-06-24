@@ -62,7 +62,7 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 		if (null != oids && oids.size() > 0) {
 			sql += " and t.oid in (:oids) ";
 		}
-		sql += " order by t.create_datetime desc";
+		sql += " order by t.start_mileage asc";
 		return sql;
 	}
 

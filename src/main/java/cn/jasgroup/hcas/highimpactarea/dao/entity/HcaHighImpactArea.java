@@ -21,19 +21,14 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 public class HcaHighImpactArea extends CommonJdbcEntity {
 
 	/**
-	 * 项目ID 
-	 */
-	private String projectOid; 
-
-	/**
 	 * 管线ID 
 	 */
 	private String pipelineOid; 
-
+	
 	/**
-	 * 地区等级区域ID 
+	 * 版本ID 
 	 */
-	private String areaOid; 
+	private String versionOid; 
 
 	/**
 	 * 高后果区编号 
@@ -53,7 +48,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 	/**
 	 * 高后果区描述 
 	 */
-	private String highImpactAreaDescription; 
+	private String description; 
 
 	/**
 	 * 起始里程 
@@ -68,12 +63,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 	/**
 	 * 长度 
 	 */
-	private Double length; 
-
-	/**
-	 * 是否历史数据 
-	 */
-	private Integer isHistory; 
+	private Double hcaLength; 
 
 	/**
 	 * 空间数据状态 
@@ -86,15 +76,6 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 	private String remarks; 
 
 
-	public String getProjectOid() {
-		return projectOid; 
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid; 
-		super.setField("projectOid");
-	}
-
 	public String getPipelineOid() {
 		return pipelineOid; 
 	}
@@ -102,15 +83,6 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 	public void setPipelineOid(String pipelineOid) {
 		this.pipelineOid = pipelineOid; 
 		super.setField("pipelineOid");
-	}
-
-	public String getAreaOid() {
-		return areaOid; 
-	}
-
-	public void setAreaOid(String areaOid) {
-		this.areaOid = areaOid; 
-		super.setField("areaOid");
 	}
 
 	public String getHighImpactAreaCode() {
@@ -140,13 +112,13 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("highImpactLevel");
 	}
 
-	public String getHighImpactAreaDescription() {
-		return highImpactAreaDescription; 
+	public String getDescription() {
+		return description; 
 	}
 
-	public void setHighImpactAreaDescription(String highImpactAreaDescription) {
-		this.highImpactAreaDescription = highImpactAreaDescription; 
-		super.setField("highImpactAreaDescription");
+	public void setHighImpactAreaDescription(String description) {
+		this.description = description; 
+		super.setField("description");
 	}
 
 	public Double getStartMileage() {
@@ -167,22 +139,13 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("endMileage");
 	}
 
-	public Double getLength() {
-		return length; 
+	public Double getHcaLength() {
+		return hcaLength; 
 	}
 
-	public void setLength(Double length) {
-		this.length = length; 
-		super.setField("length");
-	}
-
-	public Integer getIsHistory() {
-		return isHistory; 
-	}
-
-	public void setIsHistory(Integer isHistory) {
-		this.isHistory = isHistory; 
-		super.setField("isHistory");
+	public void setHcaLength(Double hcaLength) {
+		this.hcaLength = hcaLength; 
+		super.setField("hcaLength");
 	}
 
 	public String getGeoState() {
@@ -203,4 +166,16 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

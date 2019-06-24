@@ -24,10 +24,6 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	 */
 	private List<String> oids;
 	/**
-	 * 项目oid
-	 */
-	private String projectOid;
-	/**
 	 * 管线oid
 	 */
 	private String pipelineOid;
@@ -43,21 +39,16 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	
 	@Override
 	public String getQuerySql() {
-		String sql = "select t.oid,t.project_oid,pro.project_name,t.pipeline_oid,pip.pipeline_name,\n"
+		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,\n"
 				+ "t.area_code,t.regiona_level,d01.code_name as regiona_level_name,\n"
-				+ "t.start_mileage,t.end_mileage,t.length,t.remarks,t.is_history,\n"
+				+ "t.start_mileage,t.end_mileage,t.area_length,t.remarks,t.description,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_area t\n"
 				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip\n"
 				+ " on t.pipeline_oid = pip.oid\n"
-				+ " LEFT JOIN (select oid,project_name,enterprise_id from hca_project where active=1) pro\n"
-				+ " on t.project_oid = pro.oid\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='regiona_level_domain' order by ordinal) d01\n"
 				+ " on d01.code_id=t.regiona_level\n"
 				+ " where t.active=1 ";
-		if (StringUtils.isNotBlank(projectOid)) {
-			sql += " and t.project_oid = :projectOid ";
-		}
 		if (StringUtils.isNotBlank(pipelineOid)) {
 			sql += " and t.pipeline_oid = :pipelineOid ";
 		}
@@ -70,7 +61,7 @@ public class HcaAreaQuery extends BaseJavaQuery {
 		if (null != oids && oids.size() > 0) {
 			sql += " and t.oid in (:oids) ";
 		}
-		sql += " order by t.create_datetime desc";
+		sql += " order by t.start_mileage asc";
 		return sql;
 	}
 
@@ -81,14 +72,6 @@ public class HcaAreaQuery extends BaseJavaQuery {
 
 	public void setOids(List<String> oids) {
 		this.oids = oids;
-	}
-
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
 	}
 
 	public String getPipelineOid() {

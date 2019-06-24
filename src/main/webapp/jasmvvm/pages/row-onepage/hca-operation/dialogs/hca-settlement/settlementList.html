@@ -264,7 +264,7 @@ var vm = new Vue({
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
 			top.jasTools.selfDialog.show({
-				title: '要素属性编辑',
+				title: '构筑物属性编辑',
 				src: baseSrc,
 				height: '283px',
 				// width: '290px',
@@ -384,9 +384,10 @@ var vm = new Vue({
 			this.requestList();
 		},
 		locate: function(item){
-			this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+			/* this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
 				deep:2
-			});
+			}); */
+			this.jasMap.zoomAt(item.pointx, item.pointy, 15)
 		},
 		handleSelectionChange: function (val) {
 			this.oids = val.map(function (item) {

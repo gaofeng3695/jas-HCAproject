@@ -33,14 +33,12 @@ public class HcaAreaService extends CommonDataJdbcService {
 
 	public void saveRef(HcaArea hcaArea){
 		String pipelineId = hcaArea.getPipelineOid();
-		// 识别单元id集合
-		List<String> idList = hcaArea.getUnitIdList();
 		
 	}
 	
 	public void saveAndUpdateArea(){
 		HcaVersion version = new HcaVersion();
-		String sql = "update hca_version set has_used=0 where for_business=0 and active=1";
+		String sql = "update hca_version set has_used=0 where business_type=1 and active=1";
 		baseJdbcDao.update(sql, null);
 		String pipelineOid = "aa64052b-671e-4d45-989e-0d67658d47c5";
 		version.setPipelineOid(pipelineOid);
@@ -54,7 +52,7 @@ public class HcaAreaService extends CommonDataJdbcService {
 	}
 	public void saveAndUpdateHigh(){
 		HcaVersion version = new HcaVersion();
-		String sql = "update hca_version set has_used=0 where for_business=1 and active=1";
+		String sql = "update hca_version set has_used=0 where business_type=2 and active=1";
 		baseJdbcDao.update(sql, null);
 		String pipelineOid = "aa64052b-671e-4d45-989e-0d67658d47c5";
 		version.setPipelineOid(pipelineOid);
