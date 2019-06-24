@@ -36,7 +36,7 @@ public class HcaAreaBo extends CommonBaseBo {
 	/**
 	 * 地区等级 
 	 */
-	private String regionaLevel;
+	private String regionLevel;
 	
 	/**
 	 * 地区等级name 
@@ -98,12 +98,12 @@ public class HcaAreaBo extends CommonBaseBo {
 		this.areaCode = areaCode;
 	}
 
-	public String getRegionaLevel() {
-		return regionaLevel;
+	public String getRegionLevel() {
+		return regionLevel;
 	}
 
-	public void setRegionaLevel(String regionaLevel) {
-		this.regionaLevel = regionaLevel;
+	public void setRegionLevel(String regionLevel) {
+		this.regionLevel = regionLevel;
 	}
 
 	public Double getStartMileage() {

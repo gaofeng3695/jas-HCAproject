@@ -34,7 +34,7 @@ public class HcaArea extends CommonJdbcEntity {
 	/**
 	 * 地区等级 
 	 */
-	private String regionaLevel; 
+	private String regionLevel; 
 
 	/**
 	 * 起始里程 
@@ -85,13 +85,13 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("areaCode");
 	}
 
-	public String getRegionaLevel() {
-		return regionaLevel; 
+	public String getRegionLevel() {
+		return regionLevel; 
 	}
 
-	public void setRegionaLevel(String regionaLevel) {
-		this.regionaLevel = regionaLevel; 
-		super.setField("regionaLevel");
+	public void setRegionaLevel(String regionLevel) {
+		this.regionLevel = regionLevel; 
+		super.setField("regionLevel");
 	}
 
 	public Double getStartMileage() {
