@@ -58,6 +58,22 @@
     .txt-c {
       text-align: center;
     }
+    
+    .jas-flex-box.is-vertical {
+		background:#060e22f2
+	}
+	
+	.el-steps--simple {
+	    background: #606266;
+        border: 1px dashed #d9d9d9;
+	}
+	.el-upload-dragger {
+	    background-color: #303133;
+	}
+	.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+		color:#b5ddff;
+		background: #0567ad78;
+	}
   </style>
 </head>
 
@@ -80,7 +96,7 @@
                   <div class="el-upload__tip" slot="tip">只能上传Excel模板文件，最多同时上传一个</div>
                 </el-upload>
               </div>
-              <div class="dialog-footer" style="text-align: center">
+              <div class="dialog-footer" style="margin-bottom:10px;text-align: center">
                 <el-button size="small" @click="closeDialog">取 消</el-button>
                 <el-button size="small" @click="uploadExcel()" type="primary">导入</el-button>
                <!--   <el-button size="small" @click="uploadExcel('update')" type="primary">更新导入</el-button>-->
@@ -104,8 +120,8 @@
                   </div>
                   <div class="txt-c" v-html="errorMsg"></div>
                 </div>
-              </div>
-              <div class="dialog-footer" style="text-align: center">
+              </div>                           
+              <div class="dialog-footer" style="margin-bottom:10px;text-align: center;">              
                 <el-button size="small" @click="returnUpload">重新导入</el-button>
                 <el-button size="small" @click="closeDialog" type="primary">完成</el-button>
               </div>
@@ -139,7 +155,7 @@
     },
     methods: {
       closeDialog: function () {
-        top.jasTools.dialog.close();
+        top.jasTools.selfDialog.close();
       },
       onExceed: function () {
         top.Vue.prototype.$message({

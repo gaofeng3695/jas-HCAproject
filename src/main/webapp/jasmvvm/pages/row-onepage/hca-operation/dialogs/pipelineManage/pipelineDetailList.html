@@ -298,11 +298,13 @@ var vm = new Vue({
 			});
 		},
 		importFile: function(){
-			top.jasTools.dialog.show({
-				title: '导入',
+			top.jasTools.selfDialog.show({
 				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
-				height: '488px',
-				width: '35%',
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'35%',
+				title: '导入',
 			})
 		},
 		requestList: function (param) { // 0刷新  1重置  2搜索
