@@ -34,7 +34,7 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	/**
 	 * 地区等级
 	 */
-	private String regionaLevel;
+	private String regionLevel;
 	
 	
 	@Override
@@ -47,7 +47,7 @@ public class HcaAreaQuery extends BaseJavaQuery {
 				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip\n"
 				+ " on t.pipeline_oid = pip.oid\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain' order by ordinal) d01\n"
-				+ " on d01.code_id=t.regiona_level\n"
+				+ " on d01.code_id=t.region_level\n"
 				+ " where t.active=1 ";
 		if (StringUtils.isNotBlank(pipelineOid)) {
 			sql += " and t.pipeline_oid = :pipelineOid ";
@@ -55,8 +55,8 @@ public class HcaAreaQuery extends BaseJavaQuery {
 		if (StringUtils.isNotBlank(areaCode)) {
 			sql += " and t.area_code like :areaCode ";
 		}
-		if (StringUtils.isNotBlank(regionaLevel)) {
-			sql += " and t.regiona_level = :regionaLevel ";
+		if (StringUtils.isNotBlank(regionLevel)) {
+			sql += " and t.region_level = :regionLevel ";
 		}
 		if (null != oids && oids.size() > 0) {
 			sql += " and t.oid in (:oids) ";
@@ -93,12 +93,12 @@ public class HcaAreaQuery extends BaseJavaQuery {
 		this.areaCode = areaCode;
 	}
 
-	public String getRegionaLevel() {
-		return regionaLevel;
+	public String getRegionLevel() {
+		return regionLevel;
 	}
 
-	public void setRegionaLevel(String regionaLevel) {
-		this.regionaLevel = regionaLevel;
+	public void setRegionLevel(String regionLevel) {
+		this.regionLevel = regionLevel;
 	}
 
 	
