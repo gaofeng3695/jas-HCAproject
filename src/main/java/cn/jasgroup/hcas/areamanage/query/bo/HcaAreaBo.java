@@ -41,7 +41,7 @@ public class HcaAreaBo extends CommonBaseBo {
 	/**
 	 * 地区等级name 
 	 */
-	private String regionaLevelName; 
+	private String regionLevelName; 
 
 	/**
 	 * 起始里程 
@@ -146,12 +146,12 @@ public class HcaAreaBo extends CommonBaseBo {
 		this.remarks = remarks;
 	}
 
-	public String getRegionaLevelName() {
-		return regionaLevelName;
+	public String getRegionLevelName() {
+		return regionLevelName;
 	}
 
-	public void setRegionaLevelName(String regionaLevelName) {
-		this.regionaLevelName = regionaLevelName;
+	public void setRegionLevelName(String regionLevelName) {
+		this.regionLevelName = regionLevelName;
 	}
 
 	public String getOid() {
