@@ -221,9 +221,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 appConfig:that.mapConfig,
                 onOptionalLayersLoaded:function(){
                     that.jasMap.updateLayer('pd_pipesegment',{
-                        "show":true,
-                        "fieldName":"eventid",
-                        "fieldValues":[pipelineOid]
+                        "show":true
                     })
 				}
             });
@@ -252,6 +250,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				location.href="../total/total.html";
 			},
 			pipelineOperation:function(){
+				top.jasTools.selfDialog.close();
+
 				window.jasTools.selfDialog.show({
 					title: '管线信息列表',
 					src: './dialogs/pipelineManage/pipelineDetailList.html?dataType=pipeline',
@@ -360,6 +360,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
+				top.jasTools.selfDialog.close();
 				$('.hca').hide();
 				$('.area').hide();
 				//显示图层
@@ -377,9 +378,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
 				this.jasMap.layerVisibleSwitch(governmentId,true)
 				var that = this;
+				top.jasTools.selfDialog.close();
 				window.jasTools.selfDialog.show({
-					title: '要素编辑工具',
-					src: './dialogs/edit-settlement.html',
+					title: '构筑物编辑工具',
+					src: './dialogs/hca-settlement/edit-settlement.html',
 					height: '280px',
 					// width: '290px',
 					width: '380px',
@@ -392,12 +394,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.selfDialog.show({
 					title: '构筑物信息列表',
 					// src: './dialogs/detail2.html',
-					src: './dialogs/pipelineDetailList.html?dataType=pipeline',
-					height: '300px',
+					src: './dialogs/hca-settlement/settlementList.html?dataType=pipeline',
+					height: '460px',
 					// width: '800px',
-					width: '48%',
+					width: '52%',
 					bottom:'10px',
-					left:'25%',
+					left:'24%',
 				})
 			},
 			draw: function(){
@@ -486,6 +488,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			createArea: function(loading){
+				top.jasTools.selfDialog.close();
 				var msg = "确认重新生成地区等级？";
 				var radius = app.bufferValue;
 				var data = {
@@ -533,6 +536,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
+				top.jasTools.selfDialog.close();
+
 				app.showAreaDialogCreate('0', '地区等级列表', '150px');
 				// this.jasMap.refreshLayerById( 'pd_arearank' );
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);

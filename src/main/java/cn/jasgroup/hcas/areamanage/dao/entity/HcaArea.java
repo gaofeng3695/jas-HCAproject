@@ -1,10 +1,5 @@
 package cn.jasgroup.hcas.areamanage.dao.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Transient;
-
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
@@ -25,10 +20,6 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 @JdbcEntity(name="hca_area")
 public class HcaArea extends CommonJdbcEntity {
 
-	/**
-	 * 项目ID 
-	 */
-	private String projectOid; 
 
 	/**
 	 * 管线ID 
@@ -43,7 +34,7 @@ public class HcaArea extends CommonJdbcEntity {
 	/**
 	 * 地区等级 
 	 */
-	private String regionaLevel; 
+	private String regionLevel; 
 
 	/**
 	 * 起始里程 
@@ -58,13 +49,13 @@ public class HcaArea extends CommonJdbcEntity {
 	/**
 	 * 长度 
 	 */
-	private Double length; 
+	private Double areaLength; 
 
 	/**
-	 * 是否历史数据 
+	 * 描述
 	 */
-	private Integer isHistory = 0; 
-
+	private String description; 
+	 
 	/**
 	 * 空间数据状态 
 	 */
@@ -75,17 +66,6 @@ public class HcaArea extends CommonJdbcEntity {
 	 */
 	private String remarks; 
 	
-	private List<String> unitIdList = new ArrayList<>();
-
-
-	public String getProjectOid() {
-		return projectOid; 
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid; 
-		super.setField("projectOid");
-	}
 
 	public String getPipelineOid() {
 		return pipelineOid; 
@@ -105,13 +85,13 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("areaCode");
 	}
 
-	public String getRegionaLevel() {
-		return regionaLevel; 
+	public String getRegionLevel() {
+		return regionLevel; 
 	}
 
-	public void setRegionaLevel(String regionaLevel) {
-		this.regionaLevel = regionaLevel; 
-		super.setField("regionaLevel");
+	public void setRegionaLevel(String regionLevel) {
+		this.regionLevel = regionLevel; 
+		super.setField("regionLevel");
 	}
 
 	public Double getStartMileage() {
@@ -132,22 +112,13 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("endMileage");
 	}
 
-	public Double getLength() {
-		return length; 
+	public Double getAreaLength() {
+		return areaLength; 
 	}
 
-	public void setLength(Double length) {
-		this.length = length; 
-		super.setField("length");
-	}
-
-	public Integer getIsHistory() {
-		return isHistory; 
-	}
-
-	public void setIsHistory(Integer isHistory) {
-		this.isHistory = isHistory; 
-		super.setField("isHistory");
+	public void setAreaLength(Double areaLength) {
+		this.areaLength = areaLength; 
+		super.setField("areaLength");
 	}
 
 	public String getGeoState() {
@@ -168,13 +139,14 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
-	@Transient
-	public List<String> getUnitIdList() {
-		return unitIdList;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setUnitIdList(List<String> unitIdList) {
-		this.unitIdList = unitIdList;
+	public void setDescription(String description) {
+		this.description = description;
+		super.setField("description");
 	}
 
+	
 }

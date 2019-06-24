@@ -347,7 +347,12 @@ var vm = new Vue({
 		},
 		
 		locate: function(item){
-			this.jasMap.flashGraphic(item.oid, 'pd_pipesegment',{
+			this.jasMap.updateLayer('pd_pipesegment',{
+                "show":true,
+                "fieldName":"eventid",
+                "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
+            })
+			this.jasMap.flashGraphic('1', 'pd_pipesegment',{
 				deep:2
 			});
 		},
