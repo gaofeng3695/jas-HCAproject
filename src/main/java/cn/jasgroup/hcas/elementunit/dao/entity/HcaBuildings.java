@@ -14,33 +14,24 @@ import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
 import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 /**
- * @description 要素单元
+ * @description 构筑物单元
  * @author zhangyi
  * @date 2019年1月15日下午2:33:56
  * @version V1.0
  * @since JDK 1.80
  */
 
-@CommonSaveConfig(scene="/hcaelementunit/save")
-@CommonUpdateConfig(scene="/hcaelementunit/update")
-@CommonDeleteConfig(scene="/hcaelementunit/delete")
-@JdbcEntity(name = "hca_element_unit")
-public class HcaElementUnit extends CommonJdbcEntity {
+@CommonSaveConfig(scene="/hcabuildings/save")
+@CommonUpdateConfig(scene="/hcabuildings/update")
+@CommonDeleteConfig(scene="/hcabuildings/delete")
+@JdbcEntity(name = "hca_buildings")
+public class HcaBuildings extends CommonJdbcEntity {
+
 
 	/**
-	 * 项目ID
+	 * 构筑物编号 
 	 */
-	private String projectOid;
-
-	/**
-	 * 管线ID
-	 */
-	private String pipelineOid;
-
-	/**
-	 * 要素编号 
-	 */
-	private String elementCode;
+	private String buildingCode;
 
 	/**
 	 * 起始里程 
@@ -73,9 +64,9 @@ public class HcaElementUnit extends CommonJdbcEntity {
 	private Double pointy;
 
 	/**
-	 * 要素类型 
+	 * 构筑物类型 
 	 */
-	private String elementType;
+	private String buildingType;
 
 	/**
 	 * 建筑分布 
@@ -85,7 +76,7 @@ public class HcaElementUnit extends CommonJdbcEntity {
 	/**
 	 * 户数 
 	 */
-	private Double numberOfHouseholds;
+	private Double households;
 
 	/**
 	 * 人口 
@@ -101,11 +92,26 @@ public class HcaElementUnit extends CommonJdbcEntity {
 	 * 采集人员 
 	 */
 	private String collectPerson;
-
+	
 	/**
-	 * 是否历史数据 
+	 * 病床数 
 	 */
-	private Integer isHistory = 0;
+	private Double beds;
+	
+	/**
+	 * 地址
+	 */
+	private String address;
+	
+	/**
+	 * 中心点x
+	 */
+	private Double centerx;
+	
+	/**
+	 * 中心点y
+	 */
+	private Double centery;
 
 	/**
 	 * 空间数据状态 
@@ -117,32 +123,6 @@ public class HcaElementUnit extends CommonJdbcEntity {
 	 */
 	private String remarks;
 
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-		super.setField("projectOid");
-	}
-
-	public String getPipelineOid() {
-		return pipelineOid;
-	}
-
-	public void setPipelineOid(String pipelineOid) {
-		this.pipelineOid = pipelineOid;
-		super.setField("pipelineOid");
-	}
-
-	public String getElementCode() {
-		return elementCode;
-	}
-
-	public void setElementCode(String elementCode) {
-		this.elementCode = elementCode;
-		super.setField("elementCode");
-	}
 
 	public Double getStartMileage() {
 		return startMileage;
@@ -198,15 +178,6 @@ public class HcaElementUnit extends CommonJdbcEntity {
 		super.setField("pointy");
 	}
 
-	public String getElementType() {
-		return elementType;
-	}
-
-	public void setElementType(String elementType) {
-		this.elementType = elementType;
-		super.setField("elementType");
-	}
-
 	public String getBuildingDistribution() {
 		return buildingDistribution;
 	}
@@ -216,13 +187,13 @@ public class HcaElementUnit extends CommonJdbcEntity {
 		super.setField("buildingDistribution");
 	}
 
-	public Double getNumberOfHouseholds() {
-		return numberOfHouseholds;
+	public Double getHouseholds() {
+		return households;
 	}
 
-	public void setNumberOfHouseholds(Double numberOfHouseholds) {
-		this.numberOfHouseholds = numberOfHouseholds;
-		super.setField("numberOfHouseholds");
+	public void setHouseholds(Double households) {
+		this.households = households;
+		super.setField("households");
 	}
 
 	public Double getPopulation() {
@@ -254,15 +225,6 @@ public class HcaElementUnit extends CommonJdbcEntity {
 		super.setField("collectPerson");
 	}
 
-	public Integer getIsHistory() {
-		return isHistory;
-	}
-
-	public void setIsHistory(Integer isHistory) {
-		this.isHistory = isHistory;
-		super.setField("isHistory");
-	}
-
 	public String getGeoState() {
 		return geoState;
 	}
@@ -281,4 +243,59 @@ public class HcaElementUnit extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
+	public String getBuildingCode() {
+		return buildingCode;
+	}
+
+	public void setBuildingCode(String buildingCode) {
+		super.setField("buildingCode");
+		this.buildingCode = buildingCode;
+	}
+
+	public String getBuildingType() {
+		return buildingType;
+	}
+
+	public void setBuildingType(String buildingType) {
+		super.setField("buildingType");
+		this.buildingType = buildingType;
+	}
+
+	public Double getBeds() {
+		return beds;
+	}
+
+	public void setBeds(Double beds) {
+		super.setField("beds");
+		this.beds = beds;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		super.setField("address");
+		this.address = address;
+	}
+
+	public Double getCenterx() {
+		return centerx;
+	}
+
+	public void setCenterx(Double centerx) {
+		super.setField("centerx");
+		this.centerx = centerx;
+	}
+
+	public Double getCentery() {
+		return centery;
+	}
+
+	public void setCentery(Double centery) {
+		super.setField("centery");
+		this.centery = centery;
+	}
+
+	
 }
