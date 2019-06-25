@@ -99,7 +99,7 @@
 				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-down">导入</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestList"></el-button>
+						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
 					</el-tooltip>												
 					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
 						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
