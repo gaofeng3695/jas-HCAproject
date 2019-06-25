@@ -75,8 +75,8 @@
 			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
 				<el-row>
 					<el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="12">
-						<el-form-item label="编号" prop="pipelineCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.pipelineCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
+						<el-form-item label="编号" prop="areaCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.areaCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="18" :xl="12">
@@ -108,9 +108,9 @@
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
 					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
-					<el-table-column label="编号"  prop="pipelineCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" fixed>
+					<el-table-column label="编号"  prop="areaCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>						
-					<el-table-column label="等级"  prop="pipelineName" min-width="100px" show-overflow-tooltip align="center" header-align="center" fixed>
+					<el-table-column label="等级"  prop="regionLevelName" min-width="100px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>
 					<el-table-column label="起始里程" prop="startMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
@@ -219,10 +219,10 @@ var vm = new Vue({
 				that.currentPage = 1;
 			}
 			that.loading = true;
-			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaarea/getPage.do";
 			jasTools.ajax.post(url,{
 				forBusiness:that.forBusiness,
-				pipelineCode: that.form.pipelineCode,
+				areaCode: that.form.areaCode,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
