@@ -97,6 +97,10 @@
 				margin: 3px 0;
 				font-size: 33px;
 			}
+			.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+				color:#b5ddff;
+				background: #0567ad78;
+			}
 	</style>
 </head>
 
@@ -250,7 +254,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				location.href="../total/total.html";
 			},
 			pipelineOperation:function(){
-				top.jasTools.selfDialog.close();
+				//top.jasTools.selfDialog.close();
 
 				window.jasTools.selfDialog.show({
 					title: '管线信息列表',
@@ -266,7 +270,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				$('.area').hide();
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
-					src: './dialogs/buffer.html',
+					src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
 					height: '265px',
 					width: '250px',
 					left:"10%",
@@ -360,7 +364,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
-				top.jasTools.selfDialog.close();
 				$('.hca').hide();
 				$('.area').hide();
 				//显示图层
@@ -378,7 +381,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
 				this.jasMap.layerVisibleSwitch(governmentId,true)
 				var that = this;
-				top.jasTools.selfDialog.close();
+				//top.jasTools.selfDialog.close();
 				window.jasTools.selfDialog.show({
 					title: '构筑物编辑工具',
 					src: './dialogs/hca-settlement/edit-settlement.html',
@@ -488,7 +491,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			createArea: function(loading){
-				top.jasTools.selfDialog.close();
+				//top.jasTools.selfDialog.close();
 				var msg = "确认重新生成地区等级？";
 				var radius = app.bufferValue;
 				var data = {
@@ -536,7 +539,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
-				top.jasTools.selfDialog.close();
+				//top.jasTools.selfDialog.close();
 
 				app.showAreaDialogCreate('0', '地区等级列表', '150px');
 				// this.jasMap.refreshLayerById( 'pd_arearank' );

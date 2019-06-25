@@ -42,7 +42,7 @@ public class HcaAreaQuery extends BaseJavaQuery {
 		String sql = "select t.*,pip.pipeline_name,d01.code_name as region_level_name "
 				+ " from hca_area t "
 				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip on t.pipeline_oid = pip.oid "
-				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain' order by ordinal) d01 on d01.code_id=t.region_level "
+				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain') d01 on d01.code_id=t.region_level "
 				+ " where t.active=1 ";
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
@@ -57,7 +57,7 @@ public class HcaAreaQuery extends BaseJavaQuery {
 				sql += " and t.region_level = :regionLevel ";
 			}
 		}
-		//sql += " order by t.start_mileage asc";
+		sql += " order by t.start_mileage asc";
 		return sql;
 	}
 
