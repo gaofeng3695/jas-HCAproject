@@ -432,7 +432,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							})
 							// app.loaddingLayer('合并要素单元......');
 							common.simpleAjaxLoader({
-								url: "../../../../zone/settlement/random.do",
+								url: jasTools.base.rootPath + "/zone/settlement/random.do",
 								data: JSON.stringify({
 									source: settlementLayerId,
 									population:true ,//重置人口
@@ -450,7 +450,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							});
 						}
 					}
-				}); */
+				});  */
 			},
 			createRankCellData: function(loading){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
 				var that = this;
@@ -467,7 +467,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				};
 				loading.text='空间相交计算......';
 				common.simpleAjaxLoader({
-					url: "../../../../zone/rank/cell/init.do",
+					url: jasTools.base.rootPath + "/zone/rank/cell/init.do",
 					data: JSON.stringify(data) ,
 					async:true,
 					onSuccess:function(res){

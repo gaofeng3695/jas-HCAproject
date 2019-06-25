@@ -18,7 +18,7 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 
 @QueryConfig(scene = "/hcaelementunit/getPage", resultClass = HcaBuildingsBo.class)
 public class HcaBuildingsQuery extends BaseJavaQuery {
-
+	
 	/**
 	 * 数据oid集合
 	 */
@@ -32,10 +32,13 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 	 */
 	private String buildingType;
 	/**
-	 * 建筑分布
+	 * 起始里程
 	 */
-	private String buildingDistribution;
-
+	private String startMileage;
+	/**
+	 * 终止里程
+	 */
+	private String endMileage;
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.oid,t.building_code,t.start_mileage,t.end_mileage,\n"
@@ -56,14 +59,34 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 		if (StringUtils.isNotBlank(buildingType)) {
 			sql += " and t.building_type = :buildingType ";
 		}
-		if (StringUtils.isNotBlank(buildingDistribution)) {
-			sql += " and t.building_distribution = :buildingDistribution ";
+		if (StringUtils.isNotBlank(startMileage)) {
+			sql += " and t.start_mileage = :startMileage ";
+		}
+		if (StringUtils.isNotBlank(endMileage)) {
+			sql += " and t.end_mileage = :endMileage ";
 		}
 		if (null != oids && oids.size() > 0) {
 			sql += " and t.oid in (:oids) ";
 		}
-		sql += " order by t.start_mileage asc";
+		//sql += " order by t.start_mileage asc";
 		return sql;
+	}
+
+	public String getStartMileage() {
+		return startMileage;
+	}
+
+	public void setStartMileage(String startMileage) {
+		this.startMileage = startMileage;
+	}
+
+
+	public String getEndMileage() {
+		return endMileage;
+	}
+
+	public void setEndMileage(String endMileage) {
+		this.endMileage = endMileage;
 	}
 
 	public List<String> getOids() {
@@ -72,14 +95,6 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 
 	public void setOids(List<String> oids) {
 		this.oids = oids;
-	}
-
-	public String getBuildingDistribution() {
-		return buildingDistribution;
-	}
-
-	public void setBuildingDistribution(String buildingDistribution) {
-		this.buildingDistribution = buildingDistribution;
 	}
 
 	public String getBuildingCode() {

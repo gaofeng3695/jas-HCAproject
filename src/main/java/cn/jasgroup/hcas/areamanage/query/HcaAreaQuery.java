@@ -20,9 +20,9 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 public class HcaAreaQuery extends BaseJavaQuery {
 
 	/**
-	 * 数据oid集合
+	 * oid
 	 */
-	private List<String> oids;
+	private String oid;
 	/**
 	 * 管线oid
 	 */
@@ -39,39 +39,34 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	
 	@Override
 	public String getQuerySql() {
-		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,\n"
-				+ "t.area_code,t.region_level,d01.code_name as region_level_name,\n"
-				+ "t.start_mileage,t.end_mileage,t.area_length,t.remarks,t.description,\n"
-				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
-				+ " from hca_area t\n"
-				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip\n"
-				+ " on t.pipeline_oid = pip.oid\n"
-				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain' order by ordinal) d01\n"
-				+ " on d01.code_id=t.region_level\n"
+		String sql = "select t.*,pip.pipeline_name,d01.code_name as region_level_name "
+				+ " from hca_area t "
+				+ " LEFT JOIN (select oid,pipeline_name from hca_pipeline where active=1) pip on t.pipeline_oid = pip.oid "
+				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='region_level_domain' order by ordinal) d01 on d01.code_id=t.region_level "
 				+ " where t.active=1 ";
-		if (StringUtils.isNotBlank(pipelineOid)) {
-			sql += " and t.pipeline_oid = :pipelineOid ";
+		if (StringUtils.isNotBlank(oid)) {
+			sql += " and t.oid = :oid ";
+		}else{
+			if (StringUtils.isNotBlank(pipelineOid)) {
+				sql += " and t.pipeline_oid = :pipelineOid ";
+			}
+			if (StringUtils.isNotBlank(areaCode)) {
+				sql += " and t.area_code like :areaCode ";
+			}
+			if (StringUtils.isNotBlank(regionLevel)) {
+				sql += " and t.region_level = :regionLevel ";
+			}
 		}
-		if (StringUtils.isNotBlank(areaCode)) {
-			sql += " and t.area_code like :areaCode ";
-		}
-		if (StringUtils.isNotBlank(regionLevel)) {
-			sql += " and t.region_level = :regionLevel ";
-		}
-		if (null != oids && oids.size() > 0) {
-			sql += " and t.oid in (:oids) ";
-		}
-		sql += " order by t.start_mileage asc";
+		//sql += " order by t.start_mileage asc";
 		return sql;
 	}
 
-
-	public List<String> getOids() {
-		return oids;
+	public String getOid() {
+		return oid;
 	}
 
-	public void setOids(List<String> oids) {
-		this.oids = oids;
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
 
 	public String getPipelineOid() {
