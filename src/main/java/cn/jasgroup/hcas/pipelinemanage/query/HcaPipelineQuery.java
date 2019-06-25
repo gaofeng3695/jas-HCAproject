@@ -1,7 +1,5 @@
 package cn.jasgroup.hcas.pipelinemanage.query;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 
 import cn.jasgroup.hcas.pipelinemanage.query.bo.HcaPipelineBo;
