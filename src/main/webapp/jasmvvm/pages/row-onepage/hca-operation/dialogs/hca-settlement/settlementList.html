@@ -71,8 +71,44 @@
 <body>
 	<div id="app" v-cloak>		
 	<jas-list-wrapper ref="mylist">
-		<jas-search-for-list slot="search" :form="topSearch" :fields="fields" :fields-config="fieldsConfig" @search="requestList(2)"></jas-search-for-list>
-
+		<div slot="search">
+			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
+				<el-row :gutter="20">
+					<el-col :span="8">
+						<el-form-item label="构筑物编号" prop="buildingCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.buildingCode" :placeholder="'请输入构筑物编号'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="起始里程" prop="startMileage" style="margin-bottom: 15px ">
+							<el-input v-model="form.startMileage" :placeholder="'请输入起始里程'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="8">
+						<el-form-item label="终止里程" prop="endMileage" style="margin-bottom: 15px ">
+							<el-input v-model="form.endMileage" :placeholder="'请输入终止里程'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					</el-row>
+					<el-row :gutter="20">
+					<el-col :span="8">
+						<el-form-item label="构筑物类型" prop="buildingType" style="margin-bottom: 15px ">
+							<el-select v-model="form.buildingType" filterable :placeholder="'请输入构筑物类型'" size="small" clearable>
+								<el-option v-for="item in buildingTypeData" :key="item.codeId"
+										:label="item['codeName']" :value="item.codeId">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="16">
+						<el-form-item style="float:right;margin-bottom: 0px;">
+							<el-button size="small" @click="requestList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+		</div>
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
 				<!-- <el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button> -->
@@ -132,57 +168,17 @@ var vm = new Vue({
 			isClosed: false,
 			form: {},
 			tableData: [],
+			buildingTypeData: [],
 			pageSize: 10,
 			currentPage: 1,
 			total: 0,
-			btnSize: {
-				sm: 0,
-				md: 0,
-				lg: 0,
-				xl: 0,
-			},
+		
 			headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
 			},
 			tableRowStyle: {
 				'color': '#7495A8'
-			},
-			topSearch: {
-				buildingCode: '',
-				startMileage: '',
-				endMileage: '',
-				buildingType: ''
-			},
-			fields: [
-				{
-					name:'构筑物编号',
-					field: "buildingCode"
-				}, {
-					field: "startMileage",
-					name: '起始里程'
-				}, {
-					name: '终止里程',
-					field: "endMileage"
-				}, {
-					name: '构筑物类型',
-					field: "buildingType"
-				}
-			],
-			fieldsConfig: {
-				buildingCode: {
-					type:"input"
-				},
-				startMileage: {
-					type: 'input',
-				},
-				endMileage: {
-					type: 'input',
-				},
-				buildingType: {
-					type: 'select',
-					domainName: 'building_type_domain'
-				}
 			},
 			tableFields: [
 				{
@@ -215,11 +211,11 @@ var vm = new Vue({
 				},
 				{
 					"name": "构筑物类型",
-					"field": "buildingType"
+					"field": "buildingTypeName"
 				},
 				{
 					"name": "建筑分布",
-					"field": "buildingDistribution"
+					"field": "buildingDistributionName"
 				},
 				{
 					"name": "户数",
@@ -241,14 +237,11 @@ var vm = new Vue({
 		}
 	},
 	created: function () {
-		this.setFieldsPattern();		
 		this.jasMap = parent.app.jasMap;
 		this.requestList(2);
+		this.requestBuildingTypes();
 	},
 	methods: {
-		searchList: function () {
-			this.$emit('search', this.fields);
-		},
 		/* addItem: function(){
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
@@ -335,11 +328,11 @@ var vm = new Vue({
 			}
 			that.loading = true;
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
-			//var url = jasTools.base.rootPath + "/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/data.json";
 			jasTools.ajax.post(url,{
 				buildingCode:that.form.buildingCode,
 				startMileage: that.form.startMileage,
 				endMileage: that.form.endMileage,
+				buildingType: that.form.buildingType,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
@@ -351,12 +344,24 @@ var vm = new Vue({
 			});
 		},
 		importFile: function(){
-			top.jasTools.dialog.show({
+			top.jasTools.selfDialog.show({
+				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'30%',
 				title: '导入',
-				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
-				height: '488px',
-				width: '35%',
 			})
+		},
+		requestBuildingTypes: function () {
+			var that = this;
+			var url = jasTools.base.rootPath + "/jasframework/sysdoman/getDoman.do";
+			jasTools.ajax.get(url, {"domainName": 'building_type_domain'}, function (data) {
+				console.log(data)
+				data.forEach(function (item) {
+					that.buildingTypeData.push(item);
+				});
+			});
 		},
 		useLayer: function(){
 			var that = this;
@@ -366,13 +371,6 @@ var vm = new Vue({
 			setTimeout(function(){
 				that.jasMap.layerVisibleSwitch('pd_arearank',true);
 			}, 1000)
-		},
-		setFieldsPattern: function () {
-			var nFields = 5;
-			this.btnSize.sm = 24 - (24 * nFields) % 24;
-			this.btnSize.md = 24 - (12 * nFields) % 24;
-			this.btnSize.lg = 24 - (8 * nFields) % 24;
-			this.btnSize.xl = 24 - (6 * nFields) % 24;
 		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();

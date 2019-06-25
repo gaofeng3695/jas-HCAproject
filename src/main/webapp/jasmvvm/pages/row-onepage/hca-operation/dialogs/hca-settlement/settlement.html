@@ -10,16 +10,6 @@
 	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
 	<link rel="stylesheet" href="./../../../../../src/css/main.css">
 	<style>
-        /*html,body,
-		#app{
-			width: 100%;
-			height: 100%;
-			background:transparent;
-        }
-        .content{
-            color:#f0f8ff;
-            padding: 10px;
-        }*/
         html,body,
 		#app {
 			width: 100%;
@@ -86,7 +76,7 @@
 					<el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
 						<el-form-item label="构筑物类型" prop="buildingType">
 							<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择构筑物类型" size="small" >
-								<el-option v-for="item in domain.buildingType" :key="item.value" :label="item.value" :value="item.value"> </el-option>
+								<el-option v-for="item in domain.buildingType" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>		
@@ -131,7 +121,7 @@
 					<el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
 						<el-form-item label="建筑分布" prop="buildingDistribution" >
 							<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建筑分布">
-								<el-option v-for="item in domain.buildingDistribution" :key="item.value" :label="item.value" :value="item.value"> </el-option>
+								<el-option v-for="item in domain.buildingDistribution" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>	

@@ -512,7 +512,7 @@
 							type: 'warning',
 							callback: function (action) {
 								if (action === 'confirm') {
-									window.top.location.href = 'login.html';
+									window.top.location.href = jasTools.base.rootPath + '/jasmvvm/login.html';
 								}
 							}
 						});
