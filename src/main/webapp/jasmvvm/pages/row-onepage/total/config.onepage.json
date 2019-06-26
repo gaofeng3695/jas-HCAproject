@@ -76,17 +76,6 @@
     "basemaps": {
       "label": "基础底图",
       "baseMapLayers": [{
-        "id": "dark_shp",
-        "index": 0,
-        "label": "行政区划图",
-        "icon": "stylepath:images/basemap_shp.png",
-        "type": "Tile",
-        "source": "TileWMS",
-        "url": "http://geoserver.zyax.cn/geoserver/jasgroup/wms",
-        "params": {
-          "LAYERS": "jasgroup:china_canton_dark"
-        }
-      },{
         "id": "google_img",
         "index": 1,
         "label": "谷歌影像",

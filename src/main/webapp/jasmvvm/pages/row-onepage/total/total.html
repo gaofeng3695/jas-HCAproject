@@ -288,7 +288,7 @@
 										<img src="./image/not-check.png" alt="">
 									</div>
 									<div class="item-info">
-										<p class="item-val">2<span style="font-size:16px;">  条</span></p>	
+										<p class="item-val">0<span style="font-size:16px;">  条</span></p>	
 										<p class="item-title">本年度已识别</p>
 									</div>	
 								</div>	
@@ -297,7 +297,7 @@
 										<img src="./image/not-repaire.png" alt="">
 									</div>
 									<div class="item-info">
-										<p class="item-val">1<span style="font-size:16px;">  条</span></p>	
+										<p class="item-val">5<span style="font-size:16px;">  条</span></p>	
 										<p class="item-title">本年度未识别</p>
 									</div>	
 								</div>	
@@ -310,7 +310,7 @@
 									<div class="pipelineList" style="width:85%;margin-left:35px;" v-for="item2 in pipelineData">
 										<ul style="margin-top:5px;margin-bottom:5px;">
 											<li><span>管线名称：</span>{{item2.pipelineName}}
-											<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
+											<div class="icon" style="color: #f02123;">未识别&emsp;<!-- <i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i> --></div>
 											</li>
 											<li><span>管线长度：</span>{{item2.pipelineLength}} KM</li>
 											<li><span>最近评价时间：</span>{{item2.modifyDatetime}}</li>
@@ -325,7 +325,7 @@
 					</div>
 				</div>
 				<div class="panelitem" style="height:40%">
-					<jas-panel-opacity title="要素管理" style="margin-top:20px;">
+					<jas-panel-opacity title="构筑物管理" style="margin-top:20px;">
 						<div id="factorButton" @click="gotoMapPage" :style="[activeStyle]" @mouseover="isActive=true" @mouseout="isActive=false" style="float:right;color:#3a9ebf;"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></div>
 						<div id="factor" style="height: 100%;">
 							<div style="height: 50%;">
@@ -840,7 +840,7 @@
 				
 			},
 			gotoMapPage:function(){
-				location.href="../hca-operation/factorOperation.html";
+				location.href="../hca-operation/operation.html";
 			},
 			pipelineMapPage:function(){
 				location.href="../hca-operation/operation.html";
