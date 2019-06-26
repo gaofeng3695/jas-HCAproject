@@ -22,8 +22,8 @@
 			
 		}	
 		.el-table--striped .el-table__body tr.el-table__row--striped td {
-			/* background-color: rgba(148, 144, 144, 0.3); */
-		}
+/* 			background-color: rgba(148, 144, 144, 0.3);
+ */		}
 		.el-table::before {
 			left: 0;
 			bottom: 0;
@@ -62,7 +62,6 @@
 		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
 			color:#fff;
 		}
-		
 		.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
 			.el-table__body tr.current-row>td,
 			.el-table__body tr.hover-row.current-row>td,
@@ -82,37 +81,21 @@
 	<jas-list-wrapper ref="mylist">
 		<div slot="search">
 			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
-				<el-row :gutter="20">
-					<el-col :span="8">
-						<el-form-item label="构筑物编号" prop="buildingCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.buildingCode" :placeholder="'请输入构筑物编号'" size="small" clearable></el-input>
+				<el-row>
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
+						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
+							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="起始里程" prop="startMileage" style="margin-bottom: 15px ">
-							<el-input v-model="form.startMileage" :placeholder="'请输入起始里程'" size="small" clearable></el-input>
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
+						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="终止里程" prop="endMileage" style="margin-bottom: 15px ">
-							<el-input v-model="form.endMileage" :placeholder="'请输入终止里程'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					</el-row>
-					<el-row :gutter="20">
-					<el-col :span="8">
-						<el-form-item label="构筑物类型" prop="buildingType" style="margin-bottom: 15px ">
-							<el-select v-model="form.buildingType" filterable :placeholder="'请输入构筑物类型'" size="small" clearable>
-								<el-option v-for="item in buildingTypeData" :key="item.codeId"
-										:label="item['codeName']" :value="item.codeId">
-								</el-option>
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :span="16">
+					<el-col :xs="24" :sm="24" :md="6" :lg="12" :xl="12">
 						<el-form-item style="float:right;margin-bottom: 0px;">
-							<el-button size="small" @click="requestList(1)">重置</el-button>
-							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
+							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -120,12 +103,10 @@
 		</div>
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
-				<!-- <el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button> -->
-				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-up">导入</el-button>
-				<el-button @click="exportFile" size="small" plain type="primary" icon="fa fa-arrow-down">导出</el-button>
+				<el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
+						<el-button size="small" icon="el-icon-refresh" @click="requestVersionList(0)"></el-button>
 					</el-tooltip>												
 					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
 						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
@@ -136,20 +117,30 @@
 				</span>
 			</div>
 			<div class="is-grown">
-				<el-table ref="mytable" @row-dblclick="seeDetail" v-loading="loading"  @selection-change="handleSelectionChange"
+				<el-table ref="mytable" @row-dblclick="openAreaList" v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-<!-- 					<el-table-column type="selection" width="55" align="center" fixed></el-table-column>'
- -->					<el-table-column label="序号" type="index" align="center" width="50" fixed>
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
-					<template v-for="(item,index)  in tableFields">
-						<el-table-column :key="item.oid" :fixed="index=== 0?true:false" :label="item.name" :prop="item.field" :formatter="item.formatter" min-width="150px" show-overflow-tooltip align="center" sortable="custom" >
-					</template>
-					<el-table-column label="操作" align="center" min-width="250px" fixed="right" fixed>
+					<el-table-column label="版本名称"  prop="versionName" min-width="170px" show-overflow-tooltip align="center" header-align="center" fixed>
+					</el-table-column>						
+					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					</el-table-column>
+					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>
+					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="180px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>						
+					<el-table-column label="是否启用" prop="hasUsed" :formatter="formathasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>
+					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center" min-width="400px" fixed="right">
 						<template slot-scope="scope">
 						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
-						<el-button @click="editItem(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
-						<el-button @click="deleteItem(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
-						<el-button @click='locate(scope.row)' type="text" size="small" icon="fa fa-info-circle pointer">定位</el-button>
+						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
+						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
+						<el-button @click="importFile" type="text" size="small" icon="fa fa-arrow-up">导入</el-button>
+						<el-button @click='enableUse(scope.row)' v-show="scope.row.isEdit" type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
+						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -170,149 +161,122 @@
 <script src="./../../../../../common/js/jas-tools.js"></script>
 <script>
 
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
 var vm = new Vue({
 	el: "#app",
 	data: function () {
-		return {	
+		return {			
 			loading: false,
 			isClosed: false,
 			form: {},
 			tableData: [],
-			buildingTypeData: [],
 			pageSize: 10,
 			currentPage: 1,
 			total: 0,
-		
+			
 			headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
 			},
 			tableRowStyle: {
 				'color': '#7495A8'
-			},
-			tableFields: [
-				{
-					"name": "构筑物编号",
-					"field": "buildingCode"
-				},
-				{
-					"name": "起始里程",
-					"field": "startMileage"
-				},
-				{
-					"name": "终止里程",
-					"field": "endMileage"
-				},
-				{
-					"name": "水平距离",
-					"field": "horizontalDistance"
-				},
-				{
-					"name": "垂直距离",
-					"field": "verticalDistance"
-				},
-				{
-					"name": "起始坐标x",
-					"field": "pointx"
-				},
-				{
-					"name": "起始坐标y",
-					"field": "pointy"
-				},
-				{
-					"name": "构筑物类型",
-					"field": "buildingTypeName"
-				},
-				{
-					"name": "建筑分布",
-					"field": "buildingDistributionName"
-				},
-				{
-					"name": "户数",
-					"field": "households"
-				},
-				{
-					"name": "人口",
-					"field": "population"
-				},
-				{
-					"name": "地址",
-					"field": "address"
-				},
-				{
-					"name": "备注",
-					"field": "remarks"
-				}
-			]
+			}
 		}
 	},
 	created: function () {
 		this.jasMap = parent.app.jasMap;
-		this.requestList(2);
-		this.requestBuildingTypes();
+		this.forBusiness = getParamter('forBusiness');
+		this.requestVersionList(0);
 	},
 	methods: {
-		/* addItem: function(){
+		addArea: function(){
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
 			top.jasTools.selfDialog.show({
-				width: '60%',
-				height: '50%',
+				width: '50%',
+				height: '40%',
 				bottom:'20%',						
-				left:'25%',
+				left:'30%',
 				title: '新增地区等级历史版本信息',
 				src: baseSrc,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestVersionList(0);
 				}
 			});
-		}, */
-		editItem: function(row){
-			// 定位到对应构筑物，进入编辑状态，弹出编辑框
+		},
+		editArea: function(row){
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+row.oid;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
 			top.jasTools.selfDialog.show({
-				title: '构筑物属性编辑',
-				src: baseSrc,
-				width: '41%',
-				height: '35%',
+				width: '50%',
+				height: '40%',
 				bottom:'20%',						
 				left:'30%',
+				title: '修改地区等级历史版本信息',
+				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestVersionList(0);
 				}
 			});
 		},
 		seeDetail: function (row) {
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/detail.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/detail.html';
 			var src = jasTools.base.setParamsToUrl(baseSrc, {
 				oid: row.oid,
 				pageCode: 'file'
 			});
 			top.jasTools.selfDialog.show({
-				width: '41%',
-				height: '35%',
+				width: '50%',
+				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '构筑物详情',
+				title: '地区等级历史版本信息详情',
 				src: src,
 			});
 		},
-		deleteItem: function (row) {
+		deleteArea: function (row) {
 			var that = this;
 			var afterDelete = function () {
 				top.Vue.prototype.$message({
 					type: 'success',
 					message: '删除成功'
 				});
-				that.requestList(0);
+				that.requestVersionList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除删除构筑物信息吗？', '提示', {
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
-						var url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/delete.do";
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
 						jasTools.ajax.post(url, {
 							oid:row.oid
 						}, function (data) {
@@ -322,10 +286,7 @@ var vm = new Vue({
 				}
 			});
 		},
-		openDetail:function(idx){
-			parent.app.openDetail(idx);
-		},
-		requestList: function(param){
+		requestVersionList: function(param){
 			var that= this;
 			if (param == 1 || param == 0) {
 				that.form = {};
@@ -337,12 +298,11 @@ var vm = new Vue({
 				that.currentPage = 1;
 			}
 			that.loading = true;
-			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
 			jasTools.ajax.post(url,{
-				buildingCode:that.form.buildingCode,
-				startMileage: that.form.startMileage,
-				endMileage: that.form.endMileage,
-				buildingType: that.form.buildingType,
+				forBusiness:that.forBusiness,
+				versionName: that.form.versionName,
+				versionCode: that.form.versionCode,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
@@ -351,42 +311,79 @@ var vm = new Vue({
 				that.total = data.total;
 				that.tableData = data.rows;
 				that.loading = false;
+				data.rows.forEach(function(item,index){
+					if(item.hasUsed == 1){
+						item.isEdit=false;
+					}else{
+						item.isEdit=true;
+					}
+				})
 			});
+		},
+		
+		openAreaList: function(){
+			var title = '地区等级列表';
+			var layerId = 'pd_arearank';
+			if(this.forBusiness == "0"){
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			}
+			if(this.forBusiness == "1"){
+				title = '高后果区列表';
+				layerId = 'pd_zonerankcell';
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+			}
+			this.jasMap.layerVisibleSwitch(layerId,true);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			parent.app.showAreaDialog(this.forBusiness, title, '420px');
+		},
+		previewFile : function(){
+			top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+				left:'35%',
+			})
 		},
 		importFile: function(){
 			top.jasTools.selfDialog.show({
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
+				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
 				width: '40%',
 				height: '52%',
 				bottom:'20%',						
-				left:'30%',
+				left:'35%',
 				title: '导入',
 			})
 		},
-		exportFile: function(){
-			top.Vue.prototype.$message({
-				type: 'success',
-				message: '导出成功'
-			});
-		},
-		requestBuildingTypes: function () {
+		enableUse: function(row) {
 			var that = this;
-			var url = jasTools.base.rootPath + "/jasframework/sysdoman/getDoman.do";
-			jasTools.ajax.get(url, {"domainName": 'building_type_domain'}, function (data) {
-				console.log(data)
-				data.forEach(function (item) {
-					that.buildingTypeData.push(item);
-				});
+			row.hasUsed = 1;
+			url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '启用成功'
+					});
+					that.requestVersionList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'waring',
+						message: '启用失败'
+					});
+				}
 			});
-		},
-		useLayer: function(){
-			var that = this;
 			that.jasMap.layerVisibleSwitch('pd_arearank',false);
 			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
 			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 			setTimeout(function(){
 				that.jasMap.layerVisibleSwitch('pd_arearank',true);
-			}, 1000)
+			}, 1000);
+		},
+		formathasUsed: function(row, column, cellValue, index) {
+			if (row.hasUsed == 1) return '是';
+			else if (row.hasUsed == 0) return '否';
+			else return "-";
 		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();
@@ -394,23 +391,11 @@ var vm = new Vue({
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;
-			this.requestList();
+			this.requestVersionList();
 		},
 		handleCurrentChange: function (val) {
 			this.currentPage = val;
-			this.requestList();
-		},
-		locate: function(item){
-			/* this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
-				deep:2
-			}); */
-			this.jasMap.zoomAt(item.pointx, item.pointy, 15)
-		},
-		handleSelectionChange: function (val) {
-			this.oids = val.map(function (item) {
-				return item.oid;
-			});
-			this.rows = val;
+			this.requestVersionList();
 		},
 	},
 });

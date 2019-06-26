@@ -76,7 +76,7 @@
 					field: 'modifyDatetime',
 				}, {
 					name: '是否启用',
-					field: 'hasUsed',					
+					field: 'hasUsedName',					
 				},
 			],
 			field2: [{
@@ -113,6 +113,13 @@
 					oid: oid,
 				}, function (data) {
 					that.detail = data.rows[0];
+					if(that.detail.hasUsed == 1){
+						that.detail.hasUsedName = "是";
+					}else if(that.detail.hasUsed == 0){
+						that.detail.hasUsedName = "否";
+					}else{
+						that.detail.hasUsedName = "-";
+					}
 				}); 
 			}
 		},
