@@ -101,6 +101,17 @@
 				color:#b5ddff;
 				background: #0567ad78;
 			}
+			.map-module-basemaptoolsbar ul li{
+				display: block !important;
+			    padding: 1px !important;
+			    float: unset !important;
+			}
+			.map-module-basemaptoolsbar {
+			    position: absolute;
+			    top: 255px  !important;
+			    right: 10px  !important;
+			    left: unset !important;
+			}
 	</style>
 </head>
 
@@ -113,7 +124,7 @@
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="pipelineOperation">管线管理</div>
-						<div class="item-btn" @click="createBufferDialog">识别区生成</div>
+						<!-- <div class="item-btn" @click="createBufferDialog">识别区生成</div> -->
 						<div class="item-btn" @click="createBh">构筑物管理</div>
 						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
 						<div class="item-btn" @click="showHistoryBtn(1)">高后果区识别</div>
@@ -132,10 +143,10 @@
 					<!--图层操作按钮-->
 					<div class="operate-div" style="top:110px">
 						<!-- <span class="max" @click="openMax"></span> -->
-						<!-- <span class="yingxiang" @click="switchImageMap"></span> -->
-						<!-- <span class="shiliang" @click="switchVecMap"></span> -->
+						<span class="yingxiang" @click="switchImageMap"></span>
+						<span class="shiliang" @click="switchVecMap"></span>
 						<!-- <span class="threeD" @click="open3D"></span> -->
-						<!-- <span class="tuceng" @click="openTuCeng"></span> -->
+						<span class="tuceng" @click="openTuCeng"></span>
 					</div>
 					<div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
 				 </div>
@@ -580,7 +591,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					src: './dialogs/hcaAreaCurrent/hcaAreaList.html?forBusiness=' + forBusiness,
 					height: '45%',
 					width: '48%',
-					bottom:'20%',
+					bottom:'2%',
 					left:'30%'
 				})
 			},
@@ -594,8 +605,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			},
 			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
 				app.showAreaDialog('1', '高后果区列表', '460px');
-
-				/* $('.hca').hide();
+				$('.hca').hide();
+				/* 
 				var d = 1100;	// 管径
 				var p = 88;	// 管道最大压强
 				var postData = {
@@ -776,15 +787,15 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 //alert(this.companyVal)
             },
             openTuCeng:function(){
-                /* jasTools.selfDialog.show({
+            	jasTools.selfDialog.show({
                     title: '图层列表',
-                    src: '../common/mapList.html',
+                    src: './dialogs/mapList.html',
                     height: '265px',
                     width: '200px',
                     isDetail:true,
-                    right:"27%",
-                    top:"360px",
-                }) */
+                    right:"3%",
+                    top:"215px",
+                })
             },
             switchImageMap:function(e){
                 if(this.baseMap !== "google_img"){
