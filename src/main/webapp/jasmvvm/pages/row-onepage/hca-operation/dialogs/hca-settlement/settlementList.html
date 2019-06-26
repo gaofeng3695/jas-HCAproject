@@ -121,7 +121,8 @@
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
 				<!-- <el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button> -->
-				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-down">导入</el-button>
+				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-up">导入</el-button>
+				<el-button @click="exportFile" size="small" plain type="primary" icon="fa fa-arrow-down">导出</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
 						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
@@ -253,7 +254,7 @@ var vm = new Vue({
 	methods: {
 		/* addItem: function(){
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaAreaVersion/add.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
 			top.jasTools.selfDialog.show({
 				width: '60%',
 				height: '50%',
@@ -361,6 +362,12 @@ var vm = new Vue({
 				left:'30%',
 				title: '导入',
 			})
+		},
+		exportFile: function(){
+			top.Vue.prototype.$message({
+				type: 'success',
+				message: '导出成功'
+			});
 		},
 		requestBuildingTypes: function () {
 			var that = this;

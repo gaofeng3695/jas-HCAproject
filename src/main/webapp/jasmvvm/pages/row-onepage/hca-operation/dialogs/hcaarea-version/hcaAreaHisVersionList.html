@@ -22,8 +22,8 @@
 			
 		}	
 		.el-table--striped .el-table__body tr.el-table__row--striped td {
-			/* background-color: rgba(148, 144, 144, 0.3); */
-		}
+/* 			background-color: rgba(148, 144, 144, 0.3);
+ */		}
 		.el-table::before {
 			left: 0;
 			bottom: 0;
@@ -63,40 +63,39 @@
 			color:#fff;
 		}
 		.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
-		.el-table__body tr.current-row>td,
-		.el-table__body tr.hover-row.current-row>td,
-		.el-table__body tr.hover-row.el-table__row--striped.current-row>td,
-		.el-table__body tr.hover-row.el-table__row--striped>td,
-		.el-table__body tr.hover-row>td {
-		    background-color: #7fa9d838
+			.el-table__body tr.current-row>td,
+			.el-table__body tr.hover-row.current-row>td,
+			.el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+			.el-table__body tr.hover-row.el-table__row--striped>td,
+			.el-table__body tr.hover-row>td {
+			    background-color: #7fa9d838
 		}
-		
-		::-webkit-scrollbar { background-color:transparent;}
-		/* ::-webkit-scrollbar-track {background-color:#f0f6ff;  } */
-		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}  
+		::-webkit-scrollbar {background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+		/* ::-webkit-scrollbar-track {background-color:#f0f6ff;  } */ /**定义滚动条轨道 内阴影+圆角*/
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
 	</style>
 </head>
 
 <body>
-	<div id="app" v-cloak>
-		<jas-list-wrapper ref="mylist">
+	<div id="app" v-cloak>		
+	<jas-list-wrapper ref="mylist">
 		<div slot="search">
 			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row>
 					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
-						<el-form-item label="管线名称" prop="pipelineName" style="margin-bottom: 15px ">
-							<el-input v-model="form.pipelineName" :placeholder="'请输入管线名称'" size="small" clearable></el-input>
+						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
+							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
-						<el-form-item label="管线编号" prop="pipelineCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.pipelineCode" :placeholder="'请输入管线编号'" size="small" clearable></el-input>
+						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="6" :lg="12" :xl="12">
 						<el-form-item style="float:right;margin-bottom: 0px;">
-							<el-button size="small" @click="requestList(1)">重置</el-button>
-							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
+							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -104,11 +103,10 @@
 		</div>
 		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
-				<el-button @click="addPipeline" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-				<el-button @click="importFile" size="small" plain type="primary" icon="fa fa-arrow-down">导入</el-button>
+				<el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
+						<el-button size="small" icon="el-icon-refresh" @click="requestVersionList(0)"></el-button>
 					</el-tooltip>												
 					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
 						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
@@ -119,34 +117,30 @@
 				</span>
 			</div>
 			<div class="is-grown">
-			
-				<el-table ref="mytable" @row-dblclick="seeDetail"  v-loading="loading"
+				<el-table ref="mytable" @row-dblclick="openAreaList" v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
 					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
-					<el-table-column label="管线名称"  prop="pipelineName" min-width="160px" show-overflow-tooltip align="center" header-align="center" fixed>
+					<el-table-column label="版本名称"  prop="versionName" min-width="170px" show-overflow-tooltip align="center" header-align="center" fixed>
 					</el-table-column>						
-					<el-table-column label="管线编号"  prop="pipelineCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" fixed>
+					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
 					</el-table-column>
-					<el-table-column label="起始里程" prop="startMileage" min-width="100px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
-					<el-table-column label="终止里程" prop="endMileage" min-width="100px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="180px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>						
-					<el-table-column label="管道长度" prop="pipelineLength" min-width="100px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="外管径(mm)" prop="outsideDiameter" min-width="100px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="最大压力(mpa)" prop="pressure" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					<el-table-column label="是否启用" prop="hasUsed" :formatter="formathasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
 					</el-table-column>
 					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
 					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="290px" fixed="right">
+					<el-table-column label="操作" align="center" min-width="400px" fixed="right">
 						<template slot-scope="scope">
-							<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
-							<el-button @click="editPipeline(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
-							<el-button @click="deletePipeline(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
-							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
-							<el-button @click="createBuffer(scope.row)" type="text" size="small" icon="fa fa-map-marker">识别</el-button>
+						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
+						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
+						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
+						<el-button @click="importFile" type="text" size="small" icon="fa fa-arrow-up">导入</el-button>
+						<el-button @click='enableUse(scope.row)' v-show="scope.row.isEdit" type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
+						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -197,79 +191,65 @@
 	return "";
 }
 var vm = new Vue({
-	el: '#app',
+	el: "#app",
 	data: function () {
-		return {
+		return {			
+			loading: false,
+			isClosed: false,
+			form: {},
+			tableData: [],
+			pageSize: 10,
+			currentPage: 1,
+			total: 0,
+			
 			headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
 			},
 			tableRowStyle: {
 				'color': '#7495A8'
-			},
-			isClosed: false,
-			tableData: [],
-			form: {},
-			
-			pageSize: 10,
-			currentPage: 1,
-			total: 0,
-			loading: false,
-			selectedRowOids: [],
- 		}
-	},
-	computed: {},
-	watch: {		
-		selectedRows: function () {
-			var selects = [];
-			this.selectedRows.forEach(function (item) {
-				selects.push(item.oid);					
-			});
-			this.selectedRowOids = selects;
+			}
 		}
 	},
 	created: function () {
-		this.requestList(0);			
-		this.forBusiness = getParamter('forBusiness');
 		this.jasMap = parent.app.jasMap;
-	},
-	mounted: function () {
-
+		this.forBusiness = getParamter('forBusiness');
+		this.requestVersionList(0);
 	},
 	methods: {
-		addPipeline: function(){
+		addArea: function(){
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipelineManage/add.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
 			top.jasTools.selfDialog.show({
 				width: '50%',
 				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '新增管线信息',
+				title: '新增地区等级历史版本信息',
 				src: baseSrc,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestVersionList(0);
 				}
 			});
 		},
-		editPipeline: function(row){
+		editArea: function(row){
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipelineManage/add.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
 			top.jasTools.selfDialog.show({
 				width: '50%',
 				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '修改管线信息',
+				title: '修改地区等级历史版本信息',
 				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestVersionList(0);
 				}
 			});
 		},
 		seeDetail: function (row) {
 			var that = this;
-			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipelineManage/detail.html';
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/detail.html';
 			var src = jasTools.base.setParamsToUrl(baseSrc, {
 				oid: row.oid,
 				pageCode: 'file'
@@ -279,24 +259,24 @@ var vm = new Vue({
 				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '管线信息详情',
+				title: '地区等级历史版本信息详情',
 				src: src,
 			});
 		},
-		deletePipeline: function (row) {
+		deleteArea: function (row) {
 			var that = this;
 			var afterDelete = function () {
 				top.Vue.prototype.$message({
 					type: 'success',
 					message: '删除成功'
 				});
-				that.requestList(0);
+				that.requestVersionList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除管线信息', {
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
-						var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/delete.do";
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
 						jasTools.ajax.post(url, {
 							oid:row.oid
 						}, function (data) {
@@ -306,9 +286,68 @@ var vm = new Vue({
 				}
 			});
 		},
+		requestVersionList: function(param){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+			jasTools.ajax.post(url,{
+				forBusiness:that.forBusiness,
+				versionName: that.form.versionName,
+				versionCode: that.form.versionCode,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+				data.rows.forEach(function(item,index){
+					if(item.hasUsed == 1){
+						item.isEdit=false;
+					}else{
+						item.isEdit=true;
+					}
+				})
+			});
+		},
+		
+		openAreaList: function(){
+			var title = '地区等级列表';
+			var layerId = 'pd_arearank';
+			if(this.forBusiness == "0"){
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			}
+			if(this.forBusiness == "1"){
+				title = '高后果区列表';
+				layerId = 'pd_zonerankcell';
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+			}
+			this.jasMap.layerVisibleSwitch(layerId,true);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			parent.app.showAreaDialog(this.forBusiness, title, '420px');
+		},
+		previewFile : function(){
+			top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+				left:'35%',
+			})
+		},
 		importFile: function(){
 			top.jasTools.selfDialog.show({
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
+				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
 				width: '40%',
 				height: '52%',
 				bottom:'20%',						
@@ -316,31 +355,35 @@ var vm = new Vue({
 				title: '导入',
 			})
 		},
-		requestList: function (param) { // 0刷新  1重置  2搜索
+		enableUse: function(row) {
 			var that = this;
-			if (param == 1 || param == 0) {
-				this.form = {};
-				this.pageSize = 10;
-				this.currentPage = 1;
-			}
-			if (param == 2) {
-				this.pageSize = 10;
-				this.currentPage = 1;
-			}
-			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
- 			that.loading = true;				
- 			jasTools.ajax.post(url, {
-				pipelineName: this.form.pipelineName,
-				pipelineCode: this.form.pipelineCode,
-				pageNo: this.currentPage,
-				pageSize: this.pageSize,
-				page: this.currentPage,
-				rows: this.pageSize,
-			}, function (data) {
-				that.loading = false;
-				that.total = data.total;
-				that.tableData = data.rows;
-			});   
+			row.hasUsed = 1;
+			url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '启用成功'
+					});
+					that.requestVersionList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'waring',
+						message: '启用失败'
+					});
+				}
+			});
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			setTimeout(function(){
+				that.jasMap.layerVisibleSwitch('pd_arearank',true);
+			}, 1000);
+		},
+		formathasUsed: function(row, column, cellValue, index) {
+			if (row.hasUsed == 1) return '是';
+			else if (row.hasUsed == 0) return '否';
+			else return "-";
 		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();
@@ -348,33 +391,12 @@ var vm = new Vue({
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;
-			this.requestList();
+			this.requestVersionList();
 		},
 		handleCurrentChange: function (val) {
 			this.currentPage = val;
-			this.requestList();
+			this.requestVersionList();
 		},
-		
-		locate: function(item){
-			this.jasMap.updateLayer('pd_pipesegment',{
-                "show":true,
-                "fieldName":"eventid",
-                "fieldValues":[item.oid]
-            })
-			this.jasMap.flashGraphic('1', 'pd_pipesegment',{
-				deep:2
-			});
-		},
-		createBuffer: function(row){
-			top.jasTools.selfDialog.show({
-				title: '识别区条件',
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
-				height: '265px',
-				width: '250px',
-				left:"10%",
-				top:"140px"
-			})
-		}
 	},
 });
 

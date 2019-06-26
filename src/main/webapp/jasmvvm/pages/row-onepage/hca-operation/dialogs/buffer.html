@@ -20,7 +20,10 @@
             color:#f0f8ff;
             padding: 10px;
         }
-        
+    	.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+			color:#b5ddff;
+			background: #0567ad78;
+		}
 	</style>
 </head>
 
@@ -28,9 +31,9 @@
 	<div id="app" v-cloak>
 
         <div class="content">
-            <span>半径：</span><input id='radius' value='200' />
+            <span>半径：</span><input id='radius' style="line-height: 26px;border: 1px solid #466599;color: #b5ddff; background: transparent;" value='200' />
         </div>
-        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 140px;">
+        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 60px;">
             <el-button size="small" @click="cancel()">取 消</el-button>
             <el-button size="small" type="primary" @click="createBuffer()">确 定
             </el-button>
