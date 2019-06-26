@@ -2,132 +2,154 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Document</title>
-	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
-	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
-	<link rel="stylesheet" href="./../../../../../src/css/main.css">
-	<style>
-		html,body,
-		#app {
-			width: 100%;
-			height: 100%;
-			background:transparent;
-		}
-		.el-table, .el-table th, .el-table tr, .el-table td {
-		    border: 0;
-			background:#060e22f2;
-			
-		}	
-		.el-table--striped .el-table__body tr.el-table__row--striped td {
-			background-color: rgba(148, 144, 144, 0.3);
-		}
-		.el-table::before {
-			left: 0;
-			bottom: 0;
-			width: 100%;
-			height: 0px;
-		}
-		.el-table__fixed-right-patch {
-			background:transparent;
-		}
-		
-		.el-table__fixed-right::before, .el-table__fixed::before {
-		    background-color: transparent;;
-		}
-		
-		
-		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
-			color:#b5ddff;
-			background: #0567ad78;
-		}
-		.el-input__inner {
-		    height: 30px;
-		    line-height: 30px;
-		    border: 1px solid #466599;
-		    color: #b5ddff;
-		}
-		.el-input, .el-input__inner {
-		    background: transparent;
-		}
-		.el-pager ul, .el-pager li {
-			background:transparent;
-			color:#fff;
-		}
-		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
-		    background: transparent;
-		}
-		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
-			color:#fff;
-		}
-		*::-webkit-scrollbar {width:7px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-		 /**::-webkit-scrollbar-track {background-color:#f0f6ff;  }定义滚动条轨道 内阴影+圆角*/
-		*::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
-	</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<link rel="stylesheet"
+	href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+<link rel="stylesheet"
+	href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+<link rel="stylesheet" href="./../../../../../src/css/main.css">
+<style>
+html, body, #app {
+	width: 100%;
+	height: 100%;
+	background: transparent;
+}
+
+.el-table, .el-table th, .el-table tr, .el-table td {
+	border: 0;
+	background: #060e22f2;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+	/* background-color: rgba(148, 144, 144, 0.3); */
+	
+}
+
+.el-table::before {
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 0px;
+}
+
+.el-table__fixed-right-patch {
+	background: transparent;
+}
+
+.el-table__fixed-right::before, .el-table__fixed::before {
+	background-color: transparent;;
+}
+
+.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+	color: #b5ddff;
+	background: #0567ad78;
+}
+
+.el-input__inner {
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #466599;
+	color: #b5ddff;
+}
+
+.el-input, .el-input__inner {
+	background: transparent;
+}
+
+.el-pager ul, .el-pager li {
+	background: transparent;
+	color: #fff;
+}
+
+.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled
+	{
+	background: transparent;
+}
+
+.el-form-item__label, .el-pagination__total, .el-pagination__jump {
+	color: #fff;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+	.el-table__body tr.current-row>td, .el-table__body tr.hover-row.current-row>td,
+	.el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+	.el-table__body tr.hover-row.el-table__row--striped>td, .el-table__body tr.hover-row>td
+	{
+	background-color: #7fa9d838
+}
+
+::-webkit-scrollbar {
+	background-color: transparent;
+} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+/**::-webkit-scrollbar-track {background-color:#f0f6ff;  }定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+	background-color: #8F8F8F;
+	border-radius: 6px;
+} /*定义滑块 内阴影+圆角*/
+</style>
 </head>
 
 <body>
-	<div id="app" v-cloak>		
-	<jas-list-wrapper ref="mylist">
-        <div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="150px">
-				<el-row>
-					<el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="12">
-						<el-form-item label="编号" prop="areaCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.areaCode" :placeholder="'请输入编号'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="18" :xl="12">
-						<el-form-item style="float:right;margin-bottom: 0px;">
-							<el-button size="small" @click="requestList(1)">重置</el-button>
-							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
+	<div id="app" v-cloak>
+		<jas-list-wrapper ref="mylist">
+		<div slot="search">
+			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form"
+				label-width="150px"> <el-row> <el-col :xs="24"
+				:sm="12" :md="12" :lg="6" :xl="12"> <el-form-item
+				label="编号" prop="areaCode" style="margin-bottom: 15px ">
+			<el-input v-model="form.areaCode" :placeholder="'请输入编号'" size="small"
+				clearable></el-input> </el-form-item> </el-col> <el-col :xs="24" :sm="12" :md="12" :lg="18"
+				:xl="12"> <el-form-item
+				style="float:right;margin-bottom: 0px;"> <el-button
+				size="small" @click="requestList(1)">重置</el-button> <el-button
+				size="small" type="primary" @click="requestList(2)">查询</el-button> </el-form-item>
+			</el-col> </el-row> </el-form>
 		</div>
-		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
+		<div slot="list" style="padding: 0 10px 10px"
+			class="jas-flex-box is-vertical is-grown">
 			<div style="padding: 15px 0;">
-				<el-button v-show="isShowBtn" @click='previewFile' size="small"plain type="primary" icon="fa fa-file-text-o">生成报告</el-button>
-				<span class="fr">
-					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestList(0)"></el-button>
-					</el-tooltip>												
-					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
-						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
-					</el-tooltip>
-					<el-tooltip v-show="!isClosed" class="item" content="收起搜索" placement="top">
-						<el-button size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
+				<el-button v-show="isShowBtn" @click='previewFile' size="small"
+					plain type="primary" icon="fa fa-file-text-o">生成报告</el-button>
+				<span class="fr"> <el-tooltip class="item" content="刷新"
+						placement="top"> <el-button size="small"
+						icon="el-icon-refresh" @click="requestList(0)"></el-button> </el-tooltip> <el-tooltip
+						v-show="isClosed" class="item" content="展开搜索" placement="top">
+					<el-button size="small" icon="el-icon-arrow-down"
+						@click="toggleSearch"></el-button> </el-tooltip> <el-tooltip v-show="!isClosed"
+						class="item" content="收起搜索" placement="top"> <el-button
+						size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
 					</el-tooltip>
 				</span>
 			</div>
 			<div class="is-grown">
-				<el-table ref="mytable" @row-dblclick="openDetail" stripe v-loading="loading"
-					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-					<el-table-column label="序号" type="index" align="center" width="50" fixed>
-					</el-table-column>											
-					<el-table-column label="编号"  prop="areaCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" fixed>
-					</el-table-column>						
-					<el-table-column label="等级"  prop="regionLevelName" min-width="100px" show-overflow-tooltip align="center" header-align="center" fixed>
-					</el-table-column>
-					<el-table-column label="起始里程" prop="startMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="结束里程" prop="endMileage" min-width="120px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
-					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="250px" fixed="right">
-						<template slot-scope="scope">
-							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
+				<el-table ref="mytable" @row-dblclick="openDetail"
+					v-loading="loading" height="100%" :data="tableData"
+					:header-cell-style="headStyle" :row-style="tableRowStyle"
+					style="width: 100%"> <el-table-column label="序号"
+					type="index" align="center" width="50" fixed> </el-table-column> <el-table-column
+					label="编号" prop="areaCode" min-width="150px" show-overflow-tooltip
+					align="center" header-align="center" fixed> </el-table-column> <el-table-column
+					label="等级" prop="regionLevelName" min-width="100px"
+					show-overflow-tooltip align="center" header-align="center" fixed>
+				</el-table-column> <el-table-column label="起始里程" prop="startMileage" min-width="120px"
+					show-overflow-tooltip align="center" header-align="center">
+				</el-table-column> <el-table-column label="结束里程" prop="endMileage" min-width="120px"
+					show-overflow-tooltip align="center" header-align="center">
+				</el-table-column> <el-table-column label="备注" prop="remarks" min-width="200px"
+					show-overflow-tooltip align="left" header-align="center">
+				</el-table-column> <el-table-column label="操作" align="center" min-width="250px"
+					fixed="right"> <template slot-scope="scope">
+				<el-button @click="locate(scope.row)" type="text" size="small"
+					icon="fa fa-map-marker">定位</el-button> </template> </el-table-column> </el-table>
 			</div>
 			<div style="padding: 15px 0 0;" class="clearfix">
-				<el-pagination class="fr" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+				<el-pagination class="fr" @size-change="handleSizeChange"
+					@current-change="handleCurrentChange" :current-page="currentPage"
+					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize"
+					layout="total, sizes, prev, pager, next, jumper" :total="total">
 				</el-pagination>
 			</div>
 		</div>
@@ -140,164 +162,168 @@
 <script src="./../../../../../common/components/jas-components.js "></script>
 <script src="./../../../../../common/js/jas-tools.js"></script>
 <script>
-
-/**
- * @desc 获取访问路径中某个参数
- * 
- * @param paramName 参数名
- * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
- */
- function getParamter(paramName, url) {
-	var seachUrl = window.location.search.replace("?", "");
-	if (url != null) {
-		var index = url.indexOf('?');
-		url = url.substr(index + 1);
-		seachUrl = url;
+	/**
+	 * @desc 获取访问路径中某个参数
+	 * 
+	 * @param paramName 参数名
+	 * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+	 */
+	function getParamter(paramName, url) {
+		var seachUrl = window.location.search.replace("?", "");
+		if (url != null) {
+			var index = url.indexOf('?');
+			url = url.substr(index + 1);
+			seachUrl = url;
+		}
+		var ss = seachUrl.split("&");
+		var paramNameStr = "";
+		var paramNameIndex = -1;
+		for (var i = 0; i < ss.length; i++) {
+			paramNameIndex = ss[i].indexOf("=");
+			paramNameStr = ss[i].substring(0, paramNameIndex);
+			if (paramNameStr == paramName) {
+				var returnValue = ss[i].substring(paramNameIndex + 1,
+						ss[i].length);
+				if (typeof (returnValue) == "undefined") {
+					returnValue = "";
+				}
+				return returnValue;
+			}
+		}
+		return "";
 	}
-	var ss = seachUrl.split("&");
-	var paramNameStr = "";
-	var paramNameIndex = -1;
-	for ( var i = 0; i < ss.length; i++) {
-		paramNameIndex = ss[i].indexOf("=");
-		paramNameStr = ss[i].substring(0, paramNameIndex);
-		if (paramNameStr == paramName) {
-			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
-			if (typeof (returnValue) == "undefined") {
-				returnValue = "";
-			}
-			return returnValue;
-		}
-	}
-	return "";
-}
-var vm = new Vue({
-	el: "#app",
-	data: function () {
-		return {			
-			loading: false,
-			isClosed: false,
-			isShowBtn: false,
-			form: {},
-			
-			tableData: [],
-			pageSize: 10,
-			currentPage: 1,
-			total: 0,
-			
-			headStyle: {
-				'background': 'transparent',
-				'color': '#F1F2EA'
-			},
-			tableRowStyle: {
-				'color': '#7495A8'
-			}
-		}
-	},
-	created: function () {
-		this.jasMap = parent.app.jasMap;
-		this.forBusiness = getParamter('forBusiness');
-		this.requestList(0);
-		//this.getDetails();
-		if(this.forBusiness==0){
-			this.layerId = 'pd_arearank';
-			this.isShowBtn = false;
-		}else{
-			this.layerId = 'pd_zonerankcell';
-			this.isShowBtn = true;
-		}
-	},
-	methods: {
-		requestList: function(param){
-			var that= this;
-			if (param == 1 || param == 0) {
-				that.form = {};
-				that.pageSize = 10;
-				that.currentPage = 1;
-			}
-			if (param == 2) {
-				that.pageSize = 10;
-				that.currentPage = 1;
-			}
-			that.loading = true;
-			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaarea/getPage.do";
-			jasTools.ajax.post(url,{
-				forBusiness:that.forBusiness,
-				areaCode: that.form.areaCode,
-				pageNo: that.currentPage,
-				pageSize: that.pageSize,
-				page: that.currentPage,
-				rows: that.pageSize	
-			}, function (data) {
-				that.total = data.total;
-				that.tableData = data.rows;
-				that.loading = false;
-			});
-		},
+	var vm = new Vue(
+			{
+				el : "#app",
+				data : function() {
+					return {
+						loading : false,
+						isClosed : false,
+						isShowBtn : false,
+						form : {},
 
-		openDetail:function(idx){
-			parent.app.openDetail(idx);
-		},
-		getDetails: function(){
-			var that= this;
-			var sourceName = 'pd_arearank';
-			if(this.forBusiness == 1){
-				sourceName = 'pd_zonerankcell';
-			}
-			this.jasMap.commonUtil.simpleAjaxLoader({
-				url:"../../../../zone/" + sourceName + "/query.do",
-				data:JSON.stringify({
-					where :"rank is not null",
-					returnGeometry:false
-				}),
-				method:"post",
-				async:false,
-				contentType:"application/json",
-				onSuccess:function(re){
-					var result = JSON.parse(re);
-					var collection =  JSON.parse(result.data.features)  ;
-					var features = collection.features;
-					var data = [];
-					if(Array.isArray(features)){
-						for(var i = 0 ; i < features.length ; i++){
-							var properties = features[i].properties ;
-							properties.startMileage = properties.start_mileage ;
-							properties.endMileage = properties.end_mileage ;
-							properties.index = i + 1;
-							data.push(properties);
+						tableData : [],
+						pageSize : 10,
+						currentPage : 1,
+						total : 0,
+
+						headStyle : {
+							'background' : 'transparent',
+							'color' : '#F1F2EA'
+						},
+						tableRowStyle : {
+							'color' : '#7495A8'
 						}
 					}
-					that.detailData = data;
-				}
-			});
-		},
-		locate: function(item){
-			this.jasMap.flashGraphic(item.oid, this.layerId ,{
-				deep:2
-			});
-		},
-		previewFile : function(){
-			top.jasTools.selfDialogNew.show({
-				title: '分析报告',
-				src: './dialogs/preview_file.html',
-				height: '740px',
-				width: '35%',
-			})
-		},
-		
-		toggleSearch: function () {
-			this.$refs['mylist'].toggleSearch();
-			this.isClosed = this.$refs['mylist'].isClosed;
-		},
-		handleSizeChange: function (val) {
-			this.pageSize = val;
-			this.requestList();
-		},
-		handleCurrentChange: function (val) {
-			this.currentPage = val;
-			this.requestList();
-		},
-	},
-});
+				},
+				created : function() {
+					this.jasMap = parent.app.jasMap;
+					this.forBusiness = getParamter('forBusiness');
+					this.requestList(0);
+					//this.getDetails();
+					if (this.forBusiness == 0) {
+						this.layerId = 'pd_arearank';
+						this.isShowBtn = false;
+					} else {
+						this.layerId = 'pd_zonerankcell';
+						this.isShowBtn = true;
+					}
+				},
+				methods : {
+					requestList : function(param) {
+						var that = this;
+						if (param == 1 || param == 0) {
+							that.form = {};
+							that.pageSize = 10;
+							that.currentPage = 1;
+						}
+						if (param == 2) {
+							that.pageSize = 10;
+							that.currentPage = 1;
+						}
+						that.loading = true;
+						var url = jasTools.base.rootPath
+								+ "/jdbc/commonData/hcaarea/getPage.do";
+						jasTools.ajax.post(url, {
+							forBusiness : that.forBusiness,
+							areaCode : that.form.areaCode,
+							pageNo : that.currentPage,
+							pageSize : that.pageSize,
+							page : that.currentPage,
+							rows : that.pageSize
+						}, function(data) {
+							that.total = data.total;
+							that.tableData = data.rows;
+							that.loading = false;
+						});
+					},
 
+					openDetail : function(idx) {
+						parent.app.openDetail(idx);
+					},
+					getDetails : function() {
+						var that = this;
+						var sourceName = 'pd_arearank';
+						if (this.forBusiness == 1) {
+							sourceName = 'pd_zonerankcell';
+						}
+						this.jasMap.commonUtil
+								.simpleAjaxLoader({
+									url : "../../../../zone/" + sourceName
+											+ "/query.do",
+									data : JSON.stringify({
+										where : "rank is not null",
+										returnGeometry : false
+									}),
+									method : "post",
+									async : false,
+									contentType : "application/json",
+									onSuccess : function(re) {
+										var result = JSON.parse(re);
+										var collection = JSON
+												.parse(result.data.features);
+										var features = collection.features;
+										var data = [];
+										if (Array.isArray(features)) {
+											for (var i = 0; i < features.length; i++) {
+												var properties = features[i].properties;
+												properties.startMileage = properties.start_mileage;
+												properties.endMileage = properties.end_mileage;
+												properties.index = i + 1;
+												data.push(properties);
+											}
+										}
+										that.detailData = data;
+									}
+								});
+					},
+					locate : function(item) {
+						this.jasMap.flashGraphic(item.oid, this.layerId, {
+							deep : 2
+						});
+					},
+					previewFile : function() {
+						top.jasTools.selfDialogNew.show({
+							title : '分析报告',
+							src : './dialogs/preview_file.html',
+							height : '740px',
+							width : '35%',
+						})
+					},
+
+					toggleSearch : function() {
+						this.$refs['mylist'].toggleSearch();
+						this.isClosed = this.$refs['mylist'].isClosed;
+					},
+					handleSizeChange : function(val) {
+						this.pageSize = val;
+						this.requestList();
+					},
+					handleCurrentChange : function(val) {
+						this.currentPage = val;
+						this.requestList();
+					},
+				},
+			});
 </script>
 </html>
