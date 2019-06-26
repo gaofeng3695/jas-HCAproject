@@ -306,14 +306,14 @@
 						<div style="height:75%;width:100%">
 						<template>
 						    <el-carousel indicator-position="outside" :loop="false" :autoplay="false" @change="changePageNo">  
-						        <el-carousel-item v-for="item1 in pages" :key="pageNo" >
-									<div class="pipelineList" style="width:85%;margin-left:35px;" v-for="item in pipelineData">
+						        <el-carousel-item v-for="pageNo in pages" :key="pageNo" >
+									<div class="pipelineList" style="width:85%;margin-left:35px;" v-for="item2 in pipelineData">
 										<ul style="margin-top:5px;margin-bottom:5px;">
-											<li><span>管线名称：</span>{{item.pipelineName}}
+											<li><span>管线名称：</span>{{item2.pipelineName}}
 											<div class="icon" style="color: #f02123;">未识别&emsp;<i :style="[buttonStyle(1)]" @mouseover="isClick=1" @mouseout="isClick=0"  @click="intoMap" class="fa fa-podcast fa-lg" aria-hidden="true"></i></div>
 											</li>
-											<li><span>管线长度：</span>{{item.pipelineLength}} KM</li>
-											<li><span>最近评价时间：</span>{{item.modifyDatetime}}</li>
+											<li><span>管线长度：</span>{{item2.pipelineLength}} KM</li>
+											<li><span>最近评价时间：</span>{{item2.modifyDatetime}}</li>
 										</ul>
 									</div>
 						    	</el-carousel-item>
@@ -843,7 +843,7 @@
 				location.href="../hca-operation/factorOperation.html";
 			},
 			pipelineMapPage:function(){
-				location.href="../hca-operation/pipelineOperation.html";
+				location.href="../hca-operation/operation.html";
 			},
 			intoMap:function(){
 				location.href="../hca-operation/operation.html";
