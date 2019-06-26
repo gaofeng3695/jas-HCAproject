@@ -220,6 +220,10 @@ var vm = new Vue({
 			}
 			that.loading = true;
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaarea/getPage.do";
+			if(this.forBusiness == "1"){
+				url = jasTools.base.rootPath + "/jdbc/commonData/hcarankcell/getPage.do";
+			}
+			
 			jasTools.ajax.post(url,{
 				forBusiness:that.forBusiness,
 				areaCode: that.form.areaCode,
