@@ -43,14 +43,14 @@
 					<el-button @click='del' size="small" plain type="primary" >删除</el-button>
 				</el-row>
 				<!-- <input class='cbt pan' type='button' value='导航'> -->
-			</div><!-- 
+			</div>
            <div>
 				<h3>数据操作</h3>
 				<el-row style="padding:15px 5px">
 					<el-button @click='saveEdit' size="small" plain type="primary" >保存编辑</el-button>
 					<el-button @click='saveAll' size="small" plain type="primary" >保存所有</el-button>
 				</el-row>
-			</div> -->
+			</div>
             <!-- <div class='attrs' hidden>
 				<h3>属性编辑</h3>
 				<table class='grid' style='width: 100%;'></table>
@@ -325,7 +325,7 @@
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
 							common.simpleAjaxLoader({
-								url: "../../../../zone/settlement/save.do",
+								url: jasTools.base.rootPath + "/zone/settlement/save.do",
 								data: JSON.stringify(geomObj) ,
 								async: true,
 								onSuccess: function(res){
