@@ -118,22 +118,26 @@
               "labelField":"stakenumber"
            }
       }, {
-          "id":"pd_pipesegment",
+          "id":"hca_pipeline",
           "label":"管线",
           "index":20,
-          "outFields":"eventid,pipesegmentname",
+          "outFields":"gid,oid,pipeline_name,pipeline_length",
           "declutter":true,
           "strategy":"all",
           "renderer":{
             "style":"pipesegment2" ,
             "labelStyle":"lineLabelStyle",
-            "labelField":"pipesegmentname"
+            "labelField":"pipeline_name"
           },
           "listener":{
             "onDbClick":{
               "responseType":"dialog",
               "title":"线路段",
               "url":"local/dialog-pipesegment.html"
+            },
+            "onHover": {
+              "responseType": "tip",
+              "template": "管线名称：${pipeline_name}<br>管线长度：${pipeline_length}<br>"
             }
           }
       }, {
@@ -145,11 +149,17 @@
             "style":"bufferarea"
           }
         },{
-          "id":"pd_settlement","visible":false,
+          "id":"hca_buildings","visible":false,
           "label":"居民区","outFields":"*", "renderer":{
             "style":"polygon_renderer_by_settlement"
           },
-          "index":11
+          "index":11,
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "编号${building_code},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
+            }
+          }
         },{
           "id":"pd_arearankcell","visible":false,"flash":true,
           "label":"地区等级识别单元","outFields":"*",
@@ -238,5 +248,41 @@
   }
   ]
 },
-"modules":[]
+"modules":[{
+	"id": "baseMapToolsBar",
+    "class": "BaseMapToolsBar",
+    "label":"导航工具条",
+    "controller": true,
+    "moduleSet": [
+      {
+        "type": "api",
+        "label":"地图复位",
+        "target": "zoomHome"
+      },
+      {
+        "type": "api",
+        "target": "startPanMode"
+      },
+      {
+        "type": "api",
+        "target": "zoomIn"
+      },
+      {
+        "type": "api",
+        "target": "zoomOut"
+      },
+      {
+        "type": "api",
+        "target": "drawLineAndGetLength"
+      },
+      {
+        "type": "api",
+        "target": "drawPolygonAndGetArea"
+      },
+      {
+        "type": "api",
+        "target": "clearAllGraphics"
+      }
+    ]
+}]
 }

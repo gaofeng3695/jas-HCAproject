@@ -741,7 +741,7 @@
 		var close = function (param) {
 			var index = dialogs.length - 1;
 			if (index < 0) {
-				alert('没有可以关闭的dialogs')
+//				alert('没有可以关闭的dialogs')
 				return;
 			}
 			var inst = dialogs[index];

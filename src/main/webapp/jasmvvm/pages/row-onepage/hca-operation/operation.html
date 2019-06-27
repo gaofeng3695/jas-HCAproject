@@ -265,8 +265,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				location.href="../total/total.html";
 			},
 			pipelineOperation:function(){
-				//top.jasTools.selfDialog.close();
-
+				top.jasTools.selfDialog.close();
+				this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
+				this.jasMap.layerVisibleSwitch('pd_arearank',false)
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
+				this.jasMap.layerVisibleSwitch('hca_buildings',false)
+				this.jasMap.refreshLayerById('hca_pipeline');
 				window.jasTools.selfDialog.show({
 					title: '管线信息列表',
 					src: './dialogs/pipeline-manage/pipelineDetailList.html?dataType=pipeline',
@@ -293,7 +297,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
 				var governmentId = "pd_government";
-				this.jasMap.layerVisibleSwitch('pd_settlement', true);
+				//this.jasMap.layerVisibleSwitch('pd_settlement', true);
 				this.jasMap.layerVisibleSwitch(gasStationId,true)
 				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
@@ -306,9 +310,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.commonUtil.simpleAjaxLoader({
 					url:"../../../../zone/area.do",
 					data:JSON.stringify({
-						"pipesegmentTableName":"pd_pipesegment",
+						"pipesegmentTableName":"hca_pipeline",
 						"pipesegmentKeyValue":pipelineOid,
-						"pipesegmentKeyName":"eventid",
+						"pipesegmentKeyName":"oid",
 						"bufferDistance":radius
 					}),
 					contentType:"application/json",
@@ -366,7 +370,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				}
 			},
 			getPipeline: function(){
-				var layer = this.jasMap.getLayerById('pd_pipesegment');
+				var layer = this.jasMap.getLayerById('hca_pipeline');
 				var source = layer.getSource();
 				var feature = source.getFeatures()[0];
 				return feature.getGeometry();
@@ -386,13 +390,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch('pd_arearank', false);
 				this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
 				this.jasMap.layerVisibleSwitch('pd_arearankcell', false);
-				this.jasMap.layerVisibleSwitch('pd_settlement', true);
+				//this.jasMap.layerVisibleSwitch('pd_settlement', true);
+				this.jasMap.layerVisibleSwitch('hca_buildings', true);
 				this.jasMap.layerVisibleSwitch(gasStationId,true)
 				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
 				this.jasMap.layerVisibleSwitch(hospitalId,true)
 				this.jasMap.layerVisibleSwitch(governmentId,true)
 				var that = this;
-				//top.jasTools.selfDialog.close();
+				top.jasTools.selfDialog.close();
 				window.jasTools.selfDialog.show({
 					title: '构筑物编辑工具',
 					src: './dialogs/hca-settlement/edit-settlement.html',
@@ -427,8 +432,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			randomSettlementData: function(){
-			    app.showAreaDialogCreate('0', '地区等级列表', '150px');
-				/* var that = this;
+			    
+				var that = this;
 				var common = this.jasMap.commonUtil;
 				var msg = "确认重新生成地区等级？";
 				var settlementLayerId = "pd_settlement";
@@ -438,7 +443,11 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						if (action === 'confirm') {
 							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,false);
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-							const loading = that.$loading({
+							app.showAreaDialogCreate('0', '地区等级列表', '150px');
+						    that.jasMap.flashGraphic('d', 'pd_arearank' ,{
+								deep:2
+							});
+							/* const loading = that.$loading({
 								lock: true,
 								text: '合并要素单元......',
 								spinner: 'el-icon-loading',
@@ -461,10 +470,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								onError: function(){
 									that.$alert('数据处理出错', '提示')
 								}
-							});
+							}); */
 						}
 					}
-				});  */
+				});
 			},
 			createRankCellData: function(loading){	// 1.处理居民要素 2.识别单元划分 3.地区等级划分
 				var that = this;
@@ -604,9 +613,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				module.refresh(data);
 			},
 			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
-				app.showAreaDialog('1', '高后果区列表', '460px');
+				
 				$('.hca').hide();
-				/* 
+				 
 				var d = 1100;	// 管径
 				var p = 88;	// 管道最大压强
 				var postData = {
@@ -626,7 +635,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					callback: function(action){
 						if (action === 'confirm') {
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-							var loading = that.$loading({
+							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
+							app.showAreaDialog('1', '高后果区列表', '460px');
+							that.jasMap.flashGraphic('d', 'pd_zonerankcell' ,{
+								deep:2
+							});
+							/* var loading = that.$loading({
 								lock: true,
 								text: '计算影响区域......',
 								spinner: 'el-icon-loading',
@@ -659,10 +673,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								onError :function(){
 			
 								}
-							});
+							}); */
 						}
 					}
-				}) */
+				})
 			},
 			loadZoneCell: function(){
 				//刷新地图

@@ -355,7 +355,7 @@ var vm = new Vue({
 		},
 		importFile: function(){
 			top.jasTools.selfDialog.show({
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
+				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness=3',
 				width: '40%',
 				height: '52%',
 				bottom:'20%',						
@@ -401,10 +401,10 @@ var vm = new Vue({
 			this.requestList();
 		},
 		locate: function(item){
-			/* this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+			this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
 				deep:2
-			}); */
-			this.jasMap.zoomAt(item.pointx, item.pointy, 15)
+			});
+			//this.jasMap.zoomAt(item.pointx, item.pointy, 15)
 		},
 		handleSelectionChange: function (val) {
 			this.oids = val.map(function (item) {

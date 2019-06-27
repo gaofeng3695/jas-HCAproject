@@ -216,6 +216,7 @@ var vm = new Vue({
 		this.forBusiness = getParamter('forBusiness');
 		this.requestList(0);
 		if(this.forBusiness==0){
+			//this.layerId = 'hca_area';
 			this.layerId = 'pd_arearank';
 			this.isShowBtn = false;
 		}else{
@@ -283,6 +284,32 @@ var vm = new Vue({
 	    },
 
 		locate: function(item){
+			/* if(this.forBusiness == "0"){
+				// item.oid='d5c0161d-cbad-4044-92bd-3656a60e10c';
+				console.log(item)
+				if(item.startMileage == 0){
+					this.jasMap.flashGraphic("d5c0161d-cbad-4044-92bd-3656a60e10c8", this.layerId ,{
+						deep:2
+					});
+					
+				}
+				if(item.startMileage == 0.165){
+					this.jasMap.flashGraphic("802f7154-20d4-4781-8bab-0059bff895b2", this.layerId ,{
+						deep:2
+					});
+					
+				}
+				if(item.startMileage == 3.616){
+					this.jasMap.flashGraphic("385ff121-f374-4d96-9add-4d3fed48bc1d", this.layerId ,{
+						deep:2
+					});
+					
+				}
+			}else{
+				this.jasMap.flashGraphic(item.oid, this.layerId ,{
+					deep:2
+				});
+			} */
 			this.jasMap.flashGraphic(item.oid, this.layerId ,{
 				deep:2
 			});

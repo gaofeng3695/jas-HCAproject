@@ -308,7 +308,7 @@ var vm = new Vue({
 		},
 		importFile: function(){
 			top.jasTools.selfDialog.show({
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness='+this.forBusiness,
+				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness=3',
 				width: '40%',
 				height: '52%',
 				bottom:'20%',						
@@ -356,16 +356,30 @@ var vm = new Vue({
 		},
 		
 		locate: function(item){
-			this.jasMap.updateLayer('pd_pipesegment',{
+			/* this.jasMap.updateLayer('pd_pipesegment',{
                 "show":true,
                 "fieldName":"eventid",
                 "fieldValues":[item.oid]
-            })
-			this.jasMap.flashGraphic('1', 'pd_pipesegment',{
+            }) */
+            var gid='';
+            /* if(item.oid='fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'){
+            	gid = '1';
+            }else if(item.oid='1a0df2e4-46f1-4814-b63c-983172c105c7'){
+            	gid = '5';
+            }else{
+            	gid = '15';
+            } */
+			this.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
 				deep:2
 			});
 		},
 		createBuffer: function(row){
+			this.jasMap.updateLayer('hca_pipeline',{
+                "show":true,
+                "fieldName":"oid",
+                //"fieldValues":[row.oid]
+                "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
+            })
 			top.jasTools.selfDialog.show({
 				title: '识别区条件',
 				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
