@@ -158,6 +158,7 @@
       var param = window.jasTools.base.getParamsInUrl(location.href);
       console.log(param)
       this.jasMap = parent.app.jasMap;
+      this.forbusiness = param.forbusiness;
     },
     methods: {
       closeDialog: function () {
@@ -197,8 +198,12 @@
       },
       uploadExcel: function () {
         var that = this;
-        this.jasMap.layerVisibleSwitch('pd_arearank',true);
-        this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+        if(this.forbusiness == '3'){
+        	
+        }else{
+        	this.jasMap.layerVisibleSwitch('pd_arearank',true);
+        	this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+        }
         app.closeDialog();
       },
 
