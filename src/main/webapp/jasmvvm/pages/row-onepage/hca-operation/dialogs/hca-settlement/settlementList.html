@@ -138,8 +138,8 @@
 			<div class="is-grown">
 				<el-table ref="mytable" @row-dblclick="seeDetail" v-loading="loading"  @selection-change="handleSelectionChange"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-<!-- 					<el-table-column type="selection" width="55" align="center" fixed></el-table-column>'
- -->					<el-table-column label="序号" type="index" align="center" width="50" fixed>
+ 					<el-table-column type="selection" width="55" align="center" fixed></el-table-column>'
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
 					</el-table-column>											
 					<template v-for="(item,index)  in tableFields">
 						<el-table-column :key="item.oid" :fixed="index=== 0?true:false" :label="item.name" :prop="item.field" :formatter="item.formatter" min-width="150px" show-overflow-tooltip align="center" sortable="custom" >
