@@ -42,6 +42,9 @@
 			background-color: #72c1ea66;
 			cursor: pointer;
 		}
+		.el-checkbox__label{
+			color: #dde2ea;
+		}
 	</style>
 </head>
 
@@ -49,7 +52,9 @@
 	<div id="app" v-cloak>
 		<div class="map-list-box">
 			<ul class="map-list">
-				<li class="list-item" v-for="item in mapList" :click="updateLayer(item)">{{item}}</li>
+				<li class="list-item" v-for="item in checkList" :click="updateLayer(item)">
+				<el-checkbox v-model="item.checked">{{item.name}}</el-checkbox>
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -61,10 +66,134 @@
 <script src="./../../../../common/components/jas-components.js "></script>
 <script src="./../../../../common/js/jas-tools.js"></script>
 <script>
+
 	var appDetail = new Vue({
 		el: "#app",
 		data: function () {
 			return {
+				checked: false,
+				checkList: [
+					{
+						"name": "管线",
+						"checked": true					
+					},
+					{
+						"name": "识别区",
+						"checked": false					
+					},
+					{
+						"name": "地区等级",
+						"checked": false					
+					},
+					{
+						"name": "高后果区",
+						"checked": false					
+					},
+					{
+						"name": "消防",
+						"checked": false					
+					},
+					{
+						"name": "医院",
+						"checked": false					
+					},
+					{
+						"name": "学校",
+						"checked": false					
+					},
+					{
+						"name": "托儿所",
+						"checked": false					
+					},
+					{
+						"name": "幼儿园",
+						"checked": false					
+					},
+					{
+						"name": "养老院",
+						"checked": false					
+					},
+					{
+						"name": "养老院",
+						"checked": false					
+					},
+					{
+						"name":"监狱",
+						"checked": false
+					},
+					{
+						"name":"工厂",
+						"checked": false
+					},
+					{
+						"name":"商场",
+						"checked": false
+					},
+					{
+						"name":"集贸市场",
+						"checked": false
+					},
+					{
+						"name":"寺庙",
+						"checked": false
+					},
+					{
+						"name":"运动场",
+						"checked": false
+					},
+					{
+						"name":"广场",
+						"checked": false
+					},
+					{
+						"name":"娱乐休闲地",
+						"checked": false
+					},
+					{
+						"name":"剧院",
+						"checked": false
+					},
+					{
+						"name":"露营地",
+						"checked": false
+					},
+					{
+						"name":"加油站",
+						"checked": false
+					},
+					{
+						"name":"加气站",
+						"checked": false
+					},
+					{
+						"name":"炸药库",
+						"checked": false
+					},
+					{
+						"name":"独立民居",
+						"checked": false
+					},
+					{
+						"name":"居民区",
+						"checked": false
+					},
+					{
+						"name":"商业区",
+						"checked": false
+					},
+					{
+						"name":"工业区",
+						"checked": false
+					},
+					{
+						"name":"规划区",
+						"checked": false
+					},
+					{
+						"name":"市郊居住区",
+						"checked": false
+					}
+				],
 				mapList:[
 					"管线",
 					"识别区",
@@ -106,7 +235,7 @@
 				var that = this;
 				console.log(item)
 				
-				if(item == that.mapList[0]){
+				if(item.name == that.mapList[0]){
 					that.jasMap.layerVisibleSwitch('pd_entertainment_place', true);
 				}
 				/* this.jasMap.layerVisibleSwitch('pd_arearank', false);
