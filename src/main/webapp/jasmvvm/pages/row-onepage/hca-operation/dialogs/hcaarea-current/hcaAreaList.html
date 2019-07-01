@@ -96,13 +96,11 @@ html, body, #app {
 	<div id="app" v-cloak>
 		<jas-list-wrapper ref="mylist">
 		<div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form"
-				label-width="150px"> <el-row> <el-col :xs="24"
-				:sm="12" :md="12" :lg="6" :xl="12"> <el-form-item
+			<el-form class="jas-search-for-list" :model="form"
+				label-width="100px"> <el-row :gutter="20"> <el-col  :span="8"> <el-form-item
 				label="编号" prop="areaCode" style="margin-bottom: 15px ">
 			<el-input v-model="form.areaCode" :placeholder="'请输入编号'" size="small"
-				clearable></el-input> </el-form-item> </el-col> <el-col :xs="24" :sm="12" :md="12" :lg="18"
-				:xl="12"> <el-form-item
+				clearable></el-input> </el-form-item> </el-col> <el-col  :span="16"> <el-form-item
 				style="float:right;margin-bottom: 0px;"> <el-button
 				size="small" @click="requestList(1)">重置</el-button> <el-button
 				size="small" type="primary" @click="requestList(2)">查询</el-button> </el-form-item>
@@ -199,7 +197,7 @@ html, body, #app {
 				data : function() {
 					return {
 						loading : false,
-						isClosed : false,
+						isClosed : true,
 						isShowBtn : false,
 						form : {},
 
@@ -230,6 +228,9 @@ html, body, #app {
 						this.isShowBtn = true;
 					}
 				},
+				mounted: function () {
+                    this.$refs['mylist'].toggleSearch();
+                },
 				methods : {
 					requestList : function(param) {
 						var that = this;

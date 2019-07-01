@@ -81,25 +81,25 @@
 	<div id="app" v-cloak>		
 	<jas-list-wrapper ref="mylist">
 		<div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
+			<el-form class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row :gutter="20">
 					<el-col :span="8">
 						<el-form-item label="构筑物编号" prop="buildingCode" style="margin-bottom: 15px ">
 							<el-input v-model="form.buildingCode" :placeholder="'请输入构筑物编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :span="8">
-						<el-form-item label="起始里程" prop="startMileage" style="margin-bottom: 15px ">
-							<el-input v-model="form.startMileage" :placeholder="'请输入起始里程'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
+				<!--	<el-col :span="8">
+					<el-form-item label="起始里程" prop="startMileage" style="margin-bottom: 15px ">
+						<el-input v-model="form.startMileage" :placeholder="'请输入起始里程'" size="small" clearable></el-input>
+					</el-form-item>
+				</el-col>
 					<el-col :span="8">
 						<el-form-item label="终止里程" prop="endMileage" style="margin-bottom: 15px ">
 							<el-input v-model="form.endMileage" :placeholder="'请输入终止里程'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					</el-row>
-					<el-row :gutter="20">
+					<el-row :gutter="20">-->
 					<el-col :span="8">
 						<el-form-item label="构筑物类型" prop="buildingType" style="margin-bottom: 15px ">
 							<el-select v-model="form.buildingType" filterable :placeholder="'请输入构筑物类型'" size="small" clearable>
@@ -109,7 +109,7 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :span="16">
+					<el-col :span="8">
 						<el-form-item style="float:right;margin-bottom: 0px;">
 							<el-button size="small" @click="requestList(1)">重置</el-button>
 							<el-button size="small" type="primary" @click="requestList(2)">查询</el-button>
@@ -175,7 +175,7 @@ var vm = new Vue({
 	data: function () {
 		return {	
 			loading: false,
-			isClosed: false,
+			isClosed: true,
 			form: {},
 			tableData: [],
 			buildingTypeData: [],
@@ -195,7 +195,7 @@ var vm = new Vue({
 					"name": "构筑物编号",
 					"field": "buildingCode"
 				},
-				{
+				/*{
 					"name": "起始里程",
 					"field": "startMileage"
 				},
@@ -210,7 +210,7 @@ var vm = new Vue({
 				{
 					"name": "垂直距离",
 					"field": "verticalDistance"
-				},
+				},*/
 				{
 					"name": "起始坐标x",
 					"field": "pointx"
@@ -251,6 +251,9 @@ var vm = new Vue({
 		this.requestList(2);
 		this.requestBuildingTypes();
 	},
+    mounted: function () {
+        this.$refs['mylist'].toggleSearch();
+    },
 	methods: {
 		/* addItem: function(){
 			var that = this;
@@ -288,7 +291,6 @@ var vm = new Vue({
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/detail.html';
 			var src = jasTools.base.setParamsToUrl(baseSrc, {
 				oid: row.oid,
-				pageCode: 'file'
 			});
 			top.jasTools.selfDialog.show({
 				width: '41%',

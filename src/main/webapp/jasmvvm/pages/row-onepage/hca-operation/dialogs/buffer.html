@@ -33,10 +33,9 @@
         <div class="content">
             <span>半径(m)：</span><input id='radius' style="line-height: 26px;border: 1px solid #466599;color: #b5ddff; background: transparent;" value='200' />
         </div>
-        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 60px;">
+        <div slot="footer" class="dialog-footer" style="text-align: center;margin-top: 40px;">
             <el-button size="small" @click="cancel()">取 消</el-button>
-            <el-button size="small" type="primary" @click="createBuffer()">确 定
-            </el-button>
+            <el-button size="small" type="primary" @click="createBuffer()">确 定</el-button>
         </div>
 
 	</div>
@@ -61,7 +60,8 @@
 		},
 		methods: {
             cancel: function(){
-                top.jasTools.selfDialog.close();
+                window.parent.jasTools.selfDialog.close();
+                //top.jasTools.selfDialog.close();
             },
             createBuffer: function(){
                 var radius = $('#radius').val();
