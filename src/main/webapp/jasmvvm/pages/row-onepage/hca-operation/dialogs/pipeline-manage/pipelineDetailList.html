@@ -373,25 +373,29 @@ var vm = new Vue({
                 deep:2
             });
 		},
-		createBuffer: function(row){
-			this.jasMap.updateLayer('hca_pipeline',{
-                "show":true,
-                "fieldName":"oid",
-                //"fieldValues":[row.oid]
-                "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
-            });
-            window.parent.jasTools.selfDialog.close();
-            parent.app.isManage=false;
-            parent.app.isShowPipeline=true;
-            parent.app.localPipelineName="当前管线："+row.pipelineName;
-			top.jasTools.selfDialog.show({
-				title: '识别区条件',
-				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
-				height: '200px',
-				width: '260px',
-				left:"10%",
-				top:"140px"
-			})
+		createBuffer: function(item){
+			var that = this;
+			parent.app.$confirm('是否开始高后果区识别？',  "提示",  {
+				type: 'warning',
+				callback: function(action){ 
+					if (action === 'confirm') {
+						that.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+							deep:2
+						});
+						that.jasMap.updateLayer('hca_pipeline',{
+			                "show":true,
+			                "fieldName":"oid",
+			                "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
+			            });
+			            //parent.jasTools.selfDialog.close();
+			            parent.app.isManage=false;
+			            parent.app.localPipelineName = item.pipelineName;
+			            parent.app.toggleBtn();
+			            parent.app.createBufferDialog();
+			            
+					}
+				}
+			});
 		}
 	},
 });

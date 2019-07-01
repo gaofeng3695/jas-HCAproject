@@ -157,7 +157,7 @@
           "listener": {
             "onHover": {
               "responseType": "tip",
-              "template": "编号${building_code},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
+              "template": "编号${building_code},<br>人口：${population}"
             }
           }
         },{

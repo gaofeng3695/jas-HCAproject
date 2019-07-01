@@ -60,8 +60,9 @@
 		},
 		methods: {
             cancel: function(){
-                window.parent.jasTools.selfDialog.close();
-                //top.jasTools.selfDialog.close();
+                //window.parent.jasTools.selfDialog.close();
+                //parent.jasTools.selfDialog.close();
+                parent.app.closeBufferWindow();
             },
             createBuffer: function(){
                 var radius = $('#radius').val();

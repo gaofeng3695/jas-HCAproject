@@ -378,9 +378,15 @@ var vm = new Vue({
 			that.jasMap.layerVisibleSwitch('pd_arearank',false);
 			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
 			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-			setTimeout(function(){
-				that.jasMap.layerVisibleSwitch('pd_arearank',true);
-			}, 1000);
+			if(that.forBusiness=="1"){
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_zonerankcell',true);
+				}, 1000);
+			}else{
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_arearank',true);
+				}, 1000);
+			}
 		},
 		formathasUsed: function(row, column, cellValue, index) {
 			if (row.hasUsed == 1) return '是';
