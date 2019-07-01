@@ -63,7 +63,7 @@
 <body>
 	<div id="app" v-cloak>
 		<jas-dialog-wrapper>
-			<el-form ref="tableFormData" :model="tableFormData" :rules="rules"  label-width="150px">
+			<el-form ref="tableFormData" :model="tableFormData" :rules="rules"  label-width="100px">
 				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgba(16, 39, 65);">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
 				</div>
@@ -81,7 +81,7 @@
 						</el-form-item>
 					</el-col>		
 				</el-row>
-				<el-row>	
+<!--				<el-row>
 					<el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
 						<el-form-item label="起始里程" prop="startMileage">
 							<el-input-number v-model="tableFormData.startMileage" clearable placeholder="请输入起始里程" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
@@ -104,7 +104,7 @@
 							<el-input-number v-model="tableFormData.verticalDistance" clearable placeholder="请输入垂直距离" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
 						</el-form-item>
 					</el-col>	
-				</el-row>
+				</el-row>-->
 				<el-row>	
 					<el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
 						<el-form-item label="起始坐标x" prop="pointx">
@@ -186,7 +186,7 @@ var app = new Vue({
 					message: '请选择构筑物类型',
 					trigger: 'blur'
 				}],
-				startMileage: [{
+		/*		startMileage: [{
 					//required: true,
 					message: '请输入起始里程',
 					trigger: 'blur'
@@ -205,7 +205,7 @@ var app = new Vue({
 					//required: true,
 					message: '请输入垂直距离',
 					trigger: 'blur'
-				}],
+				}],*/
 				pointx: [{
 					//required: true,
 					message: '请输入起始坐标x',
@@ -220,10 +220,10 @@ var app = new Vue({
 			tableFormData: {
 				'buildingCode': '',
 				'buildingType': '',
-				'startMileage':'',
+			/*	'startMileage':'',
 				'endMileage':'',
 				'horizontalDistance':'',
-				'verticalDistance':'',
+				'verticalDistance':'',*/
 				'pointx':'',
 				'pointy':'',
 				'buildingDistribution':'',

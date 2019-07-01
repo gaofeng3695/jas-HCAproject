@@ -81,7 +81,7 @@
 	<div id="app" v-cloak>
 		<jas-list-wrapper ref="mylist">
 		<div slot="search">
-			<el-form v-show="!isClosed" class="jas-search-for-list" :model="form" label-width="100px">
+			<el-form class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row>
 					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
 						<el-form-item label="管线名称" prop="pipelineName" style="margin-bottom: 15px ">
@@ -118,7 +118,7 @@
 				</span>
 			</div>
 			<div class="is-grown">
-			
+
 				<el-table ref="mytable" @row-dblclick="seeDetail"  v-loading="loading"
 					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
 					<el-table-column label="序号" type="index" align="center" width="50" fixed>
@@ -139,14 +139,14 @@
 					</el-table-column>
 					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
 					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="370px" fixed="right">
+					<el-table-column label="操作" align="center" min-width="400px" fixed="right">
 						<template slot-scope="scope">
 							<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
 							<el-button @click="editPipeline(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
 							<el-button @click="deletePipeline(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
 							<el-button @click="importFile" type="text" size="small" icon="fa fa-arrow-up">导入</el-button>
 							<el-button @click="locate(scope.row)" type="text" size="small" icon="fa fa-map-marker">定位</el-button>
-							<el-button @click="createBuffer(scope.row)" type="text" size="small" icon="fa fa-map-marker">识别</el-button>
+							<el-button @click="createBuffer(scope.row)" type="text" size="small" icon="fa fa-map-marker">开始识别</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -207,7 +207,7 @@ var vm = new Vue({
 			tableRowStyle: {
 				'color': '#7495A8'
 			},
-			isClosed: false,
+			isClosed: true,
 			tableData: [],
 			form: {},
 			
@@ -219,7 +219,7 @@ var vm = new Vue({
  		}
 	},
 	computed: {},
-	watch: {		
+	watch: {
 		selectedRows: function () {
 			var selects = [];
 			this.selectedRows.forEach(function (item) {
@@ -233,9 +233,10 @@ var vm = new Vue({
 		this.forBusiness = getParamter('forBusiness');
 		this.jasMap = parent.app.jasMap;
 	},
-	mounted: function () {
 
-	},
+	mounted: function () {
+        this.$refs['mylist'].toggleSearch();
+    },
 	methods: {
 		addPipeline: function(){
 			var that = this;
@@ -272,7 +273,6 @@ var vm = new Vue({
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/detail.html';
 			var src = jasTools.base.setParamsToUrl(baseSrc, {
 				oid: row.oid,
-				pageCode: 'file'
 			});
 			top.jasTools.selfDialog.show({
 				width: '50%',
@@ -370,8 +370,8 @@ var vm = new Vue({
             	gid = '15';
             } */
 			this.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
-				deep:2
-			});
+                deep:2
+            });
 		},
 		createBuffer: function(row){
 			this.jasMap.updateLayer('hca_pipeline',{
@@ -379,7 +379,11 @@ var vm = new Vue({
                 "fieldName":"oid",
                 //"fieldValues":[row.oid]
                 "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
-            })
+            });
+            window.parent.jasTools.selfDialog.close();
+            parent.app.isManage=false;
+            parent.app.isShowPipeline=true;
+            parent.app.localPipelineName="当前管线："+row.pipelineName;
 			top.jasTools.selfDialog.show({
 				title: '识别区条件',
 				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
