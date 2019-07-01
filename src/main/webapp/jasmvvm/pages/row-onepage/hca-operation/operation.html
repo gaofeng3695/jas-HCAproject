@@ -52,7 +52,7 @@
 			}
 			.area-div {
 				position: absolute;
-				top: 226px;
+				top: 150px;
 				left: 143px;
 				display: inline-block;
 				box-sizing: border-box;
@@ -61,7 +61,7 @@
 			}
 			.hca-div {
 				position: absolute;
-				top: 300px;
+				top: 230px;
 				left: 143px;
 				display: inline-block;
 				box-sizing: border-box;
@@ -87,6 +87,17 @@
      			width: 654px;
 			}
 			.top-center:hover{
+				cursor: pointer;
+			}
+			.undertop-center{
+				z-index: 20;
+				position: absolute;
+				background: transparent;
+				left: calc(50% - 327px);
+				height: 50px;
+				width: 654px;
+			}
+			.undertop-center:hover{
 				cursor: pointer;
 			}
 			.el-icon-loading{
@@ -121,13 +132,14 @@
 			<template slot="center" >
 				 <div class="center">
 					 <div class="top-center" @click='urlHref'></div>
+					 <div class="undertop-center" style="padding-top:100px;" v-show="isShowPipeline" ><span style="color:#fff">{{ localPipelineName }}</span><el-button @click="goBack" type="text"  style="float:right">返回</el-button></div>
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
-						<div class="item-btn" @click="pipelineOperation">管线管理</div>
+						<div class="item-btn" @click="pipelineOperation" v-show="isManage">管线管理</div>
 						<!-- <div class="item-btn" @click="createBufferDialog">识别区生成</div> -->
 						<div class="item-btn" @click="createBh">构筑物管理</div>
-						<div class="item-btn" @click="randomSettlementData">地区等级划分</div>
-						<div class="item-btn" @click="showHistoryBtn(1)">高后果区识别</div>
+						<div class="item-btn" @click="showHistoryBtn(0)" v-show="!isManage">地区等级划分</div>
+						<div class="item-btn" @click="showHistoryBtn(1)" v-show="!isManage">高后果区识别</div>
 						<!-- <div class="item-btn" @click="showHistoryBtn">历史数据</div>
 						<div hidden class="item-btn history" @click="showHistoryList(0)">历史数据</div>
 						<div hidden class="item-btn history" @click="showHistoryList(1)">历史数据</div> -->
@@ -136,10 +148,14 @@
 						<div hidden class="item-btn area" @click="showHistoryList(0)">历史数据</div>
 						<div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
 					</div> -->
-					<div hidden class="hca-div hca">
-						<div hidden class="item-btn hca" @click="showHistoryList(0)">历史地区等级</div>
-						<div hidden class="item-btn hca" @click="createHcaArea">当前地区等级</div>
-					</div>
+                     <div hidden class="area-div area">
+                         <div hidden class="item-btn area" @click="showHistoryList(0)">历史信息</div>
+                         <div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
+                     </div>
+					 <div hidden class="hca-div hca">
+						<div hidden class="item-btn hca" @click="showHistoryList(1)">历史信息</div>
+						<div hidden class="item-btn hca" @click="createHcaArea">重新识别</div>
+					 </div>
 					<!--图层操作按钮-->
 					<div class="operate-div" style="top:110px">
 						<!-- <span class="max" @click="openMax"></span> -->
@@ -227,9 +243,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 mapConfig:"config.onepage.json",
                 layerId:"pd_pipesegment",//空间表layerId (表名)
                 layerKeyName:"pd_pipesegment",//空间表layerId (表名)
+				isManage:true,
+                isShowPipeline:false,
+                localPipelineName:'',
 			}
 		},
 		computed: {},
+		mounted: function(){
+		},
 		created: function () {
 			var that = this;
 			that.jasMap = new JasMap({
@@ -262,14 +283,18 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
         },
 		methods: {
 			urlHref: function(){
-				location.href="../total/total.html";
+				location.href=jasTools.base.rootPath + "/jasmvvm/pages/row-onepage/total/total.html";
 			},
+            goBack: function(){
+			    location.href = jasTools.base.rootPath + "/jasmvvm/pages/row-onepage/hca-operation/operation.html"
+			},
+
 			pipelineOperation:function(){
 				top.jasTools.selfDialog.close();
-				this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
-				this.jasMap.layerVisibleSwitch('pd_arearank',false)
-				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
-				this.jasMap.layerVisibleSwitch('hca_buildings',false)
+				this.jasMap.layerVisibleSwitch('pd_arearankcell',false);
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+				this.jasMap.layerVisibleSwitch('hca_buildings',false);
 				this.jasMap.refreshLayerById('hca_pipeline');
 				window.jasTools.selfDialog.show({
 					title: '管线信息列表',
@@ -278,7 +303,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					width: '60%',
 					bottom:'10px',
 					left:'25%'
-				})
+				});
 			},
 			createBufferDialog: function(){
 				$('.hca').hide();
@@ -432,8 +457,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			randomSettlementData: function(){
-			    
-				var that = this;
+                $('.area').hide();
+
+                var that = this;
 				var common = this.jasMap.commonUtil;
 				var msg = "确认重新生成地区等级？";
 				var settlementLayerId = "pd_settlement";
@@ -748,7 +774,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			showHistoryBtn: function(forBusiness){
-				if(forBusiness == "0"){
+                window.parent.jasTools.selfDialog.close();
+                if(forBusiness == "0"){
 					//$('.operate-right-div:last-of-type').hide();
 					$('.hca').hide();
 					$('.area').show();
