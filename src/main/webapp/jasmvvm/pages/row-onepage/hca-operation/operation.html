@@ -123,6 +123,19 @@
 			    right: 10px  !important;
 			    left: unset !important;
 			}
+			.title-div {
+				position: absolute;
+			    left: 50%;
+			    top: 85px;
+			    transform: translateX(-50%);
+			    z-index: 10;
+			    color:rgb(184, 222, 255);
+			}
+			.el-tag {
+			    color:rgb(184, 222, 255) !important;
+			    border-color: #409EFF;
+			    padding: 0 5px !important;
+			}
 	</style>
 </head>
 
@@ -131,8 +144,15 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					 <div class="top-center" @click='urlHref'></div>
-					 <div class="undertop-center" style="padding-top:100px;" v-show="isShowPipeline" ><span style="color:#fff">{{ localPipelineName }}</span><el-button @click="goBack" type="text"  style="float:right">返回</el-button></div>
+					<div class="top-center" @click='urlHref'></div>
+					<div class="title-div" hidden>
+				 		<label>当前识别管线：</label>
+				 		<el-tag>  </el-tag>
+				 		<el-tooltip effect="dark" content="退出识别" placement="right">
+				 			<el-button style="padding: 8px 8px" type="primary" icon="el-icon-circle-close-outline" @click="exitHca"></el-button>
+				 		</el-tooltip>
+				 	</div>
+					 <!-- <div class="undertop-center" style="padding-top:100px;" v-show="isShowPipeline" ><span style="color:#fff">{{ localPipelineName }}</span><el-button @click="goBack" type="text"  style="float:right">返回</el-button></div> -->
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
 						<div class="item-btn" @click="pipelineOperation" v-show="isManage">管线管理</div>
@@ -261,7 +281,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                     })
 				}
             });
-
 		},
         watch: {
             // 如果需要联动
@@ -306,7 +325,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			createBufferDialog: function(){
-				$('.hca').hide();
+				top.jasTools.selfDialog.close();
+				/* $('.hca').hide();
 				$('.area').hide();
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
@@ -315,9 +335,22 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					width: '250px',
 					left:"10%",
 					top:"140px"
+				}) */
+				top.jasTools.selfDialog.show({
+					title: '识别区条件',
+					src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
+					height: '200px',
+					width: '15%',
+					left:"10%",
+					top:"140px"
 				})
 			},
+			closeBufferWindow: function(){
+				$('span.jas-dialog-close').trigger('click');
+			},
 			createBuffer: function(){
+				top.jasTools.selfDialog.close();
+				$('span.jas-dialog-close').trigger('click');
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
@@ -358,7 +391,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						var mileage = pipeline.getCoordinates()[0].length;//! size
 						// 窗口关闭
 						app.onZoneBufferOpacityChanged();
-						jasTools.selfDialog.close();
+						top.jasTools.selfDialog.close();
 					}
 				});
 			},
@@ -469,11 +502,11 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						if (action === 'confirm') {
 							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,false);
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-							app.showAreaDialogCreate('0', '地区等级列表', '150px');
+							/* app.showAreaDialogCreate('0', '地区等级列表', '150px');
 						    that.jasMap.flashGraphic('d', 'pd_arearank' ,{
 								deep:2
-							});
-							/* const loading = that.$loading({
+							}); */
+							const loading = that.$loading({
 								lock: true,
 								text: '合并要素单元......',
 								spinner: 'el-icon-loading',
@@ -496,7 +529,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								onError: function(){
 									that.$alert('数据处理出错', '提示')
 								}
-							}); */
+							});
 						}
 					}
 				});
@@ -515,7 +548,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					geomName: "geom"
 				};
 				loading.text='空间相交计算......';
-				common.simpleAjaxLoader({
+				setTimeout(function(){
+					loading.close();
+					app.showAreaDialogCreate('0', '地区等级列表', '150px');
+				    that.jasMap.flashGraphic('d', 'pd_arearank' ,{
+						deep:2
+					});
+				}, 1000);
+				/* common.simpleAjaxLoader({
 					url: jasTools.base.rootPath + "/zone/rank/cell/init.do",
 					data: JSON.stringify(data) ,
 					async:true,
@@ -534,7 +574,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					onError:function(){
 						that.$alert('数据处理出错', '提示')
 					}
-				});
+				}); */
 			},
 			createArea: function(loading){
 				//top.jasTools.selfDialog.close();
@@ -662,11 +702,11 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						if (action === 'confirm') {
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
-							app.showAreaDialog('1', '高后果区列表', '460px');
+							/* app.showAreaDialog('1', '高后果区列表', '460px');
 							that.jasMap.flashGraphic('d', 'pd_zonerankcell' ,{
 								deep:2
-							});
-							/* var loading = that.$loading({
+							}); */
+							var loading = that.$loading({
 								lock: true,
 								text: '计算影响区域......',
 								spinner: 'el-icon-loading',
@@ -687,19 +727,21 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 									setTimeout(function(){
 										loading.close();
 									}, 1000);
-									that.$message({
+									/* that.$message({
 										type: 'success',
 										message: result.msg
 									});
 									if(result.data > 0){
 										app.loadZoneCell();
 										app.showAreaDialog('1', '高后果区列表', '460px');
-									}
+									} */
+									app.loadZoneCell();
+									app.showAreaDialog('1', '高后果区列表', '460px');
 								},
 								onError :function(){
 			
 								}
-							}); */
+							});
 						}
 					}
 				})
@@ -863,6 +905,22 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					background: 'rgba(0, 0, 0, 0.7)'
 				}
 				that.$loading(options) 
+			},
+			toggleBtn: function(){
+				$("span[class=el-tag]").html(this.localPipelineName);
+				$('.title-div').toggle();
+			},
+			exitHca: function(){
+				var that = this;
+				app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
+					type: 'warning',
+					callback: function(action){
+						if (action === 'confirm') {
+							window.location.reload();
+						}
+						
+					}
+				});
 			}
 		}
 	})
