@@ -555,26 +555,29 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						deep:2
 					});
 				}, 1000);
-				/* common.simpleAjaxLoader({
-					url: jasTools.base.rootPath + "/zone/rank/cell/init.do",
-					data: JSON.stringify(data) ,
-					async:true,
-					onSuccess:function(res){
-						var result = JSON.parse(res) ;
-						// that.jasMap.refreshLayerById("pd_arearankcell");
-						that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
-						loading.text='识别单元计算......';
-						that.$message({
-							title:'success',
-							message:'合并识别单元'
-						});
-						//结果展示面板
-						app.createArea(loading);
-					},
-					onError:function(){
-						that.$alert('数据处理出错', '提示')
-					}
-				}); */
+                loading.text='识别单元计算......';
+                app.createArea(loading);
+
+                /*common.simpleAjaxLoader({
+                    url: jasTools.base.rootPath + "/zone/rank/cell/init.do",
+                    data: JSON.stringify(data) ,
+                    async:true,
+                    onSuccess:function(res){
+                        var result = JSON.parse(res) ;
+                        // that.jasMap.refreshLayerById("pd_arearankcell");
+                        that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
+                        loading.text='识别单元计算......';
+                        that.$message({
+                            title:'success',
+                            message:'合并识别单元'
+                        });
+                        //结果展示面板
+                        app.createArea(loading);
+                    },
+                    onError:function(){
+                        that.$alert('数据处理出错', '提示')
+                    }
+                });*/
 			},
 			createArea: function(loading){
 				//top.jasTools.selfDialog.close();
