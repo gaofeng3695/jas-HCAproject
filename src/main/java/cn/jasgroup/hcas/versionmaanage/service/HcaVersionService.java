@@ -36,14 +36,14 @@ public class HcaVersionService extends CommonDataJdbcService {
 	 * @author：chenxiangsi
 	 * @date：Jun 21, 2019 11:24:58 AM
 	 */
-	public boolean updateVersionUsedStatus(String oid) {
+	public boolean updateVersionUsedStatus(String oid,Integer forBusiness) {
 		// TODO Auto-generated method stub
 		try {
 			HcaVersion versionUsed = versionDao.getVersionByOid(oid);
 			versionUsed.setHasUsed(1);
 			commonDataJdbcDao.update(versionUsed);
 			List<HcaVersion> versionList = new ArrayList<>();
-			versionList = versionDao.getVersionListUsed(oid);
+			versionList = versionDao.getVersionListUsed(oid,forBusiness);
 			for(HcaVersion version : versionList){
 				version.setHasUsed(0);
 				commonDataJdbcDao.update(version);

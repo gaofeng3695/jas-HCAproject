@@ -44,7 +44,8 @@ public class HcaVersionController  extends BaseController{
     @ResponseBody	
     public Object getDaqMvPipeNodeList(HttpServletRequest request, @RequestBody Map<String,String> param) throws Exception {
 		String oid = param.get("oid");
-		boolean flag = versionService.updateVersionUsedStatus(oid);
+		Integer forBusiness = Integer.valueOf(param.get("forBusiness"));
+		boolean flag = versionService.updateVersionUsedStatus(oid,forBusiness);
         return flag;
 		
 	}

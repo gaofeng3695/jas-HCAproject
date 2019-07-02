@@ -28,12 +28,15 @@ public class HcaVersionDao extends BaseJdbcDao {
 	 * @author：chenxiangsi
 	 * @date：Jun 21, 2019 11:32:08 AM
 	 */
-	public List<HcaVersion> getVersionListUsed(String oid) {
+	public List<HcaVersion> getVersionListUsed(String oid,Integer forBusiness) {
 		// TODO Auto-generated method stub
         List<String> args = new ArrayList<>();
 		String sql = "select *from hca_version v where v.has_used=1 and v.active=1";
         if(StringUtils.isNotBlank(oid)){
 			sql += " and v.oid <> '"+oid+"'";
+		}
+		if(null != forBusiness){
+			sql += " and v.for_business = "+forBusiness;
 		}
 		List<HcaVersion> versionList = baseJdbcDao.queryForList(sql, null, HcaVersion.class);
 		return versionList;
