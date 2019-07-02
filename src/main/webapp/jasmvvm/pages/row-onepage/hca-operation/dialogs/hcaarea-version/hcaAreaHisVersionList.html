@@ -222,7 +222,11 @@ var vm = new Vue({
 	methods: {
 		addArea: function(){
 			var that = this;
+			var title ="新增高后果区历史版信息";
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='新增地区等级历史版本信息';
+			}
 			top.jasTools.selfDialog.show({
 				width: '50%',
 				height: '40%',
@@ -237,13 +241,17 @@ var vm = new Vue({
 		},
 		editArea: function(row){
 			var that = this;
+			var title ="修改高后果区历史版信息";
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='修改地区等级历史版本信息';
+			}
 			top.jasTools.selfDialog.show({
 				width: '50%',
 				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '修改地区等级历史版本信息',
+				title: title,
 				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
 					that.requestVersionList(0);
@@ -252,21 +260,29 @@ var vm = new Vue({
 		},
 		seeDetail: function (row) {
 			var that = this;
+			var title="高后果区历史版本信息详情"
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/detail.html';
 			var src = jasTools.base.setParamsToUrl(baseSrc, {
 				oid: row.oid,
 			});
+			if(that.forBusiness=="0"){
+				title='地区等级历史版本信息详情';
+			}
 			top.jasTools.selfDialog.show({
 				width: '50%',
 				height: '40%',
 				bottom:'20%',						
 				left:'30%',
-				title: '地区等级历史版本信息详情',
+				title: title,
 				src: src,
 			});
 		},
 		deleteArea: function (row) {
 			var that = this;
+			var mes ="删除高后果区历史版本信息";
+			if(that.forBusiness=="0"){
+				mes='删除地区等级历史版本信息';
+			}
 			var afterDelete = function () {
 				top.Vue.prototype.$message({
 					type: 'success',
@@ -274,7 +290,7 @@ var vm = new Vue({
 				});
 				that.requestVersionList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除地区等级历史版本信息', {
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', mes, {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
