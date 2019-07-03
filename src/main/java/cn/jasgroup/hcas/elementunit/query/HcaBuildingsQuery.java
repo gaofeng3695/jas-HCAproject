@@ -45,7 +45,7 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 				+ "t.horizontal_distance,t.vertical_distance,t.pointx,t.pointy,t.building_type,t.building_distribution,\n"
 				+ "d01.code_name as building_type_name, "
 				+ "d02.code_name as building_distribution_name,"
-				+ "t.households,t.population,to_char(t.collect_date, 'yyyy-MM-dd') as collect_date,t.collect_person,t.remarks,\n"
+				+ "t.households,t.population,to_char(t.collect_date, 'yyyy-MM-dd') as collect_date,t.collect_person,t.remarks,t.pressure_pipeline,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_buildings t\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_type_domain') d01\n"

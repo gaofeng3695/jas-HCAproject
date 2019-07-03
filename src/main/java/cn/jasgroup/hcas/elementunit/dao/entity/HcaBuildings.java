@@ -122,6 +122,11 @@ public class HcaBuildings extends CommonJdbcEntity {
 	 * 备注 
 	 */
 	private String remarks;
+	
+	/**
+	 * 是否占压管道（距离<5m 0 否1是）
+	 */
+	private Integer pressurePipeline;
 
 
 	public Double getStartMileage() {
@@ -295,6 +300,15 @@ public class HcaBuildings extends CommonJdbcEntity {
 	public void setCentery(Double centery) {
 		super.setField("centery");
 		this.centery = centery;
+	}
+
+	public Integer getPressurePipeline() {
+		return pressurePipeline;
+	}
+
+	public void setPressurePipeline(Integer pressurePipeline) {
+		super.setField("pressurePipeline");
+		this.pressurePipeline = pressurePipeline;
 	}
 
 	

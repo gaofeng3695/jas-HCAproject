@@ -146,6 +146,15 @@
 				</el-row>
 				<el-row>	
 					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+						<el-form-item label="是否占压" prop="pressurePipeline">
+							<el-select v-model="tableFormData.pressurePipeline" clearable placeholder="请选择">
+								<el-option v-for="item in domain.pressurePipeline" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+				</el-row>
+				<el-row>	
+					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 						<el-form-item label="地址" prop="address">
 							<el-input v-model="tableFormData.address" clearable placeholder="请输入地址" size="small" ></el-input>
 						</el-form-item>
@@ -238,11 +247,22 @@ var app = new Vue({
 				'households':'',
 				'population':'',
 				'address':'',
-				'reamrks':''
+				'reamrks':'',
+				'pressurePipeline': 0
 			},
 			domain: {
 				buildingType: [],
-				buildingDistribution:[]
+				buildingDistribution:[],
+				pressurePipeline:[
+					{
+						key: 0,
+						value: '否'
+					},
+					{
+						key: 1,
+						value: '是'
+					}
+				]
 			},
 			isEdit:false,
 		}

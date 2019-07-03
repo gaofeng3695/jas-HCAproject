@@ -102,6 +102,18 @@
 				{
 					"name": "地址",
 					"field": "address"
+				},
+				{
+					"name": "是否占压管道",
+					"field": "pressurePipeline",
+					formatter: function(row, column, cellValue, index){
+						if(cellValue == 1){
+							cellValue ='是';
+						}else{
+							cellValue ='否';
+						}
+						return cellValue;
+					}
 				}
 			],
 			field2: [{
