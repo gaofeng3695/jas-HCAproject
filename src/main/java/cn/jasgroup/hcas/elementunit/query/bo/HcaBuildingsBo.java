@@ -126,6 +126,11 @@ public class HcaBuildingsBo extends CommonBaseBo {
 	 * 备注 
 	 */
 	private String remarks;
+	
+	/**
+	 * 是否占压管道（距离<5m 0 否1是）
+	 */
+	private Integer pressurePipeline;
 
 
 	public String getOid() {
@@ -305,4 +310,12 @@ public class HcaBuildingsBo extends CommonBaseBo {
 		this.geoState = geoState;
 	}
 
+	public Integer getPressurePipeline() {
+		return pressurePipeline;
+	}
+
+	public void setPressurePipeline(Integer pressurePipeline) {
+		this.pressurePipeline = pressurePipeline;
+	}
+	
 }
