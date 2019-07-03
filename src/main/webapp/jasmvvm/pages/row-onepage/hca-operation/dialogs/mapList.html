@@ -52,7 +52,7 @@
 	<div id="app" v-cloak>
 		<div class="map-list-box">
 			<ul class="map-list">
-				<li class="list-item" v-for="item in checkList" :click="updateLayer(item)">
+				<li class="list-item" v-for="item in checkList" @click="updateLayer(item)">
 				<el-checkbox v-model="item.checked">{{item.name}}</el-checkbox>
 				</li>
 			</ul>
@@ -75,123 +75,148 @@
 				checkList: [
 					{
 						"name": "管线",
-						"checked": true					
+						"checked": true,
+						"layerId": "hca_pipeline"
 					},
 					{
 						"name": "识别区",
-						"checked": false					
+						"checked": false,
+						"layerId": "bufferLayerId"					
 					},
 					{
 						"name": "地区等级",
-						"checked": false					
+						"checked": false,
+						"layerId": "pd_arearank"	
 					},
 					{
 						"name": "高后果区",
-						"checked": false					
+						"checked": false,
+						"layerId": "pd_zonerankcell"
 					},
 					{
 						"name": "消防",
-						"checked": false					
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name": "医院",
-						"checked": false					
+						"checked": true,
+						"layerId": "pd_hospital"
 					},
 					{
 						"name": "学校",
-						"checked": false					
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name": "托儿所",
-						"checked": false					
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name": "幼儿园",
-						"checked": false					
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name": "养老院",
-						"checked": false					
-					},
-					{
-						"name": "养老院",
-						"checked": false					
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"监狱",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"工厂",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"商场",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"集贸市场",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"寺庙",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"运动场",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"广场",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"娱乐休闲地",
-						"checked": false
+						"checked": true,
+						"layerId": "pd_entertainment_place"
 					},
 					{
 						"name":"剧院",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"露营地",
-						"checked": false
+						"checked": false,
+						"layerId": ""
 					},
 					{
 						"name":"加油站",
-						"checked": false
+						"checked": true,
+						"layerId": "pd_gas_station"
 					},
 					{
 						"name":"加气站",
-						"checked": false
+						"checked": true,
+						"layerId": "pd_gas_station"
 					},
 					{
 						"name":"炸药库",
-						"checked": false
+						"checked": false,
+						"layerId": "pd_hospital"
 					},
 					{
 						"name":"独立民居",
-						"checked": false
+						"checked": true,
+						"layerId": "hca_buildings"
 					},
 					{
 						"name":"居民区",
-						"checked": false
+						"checked": true,
+						"layerId": "hca_buildings"
 					},
 					{
 						"name":"商业区",
-						"checked": false
+						"checked": false,
+						"layerId": "hca_buildings"
 					},
 					{
 						"name":"工业区",
-						"checked": false
+						"checked": false,
+						"layerId": "hca_buildings"
 					},
 					{
 						"name":"规划区",
-						"checked": false
+						"checked": false,
+						"layerId": "hca_buildings"
 					},
 					{
 						"name":"市郊居住区",
-						"checked": false
+						"checked": false,
+						"layerId": "hca_buildings"
 					}
 				],
 				mapList:[
@@ -235,8 +260,9 @@
 				var that = this;
 				console.log(item)
 				
-				if(item.name == that.mapList[0]){
-					that.jasMap.layerVisibleSwitch('pd_entertainment_place', true);
+				if(item.layerId){
+					console.log(item.checked)
+					that.jasMap.layerVisibleSwitch(item.layerId, !item.checked);
 				}
 				/* this.jasMap.layerVisibleSwitch('pd_arearank', false);
 				this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
