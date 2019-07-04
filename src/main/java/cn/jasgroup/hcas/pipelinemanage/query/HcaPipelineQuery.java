@@ -37,11 +37,14 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
 		}else{
-			if (StringUtils.isNotBlank(pipelineCode)) {
+			/*if (StringUtils.isNotBlank(pipelineCode)) {
 				sql += " and t.pipeline_code like :pipelineCode ";
 			}
 			if (StringUtils.isNotBlank(pipelineName)) {
 				sql += " and t.pipeline_name like :pipelineName ";
+			}*/
+			if (StringUtils.isNotBlank(pipelineCode)) {
+				sql += " and (t.pipeline_code like :pipelineCode or t.pipeline_name like :pipelineName) ";
 			}
 		}
 		sql += " order by t.create_datetime desc";
