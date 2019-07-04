@@ -14,32 +14,21 @@
 		#app {
 			width: 100%;
 			height: 100%;
+			overflow-y: hidden;
 			position: relative;
 			background:transparent;
 		}
-		.content{
-			overflow:auto;
-		}
 		::-webkit-scrollbar { background-color:transparent;}
 		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
-		.el-input .el-input__inner {
-			background: transparent;
-			font-size: 14px;
-			width: 90%;
+
+		.filter-wrap {
+			margin-left: 10px;
+			height:50px;
 		}
-		.el-input__inner {
-			background:transparent;
-			border: 1px solid #466599;
-			color: #b5ddff;
-		}
-		.filterwrap {
-			padding: 10px 10px 0px 10px;
-		}
-		.orgtool {
-			height: 40px;
-			text-align: right;
-			padding: 0 10px;
-			overflow: hidden;
+		.content-list{
+			margin-top:40px;
+			height: 300px;
+			overflow:auto!important;
 		}
 		.el-pager ul, .el-pager li {
 			background:transparent;
@@ -53,11 +42,33 @@
 		}
 		.jas-dialog-self {
 			border: 1px solid #409EFF;
-			background: #060e22f2;
+			background: rgba(0, 0, 0, 0.9);
 		}
 		.jas-dialog-header {
 			background:transparent;
 			height: 40px;
+		}
+		.pagination-bottom{
+			float:right;
+			position:fixed;
+			right:10px;
+			bottom:15px;
+		}
+		.el-input .el-input__inner {
+			background: transparent;
+			font-size: 14px;
+			width: 85%;
+			position:fixed;
+		}
+		.el-input__inner {
+			background:transparent;
+			border: 1px solid #466599;
+			color: #b5ddff;
+		}
+		.orgtool {
+			height: 30px;
+			float:right;
+			margin-right:10px;
 		}
 	</style>
 </head>
@@ -65,16 +76,16 @@
 <body >
 	<div id="app">
 		<div ref="mylist">
-			<div class="filterwrap">
+			<div class="filter-wrap">
 				<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
 				</el-input>
 			</div>
 			<div class="orgtool" >
 				<el-button type="text" @click="addPipeline">新增</el-button>
 			</div>
-			<div class="content">
+			<div class="content-list">
 				<div v-for="item in pipelineData" style="margin-bottom:20px;margin-left:10px;font-size: 13px" ref="pipelines">
-					<ul style="margin-top:5px;margin-bottom:5px;">
+					<ul style="margin-top:5px;margin-bottom:5px;" @click="locate(item)">
 						<li><span style="color:#fff">管线名称：</span><span style="color:#7495A8;">{{item.pipelineName}} （{{item.pipelineCode}}）</span></li>
 						<li><span style="color:#fff">起止里程：</span><span style="color:#7495A8;">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
 						<li><span style="color:#fff">管线长度：</span><span style="color:#7495A8;">{{item.pipelineLength}} KM</span></li>
@@ -82,15 +93,15 @@
 						<li>
 							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
 							<el-button title="修改" @click="editPipeline(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
-							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-minus"></el-button>
-							<el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-arrow-up"></el-button>
+							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+							<el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
 							<el-button title="定位" @click="locate(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>
-							<el-button title="开始识别" style="float:right;margin-right:10px;" @click="createBuffer(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>
+							<el-button title="开始识别" style="float:right;margin-right:10px;" @click="createBuffer(item)" type="text" size="small" icon="fa fa-eye"></el-button>
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div style="margin-bottom: 20px;float:right" >
+			<div class="pagination-bottom">
 				<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
 							   :page-size="5" layout="total, prev, pager, next" :total="total">
 				</el-pagination>
@@ -147,8 +158,6 @@ var vm = new Vue({
 			},
 			isClosed: true,
 			tableData: [],
-			form: {},
-			
 			pageSize: 5,
 			currentPage: 1,
 			total: 0,
@@ -161,12 +170,16 @@ var vm = new Vue({
 	},
 	computed: {},
 	watch: {
-        filterText: function (val) {
-            this.$refs.pipelines.filter(val);
-        },
-	},
+        filterText:function(val){
+            this.requestList(2,val);
+		}
+/*        filterText: function (val) {
+            console.log(this.$refs.pipelines.innerText)
+            this.$refs.pipelines.innerText.filter(val);
+        },*/
+    },
 	created: function () {
-		this.requestList(0);			
+		this.requestList(0,"");
 		this.forBusiness = getParamter('forBusiness');
 		this.jasMap = parent.app.jasMap;
 	},
@@ -174,9 +187,8 @@ var vm = new Vue({
 	mounted: function () {
     },
 	methods: {
-
 		addPipeline: function(){
-			var that = this;
+            var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/add.html';
 			top.jasTools.selfDialog.show({
                 width: '15%',
@@ -186,12 +198,12 @@ var vm = new Vue({
 				title: '新增管线信息',
 				src: baseSrc,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestList(0,"");
 				}
 			});
 		},
 		editPipeline: function(row){
-			var that = this;
+            var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/add.html';
 			top.jasTools.selfDialog.show({
 				width: '15%',
@@ -201,7 +213,7 @@ var vm = new Vue({
 				title: '修改管线信息',
 				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
-					that.requestList(0);
+					that.requestList(0,"");
 				}
 			});
 		},
@@ -227,7 +239,7 @@ var vm = new Vue({
 					type: 'success',
 					message: '删除成功'
 				});
-				that.requestList(0);
+				that.requestList(0,"");
 			};
 			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除管线信息', {
 				type: 'warning',
@@ -253,10 +265,10 @@ var vm = new Vue({
 				title: '导入',
 			})
 		},
-		requestList: function (param) { // 0刷新  1重置  2搜索
+		requestList: function (param,val) { // 0刷新  1重置  2搜索
 			var that = this;
 			if (param == 1 || param == 0) {
-				this.form = {};
+                val="";
 				this.pageSize = 5;
 				this.currentPage = 1;
 			}
@@ -267,8 +279,8 @@ var vm = new Vue({
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
  			that.loading = true;
  			jasTools.ajax.post(url, {
-				pipelineName: this.form.pipelineName,
-				pipelineCode: this.form.pipelineCode,
+				pipelineName: val,
+				pipelineCode: val,
 				pageNo: this.currentPage,
 				pageSize: this.pageSize,
 				page: this.currentPage,
