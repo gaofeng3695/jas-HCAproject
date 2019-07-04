@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			overflow-y: hidden;
+			position: relative;
+			background:transparent;
+		}
+		::-webkit-scrollbar { background-color:transparent;}
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
+
+		.filter-wrap {
+			margin-left: 10px;
+			height:50px;
+		}
+		.content-list{
+			margin-top:40px;
+			height: 300px;
+			overflow:auto!important;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+			background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		.jas-dialog-self {
+			border: 1px solid #409EFF;
+			background: rgba(0, 0, 0, 0.9);
+		}
+		.jas-dialog-header {
+			background:transparent;
+			height: 40px;
+		}
+		.pagination-bottom{
+			float:right;
+			position:fixed;
+			right:10px;
+			bottom:15px;
+		}
+		.el-input .el-input__inner {
+			background: transparent;
+			font-size: 14px;
+			width: 85%;
+			position:fixed;
+		}
+		.el-input__inner {
+			background:transparent;
+			border: 1px solid #466599;
+			color: #b5ddff;
+		}
+		.orgtool {
+			height: 30px;
+			float:right;
+			margin-right:10px;
+		}
+		.data-ul {
+			margin-top:5px;
+			margin-bottom:5px;
+			cursor: pointer;
+			padding: 3px;
+			border: 1px solid transparent;
+		}
+		
+		.data-ul:hover,
+		.data-ul.active{
+			border-style: solid;
+			border-color:#409eff;
+		}
+		.name-span {
+			color:#fff;
+		}
+		.value-span{
+			color:#7495A8;
+		}
+		.table-div{
+			/* margin-bottom:20px; */
+			margin-left:10px;
+			font-size: 13px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app" v-cloak>		
+		<div ref="mylist">
+			<div class="filter-wrap">
+				<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+				</el-input>
+			</div>
+			<div class="orgtool" >
+				<el-button type="text" @click="addItem">新增</el-button>
+				<!-- <el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-arrow-up"></el-button> -->
+			</div>
+			<div class="content-list">
+				<div class="table-div" v-for="item,index in tableData" ref="pipelines">
+					<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}">
+						<li><span class="name-span">建（构）筑物编号：</span><span class="value-span">{{item.buildingCode}}</span></li>
+						<li><span class="name-span">建（构）筑物类型：</span><span class="value-span">{{item.buildingTypeName}}</span></li>
+						<li><span class="name-span">户数：</span><span class="value-span">{{item.households}}</span></li>
+						<li><span class="name-span">人口：</span><span class="value-span">{{item.population}}</span></li> 
+						<li>
+							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
+							<el-button title="修改" @click="editItem(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="pagination-bottom">
+				<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+							   :page-size="5" layout="total, prev, pager, next" :total="total">
+				</el-pagination>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+var changedFeatures = [];
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {	
+			loading: false,
+			isClosed: true,
+			form: {},
+			tableData: [],
+			buildingTypeData: [],
+			pageSize: 5,
+			currentPage: 1,
+			total: 0,
+			filterText: '',
+			showActive: -1,
+			headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			},
+			/* tableFields: [
+				{
+					"name": "建（构）筑物编号",
+					"field": "buildingCode"
+				},
+				{
+					"name": "建（构）筑物类型",
+					"field": "buildingTypeName"
+				},
+				{
+					"name": "户数",
+					"field": "households"
+				},
+				{
+					"name": "人口",
+					"field": "population"
+				}
+			] */
+		}
+	},
+	watch: {
+        filterText: function (val) {
+            this.$refs.pipelines.filter(val);
+        },
+	},
+	created: function () {
+		this.jasMap = parent.app.jasMap;
+		this.requestList(2);
+		this.requestBuildingTypes();
+		this.layerId = "hca_buildings";
+	},
+    mounted: function () {
+    },
+	methods: {
+		addItem: function(){
+			var that = this;
+			this.jasMap.drawPolygon({
+				drawLayerId: that.layerId,
+				onDrawEnd:function(evt){
+					var feature = evt.feature ;
+					var fId = feature.getId();
+					changedFeatures[fId] = feature;
+					var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+					top.jasTools.selfDialog.show({
+						title: '建（构）筑物属性编辑',
+						src: baseSrc,
+						height: '55%',
+						width: '20%',
+						top:'155px',						
+						right:'3%',
+						cbForClose: function () {
+							that.jasMap.startPanMode();
+							that.jasMap.refreshLayerById(that.layerId)
+						}
+					});
+				}
+        	})
+		},
+		editItem: function(row){
+			// 定位到对应构筑物，进入编辑状态，弹出编辑框
+			var that = this;
+			that.jasMap.editGraphic(that.layerId);
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+row.oid;
+			top.jasTools.selfDialog.show({
+				title: '建（构）筑物属性编辑',
+				src: baseSrc,
+				width: '17%',
+				height: '55%',
+				top:'14%',						
+				right:'3%',
+				cbForClose: function () {
+					that.requestList(0);
+					that.jasMap.startPanMode();
+				}
+			});
+		},
+		seeDetail: function (row) {
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/detail.html';
+			var src = jasTools.base.setParamsToUrl(baseSrc, {
+				oid: row.oid,
+			});
+			top.jasTools.selfDialog.show({
+				width: '16%',
+				height: '55%',
+				top:'14%',						
+				right:'3%',
+				title: '建（构）筑物详情',
+				src: src,
+			});
+		},
+		deleteItem: function (row) {
+			var that = this;
+			var afterDelete = function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: '删除成功'
+				});
+				that.requestList(0);
+			};
+			window.top.Vue.prototype.$confirm('您确定要删除删除建（构）筑物物信息吗？', '提示', {
+				type: 'warning',
+				callback: function (action) {
+					if (action === 'confirm') {
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/delete.do";
+						jasTools.ajax.post(url, {
+							oid:row.oid
+						}, function (data) {
+							afterDelete();
+						});
+					}
+				}
+			});
+		},
+		openDetail:function(idx){
+			parent.app.openDetail(idx);
+		},
+		requestList: function(param){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 5;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 5;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+			jasTools.ajax.post(url,{
+				buildingCode:that.form.buildingCode,
+				startMileage: that.form.startMileage,
+				endMileage: that.form.endMileage,
+				buildingType: that.form.buildingType,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+			});
+		},
+		importFile: function(){
+			top.jasTools.selfDialog.show({
+				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness=3',
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'30%',
+				title: '导入',
+			})
+		},
+		exportFile: function(){
+			top.Vue.prototype.$message({
+				type: 'success',
+				message: '导出成功'
+			});
+		},
+		requestBuildingTypes: function () {
+			var that = this;
+			var url = jasTools.base.rootPath + "/jasframework/sysdoman/getDoman.do";
+			jasTools.ajax.get(url, {"domainName": 'building_type_domain'}, function (data) {
+				data.forEach(function (item) {
+					that.buildingTypeData.push(item);
+				});
+			});
+		},
+		useLayer: function(){
+			var that = this;
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			setTimeout(function(){
+				that.jasMap.layerVisibleSwitch('pd_arearank',true);
+			}, 1000)
+		},
+		toggleSearch: function () {
+			this.$refs['mylist'].toggleSearch();
+			this.isClosed = this.$refs['mylist'].isClosed;
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestList();
+		},
+		locate: function(item, index){
+			var that = this;
+			this.showActive=index;
+			this.jasMap.flashGraphic(item.oid, that.layerId,{
+				deep:2
+			});
+		},
+		handleSelectionChange: function (val) {
+			this.oids = val.map(function (item) {
+				return item.oid;
+			});
+			this.rows = val;
+		},
+	},
+});
+
+</script>
+</html>
