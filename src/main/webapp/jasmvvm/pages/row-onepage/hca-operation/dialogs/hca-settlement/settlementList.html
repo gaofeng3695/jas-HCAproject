@@ -84,8 +84,8 @@
 			<el-form class="jas-search-for-list" :model="form" label-width="100px">
 				<el-row :gutter="20">
 					<el-col :span="8">
-						<el-form-item label="构筑物编号" prop="buildingCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.buildingCode" :placeholder="'请输入构筑物编号'" size="small" clearable></el-input>
+						<el-form-item label="建（构）筑物编号" prop="buildingCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.buildingCode" :placeholder="'请输入建（构）筑物编号'" size="small" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				<!--	<el-col :span="8">
@@ -101,8 +101,8 @@
 					</el-row>
 					<el-row :gutter="20">-->
 					<el-col :span="8">
-						<el-form-item label="构筑物类型" prop="buildingType" style="margin-bottom: 15px ">
-							<el-select v-model="form.buildingType" filterable :placeholder="'请输入构筑物类型'" size="small" clearable>
+						<el-form-item label="建（构）筑物类型" prop="buildingType" style="margin-bottom: 15px ">
+							<el-select v-model="form.buildingType" filterable :placeholder="'请输入建（构）筑物类型'" size="small" clearable>
 								<el-option v-for="item in buildingTypeData" :key="item.codeId"
 										:label="item['codeName']" :value="item.codeId">
 								</el-option>
@@ -192,7 +192,7 @@ var vm = new Vue({
 			},
 			tableFields: [
 				{
-					"name": "构筑物编号",
+					"name": "建（构）筑物编号",
 					"field": "buildingCode"
 				},
 				/*{
@@ -220,7 +220,7 @@ var vm = new Vue({
 					"field": "pointy"
 				},
 				{
-					"name": "构筑物类型",
+					"name": "建（构）筑物类型",
 					"field": "buildingTypeName"
 				},
 				{
@@ -275,7 +275,7 @@ var vm = new Vue({
 			var that = this;
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+row.oid;
 			top.jasTools.selfDialog.show({
-				title: '构筑物属性编辑',
+				title: '建（构）筑物属性编辑',
 				src: baseSrc,
 				width: '20%',
 				height: '55%',
@@ -297,7 +297,7 @@ var vm = new Vue({
 				height: '55%',
 				top:'14%',						
 				right:'3%',
-				title: '构筑物详情',
+				title: '建（构）筑物详情',
 				src: src,
 			});
 		},
@@ -310,7 +310,7 @@ var vm = new Vue({
 				});
 				that.requestList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除删除构筑物信息吗？', '提示', {
+			window.top.Vue.prototype.$confirm('您确定要删除删除建（构）筑物信息吗？', '提示', {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
