@@ -189,7 +189,7 @@
 					<div class="operate-left-div">
 						<!--<div class="item-btn" @click="pipelineOperation" v-show="isManage">管线管理</div>-->
 						<!-- <div class="item-btn" @click="createBufferDialog">识别区生成</div> -->
-						<!--<div class="item-btn" @click="createBh">构筑物管理</div>-->
+						<div class="item-btn" @click="createBh" v-show="!isManage">构筑物管理</div>
 						<div class="item-btn" @click="showHistoryBtn(0)" v-show="!isManage">地区等级划分</div>
 						<div class="item-btn" @click="showHistoryBtn(1)" v-show="!isManage">高后果区识别</div>
 						<div  v-show="isManage">
@@ -476,6 +476,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
+				this.closeBufferWindow();
 				$('.hca').hide();
 				$('.area').hide();
 				//显示图层
@@ -495,28 +496,37 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch(governmentId,true)
 				var that = this;
 				top.jasTools.selfDialog.close();
-				window.jasTools.selfDialog.show({
-					title: '构筑物编辑工具',
-					src: './dialogs/hca-settlement/edit-settlement.html',
-					height: '280px',
-					// width: '290px',
-					width: '380px',
-					left:"10%",
-					top:"140px",
-					cbForClose: function(){
-						that.jasMap.startPanMode();
-					}
-				})
-				window.jasTools.selfDialog.show({
-					title: '构筑物信息列表',
-					// src: './dialogs/detail2.html',
-					src: './dialogs/hca-settlement/settlementList.html?dataType=pipeline',
-					height: '460px',
-					// width: '800px',
-					width: '52%',
-					bottom:'10px',
-					left:'24%',
-				})
+				if(!this.isManage){
+					window.jasTools.selfDialog.show({
+						title: '构筑物编辑工具',
+						src: './dialogs/hca-settlement/edit-settlement.html',
+						height: '280px',
+						width: '380px',
+						left:"10%",
+						top:"140px",
+						cbForClose: function(){
+							that.jasMap.startPanMode();
+						}
+					})
+					window.jasTools.selfDialog.show({
+						title: '构筑物信息列表',
+						// src: './dialogs/detail2.html',
+						src: './dialogs/hca-settlement/settlementList.html?dataType=pipeline',
+						height: '460px',
+						width: '52%',
+						bottom:'10px',
+						left:'24%',
+					})
+				}else{
+					window.jasTools.selfDialog.show({
+						title: '构筑物信息列表',
+						src: './dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
+						height: '50%',
+						width: '20%',
+						top:'155px',
+						left:'1%'
+					})
+				}
 			},
 			draw: function(){
 				this.jasMap.drawPolygon({
