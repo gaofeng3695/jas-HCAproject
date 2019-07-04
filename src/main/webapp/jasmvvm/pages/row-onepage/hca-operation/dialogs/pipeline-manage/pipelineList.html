@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			background:transparent;
+		}
+		.content{
+			overflow:auto;
+		}
+		::-webkit-scrollbar { background-color:transparent;}
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
+		.el-input .el-input__inner {
+			background: transparent;
+			font-size: 14px;
+			width: 90%;
+		}
+		.el-input__inner {
+			background:transparent;
+			border: 1px solid #466599;
+			color: #b5ddff;
+		}
+		.filterwrap {
+			padding: 10px 10px 0px 10px;
+		}
+		.orgtool {
+			height: 40px;
+			text-align: right;
+			padding: 0 10px;
+			overflow: hidden;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+			background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		.jas-dialog-self {
+			border: 1px solid #409EFF;
+			background: #060e22f2;
+		}
+		.jas-dialog-header {
+			background:transparent;
+			height: 40px;
+		}
+	</style>
+</head>
+
+<body >
+	<div id="app">
+		<div ref="mylist">
+			<div class="filterwrap">
+				<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+				</el-input>
+			</div>
+			<div class="orgtool" >
+				<el-button type="text" @click="addPipeline">新增</el-button>
+			</div>
+			<div class="content">
+				<div v-for="item in pipelineData" style="margin-bottom:20px;margin-left:10px;font-size: 13px" ref="pipelines">
+					<ul style="margin-top:5px;margin-bottom:5px;">
+						<li><span style="color:#fff">管线名称：</span><span style="color:#7495A8;">{{item.pipelineName}} （{{item.pipelineCode}}）</span></li>
+						<li><span style="color:#fff">起止里程：</span><span style="color:#7495A8;">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
+						<li><span style="color:#fff">管线长度：</span><span style="color:#7495A8;">{{item.pipelineLength}} KM</span></li>
+						<li><span style="color:#fff">创建时间：</span><span style="color:#7495A8;">{{item.createDatetime}}</span></li>
+						<li>
+							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
+							<el-button title="修改" @click="editPipeline(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-minus"></el-button>
+							<el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-arrow-up"></el-button>
+							<el-button title="定位" @click="locate(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>
+							<el-button title="开始识别" style="float:right;margin-right:10px;" @click="createBuffer(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div style="margin-bottom: 20px;float:right" >
+				<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+							   :page-size="5" layout="total, prev, pager, next" :total="total">
+				</el-pagination>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+var vm = new Vue({
+	el: '#app',
+	data: function () {
+		return {
+			headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			},
+			isClosed: true,
+			tableData: [],
+			form: {},
+			
+			pageSize: 5,
+			currentPage: 1,
+			total: 0,
+			loading: false,
+			selectedRowOids: [],
+            filterText: '',
+            pipelineData:{},
+
+        }
+	},
+	computed: {},
+	watch: {
+        filterText: function (val) {
+            this.$refs.pipelines.filter(val);
+        },
+	},
+	created: function () {
+		this.requestList(0);			
+		this.forBusiness = getParamter('forBusiness');
+		this.jasMap = parent.app.jasMap;
+	},
+
+	mounted: function () {
+    },
+	methods: {
+
+		addPipeline: function(){
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/add.html';
+			top.jasTools.selfDialog.show({
+                width: '15%',
+                height: '50%',
+                top:'155px',
+                right:'4%',
+				title: '新增管线信息',
+				src: baseSrc,
+				cbForClose: function () {
+					that.requestList(0);
+				}
+			});
+		},
+		editPipeline: function(row){
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/add.html';
+			top.jasTools.selfDialog.show({
+				width: '15%',
+				height: '50%',
+                top:'155px',
+                right:'4%',
+				title: '修改管线信息',
+				src: baseSrc + '?oid=' + row.oid,
+				cbForClose: function () {
+					that.requestList(0);
+				}
+			});
+		},
+		seeDetail: function (row) {
+			var that = this;
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/pipeline-manage/detail.html';
+			var src = jasTools.base.setParamsToUrl(baseSrc, {
+				oid: row.oid,
+			});
+			top.jasTools.selfDialog.show({
+				title: '管线信息详情',
+				src: src,
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%'
+			});
+		},
+		deletePipeline: function (row) {
+			var that = this;
+			var afterDelete = function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: '删除成功'
+				});
+				that.requestList(0);
+			};
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', '删除管线信息', {
+				type: 'warning',
+				callback: function (action) {
+					if (action === 'confirm') {
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/delete.do";
+						jasTools.ajax.post(url, {
+							oid:row.oid
+						}, function (data) {
+							afterDelete();
+						});
+					}
+				}
+			});
+		},
+		importFile: function(){
+			top.jasTools.selfDialog.show({
+				src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/upload.html?forbusiness=3',
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'35%',
+				title: '导入',
+			})
+		},
+		requestList: function (param) { // 0刷新  1重置  2搜索
+			var that = this;
+			if (param == 1 || param == 0) {
+				this.form = {};
+				this.pageSize = 5;
+				this.currentPage = 1;
+			}
+			if (param == 2) {
+				this.pageSize = 5;
+				this.currentPage = 1;
+			}
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
+ 			that.loading = true;
+ 			jasTools.ajax.post(url, {
+				pipelineName: this.form.pipelineName,
+				pipelineCode: this.form.pipelineCode,
+				pageNo: this.currentPage,
+				pageSize: this.pageSize,
+				page: this.currentPage,
+				rows: this.pageSize,
+			}, function (data) {
+				that.loading = false;
+				that.total = data.total;
+                that.pipelineData = data.rows;
+
+            });
+		},
+		toggleSearch: function () {
+			this.$refs['mylist'].toggleSearch();
+			this.isClosed = this.$refs['mylist'].isClosed;
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestList();
+		},
+		
+		locate: function(item){
+			/* this.jasMap.updateLayer('pd_pipesegment',{
+                "show":true,
+                "fieldName":"eventid",
+                "fieldValues":[item.oid]
+            }) */
+            var gid='';
+            /* if(item.oid='fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'){
+            	gid = '1';
+            }else if(item.oid='1a0df2e4-46f1-4814-b63c-983172c105c7'){
+            	gid = '5';
+            }else{
+            	gid = '15';
+            } */
+			this.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+                deep:2
+            });
+		},
+		createBuffer: function(item){
+			var that = this;
+			parent.app.$confirm('是否开始高后果区识别？',  "提示",  {
+				type: 'warning',
+				callback: function(action){ 
+					if (action === 'confirm') {
+						that.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+							deep:2
+						});
+						that.jasMap.updateLayer('hca_pipeline',{
+			                "show":true,
+			                "fieldName":"oid",
+			                "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
+			            });
+			            //parent.jasTools.selfDialog.close();
+			            parent.app.isManage=false;
+			            parent.app.localPipelineName = item.pipelineName;
+			            parent.app.toggleBtn();
+			            parent.app.createBufferDialog();
+			            
+					}
+				}
+			});
+		}
+	},
+});
+
+</script>
+</html>
