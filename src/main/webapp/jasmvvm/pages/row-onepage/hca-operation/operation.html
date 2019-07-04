@@ -136,6 +136,39 @@
 			    border-color: #409EFF;
 			    padding: 0 5px !important;
 			}
+			.operate-left-div{
+				left:1%;
+				border-color: #409EFF;
+			}
+			.el-tabs--card>.el-tabs__header {
+				border-bottom: 1px solid #409EFF;
+			}
+			.el-tabs--card>.el-tabs__header .el-tabs__nav {
+				border: 1px solid #409EFF;
+			}
+			.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+				 border-bottom-color: #409EFF;
+			}
+			.el-tabs__item {
+				color: #fff;
+			}
+			.jas-dialog-self {
+				/*border: 1px solid #409EFF;*/
+				/*background: rgba(255, 255, 255, 0.3);*/
+			}
+/*			.jas-dialog-header {
+				background:transparent;
+				height: 15px;
+			}*/
+			.jas-dialog-tools {
+				right: 10px;
+				top: 0px;
+			}
+			.jas-dialog-close {
+				width: 15px;
+				height: 15px;
+				background-size: 15px 15px;
+			}
 	</style>
 </head>
 
@@ -152,22 +185,26 @@
 				 			<el-button style="padding: 8px 8px" type="primary" icon="el-icon-circle-close-outline" @click="exitHca"></el-button>
 				 		</el-tooltip>
 				 	</div>
-					 <!-- <div class="undertop-center" style="padding-top:100px;" v-show="isShowPipeline" ><span style="color:#fff">{{ localPipelineName }}</span><el-button @click="goBack" type="text"  style="float:right">返回</el-button></div> -->
 					<!--左侧流程操作按钮-->
 					<div class="operate-left-div">
-						<div class="item-btn" @click="pipelineOperation" v-show="isManage">管线管理</div>
+						<!--<div class="item-btn" @click="pipelineOperation" v-show="isManage">管线管理</div>-->
 						<!-- <div class="item-btn" @click="createBufferDialog">识别区生成</div> -->
-						<div class="item-btn" @click="createBh">构筑物管理</div>
+						<!--<div class="item-btn" @click="createBh">构筑物管理</div>-->
 						<div class="item-btn" @click="showHistoryBtn(0)" v-show="!isManage">地区等级划分</div>
 						<div class="item-btn" @click="showHistoryBtn(1)" v-show="!isManage">高后果区识别</div>
-						<!-- <div class="item-btn" @click="showHistoryBtn">历史数据</div>
-						<div hidden class="item-btn history" @click="showHistoryList(0)">历史数据</div>
-						<div hidden class="item-btn history" @click="showHistoryList(1)">历史数据</div> -->
+						<div  v-show="isManage">
+                        <template>
+							<!--<el-card class="box-card">-->
+								<el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
+									<el-tab-pane label="管线管理" name="pipelineManage"></el-tab-pane>
+									<el-tab-pane label="构筑物管理" name="buildingManage"></el-tab-pane>
+									<el-tab-pane label="地区等级历史信息" name="areaVersion"></el-tab-pane>
+									<el-tab-pane label="高后果区历史信息" name="hcaAreaVersion"></el-tab-pane>
+								</el-tabs>
+							<!--</el-card>-->
+						</template>
+                        </div>
 					</div>
-					<!-- <div hidden class="area-div area">
-						<div hidden class="item-btn area" @click="showHistoryList(0)">历史数据</div>
-						<div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
-					</div> -->
                      <div hidden class="area-div area">
                          <div hidden class="item-btn area" @click="showHistoryList(0)">历史信息</div>
                          <div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
@@ -266,7 +303,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				isManage:true,
                 isShowPipeline:false,
                 localPipelineName:'',
-			}
+                activeName:'',
+
+            }
 		},
 		computed: {},
 		mounted: function(){
@@ -316,12 +355,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch('hca_buildings',false);
 				this.jasMap.refreshLayerById('hca_pipeline');
 				window.jasTools.selfDialog.show({
-					title: '管线信息列表',
-					src: './dialogs/pipeline-manage/pipelineDetailList.html?dataType=pipeline',
+					title: '',
+					src: './dialogs/pipeline-manage/pipelineList.html?dataType=pipeline',
 					height: '50%',
-					width: '60%',
-					bottom:'10px',
-					left:'25%'
+					width: '20%',
+					top:'155px',
+					left:'1%'
 				});
 			},
 			createBufferDialog: function(){
@@ -924,7 +963,18 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						
 					}
 				});
-			}
+			},
+            handleClick(tab, event) {
+                if(tab.label=="管线管理"){
+                    this.pipelineOperation();
+				}else if(tab.label=="构筑物管理"){
+                    this.createBh();
+				}else if(tab.label=="地区等级历史信息"){
+                    this.showHistoryList(0);
+                }else if(tab.label=="高后果区历史信息"){
+                    this.showHistoryList(1);
+                }
+            }
 		}
 	})
 </script>
