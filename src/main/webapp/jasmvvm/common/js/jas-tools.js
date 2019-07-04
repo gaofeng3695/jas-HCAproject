@@ -718,7 +718,9 @@
 				methods: {
 					close: function () {
 						if (obj.cbForClose) {
-							obj.cbForClose(this.paramForCallback);
+							if(this.paramForCallback){
+								obj.cbForClose(this.paramForCallback);
+							}
 						}
 						var dom = this.$el;
 						dom.parentNode.removeChild(dom); //删除
