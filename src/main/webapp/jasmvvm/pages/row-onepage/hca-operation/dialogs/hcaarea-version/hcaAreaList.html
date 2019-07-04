@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			overflow-y: hidden;
+			position: relative;
+			background:transparent;
+		}
+		::-webkit-scrollbar { background-color:transparent;}
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
+
+		.filter-wrap {
+			margin-left: 10px;
+			height:50px;
+		}
+		.content-list{
+			margin-top:40px;
+			height: 300px;
+			overflow:auto!important;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+			background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		.jas-dialog-self {
+			border: 1px solid #409EFF;
+			background: rgba(0, 0, 0, 0.9);
+		}
+		.jas-dialog-header {
+			background:transparent;
+			height: 40px;
+		}
+		.pagination-bottom{
+			float:right;
+			position:fixed;
+			right:10px;
+			bottom:15px;
+		}
+		.el-input .el-input__inner {
+			background: transparent;
+			font-size: 14px;
+			width: 85%;
+			position:fixed;
+		}
+		.el-input__inner {
+			background:transparent;
+			border: 1px solid #466599;
+			color: #b5ddff;
+		}
+		.orgtool {
+			height: 30px;
+			float:right;
+			margin-right:10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>		
+	<jas-list-wrapper ref="mylist">
+		<div slot="search">
+			<el-form class="jas-search-for-list" :model="form" label-width="100px">
+				<el-row>
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
+						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
+							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
+						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
+							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="24" :md="6" :lg="12" :xl="12">
+						<el-form-item style="float:right;margin-bottom: 0px;">
+							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
+							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
+						</el-form-item>
+					</el-col>
+				</el-row>
+			</el-form>
+		</div>
+		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
+			<div style="padding: 15px 0;">
+				<el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
+				<span class="fr">
+					<el-tooltip class="item" content="刷新" placement="top">
+						<el-button size="small" icon="el-icon-refresh" @click="requestVersionList(0)"></el-button>
+					</el-tooltip>												
+					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
+					</el-tooltip>
+					<el-tooltip v-show="!isClosed" class="item" content="收起搜索" placement="top">
+						<el-button size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
+					</el-tooltip>
+				</span>
+			</div>
+			<div class="is-grown">
+				<el-table ref="mytable" @row-dblclick="openAreaList" v-loading="loading"
+					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
+					<el-table-column label="序号" type="index" align="center" width="50" fixed>
+					</el-table-column>											
+					<el-table-column label="版本名称"  prop="versionName" min-width="170px" show-overflow-tooltip align="center" header-align="center" fixed>
+					</el-table-column>						
+					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
+					</el-table-column>
+					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>
+					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="180px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>						
+					<el-table-column label="是否启用" prop="hasUsed" :formatter="formathasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
+					</el-table-column>
+					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
+					</el-table-column>
+					<el-table-column label="操作" align="center" min-width="400px" fixed="right">
+						<template slot-scope="scope">
+						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
+						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
+						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
+						<el-button @click="importFile" type="text" size="small" icon="fa fa-arrow-up">导入</el-button>
+						<el-button @click='enableUse(scope.row)' v-show="scope.row.isEdit" type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
+						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</div>
+			<div style="padding: 15px 0 0;" class="clearfix">
+				<el-pagination class="fr" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+				</el-pagination>
+			</div>
+		</div>
+		</jas-list-wrapper>
+	</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {			
+			loading: false,
+			isClosed: true,
+			form: {},
+			tableData: [],
+			pageSize: 10,
+			currentPage: 1,
+			total: 0,
+			
+			headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			}
+		}
+	},
+	created: function () {
+		this.jasMap = parent.app.jasMap;
+		this.forBusiness = getParamter('forBusiness');
+		this.requestVersionList(0);
+	},
+    mounted: function () {
+        this.$refs['mylist'].toggleSearch();
+    },
+	methods: {
+		addArea: function(){
+			var that = this;
+			var title ="新增高后果区历史版信息";
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='新增地区等级历史版本信息';
+			}
+			top.jasTools.selfDialog.show({
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
+				title: '新增地区等级历史版本信息',
+				src: baseSrc,
+				cbForClose: function () {
+					that.requestVersionList(0);
+				}
+			});
+		},
+		editArea: function(row){
+			var that = this;
+			var title ="修改高后果区历史版信息";
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='修改地区等级历史版本信息';
+			}
+			top.jasTools.selfDialog.show({
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
+				title: title,
+				src: baseSrc + '?oid=' + row.oid,
+				cbForClose: function () {
+					that.requestVersionList(0);
+				}
+			});
+		},
+		seeDetail: function (row) {
+			var that = this;
+			var title="高后果区历史版本信息详情"
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/detail.html';
+			var src = jasTools.base.setParamsToUrl(baseSrc, {
+				oid: row.oid,
+			});
+			if(that.forBusiness=="0"){
+				title='地区等级历史版本信息详情';
+			}
+			top.jasTools.selfDialog.show({
+				width: '50%',
+				height: '40%',
+				bottom:'20%',						
+				left:'30%',
+				title: title,
+				src: src,
+			});
+		},
+		deleteArea: function (row) {
+			var that = this;
+			var mes ="删除高后果区历史版本信息";
+			if(that.forBusiness=="0"){
+				mes='删除地区等级历史版本信息';
+			}
+			var afterDelete = function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: '删除成功'
+				});
+				that.requestVersionList(0);
+			};
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', mes, {
+				type: 'warning',
+				callback: function (action) {
+					if (action === 'confirm') {
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
+						jasTools.ajax.post(url, {
+							oid:row.oid
+						}, function (data) {
+							afterDelete();
+						});
+					}
+				}
+			});
+		},
+		requestVersionList: function(param){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 10;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+			jasTools.ajax.post(url,{
+				forBusiness:that.forBusiness,
+				versionName: that.form.versionName,
+				versionCode: that.form.versionCode,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+				data.rows.forEach(function(item,index){
+					if(item.hasUsed == 1){
+						item.isEdit=false;
+					}else{
+						item.isEdit=true;
+					}
+				})
+			});
+		},
+		
+		openAreaList: function(){
+			var title = '地区等级列表';
+			var layerId = 'pd_arearank';
+			if(this.forBusiness == "0"){
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			}
+			if(this.forBusiness == "1"){
+				title = '高后果区列表';
+				layerId = 'pd_zonerankcell';
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+			}
+			this.jasMap.layerVisibleSwitch(layerId,true);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			parent.app.showAreaDialog(this.forBusiness, title, '420px');
+		},
+		previewFile : function(){
+			top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+				left:'35%',
+			})
+		},
+		importFile: function(){
+			top.jasTools.selfDialog.show({
+				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'35%',
+				title: '导入',
+			})
+		},
+		enableUse: function(row) {
+			var that = this;
+			row.hasUsed = 1;
+			url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '启用成功'
+					});
+					that.requestVersionList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'waring',
+						message: '启用失败'
+					});
+				}
+			});
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			if(that.forBusiness=="1"){
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_zonerankcell',true);
+				}, 1000);
+			}else{
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_arearank',true);
+				}, 1000);
+			}
+		},
+		formathasUsed: function(row, column, cellValue, index) {
+			if (row.hasUsed == 1) return '是';
+			else if (row.hasUsed == 0) return '否';
+			else return "-";
+		},
+		toggleSearch: function () {
+			this.$refs['mylist'].toggleSearch();
+			this.isClosed = this.$refs['mylist'].isClosed;
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestVersionList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestVersionList();
+		},
+	},
+});
+
+</script>
+</html>
