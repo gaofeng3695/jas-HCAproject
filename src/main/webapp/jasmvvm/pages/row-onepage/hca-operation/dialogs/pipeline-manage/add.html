@@ -57,75 +57,87 @@
 	        border-right: 1px solid #30538c;
 	        border-left: 1px solid #30538c;
 		}
-		
+		.el-form-item__label {
+			font-size: 13px;
+			line-height: 20px;
+		}
+		.el-form-item__content {
+			line-height: 20px;
+			font-size: 13px;
+		}
 	</style>
 </head>
 
 <body>
-	<div id="app" v-cloak>
-
+	<div id="app" v-cloak style="font-size: 13px;">
 		<jas-dialog-wrapper>
-			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="150px">
+			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="100px">
 				<!-- <jas-base-group-title name="基本信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgba(16, 39, 65);">
+				<div style="margin: 0px 0px 6px; line-height: 30px; padding-top: 20px; border-bottom: 0px solid #409EFF">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
 				</div>
-				<el-row :gutter="10">
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+				<el-row >
+					<el-col :span="24">
 						<el-form-item label="管线名称" prop="pipelineName">
 							<el-input v-model="tableFormData.pipelineName" clearable placeholder="请输入管线名称" size="small"></el-input>
 						</el-form-item>
-					</el-col>	
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
 						<el-form-item label="管线编号" prop="pipelineCode">
 							<el-input v-model="tableFormData.pipelineCode" clearable placeholder="请输入管线编号" size="small"></el-input>
 						</el-form-item>
 					</el-col>		
 				</el-row>
 				<el-row>	
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+					<el-col :span="24">
 						<el-form-item label="起始里程" prop="startMileage">
 							<el-input-number v-model="tableFormData.startMileage" clearable placeholder="请输入起始里程" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
 						</el-form-item>
-					</el-col>	
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
 						<el-form-item label="终止里程" prop="endMileage">
 							<el-input-number v-model="tableFormData.endMileage" clearable placeholder="请输入终止里程" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
 						</el-form-item>
 					</el-col>	
 				</el-row>	
 				<el-row>	
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+					<el-col :span="24">
 						<el-form-item label="管道长度" prop="pipelineLength">
 							<el-input-number v-model="tableFormData.pipelineLength" clearable placeholder="请输入管道长度" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
 						</el-form-item>
-					</el-col>	
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
+					</el-col>
+				</el-row>
+				<el-row>
+					<el-col :span="24">
 						<el-form-item label="管道外管径(mm)" prop="outsideDiameter">
 							<el-input-number v-model="tableFormData.outsideDiameter" clearable placeholder="请输入管道外管径" size="small" :precision="0" :step="1" :max="999999999999999" :min="0"></el-input-number>
 						</el-form-item>
 					</el-col>	
 				</el-row>	
 				<el-row>	
-					<el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
+					<el-col :span="24">
 						<el-form-item label="管线稳态运行时允许的最大压力(mpa)" prop="pressure">
 							<el-input-number v-model="tableFormData.pressure" clearable placeholder="请输入管线稳态运行时允许的最大压力" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
 						</el-form-item>
 					</el-col>	
 				</el-row>				
 				<!-- <jas-base-group-title name="其他信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgba(16, 39, 65);">
+				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 0px solid #409EFF">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">其他信息</span>
 				</div>
 				<el-row>
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
+					<el-col :span="24">
 						<el-form-item label="备注" prop="remarks">
 							<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 6 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 			</el-form>
-			<div slot="footer" style="margin-bottom:10px;border-top: 1px solid rgb(15, 31, 64);">
+			<div slot="footer" style="margin-bottom:10px;border-top: 0px solid rgb(15, 31, 64);">
 				<el-button size="small" @click="cancel()">取 消</el-button>
 				<el-button size="small" :disabled="but_disabled" type="primary" @click="submit('tableFormData')">确 定</el-button>
 			</div>
