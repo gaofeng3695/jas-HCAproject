@@ -49,15 +49,13 @@
 		.el-input, .el-input__inner, .el-textarea, .el-textarea__inner {
 		    background: transparent;
 		}
-		.el-form-item__label {
-			color:#fff;
-		}
 		.el-input-number--small .el-input-number__decrease, .el-input-number--small .el-input-number__increase {
 		    background-color: transparent;
 	        border-right: 1px solid #30538c;
 	        border-left: 1px solid #30538c;
 		}
 		.el-form-item__label {
+			color:#fff;
 			font-size: 13px;
 			line-height: 20px;
 		}
@@ -73,7 +71,7 @@
 		<jas-dialog-wrapper>
 			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="100px">
 				<!-- <jas-base-group-title name="基本信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 30px; padding-top: 20px; border-bottom: 0px solid #409EFF">
+				<div style="margin: 0px 0px 6px;  line-height: 32px; padding-top: 20px; border-bottom: 1px solid rgb(16, 39, 65);">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
 				</div>
 				<el-row >
@@ -126,7 +124,7 @@
 					</el-col>	
 				</el-row>				
 				<!-- <jas-base-group-title name="其他信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 0px solid #409EFF">
+				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">其他信息</span>
 				</div>
 				<el-row>

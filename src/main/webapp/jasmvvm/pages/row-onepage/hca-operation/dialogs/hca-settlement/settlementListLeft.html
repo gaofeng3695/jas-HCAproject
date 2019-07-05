@@ -26,7 +26,7 @@
 			height:50px;
 		}
 		.content-list{
-			margin-top:40px;
+			margin-top:30px;
 			height: 300px;
 			overflow:auto!important;
 		}
@@ -51,7 +51,7 @@
 		.pagination-bottom{
 			float:right;
 			position:fixed;
-			right:10px;
+			right:5px;
 			bottom:15px;
 		}
 		.el-input .el-input__inner {
@@ -101,15 +101,15 @@
 	<div id="app" v-cloak>		
 		<div ref="mylist">
 			<div class="filter-wrap">
-				<el-input prefix-icon="el-icon-search" size="small" placeholder="输入编号进行过滤" v-model="filterText">
+				<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
 				</el-input>
 			</div>
 			<div class="orgtool" >
-				<el-button type="text" @click="addItem">新增</el-button>
+				<el-button size="small" type="text"  @click="addItem" icon="fa fa-plus">新增</el-button>
 				<!-- <el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-arrow-up"></el-button> -->
 			</div>
 			<div class="content-list">
-				<div class="table-div" v-for="item,index in tableData" ref="pipelines">
+				<div class="table-div" v-for="item,index in tableData">
 					<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}">
 						<li><span class="name-span">建（构）筑物编号：</span><span class="value-span">{{item.buildingCode}}</span></li>
 						<li><span class="name-span">建（构）筑物类型：</span><span class="value-span">{{item.buildingTypeName}}</span></li>
@@ -180,14 +180,14 @@ var vm = new Vue({
 		}
 	},
 	watch: {
-		filterText:function(val){
-            this.requestList(2,val);
-		}
+        filterText: function (val) {
+            this.$refs.pipelines.filter(val);
+        },
 	},
 	created: function () {
 		this.jasMap = parent.app.jasMap;
 		this.requestList(2);
-		/* this.requestBuildingTypes(); */
+		this.requestBuildingTypes();
 		this.layerId = "hca_buildings";
 	},
     mounted: function () {
@@ -276,7 +276,7 @@ var vm = new Vue({
 		openDetail:function(idx){
 			parent.app.openDetail(idx);
 		},
-		requestList: function(param, val){
+		requestList: function(param){
 			var that= this;
 			if (param == 1 || param == 0) {
 				that.form = {};
@@ -290,10 +290,10 @@ var vm = new Vue({
 			that.loading = true;
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
 			jasTools.ajax.post(url,{
-				buildingCode: val,
-				/* startMileage: that.form.startMileage,
+				buildingCode:that.form.buildingCode,
+				startMileage: that.form.startMileage,
 				endMileage: that.form.endMileage,
-				buildingType: that.form.buildingType, */
+				buildingType: that.form.buildingType,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
@@ -320,7 +320,7 @@ var vm = new Vue({
 				message: '导出成功'
 			});
 		},
-		/* requestBuildingTypes: function () {
+		requestBuildingTypes: function () {
 			var that = this;
 			var url = jasTools.base.rootPath + "/jasframework/sysdoman/getDoman.do";
 			jasTools.ajax.get(url, {"domainName": 'building_type_domain'}, function (data) {
@@ -328,7 +328,16 @@ var vm = new Vue({
 					that.buildingTypeData.push(item);
 				});
 			});
-		}, */
+		},
+		useLayer: function(){
+			var that = this;
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			setTimeout(function(){
+				that.jasMap.layerVisibleSwitch('pd_arearank',true);
+			}, 1000)
+		},
 		toggleSearch: function () {
 			this.$refs['mylist'].toggleSearch();
 			this.isClosed = this.$refs['mylist'].isClosed;

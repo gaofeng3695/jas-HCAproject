@@ -51,16 +51,22 @@
 		}
 		.el-form-item__label {
 			color:#fff;
+			font-size: 13px;
+			line-height: 20px;
+		}
+		.el-form-item__content {
+			line-height: 20px;
+			font-size: 13px;
 		}
 	</style>
 </head>
 
 <body>
-	<div id="app" v-cloak>
+	<div id="app" v-cloak style="font-size: 13px;">
 		<jas-dialog-wrapper>
-			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="150px">
+			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="80px">
 				<!-- <jas-base-group-title name="基本信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgba(16, 39, 65);">
+				<div style="margin: 0px 0px 6px;  line-height: 32px; padding-top: 25px; border-bottom: 1px solid rgb(16, 39, 65);">
 					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
 				</div>
 				<el-row :gutter="10">
