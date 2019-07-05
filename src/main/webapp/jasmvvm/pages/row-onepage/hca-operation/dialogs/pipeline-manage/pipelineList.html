@@ -29,13 +29,13 @@
 						<li><span class="name-span">起止里程：</span><span class="value-span">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
 						<li><span class="name-span">管线长度：</span><span class="value-span">{{item.pipelineLength}} KM</span></li>
 						<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
-						<li>
+						<li class="flex-li">
 							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
 							<el-button title="修改" @click="editPipeline(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
 							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
 							<el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
 							<!--<el-button title="定位" @click="locate(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>-->
-							<el-button title="开始识别" style="float:right;margin-right:10px;" @click="createBuffer(item)" type="text" size="small" icon="fa fa-eye"></el-button>
+							<el-button title="开始识别" @click="createBuffer(item)" type="text" size="small" icon="fa fa-eye"></el-button>
 						</li>
 					</ul>
 				</div>
