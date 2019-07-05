@@ -1009,13 +1009,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
             handleClick(tab, event) {
-                if(tab.label=="管线管理"){
+                if(tab.name=="pipelineManage"){
                     this.pipelineOperation();
-				}else if(tab.label=="构筑物管理"){
+				}else if(tab.name=="buildingManage"){
                     this.createBh();
-				}else if(tab.label=="地区等级成果"){
+				}else if(tab.name=="areaVersion"){
                     this.showHistoryList(0);
-                }else if(tab.label=="高后果区成果"){
+                }else if(tab.name=="hcaAreaVersion"){
                     this.showHistoryList(1);
                 }
             }
