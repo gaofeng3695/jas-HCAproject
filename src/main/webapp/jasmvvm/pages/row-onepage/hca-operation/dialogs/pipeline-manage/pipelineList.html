@@ -26,7 +26,7 @@
 			height:50px;
 		}
 		.content-list{
-			margin-top:40px;
+			margin-top:30px;
 			height: 300px;
 			overflow:auto!important;
 		}
@@ -51,7 +51,7 @@
 		.pagination-bottom{
 			float:right;
 			position:fixed;
-			right:10px;
+			right:5px;
 			bottom:15px;
 		}
 		.el-input .el-input__inner {
@@ -70,6 +70,30 @@
 			float:right;
 			margin-right:10px;
 		}
+		.data-ul {
+			margin-top:5px;
+			margin-bottom:5px;
+			cursor: pointer;
+			padding: 3px;
+			border: 1px solid transparent;
+		}
+
+		.data-ul:hover,
+		.data-ul.active{
+			border-style: solid;
+			border-color:#409eff;
+		}
+		.name-span {
+			color:#fff;
+		}
+		.value-span{
+			color:#7495A8;
+		}
+		.table-div{
+			/* margin-bottom:20px; */
+			margin-left:10px;
+			font-size: 13px;
+		}
 	</style>
 </head>
 
@@ -81,28 +105,28 @@
 				</el-input>
 			</div>
 			<div class="orgtool" >
-				<el-button type="text" @click="addPipeline">新增</el-button>
+				<el-button size="small" type="text"  @click="addPipeline" icon="fa fa-plus">新增</el-button>
 			</div>
-			<div class="content-list">
-				<div v-for="item in pipelineData" style="margin-bottom:20px;margin-left:10px;font-size: 13px" ref="pipelines">
-					<ul style="margin-top:5px;margin-bottom:5px;" @click="locate(item)">
-						<li><span style="color:#fff">管线名称：</span><span style="color:#7495A8;">{{item.pipelineName}} （{{item.pipelineCode}}）</span></li>
-						<li><span style="color:#fff">起止里程：</span><span style="color:#7495A8;">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
-						<li><span style="color:#fff">管线长度：</span><span style="color:#7495A8;">{{item.pipelineLength}} KM</span></li>
-						<li><span style="color:#fff">创建时间：</span><span style="color:#7495A8;">{{item.createDatetime}}</span></li>
+			<div class="content-list"  v-loading="loading">
+				<div class="table-div" v-for="item,index in pipelineData">
+					<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}">
+						<li><span class="name-span">管线名称：</span><span class="value-span">{{item.pipelineName}} （{{item.pipelineCode}}）</span></li>
+						<li><span class="name-span">起止里程：</span><span class="value-span">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
+						<li><span class="name-span">管线长度：</span><span class="value-span">{{item.pipelineLength}} KM</span></li>
+						<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
 						<li>
 							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
 							<el-button title="修改" @click="editPipeline(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
 							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
 							<el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
-							<el-button title="定位" @click="locate(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>
+							<!--<el-button title="定位" @click="locate(item)" type="text" size="small" icon="fa fa-map-marker"></el-button>-->
 							<el-button title="开始识别" style="float:right;margin-right:10px;" @click="createBuffer(item)" type="text" size="small" icon="fa fa-eye"></el-button>
 						</li>
 					</ul>
 				</div>
 			</div>
 			<div class="pagination-bottom">
-				<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+				<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
 							   :page-size="5" layout="total, prev, pager, next" :total="total">
 				</el-pagination>
 			</div>
@@ -157,14 +181,14 @@ var vm = new Vue({
 				'color': '#7495A8'
 			},
 			isClosed: true,
-			tableData: [],
 			pageSize: 5,
 			currentPage: 1,
 			total: 0,
-			loading: false,
+			loading: true,
 			selectedRowOids: [],
             filterText: '',
-            pipelineData:{},
+            pipelineData:[],
+            showActive: -1,
 
         }
 	},
@@ -173,10 +197,6 @@ var vm = new Vue({
         filterText:function(val){
             this.requestList(2,val);
 		}
-/*        filterText: function (val) {
-            console.log(this.$refs.pipelines.innerText)
-            this.$refs.pipelines.innerText.filter(val);
-        },*/
     },
 	created: function () {
 		this.requestList(0,"");
@@ -279,8 +299,7 @@ var vm = new Vue({
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcapipeline/getPage.do";
  			that.loading = true;
  			jasTools.ajax.post(url, {
-				pipelineName: val,
-				pipelineCode: val,
+				keyWord: val,
 				pageNo: this.currentPage,
 				pageSize: this.pageSize,
 				page: this.currentPage,
@@ -304,21 +323,10 @@ var vm = new Vue({
 			this.currentPage = val;
 			this.requestList();
 		},
-		
-		locate: function(item){
-			/* this.jasMap.updateLayer('pd_pipesegment',{
-                "show":true,
-                "fieldName":"eventid",
-                "fieldValues":[item.oid]
-            }) */
-            var gid='';
-            /* if(item.oid='fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5'){
-            	gid = '1';
-            }else if(item.oid='1a0df2e4-46f1-4814-b63c-983172c105c7'){
-            	gid = '5';
-            }else{
-            	gid = '15';
-            } */
+
+        locate: function(item, index){
+            var that = this;
+            this.showActive=index;
 			this.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
                 deep:2
             });

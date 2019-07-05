@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<link rel="stylesheet"
+	href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+<link rel="stylesheet"
+	href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+<link rel="stylesheet" href="./../../../../../src/css/main.css">
+<style>
+	html,body,
+	#app {
+		width: 100%;
+		height: 100%;
+		overflow-y: hidden;
+		position: relative;
+		background:transparent;
+	}
+	::-webkit-scrollbar { background-color:transparent;}
+	::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
+
+	.filter-wrap {
+		margin-left: 10px;
+		height:50px;
+	}
+	.content-list{
+		margin-top:20px;
+		height: 300px;
+		overflow:auto!important;
+	}
+	.el-pager ul, .el-pager li {
+		background:transparent;
+		color:#fff;
+	}
+	.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+		background: transparent;
+	}
+	.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+		color:#fff;
+	}
+	.jas-dialog-self {
+		border: 1px solid #409EFF;
+		background: rgba(0, 0, 0, 0.9);
+	}
+	.jas-dialog-header {
+		background:transparent;
+		height: 40px;
+	}
+	.pagination-bottom{
+		float:right;
+		position:fixed;
+		right:5px;
+		bottom:15px;
+	}
+	.el-input .el-input__inner {
+		background: transparent;
+		font-size: 14px;
+		width: 85%;
+		position:fixed;
+	}
+	.el-input__inner {
+		background:transparent;
+		border: 1px solid #466599;
+		color: #b5ddff;
+	}
+	.orgtool {
+		height: 30px;
+		float:right;
+		margin-right:10px;
+	}
+	.data-ul {
+		margin-top:5px;
+		margin-bottom:10px;
+		cursor: pointer;
+		padding: 3px;
+		border: 1px solid transparent;
+	}
+
+	.data-ul:hover,
+	.data-ul.active{
+		border-style: solid;
+		border-color:#409eff;
+	}
+	.name-span {
+		color:#fff;
+	}
+	.value-span{
+		color:#7495A8;
+	}
+	.table-div{
+		/* margin-bottom:20px; */
+		margin-left:10px;
+		font-size: 13px;
+	}
+</style>
+</head>
+
+<body>
+<div id="app">
+	<div ref="mylist">
+		<div class="filter-wrap">
+			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+			</el-input>
+		</div>
+		<div class="content-list"  v-loading="loading">
+			<div  class="table-div" v-for="item,index in tableData">
+				<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}" title="定位到当前位置">
+					<li><span class="name-span">编号：</span><span class="value-span">{{item.areaCode}}</span></li>
+					<li><span class="name-span">等级：</span><span class="value-span">{{item.regionLevelName}} </span></li>
+					<li><span class="name-span">起止里程：</span><span class="value-span">{{item.startMileage}}KM——{{item.endMileage}}KM</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="pagination-bottom">
+			<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+						   :page-size="5" layout="total, prev, pager, next" :total="total">
+			</el-pagination>
+		</div>
+	</div>
+</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+	/**
+	 * @desc 获取访问路径中某个参数
+	 * 
+	 * @param paramName 参数名
+	 * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+	 */
+	function getParamter(paramName, url) {
+		var seachUrl = window.location.search.replace("?", "");
+		if (url != null) {
+			var index = url.indexOf('?');
+			url = url.substr(index + 1);
+			seachUrl = url;
+		}
+		var ss = seachUrl.split("&");
+		var paramNameStr = "";
+		var paramNameIndex = -1;
+		for (var i = 0; i < ss.length; i++) {
+			paramNameIndex = ss[i].indexOf("=");
+			paramNameStr = ss[i].substring(0, paramNameIndex);
+			if (paramNameStr == paramName) {
+				var returnValue = ss[i].substring(paramNameIndex + 1,
+						ss[i].length);
+				if (typeof (returnValue) == "undefined") {
+					returnValue = "";
+				}
+				return returnValue;
+			}
+		}
+		return "";
+	}
+	var vm = new Vue(
+			{
+				el : "#app",
+				data : function() {
+					return {
+						loading : true,
+						isClosed : true,
+						isShowBtn : false,
+						tableData : [],
+						pageSize : 5,
+						currentPage : 1,
+						total : 0,
+                        showActive: -1,
+                        filterText: '',
+						headStyle : {
+							'background' : 'transparent',
+							'color' : '#F1F2EA'
+						},
+						tableRowStyle : {
+							'color' : '#7495A8'
+						}
+					}
+				},
+                watch: {
+                    filterText:function(val){
+                        this.requestList(2,val);
+                    }
+                },
+				created : function() {
+					this.jasMap = parent.app.jasMap;
+					this.forBusiness = getParamter('forBusiness');
+					this.requestList(0,"");
+					if (this.forBusiness == 0) {
+						this.layerId = 'pd_arearank';
+						this.isShowBtn = false;
+					} else {
+						this.layerId = 'pd_zonerankcell';
+						this.isShowBtn = true;
+					}
+				},
+				mounted: function () {
+                },
+				methods : {
+					requestList : function(param,val) {
+						var that = this;
+						if (param == 1 || param == 0) {
+							that.pageSize = 5;
+							that.currentPage = 1;
+						}
+						if (param == 2) {
+							that.pageSize = 5;
+							that.currentPage = 1;
+						}
+						that.loading = true;
+			 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaarea/getPage.do";
+			 			if(this.forBusiness == "1"){
+			 				url = jasTools.base.rootPath + "/jdbc/commonData/hcarankcell/getPage.do";
+			 			}
+						jasTools.ajax.post(url, {
+							forBusiness : that.forBusiness,
+							areaCode : val,
+							pageNo : that.currentPage,
+							pageSize : that.pageSize,
+							page : that.currentPage,
+							rows : that.pageSize
+						}, function(data) {
+							that.total = data.total;
+							that.tableData = data.rows;
+							that.loading = false;
+						});
+					},
+
+					openDetail : function(idx) {
+						parent.app.openDetail(idx);
+					},
+					getDetails : function() {
+						var that = this;
+						var sourceName = 'pd_arearank';
+						if (this.forBusiness == 1) {
+							sourceName = 'pd_zonerankcell';
+						}
+						this.jasMap.commonUtil
+								.simpleAjaxLoader({
+									url : "../../../../zone/" + sourceName
+											+ "/query.do",
+									data : JSON.stringify({
+										where : "rank is not null",
+										returnGeometry : false
+									}),
+									method : "post",
+									async : false,
+									contentType : "application/json",
+									onSuccess : function(re) {
+										var result = JSON.parse(re);
+										var collection = JSON
+												.parse(result.data.features);
+										var features = collection.features;
+										var data = [];
+										if (Array.isArray(features)) {
+											for (var i = 0; i < features.length; i++) {
+												var properties = features[i].properties;
+												properties.startMileage = properties.start_mileage;
+												properties.endMileage = properties.end_mileage;
+												properties.index = i + 1;
+												data.push(properties);
+											}
+										}
+										that.detailData = data;
+									}
+								});
+					},
+                    locate: function(item, index){
+                        this.showActive=index;
+						this.jasMap.flashGraphic(item.oid, this.layerId, {
+							deep : 2
+						});
+					},
+					previewFile : function() {
+						top.jasTools.selfDialogNew.show({
+							title : '分析报告',
+							src : './dialogs/preview_file.html',
+							height : '740px',
+							width : '35%',
+						})
+					},
+
+					handleSizeChange : function(val) {
+						this.pageSize = val;
+						this.requestList();
+					},
+					handleCurrentChange : function(val) {
+						this.currentPage = val;
+						this.requestList();
+					},
+				},
+			});
+</script>
+</html>

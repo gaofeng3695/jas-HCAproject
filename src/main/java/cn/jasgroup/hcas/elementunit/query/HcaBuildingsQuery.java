@@ -39,6 +39,9 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 	 * 终止里程
 	 */
 	private double endMileage;
+
+	private String keyWord;
+
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.oid,t.building_code,t.start_mileage,t.end_mileage,t.address,\n"
@@ -53,21 +56,26 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_distribution_domain') d02\n"
 				+ " on d02.code_id=t.building_distribution\n"
 				+ " where t.active=1";
-		if (StringUtils.isNotBlank(buildingCode)) {
-			sql += " and t.building_code like :buildingCode ";
-		}
-		if (StringUtils.isNotBlank(buildingType)) {
-			sql += " and t.building_type = :buildingType ";
-		}
-		if (startMileage != 0) {
-			sql += " and t.start_mileage = :startMileage ";
-		}
-		if (endMileage != 0) {
-			sql += " and t.end_mileage = :endMileage ";
-		}
-		if (null != oids && oids.size() > 0) {
-			sql += " and t.oid in (:oids) ";
-		}
+
+        if (null != oids && oids.size() > 0) {
+            sql += " and t.oid in (:oids) ";
+        }else {
+            if (StringUtils.isNotBlank(buildingCode)) {
+                sql += " and t.building_code like :buildingCode ";
+            }
+            if (StringUtils.isNotBlank(buildingType)) {
+                sql += " and t.building_type = :buildingType ";
+            }
+            if (startMileage != 0) {
+                sql += " and t.start_mileage = :startMileage ";
+            }
+            if (endMileage != 0) {
+                sql += " and t.end_mileage = :endMileage ";
+            }
+            if (StringUtils.isNotBlank(keyWord)) {
+                sql += " and (t.building_code like :keyWord or d01.code_name like :keyWord) ";
+            }
+        }
 		sql += " order by t.start_mileage asc";
 		return sql;
 	}
@@ -115,5 +123,14 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 		this.buildingType = buildingType;
 	}
 
-	
+	public String getKeyWord() {
+		if (StringUtils.isNotBlank(keyWord)) {
+			return '%' + keyWord + '%';
+		}
+		return keyWord;
+	}
+
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
 }

@@ -26,7 +26,7 @@
 			height:50px;
 		}
 		.content-list{
-			margin-top:40px;
+			margin-top:30px;
 			height: 300px;
 			overflow:auto!important;
 		}
@@ -51,7 +51,7 @@
 		.pagination-bottom{
 			float:right;
 			position:fixed;
-			right:10px;
+			right:5px;
 			bottom:15px;
 		}
 		.el-input .el-input__inner {
@@ -70,85 +70,71 @@
 			float:right;
 			margin-right:10px;
 		}
+
+		.data-ul {
+			margin-top:5px;
+			margin-bottom:5px;
+			cursor: pointer;
+			padding: 3px;
+			border: 1px solid transparent;
+		}
+
+		.data-ul:hover,
+		.data-ul.active{
+			border-style: solid;
+			border-color:#409eff;
+		}
+		.name-span {
+			color:#fff;
+		}
+		.value-span{
+			color:#7495A8;
+		}
+        .used-span{
+            color:red;
+        }
+		.table-div{
+			/* margin-bottom:20px; */
+			margin-left:10px;
+			font-size: 13px;
+		}
 	</style>
 </head>
 <body>
-	<div id="app" v-cloak>		
-	<jas-list-wrapper ref="mylist">
-		<div slot="search">
-			<el-form class="jas-search-for-list" :model="form" label-width="100px">
-				<el-row>
-					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
-						<el-form-item label="版本名称" prop="versionName" style="margin-bottom: 15px;">
-							<el-input v-model="form.versionName" :placeholder="'请输入版本名称'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="24" :md="9" :lg="6" :xl="6">
-						<el-form-item label="版本编号" prop="versionCode" style="margin-bottom: 15px ">
-							<el-input v-model="form.versionCode" :placeholder="'请输入版本编号'" size="small" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="24" :md="6" :lg="12" :xl="12">
-						<el-form-item style="float:right;margin-bottom: 0px;">
-							<el-button size="small" @click="requestVersionList(1)">重置</el-button>
-							<el-button size="small" type="primary" @click="requestVersionList(2)">查询</el-button>
-						</el-form-item>
-					</el-col>
-				</el-row>
-			</el-form>
+<div id="app">
+	<div ref="mylist">
+		<div class="filter-wrap">
+			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+			</el-input>
 		</div>
-		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
-			<div style="padding: 15px 0;">
-				<el-button @click="addArea" size="small" plain type="primary" icon="fa fa-plus">新增</el-button>
-				<span class="fr">
-					<el-tooltip class="item" content="刷新" placement="top">
-						<el-button size="small" icon="el-icon-refresh" @click="requestVersionList(0)"></el-button>
-					</el-tooltip>												
-					<el-tooltip v-show="isClosed" class="item" content="展开搜索" placement="top">
-						<el-button size="small" icon="el-icon-arrow-down" @click="toggleSearch"></el-button>
-					</el-tooltip>
-					<el-tooltip v-show="!isClosed" class="item" content="收起搜索" placement="top">
-						<el-button size="small" icon="el-icon-arrow-up" @click="toggleSearch"></el-button>
-					</el-tooltip>
-				</span>
-			</div>
-			<div class="is-grown">
-				<el-table ref="mytable" @row-dblclick="openAreaList" v-loading="loading"
-					height="100%" :data="tableData"  :header-cell-style="headStyle" :row-style="tableRowStyle" style="width: 100%">
-					<el-table-column label="序号" type="index" align="center" width="50" fixed>
-					</el-table-column>											
-					<el-table-column label="版本名称"  prop="versionName" min-width="170px" show-overflow-tooltip align="center" header-align="center" fixed>
-					</el-table-column>						
-					<el-table-column label="版本编号"  prop="versionCode" min-width="150px" show-overflow-tooltip align="center" header-align="center" >
-					</el-table-column>
-					<el-table-column label="版本修改人" prop="modifyUserName" min-width="120px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="版本修改时间" prop="modifyDatetime" min-width="180px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>						
-					<el-table-column label="是否启用" prop="hasUsed" :formatter="formathasUsed" min-width="100px" show-overflow-tooltip align="center" header-align="center">
-					</el-table-column>
-					<el-table-column label="备注" prop="remarks" min-width="200px" show-overflow-tooltip align="left" header-align="center">
-					</el-table-column>
-					<el-table-column label="操作" align="center" min-width="400px" fixed="right">
-						<template slot-scope="scope">
-						<el-button @click="seeDetail(scope.row)" type="text" size="small" icon="fa fa-info-circle">详情</el-button>
-						<el-button @click="editArea(scope.row)" type="text" size="small" icon="fa fa-pencil">修改</el-button>
-						<el-button @click="deleteArea(scope.row)" type="text" size="small" icon="fa fa-minus">删除</el-button>
-						<el-button @click="importFile" type="text" size="small" icon="fa fa-arrow-up">导入</el-button>
-						<el-button @click='enableUse(scope.row)' v-show="scope.row.isEdit" type="text" size="small" icon="fa fa-info-circle pointer">启用</el-button>
-						<el-button @click='previewFile' type="text" size="small" icon="fa fa-file-text-o pointer">生成报告</el-button>
-						</template>
-					</el-table-column>
-				</el-table>
-			</div>
-			<div style="padding: 15px 0 0;" class="clearfix">
-				<el-pagination class="fr" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-					:page-sizes="[10, 20, 50, 100]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-				</el-pagination>
+<!--		<div class="orgtool" >
+            <el-button @click="addArea" size="small" type="text" icon="fa fa-plus">新增</el-button>
+		</div>-->
+		<div class="content-list"  v-loading="loading">
+			<div  class="table-div" v-for="item,index in tableData">
+				<ul class="data-ul" @click="openAreaList(item,index)" :class="{active:showActive==index}">
+                    <li><span class="name-span">版本名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
+					<li><span class="name-span">版本编号：</span><span class="value-span">{{item.versionCode}}</span></li>
+					<li><span class="name-span">创建人：</span><span class="value-span">{{item.createUserName}} </span></li>
+					<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
+					<li style="display: flex;justify-content: flex-end">
+                        <!-- <el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
+                        <el-button title="修改" @click="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+                        <el-button title="删除" @click="deleteArea(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+                        <el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
+                        <el-button title="启用" @click='enableUse(item)' v-show="item.isEdit" type="text" size="small" icon="fa fa-key"></el-button>-->
+                        <el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" ></el-button>
+					</li>
+				</ul>
 			</div>
 		</div>
-		</jas-list-wrapper>
+		<div class="pagination-bottom">
+			<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+						   :page-size="5" layout="total, prev, pager, next" :total="total">
+			</el-pagination>
+		</div>
 	</div>
+</div>
 </body>
 <script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="./../../../../../lib/vue/vue.js"></script>
@@ -190,15 +176,14 @@ var vm = new Vue({
 	el: "#app",
 	data: function () {
 		return {			
-			loading: false,
-			isClosed: true,
-			form: {},
+			loading: true,
 			tableData: [],
-			pageSize: 10,
-			currentPage: 1,
-			total: 0,
-			
-			headStyle: {
+            pageSize: 5,
+            currentPage: 1,
+            total: 0,
+            showActive: -1,
+            filterText:'',
+            headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
 			},
@@ -207,13 +192,17 @@ var vm = new Vue({
 			}
 		}
 	},
+    watch: {
+        filterText:function(val){
+            this.requestVersionList(2,val);
+        }
+    },
 	created: function () {
 		this.jasMap = parent.app.jasMap;
 		this.forBusiness = getParamter('forBusiness');
-		this.requestVersionList(0);
+		this.requestVersionList(0,"");
 	},
     mounted: function () {
-        this.$refs['mylist'].toggleSearch();
     },
 	methods: {
 		addArea: function(){
@@ -224,14 +213,14 @@ var vm = new Vue({
 				title='新增地区等级历史版本信息';
 			}
 			top.jasTools.selfDialog.show({
-				width: '50%',
-				height: '40%',
-				bottom:'20%',						
-				left:'30%',
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
 				title: '新增地区等级历史版本信息',
 				src: baseSrc,
 				cbForClose: function () {
-					that.requestVersionList(0);
+					that.requestVersionList(0,"");
 				}
 			});
 		},
@@ -243,14 +232,14 @@ var vm = new Vue({
 				title='修改地区等级历史版本信息';
 			}
 			top.jasTools.selfDialog.show({
-				width: '50%',
-				height: '40%',
-				bottom:'20%',						
-				left:'30%',
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
 				title: title,
 				src: baseSrc + '?oid=' + row.oid,
 				cbForClose: function () {
-					that.requestVersionList(0);
+					that.requestVersionList(0,"");
 				}
 			});
 		},
@@ -265,10 +254,10 @@ var vm = new Vue({
 				title='地区等级历史版本信息详情';
 			}
 			top.jasTools.selfDialog.show({
-				width: '50%',
-				height: '40%',
-				bottom:'20%',						
-				left:'30%',
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
 				title: title,
 				src: src,
 			});
@@ -284,7 +273,7 @@ var vm = new Vue({
 					type: 'success',
 					message: '删除成功'
 				});
-				that.requestVersionList(0);
+				that.requestVersionList(0,"");
 			};
 			window.top.Vue.prototype.$confirm('您确定要删除吗？', mes, {
 				type: 'warning',
@@ -300,23 +289,22 @@ var vm = new Vue({
 				}
 			});
 		},
-		requestVersionList: function(param){
+		requestVersionList: function(param,val){
 			var that= this;
-			if (param == 1 || param == 0) {
-				that.form = {};
-				that.pageSize = 10;
-				that.currentPage = 1;
-			}
-			if (param == 2) {
-				that.pageSize = 10;
-				that.currentPage = 1;
-			}
+            if (param == 1 || param == 0) {
+                val="";
+                this.pageSize = 5;
+                this.currentPage = 1;
+            }
+            if (param == 2) {
+                this.pageSize = 5;
+                this.currentPage = 1;
+            }
 			that.loading = true;
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
 			jasTools.ajax.post(url,{
 				forBusiness:that.forBusiness,
-				versionName: that.form.versionName,
-				versionCode: that.form.versionCode,
+                keyWord: val,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
@@ -334,8 +322,8 @@ var vm = new Vue({
 				})
 			});
 		},
-		
-		openAreaList: function(){
+		openAreaList: function(item, index){
+            this.showActive=index;
 			var title = '地区等级列表';
 			var layerId = 'pd_arearank';
 			if(this.forBusiness == "0"){
@@ -348,10 +336,11 @@ var vm = new Vue({
 			}
 			this.jasMap.layerVisibleSwitch(layerId,true);
 			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-			parent.app.showAreaDialog(this.forBusiness, title, '420px');
+			parent.app.showAreaDialogRight(this.forBusiness, title, '420px');
 		},
-		previewFile : function(){
-			top.jasTools.selfDialogNew.show({
+		previewFile : function(item,index){
+            this.showActive=index;
+            top.jasTools.selfDialogNew.show({
 				title: '分析报告',
 				src: './dialogs/preview_file.html',
 				height: '740px',
@@ -399,15 +388,6 @@ var vm = new Vue({
 					that.jasMap.layerVisibleSwitch('pd_arearank',true);
 				}, 1000);
 			}
-		},
-		formathasUsed: function(row, column, cellValue, index) {
-			if (row.hasUsed == 1) return '是';
-			else if (row.hasUsed == 0) return '否';
-			else return "-";
-		},
-		toggleSearch: function () {
-			this.$refs['mylist'].toggleSearch();
-			this.isClosed = this.$refs['mylist'].isClosed;
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;

@@ -145,13 +145,21 @@
 			}
 			.el-tabs--card>.el-tabs__header .el-tabs__nav {
 				border: 1px solid #409EFF;
+				background: rgba(0, 0, 0, 0.6);
+                width:388px;
 			}
 			.el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
 				 border-bottom-color: #409EFF;
 			}
-			.el-tabs__item {
-				color: #fff;
-			}
+            .selftabs .el-tabs__item{
+                padding: 0 !important;
+            }
+             .el-tabs__item {
+                 width:97px;
+                 padding-left: 3px;
+                 color: #fff;
+                 text-align: center!important;
+             }
 			.jas-dialog-self {
 				border: 1px solid #409EFF;
 				background: rgba(0, 0, 0, 0.8);
@@ -191,15 +199,16 @@
 						<!-- <div class="item-btn" @click="createBufferDialog">识别区生成</div> -->
 						<div class="item-btn" @click="createBh" v-show="!isManage">构筑物管理</div>
 						<div class="item-btn" @click="showHistoryBtn(0)" v-show="!isManage">地区等级划分</div>
-						<div class="item-btn" @click="showHistoryBtn(1)" v-show="!isManage">高后果区识别</div>
+						<!--<div class="item-btn" @click="showHistoryBtn(1)" v-show="!isManage">高后果区识别</div>-->
+						<div class="item-btn" @click="createHcaArea" v-show="!isManage">高后果区识别</div>
 						<div  v-show="isManage">
                         <template>
 							<!--<el-card class="box-card">-->
-								<el-tabs v-model="activeName" type="card" @tab-click="handleClick" >
+								<el-tabs class="selftabs" v-model="activeName" type="card" @tab-click="handleClick">
 									<el-tab-pane label="管线管理" name="pipelineManage"></el-tab-pane>
 									<el-tab-pane label="构筑物管理" name="buildingManage"></el-tab-pane>
-									<el-tab-pane label="地区等级历史信息" name="areaVersion"></el-tab-pane>
-									<el-tab-pane label="高后果区历史信息" name="hcaAreaVersion"></el-tab-pane>
+									<el-tab-pane label="地区等级成果" name="areaVersion"></el-tab-pane>
+									<el-tab-pane label="高后果区成果" name="hcaAreaVersion"></el-tab-pane>
 								</el-tabs>
 							<!--</el-card>-->
 						</template>
@@ -357,8 +366,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.selfDialog.show({
 					title: '',
 					src: './dialogs/pipeline-manage/pipelineList.html?dataType=pipeline',
-					height: '50%',
-					width: '18%',
+					height: '485px',
+					width: '388px',
 					top:'155px',
 					left:'1%'
 				});
@@ -476,8 +485,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
-				this.closeBufferWindow();
-				$('.hca').hide();
+                this.closeBufferWindow();
+                $('.hca').hide();
 				$('.area').hide();
 				//显示图层
 				this.jasMap.zoomAt('110.56310713' ,'34.54671800' ,18);
@@ -519,10 +528,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					})
 				}else{
 					window.jasTools.selfDialog.show({
-						title: '构筑物信息列表',
+						title: '',
 						src: './dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
-						height: '50%',
-						width: '20%',
+						height: '485px',
+						width: '388px',
 						top:'155px',
 						left:'1%'
 					})
@@ -716,12 +725,22 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.selfDialog.show({
 					title: title,
 					src: './dialogs/hcaarea-current/hcaAreaList.html?forBusiness=' + forBusiness,
-					height: '45%',
-					width: '48%',
+					height: '38%',
+					width: '40%',
 					bottom:'2%',
 					left:'30%'
 				})
 			},
+            showAreaDialogRight: function(forBusiness, title, top){
+                window.jasTools.selfDialog.show({
+                    title: title,
+                    src: './dialogs/hcaarea-current/hcaAreaListRight.html?forBusiness=' + forBusiness,
+                    height: '485px',
+                    width: '18%',
+                    top:'155px',
+                    right:'4%'
+                })
+            },
 			refreshAreaRankDialog: function(data){
 				var module = this.jasMap.getModuleById("areaRankManager");
 				if(!module){
@@ -882,28 +901,53 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			showHistoryList: function(forBusiness){
 				$('.area').hide();
 				$('.hca').hide();
-				if(forBusiness == "0"){
-					window.jasTools.selfDialog.show({
-						id: 'hcaAreaList',
-						title: '地区等级历史版本数据',
-						src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=0',
-						height: '50%',
-						width: '60%',
-						bottom:'10px',
-						left:'25%'
-					})
-				}
-				if(forBusiness == "1"){
-					window.jasTools.selfDialog.show({
-						id: 'hcaAreaList',
-						title: '高后果区历史版本数据',
-						src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=1',
-						height: '50%',
-						width: '60%',
-						bottom:'10px',
-						left:'25%'
-					})
-				}
+                top.jasTools.selfDialog.close();
+                if(forBusiness == "0"){
+                    if(this.isManage) {
+                        window.jasTools.selfDialog.show({
+                            id: 'hcaAreaList',
+                            title: '',
+                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=0',
+                            height: '485px',
+                            width: '388px',
+                            top: '155px',
+                            left: '1%'
+                        })
+                    }else{
+                        window.jasTools.selfDialog.show({
+                            id: 'hcaAreaList',
+                            title: '地区等级历史版本数据',
+                            src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=0',
+                            height: '50%',
+                            width: '60%',
+                            bottom:'10px',
+                            left:'25%'
+                        })
+					}
+                }
+                if(forBusiness == "1"){
+                    if(this.isManage) {
+                        window.jasTools.selfDialog.show({
+                            id: 'hcaAreaList',
+                            title: '',
+                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=1',
+                            height: '485px',
+                            width: '388px',
+                            top: '155px',
+                            left: '1%'
+                        })
+                    }else{
+                        window.jasTools.selfDialog.show({
+                            id: 'hcaAreaList',
+                            title: '高后果区历史版本数据',
+                            src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=1',
+                            height: '50%',
+                            width: '60%',
+                            bottom:'10px',
+                            left:'25%'
+                        })
+					}
+                }
 			},
 			getRightOne: function(){
 				
@@ -979,9 +1023,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                     this.pipelineOperation();
 				}else if(tab.label=="构筑物管理"){
                     this.createBh();
-				}else if(tab.label=="地区等级历史信息"){
+				}else if(tab.label=="地区等级成果"){
                     this.showHistoryList(0);
-                }else if(tab.label=="高后果区历史信息"){
+                }else if(tab.label=="高后果区成果"){
                     this.showHistoryList(1);
                 }
             }

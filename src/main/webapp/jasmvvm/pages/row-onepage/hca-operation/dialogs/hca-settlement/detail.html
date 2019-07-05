@@ -20,21 +20,28 @@
 	}
 	.jas-detail-table .table_wrap tr,
 	.jas-detail-table .table_wrap th {
-	    border: 1px solid #12263c;
-	    color: #fff;
-   		background:transparent;
-	}	
+		border: 1px solid #12263c;
+		color: #fff;
+		background:transparent;
+		line-height: 2;
+		text-align: left;
+	}
+
 	.jas-detail-table .table_wrap td {
-   	    border: 1px solid #12263c;
-	    color: #7495A8;
+		border: 1px solid #12263c;
+		color: #7495A8;
+		line-height: 2;
+	}
+	.jas-detail-table .table_wrap {
+		border: 1px solid #cad9ea;
 	}
 	</style>
 </head>
 
 <body>
-	<div id="app" v-cloak style="overflow-y:auto">
-		<div style="margin-left:20px; margin-right:20px">
-			<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px;">
+	<div id="app" v-cloak style="font-size: 13px;overflow-y:auto" >
+		<div style="margin: 20px;margin-top:20px;">
+			<div style="margin: 0px 0px 6px; line-height: 32px;">
 				<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
 			</div>
 			<jas-detail-table :titles="fields" :detail="detail"></jas-detail-table>
