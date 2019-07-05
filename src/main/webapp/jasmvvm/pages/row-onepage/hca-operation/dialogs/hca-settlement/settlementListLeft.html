@@ -94,6 +94,10 @@
 			margin-left:10px;
 			font-size: 13px;
 		}
+		.flex-li{
+			display: flex;
+    		justify-content: flex-end;
+		}
 	</style>
 </head>
 
@@ -111,11 +115,11 @@
 			<div class="content-list">
 				<div class="table-div" v-for="item,index in tableData">
 					<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}">
-						<li><span class="name-span">建（构）筑物编号：</span><span class="value-span">{{item.buildingCode}}</span></li>
-						<li><span class="name-span">建（构）筑物类型：</span><span class="value-span">{{item.buildingTypeName}}</span></li>
+						<li><span class="name-span">建(构)筑物编号：</span><span class="value-span">{{item.buildingCode}}</span></li>
+						<li><span class="name-span">建(构)筑物类型：</span><span class="value-span">{{item.buildingTypeName}}</span></li>
 						<li><span class="name-span">户数：</span><span class="value-span">{{item.households}}</span></li>
 						<li><span class="name-span">人口：</span><span class="value-span">{{item.population}}</span></li> 
-						<li>
+						<li class="flex-li">
 							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
 							<el-button title="修改" @click="editItem(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
 							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
@@ -161,11 +165,11 @@ var vm = new Vue({
 			},
 			/* tableFields: [
 				{
-					"name": "建（构）筑物编号",
+					"name": "建(构)筑物编号",
 					"field": "buildingCode"
 				},
 				{
-					"name": "建（构）筑物类型",
+					"name": "建(构)筑物类型",
 					"field": "buildingTypeName"
 				},
 				{
@@ -181,13 +185,12 @@ var vm = new Vue({
 	},
 	watch: {
         filterText: function (val) {
-            this.$refs.pipelines.filter(val);
+        	 this.requestList(2,val);
         },
 	},
 	created: function () {
 		this.jasMap = parent.app.jasMap;
 		this.requestList(2);
-		this.requestBuildingTypes();
 		this.layerId = "hca_buildings";
 	},
     mounted: function () {
@@ -203,7 +206,7 @@ var vm = new Vue({
 					changedFeatures[fId] = feature;
 					var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
 					top.jasTools.selfDialog.show({
-						title: '建（构）筑物属性编辑',
+						title: '建(构)筑物属性编辑',
 						src: baseSrc,
 						height: '55%',
 						width: '20%',
@@ -223,7 +226,7 @@ var vm = new Vue({
 			that.jasMap.editGraphic(that.layerId);
 			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html?oid='+row.oid;
 			top.jasTools.selfDialog.show({
-				title: '建（构）筑物属性编辑',
+				title: '建(构)筑物属性编辑',
 				src: baseSrc,
 				width: '17%',
 				height: '55%',
@@ -246,7 +249,7 @@ var vm = new Vue({
 				height: '55%',
 				top:'14%',						
 				right:'3%',
-				title: '建（构）筑物详情',
+				title: '建(构)筑物详情',
 				src: src,
 			});
 		},
@@ -259,7 +262,7 @@ var vm = new Vue({
 				});
 				that.requestList(0);
 			};
-			window.top.Vue.prototype.$confirm('您确定要删除删除建（构）筑物物信息吗？', '提示', {
+			window.top.Vue.prototype.$confirm('您确定要删除删除建(构)筑物物信息吗？', '提示', {
 				type: 'warning',
 				callback: function (action) {
 					if (action === 'confirm') {
