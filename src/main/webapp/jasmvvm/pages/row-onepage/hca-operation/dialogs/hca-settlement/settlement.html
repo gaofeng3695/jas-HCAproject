@@ -69,14 +69,14 @@
 				</div>
 				<el-row :gutter="10">
 					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-						<el-form-item label="构筑物编号" prop="buildingCode">
+						<el-form-item label="建（构）筑物编号" prop="buildingCode">
 							<el-input v-model="tableFormData.buildingCode" clearable placeholder="请输入构筑物编号" size="small"></el-input>
 						</el-form-item>
 					</el-col>	
 				</el-row>
 				<el-row>
 					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-						<el-form-item label="构筑物类型" prop="buildingType">
+						<el-form-item label="建（构）筑物类型" prop="buildingType">
 							<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择构筑物类型" size="small" >
 								<el-option v-for="item in domain.buildingType" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
@@ -195,12 +195,12 @@ var app = new Vue({
 			rules: {
 				buildingCode: [{
 					required: true,
-					message: '请输入构筑物编号',
+					message: '请输入建（构）筑物编号',
 					trigger: 'blur'
 				}],
 				buildingType: [{
 					//required: true,
-					message: '请选择构筑物类型',
+					message: '请选择建（构）筑物类型',
 					trigger: 'blur'
 				}],
 		/*		startMileage: [{

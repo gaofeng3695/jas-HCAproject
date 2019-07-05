@@ -144,6 +144,7 @@ var vm = new Vue({
 		return {	
 			loading: false,
 			isClosed: true,
+			form: {},
 			tableData: [],
 			buildingTypeData: [],
 			pageSize: 5,
@@ -158,16 +159,34 @@ var vm = new Vue({
 			tableRowStyle: {
 				'color': '#7495A8'
 			},
+			/* tableFields: [
+				{
+					"name": "建（构）筑物编号",
+					"field": "buildingCode"
+				},
+				{
+					"name": "建（构）筑物类型",
+					"field": "buildingTypeName"
+				},
+				{
+					"name": "户数",
+					"field": "households"
+				},
+				{
+					"name": "人口",
+					"field": "population"
+				}
+			] */
 		}
 	},
-    watch: {
-        filterText:function(val){
-            this.requestList(2,val);
-        }
-    },
+	watch: {
+        filterText: function (val) {
+            this.$refs.pipelines.filter(val);
+        },
+	},
 	created: function () {
 		this.jasMap = parent.app.jasMap;
-		this.requestList(2,'');
+		this.requestList(2);
 		this.requestBuildingTypes();
 		this.layerId = "hca_buildings";
 	},
@@ -211,7 +230,7 @@ var vm = new Vue({
 				top:'14%',						
 				right:'3%',
 				cbForClose: function () {
-					that.requestList(0,'');
+					that.requestList(0);
 					that.jasMap.startPanMode();
 				}
 			});
@@ -238,7 +257,7 @@ var vm = new Vue({
 					type: 'success',
 					message: '删除成功'
 				});
-				that.requestList(0,'');
+				that.requestList(0);
 			};
 			window.top.Vue.prototype.$confirm('您确定要删除删除建（构）筑物物信息吗？', '提示', {
 				type: 'warning',
@@ -257,10 +276,10 @@ var vm = new Vue({
 		openDetail:function(idx){
 			parent.app.openDetail(idx);
 		},
-		requestList: function(param,val){
+		requestList: function(param){
 			var that= this;
 			if (param == 1 || param == 0) {
-                val="";
+				that.form = {};
 				that.pageSize = 5;
 				that.currentPage = 1;
 			}
@@ -271,7 +290,10 @@ var vm = new Vue({
 			that.loading = true;
 			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
 			jasTools.ajax.post(url,{
-				keyWord: val,
+				buildingCode:that.form.buildingCode,
+				startMileage: that.form.startMileage,
+				endMileage: that.form.endMileage,
+				buildingType: that.form.buildingType,
 				pageNo: that.currentPage,
 				pageSize: that.pageSize,
 				page: that.currentPage,
