@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../src/css/main.css">
+	<link rel="stylesheet" href="./../../css/common.css">
+</head>
+<body>
+<div id="app">
+	<div ref="mylist">
+		<div class="filter-wrap">
+			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+			</el-input>
+		</div>
+<!--		<div class="orgtool" >
+            <el-button @click="addArea" size="small" type="text" icon="fa fa-plus">新增</el-button>
+		</div>-->
+		<div class="content-list"  v-loading="loading">
+			<div  class="table-div" v-for="item,index in tableData">
+				<ul class="data-ul" @click="openAreaList(item,index)" :class="{active:showActive==index}">
+                    <li><span class="name-span">版本名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
+					<li><span class="name-span">版本编号：</span><span class="value-span">{{item.versionCode}}</span></li>
+					<li><span class="name-span">创建人：</span><span class="value-span">{{item.createUserName}} </span></li>
+					<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
+					<li style="display: flex;justify-content: flex-end">
+                        <!-- <el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
+                        <el-button title="修改" @click="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+                        <el-button title="删除" @click="deleteArea(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+                        <el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
+                        <el-button title="启用" @click='enableUse(item)' v-show="item.isEdit" type="text" size="small" icon="fa fa-key"></el-button>-->
+                        <el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" ></el-button>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="pagination-bottom">
+			<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+						   :page-size="5" layout="total, prev, pager, next" :total="total">
+			</el-pagination>
+		</div>
+	</div>
+</div>
+</body>
+<script src="./../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../common/components/jas-components.js "></script>
+<script src="./../../../../../common/js/jas-tools.js"></script>
+<script>
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {			
+			loading: true,
+			tableData: [],
+            pageSize: 5,
+            currentPage: 1,
+            total: 0,
+            showActive: -1,
+            filterText:'',
+            headStyle: {
+				'background': 'transparent',
+				'color': '#F1F2EA'
+			},
+			tableRowStyle: {
+				'color': '#7495A8'
+			}
+		}
+	},
+    watch: {
+        filterText:function(val){
+            this.requestVersionList(2,val);
+        }
+    },
+	created: function () {
+		this.jasMap = parent.app.jasMap;
+		this.forBusiness = getParamter('forBusiness');
+		this.requestVersionList(0,"");
+	},
+    mounted: function () {
+    },
+	methods: {
+		addArea: function(){
+			var that = this;
+			var title ="新增高后果区历史版信息";
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='新增地区等级历史版本信息';
+			}
+			top.jasTools.selfDialog.show({
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
+				title: '新增地区等级历史版本信息',
+				src: baseSrc,
+				cbForClose: function () {
+					that.requestVersionList(0,"");
+				}
+			});
+		},
+		editArea: function(row){
+			var that = this;
+			var title ="修改高后果区历史版信息";
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html';
+			if(that.forBusiness=="0"){
+				title='修改地区等级历史版本信息';
+			}
+			top.jasTools.selfDialog.show({
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
+				title: title,
+				src: baseSrc + '?oid=' + row.oid,
+				cbForClose: function () {
+					that.requestVersionList(0,"");
+				}
+			});
+		},
+		seeDetail: function (row) {
+			var that = this;
+			var title="高后果区历史版本信息详情"
+			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/detail.html';
+			var src = jasTools.base.setParamsToUrl(baseSrc, {
+				oid: row.oid,
+			});
+			if(that.forBusiness=="0"){
+				title='地区等级历史版本信息详情';
+			}
+			top.jasTools.selfDialog.show({
+                height: '50%',
+                width: '15%',
+                top:'155px',
+                right:'4%',
+				title: title,
+				src: src,
+			});
+		},
+		deleteArea: function (row) {
+			var that = this;
+			var mes ="删除高后果区历史版本信息";
+			if(that.forBusiness=="0"){
+				mes='删除地区等级历史版本信息';
+			}
+			var afterDelete = function () {
+				top.Vue.prototype.$message({
+					type: 'success',
+					message: '删除成功'
+				});
+				that.requestVersionList(0,"");
+			};
+			window.top.Vue.prototype.$confirm('您确定要删除吗？', mes, {
+				type: 'warning',
+				callback: function (action) {
+					if (action === 'confirm') {
+						var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/delete.do";
+						jasTools.ajax.post(url, {
+							oid:row.oid
+						}, function (data) {
+							afterDelete();
+						});
+					}
+				}
+			});
+		},
+		requestVersionList: function(param,val){
+			var that= this;
+            if (param == 1 || param == 0) {
+                val="";
+                this.pageSize = 5;
+                this.currentPage = 1;
+            }
+            if (param == 2) {
+                this.pageSize = 5;
+                this.currentPage = 1;
+            }
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+			jasTools.ajax.post(url,{
+				forBusiness:that.forBusiness,
+                keyWord: val,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+				data.rows.forEach(function(item,index){
+					if(item.hasUsed == 1){
+						item.isEdit=false;
+					}else{
+						item.isEdit=true;
+					}
+				})
+			});
+		},
+		openAreaList: function(item, index){
+            this.showActive=index;
+			var title = '地区等级列表';
+			var layerId = 'pd_arearank';
+			if(this.forBusiness == "0"){
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			}
+			if(this.forBusiness == "1"){
+				title = '高后果区列表';
+				layerId = 'pd_zonerankcell';
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+			}
+			this.jasMap.layerVisibleSwitch(layerId,true);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			parent.app.showAreaDialogRight(this.forBusiness, title, '420px');
+		},
+		previewFile : function(item,index){
+            this.showActive=index;
+            top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+				left:'35%',
+			})
+		},
+		importFile: function(){
+			top.jasTools.selfDialog.show({
+				src: './dialogs/upload.html?forbusiness='+this.forBusiness,
+				width: '40%',
+				height: '52%',
+				bottom:'20%',						
+				left:'35%',
+				title: '导入',
+			})
+		},
+		enableUse: function(row) {
+			var that = this;
+			row.hasUsed = 1;
+			url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
+			jasTools.ajax.post(url, row, function (data) {
+				if(data==1){
+					top.Vue.prototype.$message({
+						type: 'success',
+						message: '启用成功'
+					});
+					that.requestVersionList(0);
+				}else{
+					top.Vue.prototype.$message({
+						type: 'waring',
+						message: '启用失败'
+					});
+				}
+			});
+			that.jasMap.layerVisibleSwitch('pd_arearank',false);
+			that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+			this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+			if(that.forBusiness=="1"){
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_zonerankcell',true);
+				}, 1000);
+			}else{
+				setTimeout(function(){
+					that.jasMap.layerVisibleSwitch('pd_arearank',true);
+				}, 1000);
+			}
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestVersionList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestVersionList();
+		},
+	},
+});
+
+</script>
+</html>

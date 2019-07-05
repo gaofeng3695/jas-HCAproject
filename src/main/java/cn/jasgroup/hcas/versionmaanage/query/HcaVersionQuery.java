@@ -39,6 +39,8 @@ public class HcaVersionQuery extends BaseJavaQuery{
 	 * （ 0 地区等级 1 高后果区）
 	 */
 	private Integer forBusiness;
+
+	private String keyWord;
 	
 	@Override
 	public String getQuerySql() {
@@ -56,6 +58,9 @@ public class HcaVersionQuery extends BaseJavaQuery{
 			}
 			if(StringUtils.isNotBlank(versionCode)){
 				sql += " and t.version_code like :versionCode ";
+			}
+			if(StringUtils.isNotBlank(keyWord)){
+				sql += " and (t.version_name like :keyWord or t.version_code like :keyWord) ";
 			}
 			if(null != forBusiness){
 				sql += " and t.for_business = :forBusiness ";
@@ -111,4 +116,14 @@ public class HcaVersionQuery extends BaseJavaQuery{
 		this.pipelineOid = pipelineOid;
 	}
 
+	public String getKeyWord() {
+		if (StringUtils.isNotBlank(keyWord)) {
+			return '%' + keyWord + '%';
+		}
+		return keyWord;
+	}
+
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
 }

@@ -29,7 +29,8 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 	 * 管线编号
 	 */
 	private String pipelineCode;
-	
+
+	private String keyWord;
 
 	@Override
 	public String getQuerySql() {
@@ -37,14 +38,14 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
 		}else{
-			/*if (StringUtils.isNotBlank(pipelineCode)) {
+			if (StringUtils.isNotBlank(pipelineCode)) {
 				sql += " and t.pipeline_code like :pipelineCode ";
 			}
 			if (StringUtils.isNotBlank(pipelineName)) {
 				sql += " and t.pipeline_name like :pipelineName ";
-			}*/
-			if (StringUtils.isNotBlank(pipelineCode)) {
-				sql += " and (t.pipeline_code like :pipelineCode or t.pipeline_name like :pipelineName) ";
+			}
+			if(StringUtils.isNotBlank(keyWord)){
+				sql += " and (t.pipeline_code like :keyWord or t.pipeline_name like :keyWord) ";
 			}
 		}
 		sql += " order by t.create_datetime desc";
@@ -81,4 +82,14 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 		this.pipelineCode = pipelineCode;
 	}
 
+	public String getKeyWord() {
+		if (StringUtils.isNotBlank(keyWord)) {
+			return '%' + keyWord + '%';
+		}
+		return keyWord;
+	}
+
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
 }
