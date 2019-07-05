@@ -740,7 +740,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				module.refresh(data);
 			},
 			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
-				
+				this.closeBufferWindow();
 				$('.hca').hide();
 				 
 				var d = 1100;	// 管径
@@ -877,7 +877,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			showHistoryBtn: function(forBusiness){
-                window.parent.jasTools.selfDialog.close();
+                //window.parent.jasTools.selfDialog.close();
+                this.closeBufferWindow();
                 if(forBusiness == "0"){
 					//$('.operate-right-div:last-of-type').hide();
 					$('.hca').hide();
@@ -889,9 +890,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				}
 			},
 			showHistoryList: function(forBusiness){
+				top.jasTools.selfDialog.close(this.closeBufferWindow());
 				$('.area').hide();
 				$('.hca').hide();
-                top.jasTools.selfDialog.close();
                 if(forBusiness == "0"){
                     if(this.isManage) {
                         window.jasTools.selfDialog.show({
