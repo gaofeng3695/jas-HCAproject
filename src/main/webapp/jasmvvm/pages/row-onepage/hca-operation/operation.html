@@ -497,7 +497,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var that = this;
 				top.jasTools.selfDialog.close();
 				if(!this.isManage){
-					window.jasTools.selfDialog.show({
+					/* window.jasTools.selfDialog.show({
 						title: '建(构)筑物编辑工具',
 						src: './dialogs/hca-settlement/edit-settlement.html',
 						height: '280px',
@@ -516,6 +516,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						width: '52%',
 						bottom:'10px',
 						left:'24%',
+					}) */
+					window.jasTools.selfDialog.show({
+						title: '',
+						src: './dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
+						height: '485px',
+						width: '335px',
+						top:'155px',
+						left:'8%'
 					})
 				}else{
 					window.jasTools.selfDialog.show({
@@ -706,8 +714,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.selfDialog.show({
 					title: title,
 					src: './dialogs/hcaarea-current/areaDivideList.html?forBusiness=' + forBusiness,
-					height: '45%',
-					width: '48%',
+					height: '36%',
+					width: '42%',
 					bottom:'10px',
 					left:'30%'
 				})
@@ -722,6 +730,16 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					left:'30%'
 				})
 			},
+            showAreaDialogLeft: function(forBusiness, title, top){
+                window.jasTools.selfDialog.show({
+                    title: title,
+                    src: './dialogs/hcaarea-current/hcaAreaListRight.html?forBusiness=' + forBusiness+'&btnVisible=true',
+                    height: '485px',
+                    width: '18%',
+                    top:'155px',
+                    left:'8%'
+                })
+            },
             showAreaDialogRight: function(forBusiness, title, top){
                 window.jasTools.selfDialog.show({
                     title: title,
@@ -741,9 +759,18 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				module.refresh(data);
 			},
 			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
+				var that = this;
+				this.jasMap.startPanMode();
 				this.closeBufferWindow();
 				$('.hca').hide();
-				 
+				if(!this.jasMap.getLayerVisible('pd_arearank')){
+					that.$alert('请进行地区等级划分', '提示', {
+						callback: function(){
+							
+						}
+					});
+					return;
+				} 
 				var d = 1100;	// 管径
 				var p = 88;	// 管道最大压强
 				var postData = {
@@ -756,7 +783,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						"presure":p
 					}
 				};
-				var that = this;
 				var common = this.jasMap.commonUtil;
 				that.$confirm('生成新的高后果区？',  "提示",  {
 					type: 'warning',
@@ -798,7 +824,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 										app.showAreaDialog('1', '高后果区列表', '460px');
 									} */
 									app.loadZoneCell();
-									app.showAreaDialog('1', '高后果区列表', '460px');
+									app.showAreaDialogLeft('1', '高后果区列表', '420px');
+									//app.showAreaDialog('1', '高后果区列表', '460px');
 								},
 								onError :function(){
 			
@@ -878,12 +905,23 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				});
 			},
 			showHistoryBtn: function(forBusiness){
+                var that = this;
                 //window.parent.jasTools.selfDialog.close();
+                this.jasMap.startPanMode();
                 this.closeBufferWindow();
                 if(forBusiness == "0"){
 					//$('.operate-right-div:last-of-type').hide();
-					$('.hca').hide();
-					$('.area').show();
+					/* $('.hca').hide();
+					$('.area').show(); */
+					
+					top.jasTools.selfDialog.show({
+						src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/area-select.html',
+						width: '18%',
+						height: '20%',
+						bottom:'40%',						
+						left:'40%',
+						title: '导入',
+					})
 				}
 				if(forBusiness == "1"){
 					$('.area').hide();
@@ -906,7 +944,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                             left: '1%'
                         })
                     }else{
-                        window.jasTools.selfDialog.show({
+                        /* window.jasTools.selfDialog.show({
                             id: 'hcaAreaList',
                             title: '地区等级历史版本数据',
                             src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=0',
@@ -914,6 +952,15 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                             width: '60%',
                             bottom:'10px',
                             left:'25%'
+                        }) */
+                        window.jasTools.selfDialog.show({
+                            id: 'hcaAreaList',
+                            title: '',
+                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=0',
+                            height: '485px',
+                            width: '388px',
+                            top: '155px',
+                            left: '8%'
                         })
 					}
                 }
@@ -1020,6 +1067,14 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 }else if(tab.name=="hcaAreaVersion"){
                     this.showHistoryList(1);
                 }
+            },
+            clickRadio: function(item){
+            	if(item == "2"){
+            		this.areaSelect == 2;
+            	}else{
+					this.areaSelect == 1;            		
+            	}
+            		console.log(this.areaSelect)
             }
 		}
 	})

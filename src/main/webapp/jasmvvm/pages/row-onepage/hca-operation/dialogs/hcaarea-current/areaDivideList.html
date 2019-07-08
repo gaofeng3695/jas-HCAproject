@@ -97,8 +97,8 @@
 				</el-row>
 			</el-form>
 		</div>
-		<div slot="list" style="padding: 0 10px 10px" class="jas-flex-box is-vertical is-grown">
-			<div style="padding: 15px 0;">
+		<div slot="list" style="padding: 0 10px 0" class="jas-flex-box is-vertical is-grown">
+			<div style="padding: 8px 0;">
 				<el-button @click='previewFile' size="small"plain type="primary" icon="fa fa-file-text-o">生成报告</el-button>
 				<span class="fr">
 					<el-tooltip class="item" content="刷新" placement="top">
@@ -198,7 +198,7 @@ var vm = new Vue({
 			isShowBtn: false,
 			form: {},
 			tableData: [],
-			pageSize: 10,
+			pageSize: 3,
 			currentPage: 1,
 			total: 0,
 			
@@ -232,11 +232,11 @@ var vm = new Vue({
 			var that= this;
 			if (param == 1 || param == 0) {
 				that.form = {};
-				that.pageSize = 10;
+				that.pageSize = 3;
 				that.currentPage = 1;
 			}
 			if (param == 2) {
-				that.pageSize = 10;
+				that.pageSize = 3;
 				that.currentPage = 1;
 			}
 			that.loading = true;
@@ -291,19 +291,25 @@ var vm = new Vue({
 				// item.oid='d5c0161d-cbad-4044-92bd-3656a60e10c';
 				console.log(item)
 				if(item.startMileage == 0){
-					this.jasMap.flashGraphic("d5c0161d-cbad-4044-92bd-3656a60e10c8", this.layerId ,{
+					this.jasMap.flashGraphic("e1885098-38d7-470d-a4d2-42c12ac5ce1d", this.layerId ,{
 						deep:2
 					});
 					
 				}
 				if(item.startMileage == 0.165){
-					this.jasMap.flashGraphic("802f7154-20d4-4781-8bab-0059bff895b2", this.layerId ,{
+					this.jasMap.flashGraphic("e19d4a5d-7381-48cd-a0be-4a626fa52250", this.layerId ,{
 						deep:2
 					});
 					
 				}
 				if(item.startMileage == 3.616){
-					this.jasMap.flashGraphic("385ff121-f374-4d96-9add-4d3fed48bc1d", this.layerId ,{
+					this.jasMap.flashGraphic("c51de314-34fe-4f4e-9f50-34317de808c9", this.layerId ,{
+						deep:2
+					});
+					
+				}
+				if(item.startMileage == 4.471){
+					this.jasMap.flashGraphic("c4c32e7c-4a33-4311-a090-5ab7aa51d3ac", this.layerId ,{
 						deep:2
 					});
 					

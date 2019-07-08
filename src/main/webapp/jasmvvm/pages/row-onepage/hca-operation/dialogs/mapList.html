@@ -100,7 +100,7 @@
 					},
 					{
 						"name": "医院",
-						"checked": true,
+						"checked": false,
 						"layerId": "pd_hospital"
 					},
 					{
@@ -160,7 +160,7 @@
 					},
 					{
 						"name":"娱乐休闲地",
-						"checked": true,
+						"checked": false,
 						"layerId": "pd_entertainment_place"
 					},
 					{
@@ -175,12 +175,12 @@
 					},
 					{
 						"name":"加油站",
-						"checked": true,
+						"checked": false,
 						"layerId": "pd_gas_station"
 					},
 					{
 						"name":"加气站",
-						"checked": true,
+						"checked": false,
 						"layerId": "pd_gas_station"
 					},
 					{
@@ -190,12 +190,12 @@
 					},
 					{
 						"name":"独立民居",
-						"checked": true,
+						"checked": false,
 						"layerId": "hca_buildings"
 					},
 					{
 						"name":"居民区",
-						"checked": true,
+						"checked": false,
 						"layerId": "hca_buildings"
 					},
 					{
@@ -254,6 +254,7 @@
 		},
 		created: function () {
 			this.jasMap = parent.app.jasMap;
+			this.initChecked();
 		},
 		methods: {
 			updateLayer: function(item){
@@ -267,6 +268,15 @@
 				/* this.jasMap.layerVisibleSwitch('pd_arearank', false);
 				this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
 				this.jasMap.layerVisibleSwitch('pd_arearankcell', false); */
+			},
+			initChecked: function(){
+				var that = this;
+				$.each(that.checkList, function(i, item){
+					var visible = that.jasMap.getLayerVisible(item.layerId);
+					if(visible){
+						item.checked = true;
+					}
+				});
 			}
 		},
 	});
