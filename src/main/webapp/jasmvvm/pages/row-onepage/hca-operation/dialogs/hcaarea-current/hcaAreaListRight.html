@@ -20,6 +20,9 @@
 			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
 			</el-input>
 		</div>
+		<div class="orgtool" hidden>
+             <el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" >生成报告</el-button>
+		</div>
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
 				<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}" title="定位到当前位置">
@@ -104,6 +107,10 @@
 				created : function() {
 					this.jasMap = parent.app.jasMap;
 					this.forBusiness = getParamter('forBusiness');
+					this.btnVisible = getParamter('btnVisible');
+					if(this.btnVisible){
+						$('.orgtool').show();
+					}
 					this.requestList(0,"");
 					if (this.forBusiness == 0) {
 						this.layerId = 'pd_arearank';

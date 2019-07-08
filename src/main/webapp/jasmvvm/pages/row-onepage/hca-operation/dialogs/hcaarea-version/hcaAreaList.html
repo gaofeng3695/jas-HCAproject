@@ -18,9 +18,9 @@
 			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
 			</el-input>
 		</div>
-<!--		<div class="orgtool" >
+		<div class="orgtool" >
             <el-button @click="addArea" size="small" type="text" icon="fa fa-plus">新增</el-button>
-		</div>-->
+		</div>
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
 				<ul class="data-ul" @click="openAreaList(item,index)" :class="{active:showActive==index}">
@@ -29,11 +29,11 @@
 					<li><span class="name-span">创建人：</span><span class="value-span">{{item.createUserName}} </span></li>
 					<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
 					<li class="flex-li">
-                        <!-- <el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
-                        <el-button title="修改" @click="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
-                        <el-button title="删除" @click="deleteArea(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
-                        <el-button title="导入" @click="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
-                        <el-button title="启用" @click='enableUse(item)' v-show="item.isEdit" type="text" size="small" icon="fa fa-key"></el-button>-->
+                        <el-button class="btn-visible" hidden title="详情" @click.stop="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
+                        <el-button class="btn-visible" hidden title="修改" @click.stop="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+                        <el-button class="btn-visible" hidden title="删除" @click.stop="deleteArea(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+                        <el-button class="btn-visible" hidden title="导入" @click.stop="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
+                        <!-- <el-button title="启用" @click='enableUse(item)' v-show="item.isEdit" type="text" size="small" icon="fa fa-key"></el-button> -->
                         <el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" ></el-button>
 					</li>
 				</ul>
