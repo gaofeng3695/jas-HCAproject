@@ -387,7 +387,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				$('span.jas-dialog-close').trigger('click');
 			},
 			createBuffer: function(){
-				//top.jasTools.selfDialog.close();
+				top.jasTools.selfDialog.close();
 				this.closeBufferWindow();
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
@@ -475,7 +475,8 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				top.jasTools.dialog.close();
 			},
 			createBh: function(){
-                this.closeBufferWindow();
+				top.jasTools.selfDialog.close();
+                //this.closeBufferWindow();
                 $('.hca').hide();
 				$('.area').hide();
 				//显示图层

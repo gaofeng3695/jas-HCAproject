@@ -33,7 +33,7 @@
 						<li class="flex-li">
 							<el-button title="详情" @click="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
 							<el-button title="修改" @click="editItem(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
-							<el-button title="删除" @click="deletePipeline(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
+							<el-button title="删除" @click="deleteItem(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
 						</li>
 					</ul>
 				</div>
@@ -125,7 +125,7 @@ var vm = new Vue({
 						right:'3%',
 						cbForClose: function () {
 							that.jasMap.startPanMode();
-							that.jasMap.refreshLayerById(that.layerId)
+							//that.jasMap.refreshLayerById(that.layerId)
 						}
 					});
 				}
