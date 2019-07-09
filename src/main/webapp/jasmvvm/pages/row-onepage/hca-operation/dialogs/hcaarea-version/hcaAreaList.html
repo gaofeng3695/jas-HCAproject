@@ -19,7 +19,7 @@
 			</el-input>
 		</div>
 		<div class="orgtool" >
-            <el-button @click="addArea" size="small" type="text" icon="fa fa-plus">新增</el-button>
+            <el-button @click="addArea" size="small" type="text" icon="fa fa-plus" v-show="isHca">新增</el-button>
 		</div>
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
@@ -32,7 +32,7 @@
                         <el-button class="btn-visible" hidden title="详情" @click.stop="seeDetail(item)" type="text" size="small" icon="fa fa-info-circle"></el-button>
                         <el-button class="btn-visible" hidden title="修改" @click.stop="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
                         <el-button class="btn-visible" hidden title="删除" @click.stop="deleteArea(item)" type="text" size="small" icon="fa fa-trash-o"></el-button>
-                        <el-button class="btn-visible" hidden title="导入" @click.stop="importFile(item)" type="text" size="small" icon="fa fa-mail-forward"></el-button>
+                        <el-button class="btn-visible" hidden title="导入" @click.stop="importFile(item)" type="text" size="small" icon="fa fa-mail-forward" v-show="isHca"></el-button>
                         <!-- <el-button title="启用" @click='enableUse(item)' v-show="item.isEdit" type="text" size="small" icon="fa fa-key"></el-button> -->
                         <el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" ></el-button>
 					</li>
@@ -94,6 +94,7 @@ var vm = new Vue({
             total: 0,
             showActive: -1,
             filterText:'',
+			isHca:false,
             headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
@@ -112,6 +113,11 @@ var vm = new Vue({
 		this.jasMap = parent.app.jasMap;
 		this.forBusiness = getParamter('forBusiness');
 		this.requestVersionList(0,"");
+		if(this.forBusiness=="1"){
+		    this.isHca=false;
+		}else{
+		    this.isHca=true;
+		}
 	},
     mounted: function () {
     },
@@ -128,7 +134,7 @@ var vm = new Vue({
                 width: '15%',
                 top:'155px',
                 right:'4%',
-				title: '新增地区等级历史版本信息',
+				title: title,
 				src: baseSrc,
 				cbForClose: function () {
 					that.requestVersionList(0,"");
