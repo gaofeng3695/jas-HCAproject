@@ -193,8 +193,16 @@
 				window.parent.jasTools.selfDialog.close(param);
 				if(!param){
 					if(this.forBusiness == "0"){
+						parent.app.$message({
+							type: 'success',
+							message: "未填写信息，系统自动保存！"
+						});
 						parent.app.showAreaDialogCreate('0', '地区等级列表', '150px');
 					}else{
+						parent.app.$message({
+							type: 'success',
+							message: "未填写信息，系统自动保存！"
+						});
 						parent.app.showAreaDialogLeft('1', '高后果区列表', '150px');
 					}
 				}
