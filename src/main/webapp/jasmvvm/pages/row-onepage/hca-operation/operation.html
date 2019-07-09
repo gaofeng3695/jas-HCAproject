@@ -607,9 +607,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				loading.text='空间相交计算......';
 				setTimeout(function(){
 					loading.close();
-					app.showAreaDialogCreate('0', '地区等级列表', '150px');
-				    that.jasMap.flashGraphic('d', 'pd_arearank' ,{
+					that.jasMap.layerVisibleSwitch("pd_arearank" ,true);
+					/* that.jasMap.flashGraphic('d', 'pd_arearank' ,{
 						deep:2
+					}); */
+					that.saveVersion('0', function(){
+						app.showAreaDialogCreate('0', '地区等级列表', '150px');
+						//app.showAreaDialogCreate('0', '地区等级列表', '150px');
 					});
 				}, 1000);
                 /* loading.text='识别单元计算......';
@@ -803,34 +807,28 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							setTimeout(function(){
 								loading.text='空间相交计算......'
 							}, 1000);
-							common.simpleAjaxLoader({
+							/* common.simpleAjaxLoader({
 								url:"../../../../zone/data/analysis.do",
 								data:JSON.stringify(postData),
 								contentType:"application/json",
 								method :"post",
 								async :true,
 								onSuccess :function(re){
-									var result = JSON.parse(re);
+									var result = JSON.parse(re); */
 									loading.text='高后果区计算......';
 									setTimeout(function(){
 										loading.close();
 									}, 1000);
-									/* that.$message({
-										type: 'success',
-										message: result.msg
+									that.saveVersion('1', function(){
+										app.showAreaDialogLeft('1', '高后果区列表', '150px');
 									});
-									if(result.data > 0){
-										app.loadZoneCell();
-										app.showAreaDialog('1', '高后果区列表', '460px');
-									} */
-									app.loadZoneCell();
-									app.showAreaDialogLeft('1', '高后果区列表', '420px');
 									//app.showAreaDialog('1', '高后果区列表', '460px');
-								},
+									app.loadZoneCell();
+								/* },
 								onError :function(){
 			
 								}
-							});
+							}); */
 						}
 					}
 				})
@@ -1075,6 +1073,27 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					this.areaSelect == 1;            		
             	}
             		console.log(this.areaSelect)
+            },
+            saveVersion: function(forBusiness, callback){
+            	var that = this;
+    			var title ="新增高后果区历史版信息";
+    			console.log(forBusiness)
+    			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html?forBusiness=' + forBusiness;
+    			if(forBusiness=="0"){
+    				title='新增地区等级历史版本信息';
+    			}
+    			top.jasTools.selfDialog.show({
+    				height: '485px',
+                    width: '388px',
+                    top: '155px',
+                    left: '8%',
+    				title: title,
+    				src: baseSrc,
+    				cbForClose: function () {
+    					
+    					callback();
+    				}
+    			});
             }
 		}
 	})
