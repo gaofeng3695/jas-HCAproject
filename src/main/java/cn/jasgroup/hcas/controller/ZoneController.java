@@ -368,7 +368,7 @@ public class ZoneController extends BaseController {
         param.setSrsname( areaCellSourceName );
         param.setOrderBy( "start_mileage" );
         param.setOutputFormat( null );
-        FeatureCollection queryResult = geodataAccessService.query(param);// 空间查询
+        FeatureCollection<Feature> queryResult = geodataAccessService.query(param);// 空间查询
         Feature[] features = queryResult.getFeatures().toArray(new Feature[0]);
         Integer featureSize = features.length  ;
 
@@ -602,7 +602,7 @@ public class ZoneController extends BaseController {
         param.setSrsname(sourceName);
         param.setGeometryType(GeometryType.POLYGON.name());
 
-        FeatureCollection featureCollection = geodataAccessService.query(param);// 空间查询
+        FeatureCollection<Feature> featureCollection = geodataAccessService.query(param);// 空间查询
         Feature[] features = featureCollection.getFeatures().toArray(new Feature[0] );
         //叠加人口数据
         double totalPopulation = 0d;
@@ -939,7 +939,7 @@ public class ZoneController extends BaseController {
             layerQueryParam.setOutFields("gid");
             layerQueryParam.setGeometry(feature.getGeometry().toString());
             layerQueryParam.setGeometryType(GeometryType.POLYGON.name());
-            FeatureCollection queryResult =   geodataAccessService.query(layerQueryParam);
+            FeatureCollection<Feature> queryResult =   geodataAccessService.query(layerQueryParam);
 
             Feature[] array = queryResult.getFeatures().toArray(new Feature[0] );
             if(array != null && array.length > 0 ){
@@ -978,7 +978,7 @@ public class ZoneController extends BaseController {
                 layerQueryParam.setGeometry(feature.getGeometry().toString());
                 layerQueryParam.setGeometryType(GeometryType.POLYGON.name());
 
-                FeatureCollection   queryResult = geodataAccessService.query(layerQueryParam);
+                FeatureCollection<Feature>   queryResult = geodataAccessService.query(layerQueryParam);
                 Feature[] array = queryResult.getFeatures().toArray(new Feature[0]);
                 if(array != null && array.length > 0){
                     if(diameter > 762 && presure > 6.9) {
@@ -1149,7 +1149,7 @@ public class ZoneController extends BaseController {
         layerQueryParam.setSrsname(sourceName);
         layerQueryParam.setOutFields("*");
 
-        FeatureCollection queryResult = geodataAccessService.query(layerQueryParam) ;
+        FeatureCollection<Feature> queryResult = geodataAccessService.query(layerQueryParam) ;
         Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
         int i = 0 ;
         double maxArea = 0d;
@@ -1207,7 +1207,7 @@ public class ZoneController extends BaseController {
         param.setGeometryType(GeometryType.POLYGON.name());
         param.setGeometry(GeometryUtil.abraseSRID(bufferPolygonWKT)) ;
 
-        FeatureCollection queryResult = geodataAccessService.query(param) ;
+        FeatureCollection<Feature> queryResult = geodataAccessService.query(param) ;
         Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
 
         StringUtil.timeEnd("查询识别区域相交的居民地");
@@ -1281,7 +1281,7 @@ public class ZoneController extends BaseController {
         layerQueryParam.setSrsname(sourceName);
         layerQueryParam.setOutFields("*");
         layerQueryParam.setOrderBy("start_mileage");
-        FeatureCollection queryResult = geodataAccessService.query(layerQueryParam) ;
+        FeatureCollection<Feature> queryResult = geodataAccessService.query(layerQueryParam) ;
         Feature[] features =queryResult.getFeatures().toArray(new  Feature[0]);
         return features ;
     }
@@ -1415,8 +1415,8 @@ public class ZoneController extends BaseController {
     }
 
     private Geometry mergeGeometry(Polygon geo1 , Polygon geo2){
-        Point[] pointArray1 = geo1.getCoordinates();
-        Point[] pointArray2 = geo2.getCoordinates();
+        Point[] pointArray1 = geo1.toCoordinates();
+        Point[] pointArray2 = geo2.toCoordinates();
         int size1 = pointArray1.length ;
         int size2 = pointArray2.length ;
         int size = size1 + size2;
@@ -1443,7 +1443,7 @@ public class ZoneController extends BaseController {
             double startX = 0d;
             double startY = 0d;
             Polygon polygon = (Polygon) feature.getGeometry();
-            Point[] points = polygon.getCoordinates();
+            Point[] points = polygon.toCoordinates();
             for(int j = 0 ; j < points.length ;j++){
                 Point p = points[j];
                 String point = GeometryUtil.toWKT(p);
@@ -1544,7 +1544,7 @@ public class ZoneController extends BaseController {
         param.setReturnGeometry( true );
         param.setOrderBy("start_mileage");
         param.setOutFields("*");
-        FeatureCollection areaResult = geodataAccessService.query(param);
+        FeatureCollection<Feature> areaResult = geodataAccessService.query(param);
         Feature[] features =areaResult.getFeatures().toArray(new  Feature[0]);
         logger.info("查询到{}条地区等级数据",features.length) ;
         //

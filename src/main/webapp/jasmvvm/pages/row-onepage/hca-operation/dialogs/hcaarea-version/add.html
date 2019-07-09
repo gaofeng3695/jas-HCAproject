@@ -137,6 +137,10 @@
 			
 		computed: {
 		},
+		created: function(){
+			var param = window.jasTools.base.getParamsInUrl(location.href);
+			this.forBusiness = param.forBusiness;
+		},
 		mounted: function () {
 			var param = window.jasTools.base.getParamsInUrl(location.href);
 			if (param.oid) {
@@ -171,6 +175,7 @@
 				if (!this.isEdit) {
 					msg = "增加成功";
 					url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/save.do";
+					that.tableFormData.forBusiness = this.forBusiness;
 				} else {
 					msg = "修改成功";
 					url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/update.do";
@@ -186,6 +191,13 @@
 			},
 			cancel: function (param) {
 				window.parent.jasTools.selfDialog.close(param);
+				if(!param){
+					if(this.forBusiness == "0"){
+						parent.app.showAreaDialogCreate('0', '地区等级列表', '150px');
+					}else{
+						parent.app.showAreaDialogLeft('1', '高后果区列表', '150px');
+					}
+				}
 			}
 		},
 	});

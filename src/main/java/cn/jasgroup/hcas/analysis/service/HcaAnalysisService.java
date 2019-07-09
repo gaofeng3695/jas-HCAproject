@@ -131,7 +131,7 @@ public class HcaAnalysisService extends AnalysisBaseService implements IAnalysis
         param.setOrderBy("start_mileage");
 
         loggerUtil.time("查询识别区域相交的居民地");
-        FeatureCollection queryResult = geodataAccessService.query(param) ;
+        FeatureCollection<Feature> queryResult = geodataAccessService.query(param) ;
         Feature[] settlementData = queryResult.getFeatures().toArray(new Feature[0]);
         int totalSize = settlementData.length;
         loggerUtil.timeEnd("查询识别区域内的居民地","查询到" + totalSize + "处居民地");
@@ -184,7 +184,7 @@ public class HcaAnalysisService extends AnalysisBaseService implements IAnalysis
             Feature feature = settlementData[i];
             Map<String,Object> attributes = feature.getAttributes();
             Polygon polygon = (Polygon) GeometryUtil.toGeometry(feature.getGeometry());
-            Point[] points = polygon.getCoordinates();//相交
+            Point[] points = polygon.toCoordinates();//相交
 
             double startFraction = 1 ;
             double endFraction = 0d;
