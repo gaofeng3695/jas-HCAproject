@@ -1,0 +1,424 @@
+{
+  "description":"gis平台api配置,提供基础的公共的地图相关配置",
+  "style":"default",
+  "dojoConfig":{
+    "parseOnLoad": true,
+    "async": true,
+    "baseUrl":"../../jasframework/common/lib/esri/3.18/dojo"
+  },
+  "services":{
+    "geometryService":"http://192.168.100.130:6080/arcgis/rest/services/Utilities/Geometry/GeometryServer",
+    "printService":"http://192.168.100.130:6080/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+  },
+  "context":{
+    "tdt-key":"46631a6a7eeeefecf46ebc480483d9ca",
+    "defaultFlashEffect":"shine",
+    "fullscreenTarget":"body",
+    "feColorMatrixValue":"0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.1 0 0 0 0 0 1 0"
+  },
+  "resources": [
+  ],
+  "map":{
+    "id":"mapDivId",
+    "mapOptions":{
+      "extent":{
+        "xmin": 107.046640,
+        "ymin": 30.942782,
+        "xmax": 122.536931,
+        "ymax": 38.568955,
+        "spatialReference": {
+          "wkid": 4490
+        }
+      },
+      "slider":false
+    },
+    "basemaps":{
+      "label": "基础底图",
+      "baseMapLayers": [
+        {
+          "id": "tdt-shp",
+          "label": "天地图矢量",
+          "icon": "../../jasframework/map_viewer/images/basemaps/basemap_shp.png",
+          "visible": true,
+          "layerSet": [
+            {
+              "id": "tianditu-vec",
+              "label": "行政区划图",
+              "type": "tdt-vec",
+              "index": 1
+            },
+            {
+              "id": "tianditu-cva",
+              "label": "矢量图标注",
+              "type": "tdt-cva",
+              "index": 1,
+              "visible": true
+            }
+          ]
+        },
+        {
+          "id": "tdt-img",
+          "label": "天地图影像",
+          "icon": "../../jasframework/map_viewer/images/basemaps/basemap_img.png",
+          "visible": true,
+          "layerSet": [
+            {
+              "id": "tianditu-img",
+              "label": "天地图影像",
+              "type": "tdt-img",
+              "index": 2
+            },
+            {
+              "id": "tianditu-cia",
+              "label": "影像图标注",
+              "type": "tdt-cia",
+              "index": 6
+            }
+          ]
+        },
+        {
+          "id": "tdt-ter",
+          "label": "天地图地形",
+          "icon": "../../jasframework/map_viewer/images/basemaps/basemap_img.png",
+          "visible": true,
+          "layerSet": [
+            {
+              "id": "tianditu-ter",
+              "label": "天地图地形",
+              "type": "tdt-ter",
+              "index": 2
+            },
+            {
+              "id": "tianditu-cta",
+              "label": "地形图标注",
+              "type": "tdt-cta",
+              "index": 6
+            }
+          ]
+        }
+      ],
+      "baseMapLayers2": [
+        {
+          "id": "tdt-shp",
+          "label": "天地图矢量",
+          "icon": "../../jasframework/map_viewer/images/basemaps/basemap_shp.png",
+          "visible": true,
+          "layerSet": [
+            {
+              "id": "tianditu-vec",
+              "label": "行政区划图",
+              "type": "dynamic",
+              "url":"http://192.168.100.77:6080/arcgis/rest/services/MXDLG/MapServer",
+              "index": 1
+            }
+          ]
+        }
+      ]
+    },
+    "optionallayers":[{
+      "id":"layerSet001",
+      "label":"业务图层",
+      "layerSet":[
+       {
+          "id":"hca_buildings","type":"feature","label":"gzw","index":"31" ,"visible":false,
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0"
+        },{
+          "id":"hca_pipeline","type":"feature","label":"guaxian","index":"31" ,
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1"
+        },{
+          "id":"pd_arearank","type":"feature","label":"dqdj","index":"31" ,"visible":false,"where":"1!=1",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2"
+        },{
+          "id":"pd_zonerankcell","type":"feature","label":"hca","index":"31" ,"visible":false,"where":"1!=1",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3"
+        }
+      ]
+  },{
+    "id":"layerSet002",
+    "label":"特定场所",
+    "layerSet":[
+      {
+        "id":"pd_government",
+        "label":"政府机构",
+        "maxScale":100000,
+        "outFields":"","strategy":"bbox",
+        "visible":false,
+        "renderer":{
+          "style":"government_style"
+        },
+        "index":31
+      }, {
+        "id":"pd_hospital",
+        "label":"医疗院所","strategy":"bbox",
+        "outFields":"",
+        "visible":false,
+        "maxScale":100000,
+        "renderer":{
+          "style":"hospital_style"
+        },
+        "index":31
+      },{
+        "id":"pd_gas_station",
+        "index":31,"strategy":"bbox",
+        "label":"加油站",
+        "maxScale":100000,
+        "outFields":"",
+        "visible":false,
+        "renderer":{
+          "style":"gas_station_style"
+        }
+      },{
+        "id":"pd_entertainment_place",
+        "index":31,"strategy":"bbox",
+        "label":"娱乐场所",
+        "maxScale":100000,
+        "outFields":"",
+        "visible":false,
+        "renderer":{
+          "style":"entertainment_style"
+        }
+      }
+    ]
+  }
+  ]
+},
+  "proxy":[],
+  "modules":[
+    {
+    "id": "baseMapToolsBar",
+    "label": "地图工具条",
+    "class": "BaseMapToolsBar",
+    "icon": "",
+    "controller": true,
+    "container": "map",
+    "moduleSet": [{
+        "type": "api",
+        "target": "fullscreen",
+        "label": "地图全屏",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/reset.png"
+      },
+      {
+        "type": "api",
+        "target": "zoomHome",
+        "label": "地图复位",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/reset.png"
+      },
+      {
+        "type": "api",
+        "target": "startPanMode",
+        "label": "平移地图",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/mapPan.png"
+      },
+      {
+        "type": "api",
+        "target": "zoomIn",
+        "label": "放大地图",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/zoomIn.png"
+      },
+      {
+        "type": "api",
+        "target": "zoomOut",
+        "label": "缩小地图",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/zoomOut.png"
+      },
+      {
+        "type": "api",
+        "target": "drawLineAndGetLength",
+        "label": "距离测量",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/measureDistance.png"
+      },
+      {
+        "type": "api",
+        "target": "drawPolygonAndGetArea",
+        "label": "面积测量",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/measureArea.png"
+      },
+      {
+        "type": "module",
+        "target": "drawBox",
+        "label": "地图标绘",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "api",
+        "target": "clearAllGraphics",
+        "label": "清空标记",
+        "index": "",
+        "icon": "../../jasframework/map_viewer/images/dock/clear.png"
+      },
+      {
+        "type": "module",
+        "target": "locate",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "module",
+        "target": "queryByPolygon",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "module",
+        "target": "queryByCircle",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "module",
+        "target": "layerListTree",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "module",
+        "target": "mapExport",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "module",
+        "target": "mapPrint",
+        "index": "",
+        "toggle": true
+      },
+      {
+        "type": "api",
+        "target": "func1",
+        "label":"全屏",
+        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
+        "index": ""
+      },
+      {
+        "type": "api",
+        "target": "createBh",
+        "label":"标绘",
+        "icon":"../../jasframework/map_viewer/images/plot/polygon.png",
+        "index": ""
+      },
+      {
+        "type": "api",
+        "target": "showHistoryBtn",
+        "label":"标绘",
+        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
+        "index": ""
+      },
+      {
+        "type": "api",
+        "target": "createHcaArea",
+        "label":"标绘",
+        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
+        "index": ""
+      }
+    ]
+  },
+    {
+      "id": "layerListTree",
+      "label": "图层控制",
+      "class": "LayerListTree",
+      "icon": "../../jasframework/map_viewer/images/dock/layers.png",
+      "options":{
+        "right":230,
+        "top":80
+      }
+    },
+    {
+      "id": "drawBox",
+      "label": "标绘",
+      "class": "DrawAndEditPanel",
+      "icon": "../../jasframework/map_viewer/images/dock/draw.png",
+      "options":{
+        "height":300
+      }
+    },
+    {
+      "id": "locate",
+      "label": "坐标定位",
+      "class": "Locate",
+      "icon": "../../jasframework/map_viewer/images/dock/locate.png"
+    },
+    {
+      "id": "queryByCircle",
+      "label": "圆查询",
+      "class": "QueryByGeometry",
+      "icon": "../../jasframework/map_viewer/images/dock/queryByCircle.png",
+      "options":{
+        "title":"圆查询",
+        "queryType":"circle",
+        "layers":[{
+          "id":"group01",
+          "text":"未命名分组01",
+          "children":[{
+            "id":"sco_base_stake",
+            "text":"桩",
+            "outFields":"*",
+            "where":"active=1"
+          }]
+        },{
+          "id":"dfdsfd",
+          "text":"焊口",
+          "outFields":"*",
+          "where":"active=1"
+        }],
+        "columns":{
+          "sco_base_stake":[
+            {"field":"OID","title":"编号","width":100,"align":"center"},
+            {"field":"STAKE_NUM","title":"桩号","width":100,"align":"center"},
+            {"field":"MILEAGE","title":"里程","width":100,"align":"center"}
+          ],
+          "dfdsfd":[
+            {"field":"OID","title":"编号","width":100,"align":"center"},
+            {"field":"WELD_NUM","title":"焊口编号","width":100,"align":"center"}
+          ]
+        }
+      }
+    },
+    {
+      "id": "queryByPolygon",
+      "label": "面查询",
+      "class": "QueryByGeometry",
+      "icon": "../../jasframework/map_viewer/images/dock/queryByPolygon.png",
+      "options":{
+        "title":"面查询",
+        "queryType":"polygon",
+        "mode":"tool"
+      }
+    },
+    {
+      "id": "baseMapsGallary",
+      "label": "底图切换",
+      "class": "BaseMapsGallary"
+    },
+    {
+      "id": "overViewMap",
+      "label": "鹰眼图",
+      "class": "OverViewMap"
+    },
+    {
+      "id": "mapPrint",
+      "label": "地图打印",
+      "class": "MapPrint",
+      "icon": "../../jasframework/map_viewer/images/dock/print.png"
+    },
+    {
+      "id": "mapExport",
+      "label": "地图导出","enable":true,
+      "class": "MapExport",
+      "icon": "../../jasframework/map_viewer/images/dock/export.png"
+    },
+    {
+      "id": "coorsPicker","enable":true,
+      "label": "坐标拾取",
+      "class": "CoorsPicker",
+      "icon": "../../jasframework/map_viewer/images/dock/locate.png"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+[
+	{
+		"tableName": "hcabuildings",
+		"beginRow": 0,
+		"beginCol": 1,
+		"importMap": {
+			"fieldName": "",
+			"fieldType": "",
+			"inputType": "",
+			"isMandatory": "",
+			"dataSource": "",
+			"dataSourceMap": [],
+		}
+	}
+]

@@ -30,8 +30,9 @@ function showmap2d(){
 		innerNorthLayout.hide('east');
 		if(!isHasOpen2d){
 			isHasOpen2d=true;
-			tab.addMapTab('2d','地图','http://120.192.58.115:18080/#/locate/',true);
-			/*tab.addMapTab('2d','地图','../map_viewer/map.html',true);*/
+			//tab.addMapTab('2d','地图','http://120.192.58.115:18080/#/locate/',true);
+			//tab.addMapTab('2d','地图','../../jasmvvm/pages/row-onepage/hca-operation/operation.html',true);
+			tab.addMapTab('2d','地图','../map_viewer/operation.html',true);
 		}
 		if(isHasOpen3d){
 			if(click3dStatis==true){//如果3d已经最大化，先还原
@@ -49,8 +50,8 @@ function showmap2d(){
 		innerEastLayout.hide('south');
 		if(!isHasOpen2d){
 			isHasOpen2d=true;
-			tab.addMapTab('2d','地图','http://120.192.58.115:18080/#/locate/',true);
-			/*tab.addMapTab('2d','地图','../map_viewer/map.html',true);*/
+			//tab.addMapTab('2d','地图','http://120.192.58.115:18080/#/locate/',true);
+			tab.addMapTab('2d','地图','../map_viewer/operation.html',true);
 		}
 		if(isHasOpen3d){
 			if(click3dStatis==true){//如果3d已经最大化，先还原
