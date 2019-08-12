@@ -216,7 +216,7 @@
 
 
 	<!-- gis  -->
-	<bean id="geodataProcessService" class="cn.jasgroup.gis.dataprocess.opengis.GeodataProcessService">
+	<!-- <bean id="geodataProcessService" class="cn.jasgroup.gis.dataprocess.opengis.GeodataProcessService">
 	    <property name="geometryService" ref="geometryService" ></property>
 	    <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" ></property>
 	</bean>
@@ -230,7 +230,7 @@
 	</bean>
 	<bean id="geodataAccessService" class="cn.jasgroup.gis.dataaccess.opengis.GeodataAccessService" init-method="init">
 	    <property name="namedParameterJdbcTemplate" ref="namedParameterJdbcTemplate" ></property>
-	</bean>
+	</bean> -->
 
 
 	<!-- redisTemplate配置开始 -->
@@ -313,7 +313,7 @@
      
     
     <!-- 消息接收者 -->
-    <bean id="spatialListener" class="cn.jasgroup.gis.data.opengis.SpatialPersistenceListener"></bean>
+    <bean id="spatialListener" class="cn.jasgroup.gis.data.arcgis.SpatialPersistenceListener"></bean>
     <!-- queue litener 观察 监听模式 当有消息到达时会通知监听在对应的队列上的监听对象 -->  
     <rabbit:listener-container connection-factory="rabbitConnectionFactory" acknowledge="manual">  <!--  -->
          <rabbit:listener  queues="${rabbit.queue.spatial}"  ref="spatialListener"/>  

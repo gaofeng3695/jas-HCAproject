@@ -1,12 +1,14 @@
 package cn.jasgroup.hcas.pipelinemanage.dao.entity;
 
+import javax.persistence.Column;
+
+import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
 import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
 import cn.jasgroup.jasframework.base.annotation.UniqueConstraintStrategy;
 import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
-import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 /**
  * @description 管线表
@@ -26,7 +28,7 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 @CommonUpdateConfig(scene="/hcapipeline/update")
 @CommonDeleteConfig(scene="/hcapipeline/delete")
 @JdbcEntity(name="hca_pipeline")
-public class HcaPipeline extends CommonJdbcEntity {
+public class HcaPipeline extends ArcGisSpatialObject {
 
 	/**
 	 * 管线编号 
@@ -64,16 +66,11 @@ public class HcaPipeline extends CommonJdbcEntity {
 	private Double pressure; 
 
 	/**
-	 * 空间数据状态 
-	 */
-	private String geoState; 
-
-	/**
 	 * 备注 
 	 */
 	private String remarks; 
 
-
+	@Column(name="pipeline_code")
 	public String getPipelineCode() {
 		return pipelineCode; 
 	}
@@ -83,6 +80,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("pipelineCode");
 	}
 
+	@Column(name="pipeline_name")
 	public String getPipelineName() {
 		return pipelineName;
 	}
@@ -92,6 +90,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("pipelineName");
 	}
 
+	@Column(name="start_mileage")
 	public Double getStartMileage() {
 		return startMileage; 
 	}
@@ -101,6 +100,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("startMileage");
 	}
 
+	@Column(name="end_mileage")
 	public Double getEndMileage() {
 		return endMileage; 
 	}
@@ -110,6 +110,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("endMileage");
 	}
 
+	@Column(name="pipeline_length")
 	public Double getPipelineLength() {
 		return pipelineLength; 
 	}
@@ -119,6 +120,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("pipelineLength");
 	}
 
+	@Column(name="outside_diameter")
 	public Double getOutsideDiameter() {
 		return outsideDiameter; 
 	}
@@ -128,6 +130,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("outsideDiameter");
 	}
 
+	@Column(name="pressure")
 	public Double getPressure() {
 		return pressure; 
 	}
@@ -137,15 +140,7 @@ public class HcaPipeline extends CommonJdbcEntity {
 		super.setField("pressure");
 	}
 
-	public String getGeoState() {
-		return geoState; 
-	}
-
-	public void setGeoState(String geoState) {
-		this.geoState = geoState; 
-		super.setField("geoState");
-	}
-
+	@Column(name="remarks")
 	public String getRemarks() {
 		return remarks; 
 	}

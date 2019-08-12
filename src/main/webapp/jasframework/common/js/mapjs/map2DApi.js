@@ -2213,7 +2213,7 @@ var M = JasMap = null;
                         var deltTime = end.datetime - start.datetime ;
                         var point = {};
                         var during = frameTime * params.times ;
-                        if(deltTime > during){
+                        if( deltTime > during){
                             isRouteLocate = false ;
                             var x1 = start.coordinate[0];
                             var y1 = start.coordinate[1];
@@ -2382,17 +2382,6 @@ var M = JasMap = null;
                         if(angle === null ){
                             angle = calculateRotateAngle(lastX,lastY,nextX ,nextY);
                         }
-                        // var segmentLength = geometryUtil.distance(lastX,lastY ,nextX ,nextY);
-                        // sumArrowSpaceLength += segmentLength;
-                        // if(sumArrowSpaceLength > params.arrowSpace ){
-                        //     var deltLenth  = sumArrowSpaceLength - params.arrowSpace;
-                        //     var k = deltLenth / segmentLength;
-                        //     var locate = locatePoint(lastX,lastY ,nextX ,nextY ,k);
-                        //     var gra = createSimpleGraphic(locate,routeArrowSymbolObj);
-                        //     gra.symbol.setAngle(angle);
-                        //     routeLayer.add(gra) ;
-                        //     sumArrowSpaceLength = 0 ;
-                        // }
                         var locate = [nextX ,nextY ];
                         var gra = createSimpleGraphic(locate,routeArrowSymbolObj);
                         gra.symbol.setAngle(angle);
@@ -2477,7 +2466,81 @@ var M = JasMap = null;
                 var routePlayer = new RoutePlayer(route,options);
                 return routePlayer.init().play();
             };
+            /**
+             * 按时间动画箭头线
+             * @param polylineString 坐标字符串x1,y1,x2,y2; ... ;xn-1,yn-1,xn,yn;
+             * @param lineSymbolObject 轨迹样式
+             * @param during 持续时间（毫秒）
+             * @param layerId 图形绘制的图层
+             * @param arrowSymbolObject 图形绘制的图层
+             */
+            _this.animateArrowLineInTime = function(polylineString,lineSymbolObject,during,layerId,arrowSymbolObject){
+                var defaultLineSymbolObject = {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [0,0,255,255],
+                    "width": 2
+                };
+                lineSymbolObject = lang.mixin(defaultLineSymbolObject, lineSymbolObject);
+                var symbol = styleManager.getSymbolByObject(lineSymbolObject);
 
+                layerId = layerId ? layerId :"drawylayer_animate_route";
+                var layer = _this.getLayerById( layerId ) ;
+                if(!layer){
+                    layer = _this.createGraphicLayer(layerId);
+                }
+                var coordinatesArray = layerManager.parsePolylineCoordinateBySemicolon(polylineString);
+                var duringArray = [];
+                for(var idx = 0 ; idx < coordinatesArray.length;idx++){
+                    duringArray.push(during);
+                }
+                var pathArray = layerManager.buildSegments(coordinatesArray,duringArray,layer,symbol,arrowSymbolObject);
+                //多条线段
+                for(var i = 0 ; i < pathArray.length ; i++){
+                    var path = pathArray[i] ;
+                    path.animate();
+                }
+            };
+            /**
+             * 按速度动画箭头线
+             * @param polylineString
+             * @param lineSymbolObject
+             * @param speed
+             * @param ratio
+             * @param arrowSymbolObject
+             */
+            _this.animateArrowLineInSpeed = function(polylineString,lineSymbolObject,speed,ratio,arrowSymbolObject){
+
+                var defaultLineSymbolObject = {
+                    "type": "esriSLS",
+                    "style": "esriSLSSolid",
+                    "color": [0,0,255,255],
+                    "width": 2
+                };
+                lineSymbolObject = lang.mixin(defaultLineSymbolObject, lineSymbolObject);
+                var symbol = styleManager.getSymbolByObject(lineSymbolObject);
+
+                var layerId = "drawylayer_animate_route";
+                var layer = _this.getLayerById( layerId) ;
+                if(!layer){
+                    layer = _this.createGraphicLayer(layerId);
+                }
+                //
+                var coordinatesArray = layerManager.parsePolylineCoordinateBySemicolon(polylineString);
+                var duringArray = [];
+                for(var idx = 0 ; idx < coordinatesArray.length ;idx ++){
+                    var path = coordinatesArray[idx] ;
+                    var length = layerManager.getRoughLength(path) ;
+                    var during = length/speed * ratio;
+                    duringArray.push(during);
+                }
+                var pathArray = layerManager.buildSegments(coordinatesArray,duringArray,layer,symbol,arrowSymbolObject);
+                //多条线段
+                for(var i = 0 ; i < pathArray.length ; i++){
+                    var segment = pathArray[i] ;
+                    segment.animate();
+                }
+            };
             _this.coorsToXY = function (lng, lat) {
                 var arrs;
                 var wkid = _this.map.spatialReference.wkid;
@@ -2616,7 +2679,7 @@ var M = JasMap = null;
                     }
                 });
             };
-            _this.bufferGraphic = function(graphic ,distance, options){
+            _this.bufferGraphic = function ( graphic ,distance, options){
                 _this.queryBufferGraphic(graphic.geometry.toJson() ,distance, options);
             };
             _this.queryBufferGraphic = function( geomJson ,distance, options){
@@ -3105,6 +3168,235 @@ var M = JasMap = null;
                     eventManager.publishEvent(_this.Events.OptionalLayersChangedEvent, layers, configs);//
                 };
 
+                var PathSegment = function(ly ,arrowSymbolObject){
+
+                    var defaultArrowSymbolObject = {
+                        type: "esriSMS",
+                        style: "esriSMSPath",
+                        angle:0,
+                        size: 16,
+                        xoffset:0,
+                        yoffset:0,
+                        "color": [0,0,255,0],
+                        path:"M 0 5 L 5 0 L 10 5",
+                        "outline" : {
+                            "color" : [0,255,0,255],
+                            "width" :2
+                        }
+                    };
+
+                    arrowSymbolObject = lang.mixin(defaultArrowSymbolObject, arrowSymbolObject);
+                    var arrowSymbol = styleManager.getSymbolByObject(arrowSymbolObject);
+                    var _self = this ;
+                    var symbol = arrowSymbol;
+                    var layer = ly;
+                    var frameTime = 40 ;//mx
+                    var routeArray = [];
+                    var CONST_PI = 180 / Math.PI;
+                    var sp = _this.map.spatialReference;
+                    _self.length = 0 ;
+                    _self.start = [];
+                    _self.end = [];
+                    _self.during = 0;
+                    _self.easing = function(x){
+                        //自定义简单的函数来替代贝塞尔曲线函数
+                        return 1 - Math.pow(x - 1 ,2);//[0,1]
+                    };
+                    _self.calLength = function(){
+                        _self.length = Math.sqrt(Math.pow(_self.end[0] - _self.start[0],2) + Math.pow(_self.end[1] - _self.start[1],2));
+                    };
+                    var calculateRotateAngle = function(){
+                        var lastX = _self.start[0];
+                        var lastY = _self.start[1];
+                        var nextX = _self.end[0];
+                        var nextY = _self.end[1];
+                        var vec = [ nextX - lastX ,nextY - lastY] ;
+                        var vecLen = Math.sqrt(Math.pow(vec[0] ,2) + Math.pow(vec[1],2));
+                        var angle = Math.acos(vec[1] / vecLen) * CONST_PI ;
+                        if(vec[0] < 0 ){
+                            angle = 360 - angle ;
+                        }
+                        angle = parseInt(angle.toFixed(0));
+                        return angle ;
+                    };
+                    var interPoint = function(k){
+                        var x = k * ( _self.end[0] - _self.start[0] ) + _self.start[0] ;
+                        var y = k * ( _self.end[1] - _self.start[1] ) + _self.start[1] ;
+                        return [x , y] ;
+                    };
+                    //设置播放时长并内插坐标
+                    _self.setDuring = function(du){
+                        _self.during = du;
+                        routeArray.push(_self.start);
+                        if(_self.during > frameTime){
+                            var sumDuring = 0 ;
+                            while(true){
+                                sumDuring += frameTime;
+                                if(sumDuring > _self.during){
+                                    sumDuring = _self.during;
+                                    break;
+                                }else{
+                                    var radio = sumDuring /_self.during;
+                                    var k = _self.easing(radio) ;
+                                    var p = interPoint(k);
+                                    routeArray.push(p);
+                                }
+                            }
+                        }
+                        routeArray.push(_self.end);
+                    };
+                    var current = null ;
+                    var graphic = null;
+                    _self.prepare = function(){
+                        current = _self.start ;
+                        if(graphic === null){
+                            var point = new Point(current,sp);
+                            var angle = calculateRotateAngle();
+                            graphic = new Graphic(point,symbol);
+                            layer.add(graphic);
+                        }else{
+                            var point = new Point(_self.start,sp);
+                            graphic.setGeometry(point);
+                        }
+                        graphic.symbol.setAngle(angle);
+                    };
+                    var currentIndex = 1;
+                    _self.update = function(callback){
+                        var coors = routeArray[currentIndex++];
+                        var point = new Point(coors,sp);
+                        graphic.setGeometry(point);
+                        callback(point);
+                        return currentIndex === routeArray.length;
+                    };
+                };
+                var PathSegments = function(during,ly,symbol){
+                    var _self = this ;
+                    var timer = null ;
+                    var layer = ly;
+                    var routeGraphic = null;
+                    var routeSymbol = symbol;
+                    var sp = _this.map.spatialReference;
+
+                    _self.totalDuring = during;
+                    _self.totalLength = 0 ;
+                    _self.segments = [];
+                    _self.addSegment = function(se){
+                        _self.segments.push(se);
+                        _self.totalLength += se.length ;
+                    };
+                    //根据长度分配播放时间
+                    _self.distributeDuringTime = function(){
+                        for(var i = 0 ; i < _self.segments.length ; i ++){
+                            var radio = _self.segments[i].length / _self.totalLength ;
+                            _self.segments[i].setDuring(radio * _self.totalDuring)  ;
+                        }
+                    };
+                    _self.stop = function(){
+                        clearInterval(timer);
+                    };
+                    _self.prepare = function(){
+                        routeGraphic = new Graphic();
+                        var path = [ _self.segments[0].start, _self.segments[0].start];
+                        var route = new Polyline(sp);
+                        route.addPath(path) ;
+                        routeGraphic.setSymbol(routeSymbol);
+                        routeGraphic.setGeometry(route);
+                        layer.add(routeGraphic);
+                        return _this.flashGraphic( routeGraphic,ly.id,{
+                            flash:false
+                        });
+                    };
+                    _self.turn = function(){
+                        var pl = routeGraphic.geometry;
+                        var p = pl.getPoint(0,0);
+                        pl.insertPoint(0,0,p);
+                        routeGraphic.setGeometry(pl);
+                    };
+                    _self.update = function(p){
+                        var pl = routeGraphic.geometry;
+                        pl.setPoint(0,0,new Point(p.x,p.y,sp));
+                        routeGraphic.setGeometry(pl);
+                    };
+                    _self.animate = function(){
+                        var segmentIndex = -1 ;
+                        var size = _self.segments.length ;
+                        var next = true ;
+                        var currentSegment = null;
+                        _self.stop();
+                        _self.prepare().then(function(){
+                            timer = setInterval(function(){
+                                if(next){
+                                    _self.turn();
+                                    if(segmentIndex === size - 1){
+                                        _self.stop();
+                                        return ;
+                                    }
+                                    currentSegment = _self.segments[++segmentIndex];
+                                    currentSegment.prepare();
+                                }
+                                next = currentSegment.update(function(p){
+                                    _self.update(p);
+                                });
+                                if(next){
+                                    console.info("turn");
+                                }else{
+                                    console.info("moving");
+                                }
+                            },40);
+                        });
+                    };
+                };
+                //
+                _class.parsePolylineCoordinateBySemicolon = function( str){
+                    var strArray = str.split(";");
+                    var result = [] ;
+                    for(var i = 0 ; i < strArray.length ; i++){
+                        var pathString = strArray[i] ;
+                        var coorsArray = pathString.split(",");
+                        var path = [];
+                        for(var j = 0 ; j < coorsArray .length - 1 ; j++){
+                            var startX = parseFloat(coorsArray[j]);
+                            var startY = parseFloat(coorsArray[++j]);
+                            path.push([ startX,startY ]);
+                        }
+                        result.push(path) ;
+                    }
+                    return result;
+                };
+                _class.buildSegments = function( pathsArray ,duringArray ,layer, symbol ,arrowSymbol){
+                    var result = [];
+                    for(var i = 0 ; i < pathsArray.length ; i++){
+                        var pathArray = pathsArray[i] ;
+                        var path = new PathSegments(duringArray[i],layer,symbol);
+                        var last = pathArray[0];
+                        for(var j = 1 ; j < pathArray .length; j ++){
+                            var segment = new PathSegment(layer,arrowSymbol);
+                            var current = pathArray[j];
+                            var startX = last[0];
+                            var startY = last[1];
+                            segment.start = [startX,startY];
+                            var endX = current[0];
+                            var endY = current[1];
+                            segment.end = [endX ,endY];
+                            segment.calLength();
+                            path.addSegment(segment);
+                            last = current;
+                        }
+                        path.distributeDuringTime();
+                        result.push(path) ;
+                    }
+                    return result;
+                };
+                _class.getRoughLength = function(pathArray){
+                    var length = 0 ;
+                    var last = pathArray[0];
+                    for(var i = 1 ; i < pathArray.length ; i++){
+                        var current = pathArray[i];
+                        length += Math.sqrt(Math.pow(current[0] - last[0],2) + Math.pow(current[1] - last[1],2));
+                        last = current ;
+                    }
+                    return length;
+                };
                 _class. processOptionallayerOptions = function (conf, mapFunction, parent) {// 遍历
                     if (mapFunction && typeof mapFunction === "function") {
                         mapFunction(conf, parent);
@@ -5064,6 +5356,7 @@ var M = JasMap = null;
                         data:null,
                         method:"post",
                         async:true,
+                        contentType:"application/json",
                         onSuccess:function(){
 
                         },
@@ -5084,6 +5377,8 @@ var M = JasMap = null;
                     var onSuccess = options.onSuccess ;
                     var onError = options.onError ;
                     var async = options.async ;
+                    var contentType = options.contentType ;
+
                     xmlHttp.onreadystatechange = function(){
                         if(arguments[0] && arguments[0].target){
                             xmlHttp = arguments[0].target;
@@ -5098,8 +5393,7 @@ var M = JasMap = null;
                         }
                     };
                     xmlHttp.open(method,url,async);
-                    //xmlHttp.setRequestHeader("Content-type","application/json");
-                    //xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                    xmlHttp.setRequestHeader("content-type",contentType);
                     xmlHttp.send(formData ? formData : null);
                 };
                 _class.appendUrl = function(url, fieldName , fieldValue){

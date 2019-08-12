@@ -1,10 +1,12 @@
 package cn.jasgroup.hcas.areamanage.dao.entity;
 
+import javax.persistence.Column;
+
+import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
 import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
-import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 /**
  * @description 地区等级区域
@@ -18,7 +20,7 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 @CommonUpdateConfig(scene="/hcaarea/update")
 @CommonDeleteConfig(scene="/hcaarea/delete")
 @JdbcEntity(name="hca_area")
-public class HcaArea extends CommonJdbcEntity {
+public class HcaArea extends ArcGisSpatialObject {
 
 
 	/**
@@ -57,16 +59,11 @@ public class HcaArea extends CommonJdbcEntity {
 	private String description; 
 	 
 	/**
-	 * 空间数据状态 
-	 */
-	private String geoState; 
-
-	/**
 	 * 备注 
 	 */
 	private String remarks; 
 	
-
+	@Column(name="pipeline_oid")
 	public String getPipelineOid() {
 		return pipelineOid; 
 	}
@@ -76,6 +73,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("pipelineOid");
 	}
 
+	@Column(name="area_code")
 	public String getAreaCode() {
 		return areaCode; 
 	}
@@ -85,6 +83,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("areaCode");
 	}
 
+	@Column(name="region_level")
 	public String getRegionLevel() {
 		return regionLevel; 
 	}
@@ -94,6 +93,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("regionLevel");
 	}
 
+	@Column(name="start_mileage")
 	public Double getStartMileage() {
 		return startMileage; 
 	}
@@ -103,6 +103,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("startMileage");
 	}
 
+	@Column(name="end_mileage")
 	public Double getEndMileage() {
 		return endMileage; 
 	}
@@ -112,6 +113,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("endMileage");
 	}
 
+	@Column(name="area_length")
 	public Double getAreaLength() {
 		return areaLength; 
 	}
@@ -121,15 +123,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("areaLength");
 	}
 
-	public String getGeoState() {
-		return geoState; 
-	}
-
-	public void setGeoState(String geoState) {
-		this.geoState = geoState; 
-		super.setField("geoState");
-	}
-
+	@Column(name="remarks")
 	public String getRemarks() {
 		return remarks; 
 	}
@@ -139,6 +133,7 @@ public class HcaArea extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
+	@Column(name="description")
 	public String getDescription() {
 		return description;
 	}
