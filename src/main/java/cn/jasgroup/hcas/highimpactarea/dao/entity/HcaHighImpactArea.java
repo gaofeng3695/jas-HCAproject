@@ -1,10 +1,12 @@
 package cn.jasgroup.hcas.highimpactarea.dao.entity;
 
+import javax.persistence.Column;
+
+import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
 import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
-import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 /**
  * @description 高后果区
@@ -18,10 +20,10 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 @CommonUpdateConfig(scene="/hca_high_impact_area/update")
 @CommonDeleteConfig(scene="/hca_high_impact_area/delete")
 @JdbcEntity(name="hca_high_impact_area")
-public class HcaHighImpactArea extends CommonJdbcEntity {
+public class HcaHighImpactArea extends ArcGisSpatialObject {
 
 	/**
-	 * 管线ID 
+	 * 管线ID
 	 */
 	private String pipelineOid; 
 	
@@ -66,16 +68,11 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 	private Double hcaLength; 
 
 	/**
-	 * 空间数据状态 
-	 */
-	private String geoState; 
-
-	/**
 	 * 备注 
 	 */
 	private String remarks; 
 
-
+	@Column(name="pipeline_oid")
 	public String getPipelineOid() {
 		return pipelineOid; 
 	}
@@ -85,6 +82,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("pipelineOid");
 	}
 
+	@Column(name="high_impact_area_code")
 	public String getHighImpactAreaCode() {
 		return highImpactAreaCode; 
 	}
@@ -93,7 +91,8 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		this.highImpactAreaCode = highImpactAreaCode; 
 		super.setField("highImpactAreaCode");
 	}
-
+	
+	@Column(name="high_impact_area_name")
 	public String getHighImpactAreaName() {
 		return highImpactAreaName; 
 	}
@@ -103,6 +102,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("highImpactAreaName");
 	}
 
+	@Column(name="high_impact_level")
 	public String getHighImpactLevel() {
 		return highImpactLevel; 
 	}
@@ -112,6 +112,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("highImpactLevel");
 	}
 
+	@Column(name="description")
 	public String getDescription() {
 		return description; 
 	}
@@ -121,6 +122,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("description");
 	}
 
+	@Column(name="start_mileage")
 	public Double getStartMileage() {
 		return startMileage; 
 	}
@@ -130,6 +132,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("startMileage");
 	}
 
+	@Column(name="end_mileage")
 	public Double getEndMileage() {
 		return endMileage; 
 	}
@@ -139,6 +142,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("endMileage");
 	}
 
+	@Column(name="hca_length")
 	public Double getHcaLength() {
 		return hcaLength; 
 	}
@@ -148,15 +152,7 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("hcaLength");
 	}
 
-	public String getGeoState() {
-		return geoState; 
-	}
-
-	public void setGeoState(String geoState) {
-		this.geoState = geoState; 
-		super.setField("geoState");
-	}
-
+	@Column(name="remarks")
 	public String getRemarks() {
 		return remarks; 
 	}
@@ -166,10 +162,11 @@ public class HcaHighImpactArea extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
+	@Column(name="version_oid")
 	public String getVersionOid() {
 		return versionOid;
 	}
-
+	
 	public void setVersionOid(String versionOid) {
 		this.versionOid = versionOid;
 	}

@@ -1,9 +1,13 @@
 package cn.jasgroup.hcas.versionmaanage.dao.entity;
 
+import javax.persistence.Column;
+
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
 import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
+import cn.jasgroup.jasframework.base.annotation.UniqueConstraintStrategy;
+import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 /**
@@ -14,6 +18,12 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
  * @since JDK 1.80
  */
 
+@UniqueConstraints(
+    strategys ={
+        @UniqueConstraintStrategy(columnNames={"versionName"},name="版本名称"),
+        @UniqueConstraintStrategy(columnNames={"versionCode"},name="版本编号")
+    }
+)
 @CommonSaveConfig(scene="/hcaversion/save")
 @CommonUpdateConfig(scene="/hcaversion/update")
 @CommonDeleteConfig(scene="/hcaversion/delete")
@@ -51,6 +61,7 @@ public class HcaVersion extends CommonJdbcEntity {
 	 */
 	private String remarks; 
 
+	@Column(name="remarks")
 	public String getRemarks() {
 		return remarks; 
 	}
@@ -60,6 +71,7 @@ public class HcaVersion extends CommonJdbcEntity {
 		super.setField("remarks");
 	}
 
+	@Column(name="version_name")
 	public String getVersionName() {
 		return versionName; 
 	}
@@ -69,6 +81,7 @@ public class HcaVersion extends CommonJdbcEntity {
 		super.setField("versionName");
 	}
 
+	@Column(name="version_code")
 	public String getVersionCode() {
 		return versionCode; 
 	}
@@ -78,6 +91,7 @@ public class HcaVersion extends CommonJdbcEntity {
 		super.setField("versionCode");
 	}
 
+	@Column(name="for_business")
 	public Integer getForBusiness() {
 		return forBusiness; 
 	}
@@ -87,6 +101,7 @@ public class HcaVersion extends CommonJdbcEntity {
 		super.setField("forBusiness");
 	}
 
+	@Column(name="has_used")
 	public Integer getHasUsed() {
 		return hasUsed; 
 	}
@@ -96,6 +111,7 @@ public class HcaVersion extends CommonJdbcEntity {
 		super.setField("hasUsed");
 	}
 
+	@Column(name="pipeline_oid")
 	public String getPipelineOid() {
 		return pipelineOid;
 	}
