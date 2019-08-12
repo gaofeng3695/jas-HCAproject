@@ -24,168 +24,6 @@ var columns = [[
                  {field:'modifiedBy',title:'修改人',width:80},
                  {field:'remark',title:'备注',width:240}
               ]];
-//网格按钮
-var toolbars = [{
-			 id	:"addExcelTemp",
-			 text:"新增模板",
-			 iconCls:'icon-add',
-			 handler:function(){
-				 top.getDlg("addExcelTemplate.htm","templateadd","新增Excel模板信息",800,510);
-			 }
-		},{
-			id:"updateExcelTemp",
-			text:"修改模板",
-			iconCls:'icon-edit',
-			handler:function(){
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#excelTemplateTable').datagrid('getSelected');
-					top.getDlg("updateExcelTemplate.htm?eventid="+row.eventid,"templateupdate","修改Excel模板信息",800,510);
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-		},{
-			id:"deleteExcelTemp",
-			text:"删除",
-			iconCls:'icon-remove',
-			handler:function(){
-				//选择记录
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length > 0) {
-					var ids = "";
-					//遍历取得所有被选中记录的id
-					for ( var i = 0; i < rows.length; i++) {
-						ids += ","+rows[i].eventid;
-					}
-					if (ids.length > 0) {
-						ids = ids.substring(1);
-						$.messager.confirm('提示框', '您确定要删除该模板吗？',function(r){
-							if (r) {
-								$.ajax({
-									url : rootPath + 'jasframework/excel/deleteTemplateInfo.do',
-									type: 'POST',
-									data: "templateIds=" + ids,
-									success: function(data){
-										if (data == true) {
-											$.messager.alert('提示', '删除成功！' , 'info', function(){
-												$('#excelTemplateTable').datagrid('reload');
-												$('#excelTemplateTable').datagrid('clearSelections');
-											});
-										}else {
-											$.messager.alert('提示', '删除失败！', 'error');
-										}
-									},
-									dataType:"json",
-									error: function(data){
-										$.messager.alert('提示', '删除失败！', 'error');
-									} 
-								});
-							}
-						});
-					}
-				} else {
-					$.messager.alert('提示', '删除失败！', 'error');
-				}
-			}
-		},
-//		{
-//			id:"lookupExcelTemp",
-//			text:"查看",
-//			iconCls:'icon-view',
-//			handler:function(){
-//				var rows = $('#excelTemplateTable').datagrid('getSelections');
-//				if (rows.length == 1) {
-//					var row = $('#excelTemplateTable').datagrid('getSelected');
-//					top.getDlg("lookupExcelTemplate.htm?eventid="+row.eventid,"templatelookup","查看模板信息",700,510);
-//				} else {
-//					$.messager.alert('提示', '请选中一条记录！', 'info');
-//				}
-//			}
-//		},
-		{
-			id:"createNativeTemp",
-			text:"生成模板",
-			iconCls:'icon-download',
-			handler:function(){
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#excelTemplateTable').datagrid('getSelected');
-					var templateId = row.eventid;
-					$.ajax({
-						url:rootPath + 'jasframework/excel/createExcelTemplate.do?templateId='+templateId,
-						type:"POST",
-						success:function(result){
-							if (result.success == "1") {
-								$.messager.alert('提示',result.message,"info");
-							} else {
-								$.messager.alert('提示',result.message,"info");
-							}
-						},
-						dataType:"json",
-						async:false,
-						error:function(result){
-							$.messager.alert('提示',result.message,"info");
-						}
-					});
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-		},
-		{
-			id:"downloadNativeTemp",
-			text:"下载模板",
-			iconCls:'icon-download',
-			handler:function(){
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#excelTemplateTable').datagrid('getSelected');
-					var templateId = row.eventid;
-					$("<iframe id=\"fileDownload\" style=\"display: none;\"></iframe>").appendTo("body");
-					var url= rootPath + "jasframework/excel/downloadTemplate.do?templateId=" + templateId;
-					$("#fileDownload").attr("src", addTokenForUrl(url));
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-		},
-		{
-			id:"uploadTemp",
-			text:"上传模板",
-			iconCls:'icon-download',
-			handler:function(){
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#excelTemplateTable').datagrid('getSelected');
-					var templateId = row.eventid;
-					top.getDlg("uploadTemplate.html?callerPageUrl=queryExcelTemplate.htm&datagridElementId=excelTemplateTable&templateId="+templateId,"uploadTemplate","上传excel模板",450,350,false);
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-//		},{
-//			id:"downloadTemp",
-//			text:"下载模板",
-//			iconCls:'icon-downfile',
-//			handler:function(){
-//				
-//			}
-		},
-		{
-			text:"导入数据",
-			iconCls:'icon-import',
-			handler:function(){
-				var rows = $('#excelTemplateTable').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#excelTemplateTable').datagrid('getSelected');
-					var templateId = row.eventid;
-					top.getDlg("importExcelData.htm?callerPageUrl=queryExcelTemplate.htm&datagridElementId=excelTemplateTable&templateId="+templateId+"&tableName=&functionName=","importiframe","导入excel数据",650,450,false);
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-		}];
 
 function lookupExcel(){
 	var rows = $('#excelTemplateTable').datagrid('getSelections');
@@ -202,7 +40,7 @@ function lookupExcel(){
  * 
  */
 function addExcel(){
-	 top.getDlg("addExcelTemplate.htm","templateadd","新增Excel模板信息",800,510);
+	 top.getDlg("addExcelTemplate.htm","templateadd","新增Excel模板信息",800,550);
 }
 
 /**
@@ -213,7 +51,7 @@ function updateExcel(){
 	var rows = $('#excelTemplateTable').datagrid('getSelections');
 	if (rows.length == 1) {
 		var row = $('#excelTemplateTable').datagrid('getSelected');
-		top.getDlg("updateExcelTemplate.htm?eventid="+row.eventid,"templateupdate","修改Excel模板信息",800,510);
+		top.getDlg("updateExcelTemplate.htm?eventid="+row.eventid,"templateupdate","修改Excel模板信息",800,550);
 	} else {
 		$.messager.alert('提示', '请选中一条记录！', 'info');
 	}

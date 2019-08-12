@@ -74,7 +74,7 @@ $(document).ready(function() {
 	$('#foreignField').combobox({
 		data:foreignFieldList,
 		valueField:'id',
-		textField:'text',
+		textField:'idtext',
 		panelHeight:100
 	});
 	
@@ -97,8 +97,8 @@ $(document).ready(function() {
 	$('#associateField').combobox({
 		data:associateFieldList,
 		multiple:true,
-		valueField:'ID',
-		textField:'TEXT',
+		valueField:'id',
+		textField:'idtext',
 		panelHeight:100
 	});
 		
@@ -298,6 +298,7 @@ $(document).ready(function() {
 	    	$("#isForeignField").combobox("select",rowData.isForeignField);
 	    	//$("#isForeignField").combobox("setValue",rowData.isForeignField);
 	    	$("#foreignField").combobox("setValue",rowData.foreignField);
+	    	$("#foreignField").combobox("setText",rowData.foreignField);
 	    	$("#associateField").combobox("setValue",rowData.associateField);
 	    	$("#associateValue").val(rowData.associateValue);	    	
 	    },
@@ -356,7 +357,8 @@ function endEditing() {
 		//取值
 		var associateFieldValue = $("#associateField").combobox("getValues").join(",");	// 数组转字符串
 		var associateValue = $("#associateValue").val();
-		var foreignFieldValue = $("#foreignField").combobox("getValue");
+//		var foreignFieldValue = $("#foreignField").combobox("getValue");
+		var foreignFieldValue = $("#foreignField").combobox("getText");
 		var validateTypeValue = $("#validateType").combobox("getValue");
 		var excelOperatorValue = $("#excelOperator").combobox("getValue");
 		var excelErrorModeValue = $("#excelErrorMode").combobox("getValue");

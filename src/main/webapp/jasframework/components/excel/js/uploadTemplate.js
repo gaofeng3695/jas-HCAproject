@@ -13,7 +13,7 @@ $(function(){
 	
 	uploader = WebUploader.create({
 	    auto: false,
-	    swf: rootPath+'common/lib/webuploader/Uploader.swf',
+	    swf: rootPath+'jasframework/common/lib/webuploader/Uploader.swf',
 	    server: addTokenForUrl(rootPath+"jasframework/excel/uploadExcelTemplate.do?templateId="+templateId),
 	    
 	    // 禁掉整个页面的拖拽功能  如果不禁用，图片拖进来的时候会默认被浏览器打开。
