@@ -1,6 +1,7 @@
 package cn.jasgroup.hcas.versionmaanage.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import cn.jasgroup.hcas.versionmaanage.dao.HcaVersionDao;
 import cn.jasgroup.hcas.versionmaanage.dao.entity.HcaVersion;
 import cn.jasgroup.jasframework.engine.jdbc.dao.CommonDataJdbcDao;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
+import cn.jasgroup.jasframework.utils.DateTimeUtil;
 
 /**
  * @description：TODO
@@ -53,5 +55,18 @@ public class HcaVersionService extends CommonDataJdbcService {
 			// TODO: handle exception
 			return false;
 		}
+	}
+	
+	public int initToSave(String oid ,String pipelineOid ,int bussiness){
+		HcaVersion entity = new HcaVersion();
+		Date now = new Date();
+		String code = "CODE-"+String.valueOf(now.getTime());
+		String name = "未命名-" + DateTimeUtil.getFormatDate(now, DateTimeUtil.DATETIME_FORMAT_CN) + "存档";
+		entity.setOid(oid);
+		entity.setVersionCode(code);
+		entity.setVersionName(name);
+		entity.setPipelineOid(pipelineOid);
+		entity.setForBusiness(bussiness);
+		return commonDataJdbcDao.save(entity);
 	}
 }

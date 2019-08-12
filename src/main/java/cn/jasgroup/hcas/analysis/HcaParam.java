@@ -1,7 +1,5 @@
 package cn.jasgroup.hcas.analysis;
 
-import cn.jasgroup.gis.data.FeatureSource;
-
 /**
  * Created by kc on 2019/5/29.
  */

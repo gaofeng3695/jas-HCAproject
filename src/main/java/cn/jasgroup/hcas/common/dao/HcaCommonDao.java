@@ -1,5 +1,6 @@
 package cn.jasgroup.hcas.common.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.google.common.collect.ImmutableMap;
 
+import cn.jasgroup.jasframework.domain.entity.SysDomain;
 import cn.jasgroup.jasframework.engine.jdbc.dao.CommonDataJdbcDao;
 
 /**
@@ -53,5 +55,16 @@ public class HcaCommonDao extends CommonDataJdbcDao{
 		String sql = "select oid as key, pipeline_name as value from hca_pipeline where active=1 and project_oid=:projectOid";
 		
 		return super.queryForList(sql, ImmutableMap.of("projectOid", projectOid));
+	}
+	
+	/**
+	 *
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<SysDomain> getAllSysDomains(){
+		Map<String,Object> paramMap = new HashMap<>();
+		String sql= "select * from sys_domain order by parent_code_id ,ordinal";
+		return super.queryForList(sql ,paramMap,SysDomain.class);
 	}
 }

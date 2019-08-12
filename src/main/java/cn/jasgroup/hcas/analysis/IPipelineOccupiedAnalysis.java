@@ -10,4 +10,5 @@ public interface IPipelineOccupiedAnalysis {
      * @return
      */
     Boolean executePipelineOccupiedAnalysis();
+
 }
