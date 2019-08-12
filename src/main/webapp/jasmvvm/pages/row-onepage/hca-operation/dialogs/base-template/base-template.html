@@ -61,6 +61,9 @@
                     /*that.jasMap = new JasMap({
                         appConfig:that.mapConfig
                     });*/
+                    if(top.hcaMapApp){
+                    	that.jasMap = parent.jasMap;
+                    }
                     that.pageConfig = window.pageConfig;
                     var param = window.jasTools.base.getParamsInUrl(location.href);
                     that.privilegeCode = param.privilegeCode || pageConfig.privilegeCode;

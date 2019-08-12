@@ -281,7 +281,7 @@
 
 var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 
-	var app = new Vue({
+	top.hcaMapApp = new Vue({
 		el: '#app',
 		data: function () {
 			return {
@@ -310,6 +310,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                     })
 				}
             });
+			top.jasMap = that.jasMap;
+			parent.jasMap = that.jasMap;
+			window.jasMap = that.jasMap;
 			that.jasMap.createBh = this.createBh;
 			that.jasMap.showHistoryBtn = this.showHistoryBtn;
 			that.jasMap.createHcaArea = this.createHcaArea;

@@ -156,8 +156,13 @@ var pageConfig = {
             })
         },
         locatePipeline: function(item){
-            this.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
-                deep:2
+        	if(!top.hcaMapApp){
+        		top.showmap2d();
+        		return; 
+        	}
+        	top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+                deep:2,
+                fieldName: 'OID'
             });
         },
     }

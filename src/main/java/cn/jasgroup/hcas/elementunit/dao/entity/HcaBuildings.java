@@ -8,6 +8,7 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import cn.jasgroup.framework.spatial.annotation.Surface;
 import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
@@ -26,12 +27,13 @@ import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 
 @UniqueConstraints(
     strategys ={
-        @UniqueConstraintStrategy(columnNames={"buildingCode"},name="建（构）筑物名称")
+        @UniqueConstraintStrategy(columnNames={"buildingCode"},name="建（构）筑物编号")
     }
 )
 @CommonSaveConfig(scene="/hcabuildings/save")
 @CommonUpdateConfig(scene="/hcabuildings/update")
 @CommonDeleteConfig(scene="/hcabuildings/delete")
+@Surface(geometryColumnName = "shape")
 @JdbcEntity(name = "hca_buildings")
 public class HcaBuildings extends ArcGisSpatialObject {
 
