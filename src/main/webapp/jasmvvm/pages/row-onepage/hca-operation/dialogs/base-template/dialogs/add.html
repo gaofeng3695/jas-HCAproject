@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="../../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="../../../../../../src/css/main.css">
+</head>
+<body>
+<div id="app" v-cloak v-loading="loading">
+	<jas-dialog-wrapper>
+		<el-form ref="formData" :model="form" label-width="150px">
+			<jas-form-items-group ref="mainForm" :form="form" :fields-config="fieldsConfig" :names-group="namesGroup"  :fields-group="fieldsGroup"></jas-form-items-group>
+		</el-form>
+		<div slot="footer">
+			<el-button size="small" @click="cancel()">取 消</el-button>
+			<el-button size="small" type="primary" @click="submit('formData')">确 定</el-button>
+		</div>
+	</jas-dialog-wrapper>
+</div>
+</body>
+<script src="../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../../../../lib/vue/vue.js"></script>
+<script src="../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="../../../components/jas-components.js "></script>
+<script src="../../../../../../common/js/jas-tools.js"></script>
+<script>
+    (function () { //加载配置未见
+        var param = window.jasTools.base.getParamsInUrl(location.href);
+        var pageCode = param.pageCode;
+        pageCode && $.getScript('./../config/' + pageCode + '.js', function (data, textStatus, jqxhr) {
+            window.app = new Vue(vueConfig);
+        });
+    })();
+
+    var vueConfig = {
+        el: "#app",
+        data: function () {
+            var that = this;
+            return {
+                namesGroup: [],
+                fieldsGroup: [],
+                fieldsConfig: {},
+                ifAttachment: false,
+                loading: false,
+                form: {},
+                options: [],
+                oid:'',
+                forBusiness:''
+            }
+        },
+        created: function () {
+            var that = this;
+            var param = window.jasTools.base.getParamsInUrl(location.href);
+            this.pageCode = param.pageCode;
+            this.pageConfig = window.pageConfig;
+            this.fieldsConfig = window.pageConfig.fieldsConfig;
+            this.detailPath = window.pageConfig.detailPath;
+            this.savePath = window.pageConfig.savePath;
+            this.updatePath = window.pageConfig.updatePath;
+            var allfields = [];
+            this.pageConfig.addFields.forEach(function (item) {
+                that.namesGroup.push(item.title);
+                that.fieldsGroup.push(that.formatFields(item.fields, pageConfig.fieldsConfig));
+                allfields = allfields.concat(item.fields);
+            });
+            this.form = this.formatForm(allfields);
+            if(param.forBusiness){
+                this.forBusiness = param.forBusiness;
+            }
+            if(param.forBusiness==1){
+                if(param.pageCode=="area-list"){
+                    that.detailPath = "/jdbc/commonData/hcahighimpactarea/getPage.do";
+                    that.savePath = "/jdbc/commonData/hca_high_impact_area/save.do";
+                    that.updatePath = "/jdbc/commonData/hca_high_impact_area/update.do";
+                }
+            }
+            if (param.oid) {
+                this.oid = param.oid;
+                this.form.oid = this.oid;
+                this.isEdit = true;
+                this.getDetailByObjectId();
+            };
+        },
+        mounted: function () {
+
+        },
+        methods: {
+            formatForm: function (fields) {
+                var obj = {};
+                fields.forEach(function (item) {
+                    obj[item] = '';
+                });
+                if (pageConfig.searchParams) {
+                    obj = jasTools.base.extend(obj, pageConfig.searchParams);
+                }
+                return obj;
+            },
+            formatFields: function (fields, fieldsConfig) {
+                return fields.map(function (item) {
+                    return {
+                        name: fieldsConfig[item].name,
+                        field: item,
+                        formatter: fieldsConfig[item].formatter,
+                    };
+                });
+            },
+            cancel: function (param) {
+                window.parent.jasTools.dialog.close(param);
+            },
+            submit: function (formName) {
+                var that = this;
+                this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        that.save();
+                    }
+                });
+            },
+            save: function () {
+                var that = this;
+                var msg = "";
+                if (!this.isEdit) {
+                    msg = "增加成功";
+                    url = jasTools.base.rootPath + this.savePath;
+                } else {
+                    msg = "修改成功";
+                    url = jasTools.base.rootPath + this.updatePath;
+                }
+                this.loading = true;
+                if(that.forBusiness){
+                    that.form.forBusiness = that.forBusiness;
+                }
+                jasTools.ajax.post(url, that.form, function (data) {
+                    that.loading = false;
+                    window.parent.Vue.prototype.$message({
+                        type: 'success',
+                        message:msg
+                    });
+                    that.$nextTick(function () {
+                        that.cancel(1);
+                    })
+                });
+            },
+            getDetailByObjectId: function () {
+                var that = this;
+                var url = jasTools.base.rootPath + that.detailPath;
+                jasTools.ajax.post(url, {
+                    oid: that.oid,
+                }, function (data) {
+                    that.form = data.rows[0];
+                    that.$refs['mainForm'].triggerFatherSelectsChange();
+                });
+            },
+        },
+    };
+</script>
+
+</html>
