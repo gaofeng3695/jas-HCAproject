@@ -18,7 +18,11 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 
 @QueryConfig(scene = "/hcaelementunit/getPage", resultClass = HcaBuildingsBo.class)
 public class HcaBuildingsQuery extends BaseJavaQuery {
-	
+
+	/**
+	 * oid
+	 */
+	private String oid;
 	/**
 	 * 数据oid集合
 	 */
@@ -56,28 +60,41 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_distribution_domain') d02\n"
 				+ " on d02.code_id=t.building_distribution\n"
 				+ " where t.active=1";
-
-        if (null != oids && oids.size() > 0) {
-            sql += " and t.oid in (:oids) ";
-        }else {
-            if (StringUtils.isNotBlank(buildingCode)) {
-                sql += " and t.building_code like :buildingCode ";
-            }
-            if (StringUtils.isNotBlank(buildingType)) {
-                sql += " and t.building_type = :buildingType ";
-            }
-            if (startMileage != 0) {
-                sql += " and t.start_mileage = :startMileage ";
-            }
-            if (endMileage != 0) {
-                sql += " and t.end_mileage = :endMileage ";
-            }
-            if (StringUtils.isNotBlank(keyWord)) {
-                sql += " and (t.building_code like :keyWord or d01.code_name like :keyWord) ";
-            }
-        }
-		sql += " order by t.start_mileage asc";
+		if (StringUtils.isNotBlank(oid)) {
+			sql += " and t.oid = :oid ";
+		}else {
+			if (null != oids && oids.size() > 0) {
+				sql += " and t.oid in (:oids) ";
+			} else {
+				if (StringUtils.isNotBlank(buildingCode)) {
+					sql += " and t.building_code like :buildingCode ";
+				}
+				if (StringUtils.isNotBlank(buildingType)) {
+					sql += " and t.building_type = :buildingType ";
+				}
+				if (startMileage != 0) {
+					sql += " and t.start_mileage = :startMileage ";
+				}
+				if (endMileage != 0) {
+					sql += " and t.end_mileage = :endMileage ";
+				}
+				if (StringUtils.isNotBlank(keyWord)) {
+					sql += " and (t.building_code like :keyWord or d01.code_name like :keyWord) ";
+				}
+			}
+			sql += " order by t.start_mileage asc";
+		}
 		return sql;
+	}
+
+	@Override
+	public String getOid() {
+		return oid;
+	}
+
+	@Override
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
 
 	public double getStartMileage() {
@@ -133,4 +150,6 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
 	}
+
+
 }
