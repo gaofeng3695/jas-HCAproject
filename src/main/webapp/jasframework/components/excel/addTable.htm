@@ -40,10 +40,6 @@
 				<td><span>表类型：</span></td>
 				<td><input id="geometryType" name="geometryType" class="easyui-combobox" required="true" style="width:100%;" /></td>
 			</tr>
-			<tr>
-				<td><span>空间表数据转换方式：</span></td>
-				<td><input id="operateType" name="operateType" class="easyui-combobox" /></td>
-			</tr>
 			<tr>				
 				<td><span>是否主表：</span></td>
 				<td><input id="isMainTable" name="isMainTable" class="easyui-combobox" required="true" style="width:100%;" /></td>
@@ -54,6 +50,14 @@
 				<td><span>字段名称：</span></td>
 				<td colspan="3"><input id="fieldNames" name="fieldNames" class="easyui-validatebox input_bg" /></td>
 			</tr>
+			<tr>
+                <td><span style='color:red'>注：</span></td>
+                <td colspan="2"><span style='color:red'>唯一性字段大小写与【字段信息匹配】页面配置字段大小写保持一致</span></td>
+            </tr>
+			<!-- <tr>
+				<td><span>实体全路径：</span></td>
+				<td colspan="3"><input id="entityPath" name="entityPath" class="easyui-validatebox input_bg" /></td>
+			</tr> -->
 			<tr>
 				<td><span>备注：</span></td>
 				<td colspan="3"><textarea name="remark" cols="25" rows="5" id="remark" class="easyui-validatebox" validType="maxLength[300]"></textarea></td>

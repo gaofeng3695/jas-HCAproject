@@ -50,6 +50,7 @@ function uploadDataFile(){
 	uploader.upload();
 	uploader.on('uploadSuccess',function(file, returnData) {
 		hiddenLoadingMessage();
+//		var returnData = $.parseJSON(returnData);
 		var totalCount = returnData.totalCount;
 		var validatedDataCount = returnData.validatedDataCount;
 		var checkResutlMessage = returnData.errorMessage;
@@ -60,6 +61,7 @@ function uploadDataFile(){
 			var resutlMessage="</br>数据总条数: <span style='font-weight:bold;color:red'>"+totalCount+"</span>"
 			+" 有效数据条数: <span style='font-weight:bold;color:red'>"+validatedDataCount+"</span>";
 			if(totalCount!=validatedDataCount){
+//				resutlMessage = resutlMessage+" 以下为具体检查结果：<br>"+checkResutlMessage;
 				resutlMessage = resutlMessage+" 以下为具体检查结果：<br>";
 				var arr = checkResutlMessage.split("$");
 				$.each(arr, function(i){
@@ -108,6 +110,10 @@ function uploadDataFile(){
  * @param importType
  */
 function importData(importType){
+//	if(importType=='overwrite' && fkValue==''){
+//		top.showAlert("提示",'覆盖更新只适用于子表数据更新!','');
+//		return;
+//	}
 	if(importType=='update'){
 		$.messager.confirm("确认","更新导入比较耗时，确定要更新导入吗？",function(r){
 			if (r){
@@ -130,9 +136,11 @@ function importDataRequest(importType){
 	$.ajax({
 		url : rootPath+"jasframework/excel/saveDataToDatabase.do",
 		type : 'POST',
+		data: 'json',
 		data : {importType:importType},
 		success : function(returnData) {
 			hiddenLoadingMessage();
+//			var returnData = $.parseJSON(returnData);
 			if(returnData.errorCode == "1"){
 				top.showAlert("提示", returnData.errorMess, '');
 				return;

@@ -19,8 +19,8 @@ $(document).ready(function() {
 	$("#templateId").val(templateId);
 	$("#tableName").combobox({
 		url:rootPath + 'jasframework/excel/getTableNamesList.do?templateId=' + templateId,
-		valueField:'TABLE_NAME',
-		textField:'TABLE_NAME',
+		valueField:'table_name',
+		textField:'table_name',
 		panelHeight:200
 	});
 	$("#formType").combobox({
@@ -38,14 +38,6 @@ $(document).ready(function() {
 	});
 	$("#geometryType").combobox("setValue","none");
 
-	$("#operateType").combobox({
-		data:operateTypeList,
-		valueField:'id',
-		textField:'text',
-		panelHeight:86
-	});
-	$("#operateType").combobox("setValue",""); 
-	
 	$("#isMainTable").combobox({
 		data:isMainTableList,
 		valueField:'id',
@@ -57,7 +49,6 @@ $(document).ready(function() {
 	setComboObjWidth("tableName", 0.3, "combobox");
 	setComboObjWidth("formType", 0.3, "combobox");
 	setComboObjWidth("geometryType", 0.3, "combobox");
-	setComboObjWidth("operateType", 0.3, "combobox");	
 	setComboObjWidth("isMainTable", 0.3, "combobox");
 });
 

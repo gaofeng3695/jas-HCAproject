@@ -2,6 +2,7 @@ package cn.jasgroup.hcas.pipelinemanage.dao.entity;
 
 import javax.persistence.Column;
 
+import cn.jasgroup.framework.spatial.annotation.Line;
 import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
@@ -27,6 +28,7 @@ import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 @CommonSaveConfig(scene="/hcapipeline/save")
 @CommonUpdateConfig(scene="/hcapipeline/update")
 @CommonDeleteConfig(scene="/hcapipeline/delete")
+@Line(geometryColumnName = "shape")
 @JdbcEntity(name="hca_pipeline")
 public class HcaPipeline extends ArcGisSpatialObject {
 

@@ -2,6 +2,7 @@ package cn.jasgroup.hcas.areamanage.dao.entity;
 
 import javax.persistence.Column;
 
+import cn.jasgroup.framework.spatial.annotation.Surface;
 import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
 import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
@@ -19,6 +20,7 @@ import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
 @CommonSaveConfig(scene="/hcaarea/save")
 @CommonUpdateConfig(scene="/hcaarea/update")
 @CommonDeleteConfig(scene="/hcaarea/delete")
+@Surface(geometryColumnName = "shape")
 @JdbcEntity(name="hca_area")
 public class HcaArea extends ArcGisSpatialObject {
 

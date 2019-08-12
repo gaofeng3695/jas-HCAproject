@@ -51,99 +51,6 @@ var columns = [[
                  {field:'sheetIndex',title:'sheet索引',width:75},
                  {field:'remark',title:'备注',width:100}
               ]];
-//网格按钮
-var toolbars = [{
-			 id	:"addTable",
-			 text:"新增",
-			 iconCls:'icon-add',
-			 handler:function(){
-				 getDlg("addTable.htm?templateId=" + templateId,"addtable","新增表配置信息",500,260);
-			 }
-		},{
-			id:"updateTable",
-			text:"修改",
-			iconCls:'icon-edit',
-			handler:function(){
-				var rows = $('#tableInfoData').datagrid('getSelections');
-				if (rows.length == 1) {
-					var row = $('#tableInfoData').datagrid('getSelected');
-					getDlg("updateTable.htm?eventid="+row.eventid+"&templateId="+templateId,"updatetable","修改表配置信息",500,260);
-				} else {
-					$.messager.alert('提示', '请选中一条记录！', 'info');
-				}
-			}
-		},{
-			id:"deleteTable",
-			text:"删除",
-			iconCls:'icon-remove',
-			handler:function(){
-				//选择查看记录
-				var rows = $('#tableInfoData').datagrid('getSelections');
-				if (rows.length > 0) {
-					var ids = "";
-					//遍历取得所有被选中记录的id
-					for ( var i = 0; i < rows.length; i++) {
-						ids += ","+rows[i].eventid;
-					}
-					if (ids.length > 0) {
-						ids = ids.substring(1);
-						$.messager.confirm('提示框', '您确定要删除该表吗？',function(r){
-							if (r) {
-								$.ajax({
-									url : rootPath + 'jasframework/excel/deleteTableInfo.do',
-									type: 'POST',
-									data: "tableIds="+ids,
-									success: function(data){
-										if (data == true) {
-											$.messager.alert('提示', '删除成功！' , 'info', function(){
-												$('#tableInfoData').datagrid('reload');
-												$('#tableInfoData').datagrid('clearSelections');
-											});
-										}else {
-											$.messager.alert('提示', '删除失败！', 'error');
-										}
-									},
-									dataType:"json",
-									error: function(data){
-										$.messager.alert('提示', '删除失败！', 'error');
-									} 
-								});
-							}
-						});
-					}
-				} else {
-					$.messager.alert('提示', '删除失败！', 'error');
-				}
-			}
-		},
-//		{
-//			id:"lookupTable",
-//			text:"查看",
-//			iconCls:'icon-view',
-//			handler:function(){
-//				var rows = $('#tableInfoData').datagrid('getSelections');
-//				if (rows.length == 1) {
-//					var row = $('#tableInfoData').datagrid('getSelected');
-//					top.getDlg("viewTableInfo.htm?eventid="+row.eventid,"lookuptable","查看表信息",600,220);
-//				} else {
-//					$.messager.alert('提示', '请选中一条记录！', 'info');
-//				}
-//			}
-//		},
-		{
-			 id	:"fieldInfoConfig",
-			 text:"字段信息配置",
-			 iconCls:'icon-analysis',
-			 handler:function(){
-					var rows = $('#tableInfoData').datagrid('getSelections');
-					if (rows.length == 1) {
-						var row = $('#tableInfoData').datagrid('getSelected');
-						top.getDlg("fieldInfoConfiguration.htm?eventid="+row.eventid+"&templateId="+templateId+"&formType="+row.formType,"fieldInfoConfig","字段信息配置",880,500);
-					} else {
-						$.messager.alert('提示', '请选中一条记录！', 'info');
-					}
-				}
-		}];
 
 /**
  * 
@@ -238,7 +145,6 @@ function fieldInfoConfig(){
  */
 $(document).ready(function() {	
 	$("#tableInfoData").datagrid({
-		/*title:"表信息列表",*/
 		idField:'eventid',
 		url: rootPath + "jasframework/excel/getTableInfoByTemplateId.do?templateId=" + templateId,
 		frozenColumns:[[
@@ -248,7 +154,6 @@ $(document).ready(function() {
 		fitColumns:true,
 		columns:columns,
 		toolbar:"#toolbars",
-//		toolbar:toolbars,
 		pagination:true,
 		rownumbers:true,
 		striped: true,
@@ -257,7 +162,7 @@ $(document).ready(function() {
 	    	$('#tableInfoData').datagrid('clearSelections'); //clear selected options
 	    }
 	});
-	initDatagrigHeight('tableInfoData', '', 0);
+	initDatagrigHeight('tableInfoData', "toolbars", $("#toolbars").height());
 });
 
 /**
