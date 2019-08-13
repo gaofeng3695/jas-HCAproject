@@ -39,7 +39,11 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 	 * 高后果区等级
 	 */
 	private String highImpactLevel;
-
+	/**
+	 * 版本Oid
+	 */
+	private String versionOid;
+	
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,t.version_oid,\n"
@@ -67,6 +71,9 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 		}
 		if (null != oids && oids.size() > 0) {
 			sql += " and t.oid in (:oids) ";
+		}
+		if (StringUtils.isNotBlank(highImpactLevel)) {
+			sql += " and t.version_oid = :versionOid ";
 		}
 		sql += " order by t.create_datetime desc";
 		return sql;
@@ -116,6 +123,14 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 
 	public void setHighImpactLevel(String highImpactLevel) {
 		this.highImpactLevel = highImpactLevel;
+	}
+
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
 	}
 
 }
