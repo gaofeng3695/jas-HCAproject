@@ -334,15 +334,11 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         if( p == null ){
             logger.error("出错了，没有查询到管线{}坐标数据！" ,key );
         }
-        Geometry pp = geometryService.transform(p,p.getSpatialReference().getWkid(),3857);
-        analysisSchema.setProjectedPipeline((Polyline) pp);// 这里设置的是投影坐标！
-
-        Double totalMileage = pipelineService.queryPipelineMileage((Polyline) pp);
-        analysisSchema.setTotalMileage(totalMileage);
+        double totalMileage = analysisSchema.getTotalMileage();
         logger.info("管线{}实际里程为{}千米" ,key ,totalMileage);
 
-        Polygon bufferArea = JtsUtil.buffer(pp,buffer ,2);
-        analysisSchema.setRecognitionAreaBuffer(bufferArea);
+        analysisSchema.createRecognitionAreaBuffer(buffer);
+
         return analysisSchema;
     }
 
@@ -367,8 +363,6 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         param.setGeometryType(GeometryType.POLYGON.name());
         param.setGeometry(bufferWKT);
         param.setOutFields("*");
-        param.setInputSRID(bufferPg.getSpatialReference().getWkid());
-        param.setOutputSRID(bo.getProjectedPipeline().getSpatialReference().getWkid());
         param.setWhere("1=1");// where ?
         param.setOrderBy("start_mileage");
         loggerUtil.time("查询识别区域内的居民地");
@@ -395,7 +389,10 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             Geometry g = GeometryUtil.toGeometry(feature.getGeometry());
             interacts[i] = g;
         }
-        Geometry[] geometries = geometryService.intersect(interacts, bufferPg);
+        Geometry[] geometries = new Geometry[0];
+        if(interacts.length > 0){
+            geometries = geometryService.intersect(interacts, bufferPg);
+        }
         //相交计算的结果可能是点或线，这里只需处理面
         for(int i = 0 ; i < geometries.length ;i++){
             if(geometries != null && geometries[i] instanceof Polygon){
@@ -654,7 +651,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         //2、生成几何对象
         int gcsSrid = bo.getPipeline().getSpatialReference().getWkid();
-        int pcsSrid = bo.getProjectedPipeline().getSpatialReference().getWkid();
+        int pcsSrid = bo.getRecognitionAreaBuffer().getSpatialReference().getWkid();
         for(int i = 0 ; i < features.length ;++i){
             Feature feature = features[i] ;
             double startMileage = MapUtil.getDouble(feature.getAttributes() ,startMileageFieldName) ;

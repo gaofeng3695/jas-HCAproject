@@ -2,6 +2,7 @@ package cn.jasgroup.hcas.analysis;
 
 import cn.jasgroup.gis.geometry.Polygon;
 import cn.jasgroup.gis.geometry.Polyline;
+import cn.jasgroup.gis.util.JtsUtil;
 import cn.jasgroup.gis.util.LinearReferenceUtil;
 
 /**
@@ -20,11 +21,6 @@ public class HcaLinearParam {
      * 目标管线要素几何对象
      */
     private Polyline pipeline ;
-    /**
-     * 投影后的管线要素几何对象
-     */
-    private Polyline projectedPipeline ;
-
 
     /**
      * 识别区缓冲区几何对象
@@ -61,6 +57,7 @@ public class HcaLinearParam {
 
     public void setPipeline(Polyline pipeline) {
         this.pipeline = pipeline;
+        initLinearReference();
     }
 
     public Polygon getRecognitionAreaBuffer() {
@@ -70,7 +67,10 @@ public class HcaLinearParam {
     public void setRecognitionAreaBuffer(Polygon recognitionAreaBuffer) {
         this.recognitionAreaBuffer = recognitionAreaBuffer;
     }
-
+    public void createRecognitionAreaBuffer(double buffer) {
+        Polygon bufferArea = JtsUtil.buffer(linearReferenceUtil.getLinearPolyline().getPolyline(),buffer ,2);
+        this.recognitionAreaBuffer = bufferArea;
+    }
     public Polygon getPotentialInfluenceBuffer() {
         return potentialInfluenceBuffer;
     }
@@ -79,24 +79,21 @@ public class HcaLinearParam {
         this.potentialInfluenceBuffer = potentialInfluenceBuffer;
     }
 
+    private void initLinearReference(){
+        linearReferenceUtil = new LinearReferenceUtil(pipeline);
+        linearReferenceUtil.resetMeasureByLocalLength();
+        this.totalMileage = linearReferenceUtil.getLinearPolyline().getTotalMeasure();
+    }
+
     public LinearReferenceUtil getLinearReferenceUtil() {
         if(linearReferenceUtil == null){
-            linearReferenceUtil = new LinearReferenceUtil(projectedPipeline);
-            linearReferenceUtil.resetMeasureByLocalLength();
+            initLinearReference();
         }
         return linearReferenceUtil;
     }
 
     public void setLinearReferenceUtil(LinearReferenceUtil linearReferenceUtil) {
         this.linearReferenceUtil = linearReferenceUtil;
-    }
-
-    public Polyline getProjectedPipeline() {
-        return projectedPipeline;
-    }
-
-    public void setProjectedPipeline(Polyline projectedPipeline) {
-        this.projectedPipeline = projectedPipeline;
     }
 
     public Double getOuterDimension() {

@@ -1,7 +1,6 @@
 package cn.jasgroup.hcas.analysis.service;
 import cn.jasgroup.gis.data.Feature;
 import cn.jasgroup.gis.data.FeatureCollection;
-import cn.jasgroup.gis.data.FeatureObject;
 import cn.jasgroup.gis.data.GeometryType;
 import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
 import cn.jasgroup.gis.dataaccess.LayerQueryParam;
@@ -72,18 +71,18 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
 
     /**
      *
-     * @param areaVersionOid 地区等级版本ID
+     * @param areaVersionCode 地区等级版本ID
      * @return
      */
     @Override
-    public HcaAnalysisResult executeAnalysis(String areaVersionOid) {
+    public HcaAnalysisResult executeAnalysis(String areaVersionCode) {
 
         HcaAnalysisResult hcaAnalysisResult = new HcaAnalysisResult();
 
         loggerUtil.time("执行高后果区分析");
         //1、查询版本数据
-        HcaVersion version = queryHcaVersion(areaVersionOid) ;
-        //String areaVersionOid = version.getOid();
+        HcaVersion version = queryHcaVersion(areaVersionCode) ;
+        String areaVersionOid = version.getOid();
         if(version == null ){
             hcaAnalysisResult.setTotal(0);
             return hcaAnalysisResult;
@@ -158,7 +157,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         String oidFieldName = HcaAnalysisContext.TableKeyName;
 
         int outSrid = bo.getPipeline() .getSpatialReference().getWkid();
-        int inSrid = bo.getProjectedPipeline().getSpatialReference().getWkid();
+        int inSrid = bo.getPotentialInfluenceBuffer().getSpatialReference().getWkid();
         double pressure = bo.getPressure();
         double dimension = bo.getOuterDimension();
         double buffer = calculatePotentialInfluenceBufferDistance(pressure,dimension);
@@ -392,10 +391,8 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         if( p == null ){
             logger.error("出错了，没有查询到管线{}坐标数据！" ,key );
         }
-        Geometry pp = geometryService.transform(p,p.getSpatialReference().getWkid(),3857);
-        analysisSchema.setProjectedPipeline((Polyline) pp);// 这里设置的是投影坐标！
-        Double totalMileage = pipelineService.queryPipelineMileage((Polyline) pp);
-        analysisSchema.setTotalMileage(totalMileage);
+
+        double totalMileage = analysisSchema.getTotalMileage();
         logger.info("管线{}实际里程为{}千米" ,key ,totalMileage);
 
         if(!props.containsKey(HcaAnalysisContext.pipePressureFieldName)){
@@ -424,7 +421,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         param.setOutputFormat(null);
         param.setOutFields("*");
         FeatureCollection collection = geodataAccessService.query(param);
-        List<FeatureObject> features = collection.getFeatures();
+        List<Feature> features = collection.getFeatures();
         return features.toArray(new Feature[0]);
     }
 
