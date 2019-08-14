@@ -1,6 +1,7 @@
 package cn.jasgroup.hcas.areamanage.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.jasgroup.hcas.areamanage.service.HcaAreaService;
@@ -14,7 +15,8 @@ import cn.jasgroup.jasframework.base.controller.BaseController;
  * @since JDK 1.80
  */
 
-@RestController("/hcaarea")
+@RestController
+@RequestMapping("hcaarea")
 public class HcaAreaController extends BaseController{
 
 	@Autowired
