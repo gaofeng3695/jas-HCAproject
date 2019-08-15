@@ -110,7 +110,7 @@ a {
 
 a:hover {
 	background: #328bdd;
-	background: #1f2630;
+	/* background: #1f2630; */
 }
 
 .user-info .quit {

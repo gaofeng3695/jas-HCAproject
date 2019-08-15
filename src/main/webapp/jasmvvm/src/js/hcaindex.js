@@ -52,8 +52,8 @@ window.app = new Vue({
 			panelShowed: true,
 			isExpend: true,
 			menuWith: 200,
-			menusOpened: ['P-MONGOLIA-002'],
-			currentTap: 'P-MONGOLIA-002',
+			menusOpened: ['P-HCA-001'],
+			currentTap: 'P-HCA-001',
 			tabs: [], // 打开的标签页
 			items: [], //菜单数组
 			aMenu: [],//初始化的菜单数组
