@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.jasgroup.hcas.areamanage.query.HcaAreaQuery;
-import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
+import cn.jasgroup.hcas.pipelinemanage.query.HcaPipelineQuery;
 import cn.jasgroup.hcas.pipelinemanage.query.bo.HcaPipelineBo;
 import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
@@ -52,15 +51,15 @@ public class HcaPipelineConroller extends BaseController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/exportToExcelAction")
-	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaAreaQuery query) {
+	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaPipelineQuery query) {
 		// 列属性名称
-		String propertyName = "pipelineName,pipelineCode,startMileage,endMileage,pipelineLength,outsideDiameter,pressure,remarks";
+		String propertyName = "pipelineName,pipelineCode,startMileage,endMileage,pipelineLength,outsideDiameter,pressure,remarks,shape";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyList = Arrays.asList(propertyName.split(","));
 		}
 		// 列属性描述
-		String propertyDes = "管线名称,管线编号,起始里程,终止里程,管线长度,管道外管径,最大压力,备注";
+		String propertyDes = "管线名称,管线编号,起始里程,终止里程,管线长度,管道外管径,最大压力,备注,空间坐标";
 		List<String> propertyDesList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyDesList = Arrays.asList(propertyDes.split(","));

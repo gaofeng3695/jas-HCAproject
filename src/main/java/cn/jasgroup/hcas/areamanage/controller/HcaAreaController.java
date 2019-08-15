@@ -73,7 +73,21 @@ public class HcaAreaController extends BaseController {
 			Map<String, String> mss = new HashMap<>();
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String s = (String) it.next();
-				Object valueObject = ms.get(s);
+				Object valueObject = null;
+				switch (s) {
+				case "pipelineOid":
+					valueObject = ms.get("pipelineName");
+					break;
+				case "versionOid":
+					valueObject = ms.get("versionName");
+					break;
+				case "regionLevel":
+					valueObject = ms.get("regionLevelName");
+					break;
+				default:
+					valueObject = ms.get(s);
+					break;
+				}
 				String valueString = "";
 				// 如果为日期
 				if (valueObject instanceof Date) {

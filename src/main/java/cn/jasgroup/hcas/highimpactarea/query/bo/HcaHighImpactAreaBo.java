@@ -69,12 +69,21 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	/**
 	 * 空间数据状态 
 	 */
-	private String geoState; 
+	private String shapeState; 
 
 	/**
 	 * 备注 
 	 */
 	private String remarks;
+	
+	/**
+	 * 版本Oid 
+	 */
+	private String versionOid;
+	/**
+	 * 版本名称 
+	 */
+	private String versionName;
 
 	public String getPipelineOid() {
 		return pipelineOid;
@@ -140,12 +149,12 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 		this.endMileage = endMileage;
 	}
 
-	public String getGeoState() {
-		return geoState;
+	public String getShapeState() {
+		return shapeState;
 	}
 
-	public void setGeoState(String geoState) {
-		this.geoState = geoState;
+	public void setShapeState(String shapeState) {
+		this.shapeState = shapeState;
 	}
 
 	public String getRemarks() {
@@ -179,4 +188,22 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
+	}
+
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+	
+	
 }

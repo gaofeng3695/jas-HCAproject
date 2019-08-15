@@ -49,7 +49,7 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 	
 	@Override
 	public String getQuerySql() {
-		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,t.version_oid,\n"
+		String sql = "select t.oid,t.pipeline_oid,pip.pipeline_name,t.version_oid,v.version_name,\n"
 				+ "t.high_impact_area_code,t.high_impact_area_name,t.high_impact_level,\n"
 				+ "d01.code_name as high_impact_level_name,t.description,\n"
 				+ "t.start_mileage,t.end_mileage,t.hca_length,t.remarks,\n"
@@ -59,6 +59,7 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 				+ " on t.pipeline_oid = pip.oid\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='high_impact_level_domain' order by ordinal) d01\n"
 				+ " on d01.code_id=t.high_impact_level\n"
+				+ " LEFT JOIN (select oid,version_name from hca_version where active=1) v on v.oid=t.version_oid\n"
 				+ " where t.active=1";
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
