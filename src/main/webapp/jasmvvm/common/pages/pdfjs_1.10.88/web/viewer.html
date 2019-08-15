@@ -43,7 +43,10 @@ See https://github.com/adobe-type-tools/cmap-resources
       if (param.isDoc) {
         var url = jasTools.base.rootPath + "/jasdoc/folder/doccenter/previewPdfFileById.do?docId=" + param.oid + "&token=" +
           localStorage.getItem("token");
-      } else {
+      } else if(param.isHcaReport){
+    	  var url = jasTools.base.rootPath + "/hcaReport/previewpdf.do?fileId=" + param.fildId + "&token=" +
+          localStorage.getItem("token");
+      }else {
         var url = jasTools.base.rootPath + "/attachment/getPreviewFile.do?oid=" + param.oid + "&token=" +
           localStorage.getItem("token");
       }
