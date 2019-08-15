@@ -126,21 +126,26 @@ var pageConfig = {
         }
     ],
     methods:{
-        createBuffer: function(){
+        createBuffer: function(item){
             var that = this;
-            var selectedRowId = that.selectedRowOids;
             window.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
                 type: 'warning',
                 callback: function(action){
                     if (action === 'confirm') {
-                        that.jasMap.flashGraphic(selectedRowId, 'hca_pipeline',{
-                            deep:2
+                        if(!top.hcaMapApp){
+                            top.showmap2d();
+                            return;
+                        }
+                        top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+                            deep:2,
+                            fieldName: 'OID'
                         });
-                        that.jasMap.updateLayer('hca_pipeline',{
+                        top.jasMap.updateLayer('hca_pipeline',{
                             "show":true,
                             "fieldName":"oid",
                             "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
                         });
+                        top.createBufferDialog(item.oid);
                     }
                 }
             });
@@ -156,12 +161,13 @@ var pageConfig = {
             })
         },
         locatePipeline: function(item){
-        	if(!top.hcaMapApp){
-        		top.showmap2d();
-        		return; 
-        	}
-        	top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
-                deep:2,
+            if(!top.hcaMapApp){
+                top.showmap2d();
+                return;
+            }
+            top.showmap2d();
+            top.jasMap.flashGraphic(item.oid, 'hca_pipeline', {
+                deep: 2,
                 fieldName: 'OID'
             });
         },

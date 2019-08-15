@@ -17,9 +17,9 @@ import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
  * @since JDK 1.80
  */
 
-@CommonSaveConfig(scene="/hca_high_impact_area/save")
-@CommonUpdateConfig(scene="/hca_high_impact_area/update")
-@CommonDeleteConfig(scene="/hca_high_impact_area/delete")
+@CommonSaveConfig(scene="/hcahighimpactarea/save")
+@CommonUpdateConfig(scene="/hcahighimpactarea/update")
+@CommonDeleteConfig(scene="/hcahighimpactarea/delete")
 @Surface(geometryColumnName = "shape")
 @JdbcEntity(name="hca_high_impact_area")
 public class HcaHighImpactArea extends ArcGisSpatialObject {

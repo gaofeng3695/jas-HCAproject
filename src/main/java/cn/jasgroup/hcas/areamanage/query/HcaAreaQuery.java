@@ -35,8 +35,12 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	 * 地区等级
 	 */
 	private String regionLevel;
-	
-	
+
+	/**
+	 * 版本Oid
+	 */
+	private String versionOid;
+
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.*,pip.pipeline_name,d01.code_name as region_level_name "
@@ -55,6 +59,9 @@ public class HcaAreaQuery extends BaseJavaQuery {
 			}
 			if (StringUtils.isNotBlank(regionLevel)) {
 				sql += " and t.region_level = :regionLevel ";
+			}
+			if (StringUtils.isNotBlank(versionOid)) {
+				sql += " and t.version_oid = :versionOid ";
 			}
 		}
 		sql += " order by t.start_mileage asc";
@@ -96,5 +103,11 @@ public class HcaAreaQuery extends BaseJavaQuery {
 		this.regionLevel = regionLevel;
 	}
 
-	
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
+	}
 }

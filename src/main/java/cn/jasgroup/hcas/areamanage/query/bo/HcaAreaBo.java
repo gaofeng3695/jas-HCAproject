@@ -56,8 +56,11 @@ public class HcaAreaBo extends CommonBaseBo {
 	/**
 	 * 长度 
 	 */
-	private Double areaLength; 
-
+	private Double areaLength;
+	/**
+	 * 人口数量
+	 */
+	private Integer population;
 	/**
 	 * 描述
 	 */
@@ -168,6 +171,13 @@ public class HcaAreaBo extends CommonBaseBo {
 
 	public void setDescription(String description) {
 		this.description = description;
-	} 
+	}
 
+	public Integer getPopulation() {
+		return population;
+	}
+
+	public void setPopulation(Integer population) {
+		this.population = population;
+	}
 }

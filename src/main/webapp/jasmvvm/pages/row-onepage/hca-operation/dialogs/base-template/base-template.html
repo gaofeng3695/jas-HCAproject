@@ -70,11 +70,11 @@
                     that.templateCode = param.templateCode; // 导入导出模板
                     that.pageCode = param.pageCode;
                     that.className = param.className;
-                    that.addUrl = jasTools.base.rootPath +  '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add.html?pageCode=' + that.pageCode + '&forBusiness='+param.forBusiness;
+                    that.versionOid = param.versionOid;
+                    that.pipelineOid = param.pipelineOid;
+                    that.addUrl = jasTools.base.rootPath +  '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add.html?pageCode=' + that.pageCode + '&forBusiness='+param.forBusiness + '&versionOid='+param.versionOid +'&pipelineOid='+param.pipelineOid;
                     that.detailUrl = jasTools.base.rootPath +  '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/detail.html?pageCode=' + that.pageCode;
-                    if (pageConfig.addParams) {
-                        that.addUrl = jasTools.base.setParamsToUrl(that.addUrl, pageConfig.addParams)
-                    }
+
                     that.searchPath = that.pageConfig.searchPath;
                     that.deletePath = that.pageConfig.deletePath;
 
@@ -89,12 +89,10 @@
                     }else{
                         if(param.forBusiness==1){
                             that.topSearch.forBusiness = 1;
-                            if(param.pageCode=="area-list"){
-                                that.searchPath = "/jdbc/commonData/hcahighimpactarea/getPage.do";
-                                that.detailUrl = jasTools.base.rootPath +  '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/detail.html?pageCode=' + that.pageCode + '&forBusiness=1';
-                                that.deletePath = "/jdbc/commonData/hca_high_impact_area/delete.do";
-                            }
                         }
+                    }
+                    if(param.versionOid){
+                        that.topSearch.versionOid = that.versionOid;
                     }
                 },
                 mounted: function () {
