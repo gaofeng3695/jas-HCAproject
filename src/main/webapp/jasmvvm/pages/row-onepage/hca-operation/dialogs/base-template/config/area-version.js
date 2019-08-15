@@ -168,23 +168,12 @@ var pageConfig = {
                 bottom:'5%',
             })
         },
-/*        areaList: function (row) {
-            jasTools.mask.show({
-                title: '地区列表',
-                src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&forBusiness=0',
-                height: '70%',
-                width: '80%',
-                left:'10%',
-                bottom:'5%',
-            })
-        },*/
         areaList: function (row) {
             jasTools.mask.show({
                 title: '地区列表',
                 src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&pipelineOid='+row.pipelineOid+'&versionOid='+row.oid,
                 height: '80%',
                 width: '80%',
-                title: '地区列表',
                 cbForClose: function (param) {
                     that.$refs.table.refresh();
                 }
