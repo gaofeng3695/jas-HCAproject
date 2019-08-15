@@ -274,6 +274,7 @@
                 localPipelineName:'',
                 activeName:'',
                 pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
+                localAreaVersionOid:'',
             }
 		},
 		computed: {},
@@ -340,8 +341,8 @@
                     }
                 })
             },
-			createBufferDialog: function(pipelinOid){
-                that.pipelineOid = pipelineOid;
+			createBufferDialog: function(pipelineOid){
+                this.pipelineOid = pipelineOid;
 				this.closeBufferWindow();
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
@@ -514,12 +515,13 @@
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
 							common.simpleAjaxLoader({
-								//url: jasTools.base.rootPath + "/zone/settlement/random.do",
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
-									source: settlementLayerId,
+                                    pipesegmentKeyValue: that.pipelineOid,
+                                    bufferDistance:app.bufferValue,
+									/*source: settlementLayerId,
 									population:true ,//重置人口
-									buildingType:true//重置建筑类型
+									buildingType:true//重置建筑类型*/
 								}) ,
 								async: true,
 								onSuccess: function(res){
@@ -557,44 +559,6 @@
 					});
 				}, 1000);
 			},
-			createArea: function(loading){
-				var msg = "确认重新生成地区等级？";
-				var radius = app.bufferValue;
-				var data = {
-					"dataSize":200,
-					"pipesegmentTableName":"pd_pipesegment",
-					"pipeKeyValue":that.pipelineOid,
-					"pipeKeyName":"eventid",
-					"bufferDistance":radius
-				};
-				var areaRankLayerId = "pd_arearank";
-				var that = this;
-				var common = this.jasMap.commonUtil;
-				loading.text='重新生成地区等级......';
-				common.simpleAjaxLoader({
-					url:"../../../../zone/rank/analysis.do",
-					data:JSON.stringify(data),
-					contentType:"application/json",
-					method:"post",
-					async:true,
-					onSuccess:function(re){
-						var result = JSON.parse(re);
-						if(result.msg==="操作成功！"){
-							var count = result.data ;
-							loading.close();
-							that.$message({
-								type: 'success',
-								message: '地区等级生成成功，创建' +count+ "个地区"
-							});
-							app.loadAreaRankData(result.data);
-						}else{
-							that.$alert('错误', '提示')
-						}
-					},
-					onError:function(){
-					}
-				});
-			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
 				that.showAreaDialogCreate('0', '地区等级列表', '150px');
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);
@@ -626,6 +590,7 @@
 				})
 			},
             showAreaDialogRight: function(forBusiness,title,versionOid){
+                this.localAreaVersionOid = versionOid;
                 if(forBusiness == 0){
                     window.jasTools.selfDialog.show({
                         title: title,
@@ -654,12 +619,17 @@
 				module.open(true);
 				module.refresh(data);
 			},
-			createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
+
+            //1、拿到地区等级版本，发起请求，计算高后果区，返回高后果计算结果版本code
+            //2、通过code刷新高后果区图层 updateLayer() ; where :"code=="
+            createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
 				var that = this;
-				this.jasMap.startPanMode();
+				var localAreaVersionOid = that.localAreaVersionOid;
+                var settlementLayerId = "pd_settlement";
+                this.jasMap.startPanMode();
 				this.closeBufferWindow();
 				if(!this.jasMap.getLayerVisible('pd_arearank')){
-					that.$alert('请进行地区等级划分', '提示', {
+					that.$alert('请先进行地区等级划分', '提示', {
 						callback: function(){
 						}
 					});
@@ -681,24 +651,38 @@
 				that.$confirm('生成新的高后果区？',  "提示",  {
 					type: 'warning',
 					callback: function(action){
-						if (action === 'confirm') {
-							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
-							var loading = that.$loading({
-								lock: true,
-								text: '计算影响区域......',
-								spinner: 'el-icon-loading',
-								background: 'rgba(0, 0, 0, 0.7)'
-							});
-							setTimeout(function(){
-								loading.text='空间相交计算......'
-							}, 1000);
-                                loading.text='高后果区计算......';
-                                setTimeout(function(){
-                                    loading.close();
-                                }, 1000);
-                                that.saveVersion('1');
-                                that.loadZoneCell();
-						}
+                        if (action === 'confirm') {
+                            that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+                            that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
+                            var loading = that.$loading({
+                                lock: true,
+                                text: '计算影响区域......',
+                                spinner: 'el-icon-loading',
+                                background: 'rgba(0, 0, 0, 0.7)'
+                            });
+                            common.simpleAjaxLoader({
+                                url:jasTools.base.rootPath + "/analysis/high/"+localAreaVersionOid+"/doHcaAnalysis.do",
+                                data: JSON.stringify({
+                                    /*source: settlementLayerId,
+                                    population:true ,//重置人口
+                                    buildingType:true//重置建筑类型*/
+                                }) ,
+                                async: true,
+                                onSuccess: function(res){
+                                    var result = JSON.parse(res) ;
+                                    that.jasMap.updateLayer(settlementLayerId);
+                                    tloading.text='高后果区计算......';
+                                    setTimeout(function(){
+                                        loading.close();
+                                    }, 1000);
+                                    that.saveVersion('1');
+                                    that.loadZoneCell();
+                                },
+                                onError: function(){
+                                    that.$alert('数据处理出错', '提示')
+                                }
+                            });
+                        }
 					}
 				})
 			},
