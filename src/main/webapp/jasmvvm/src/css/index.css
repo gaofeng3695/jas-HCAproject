@@ -16,9 +16,9 @@ body,
 /* header寮�濮� */
 
 .headerwrapper {
-	/* background: #409EFF; */
-	background: #344052;
-	border-bottom: 1px solid #1f2630;
+	background: #3589df;
+	/* background: #344052; */
+	border-bottom: 1px solid #2a82dd;
 }
 
 .header {
@@ -110,7 +110,7 @@ a {
 
 a:hover {
 	background: #328bdd;
-	background: #1f2630;
+	/* background: #1f2630; */
 }
 
 .user-info .quit {
@@ -440,46 +440,51 @@ a:hover {
 
 
 .el-menu {
-	background: #344052;
+	background: #fff;
 }
 
 .el-submenu__title {
-	color: #ececec;
+	/* color: #ececec; */
+	color: #333333;
 }
 
 .el-menu-item {
 	/* font-size: 12px; */
-	color: #ececec;
+	/* color: #ececec; */
+	color: #333333;
 }
 
 .el-menu .el-submenu__title:hover {
-	background: #1f2630;
+	/* background: #1f2630; */
+	background: #3589df;
 }
 
 .el-menu .el-menu-item:hover {
-	background: #1f2630;
+	/* background: #1f2630; */
+	background: #3589df;
 }
 
 .el-menu .el-menu-item.is-active {
 	/* border-left: 3px solid #5fb8ff; */
-	background: #1f2630;
+	/* background: #1f2630; */
+	background: background: #3589df;;
 	/* color:#ececec */
 }
 
 .el-submenu__title i {
-	color: #ececec;
+	color: #333333;
 }
 
 .el-menu-item i {
-	color: #ececec;
+	color: #333333;
 }
 
 .is-opened .el-menu-item {
-	background: #222e3c;
+	background: #fff;
 }
 
 .is-opened .el-menu {
-	background: #222e3c;
+	background: #fff;
 }
 
 .el-tabs__item {
