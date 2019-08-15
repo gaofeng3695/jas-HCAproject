@@ -28,8 +28,12 @@ public class HcaArea extends ArcGisSpatialObject {
 	/**
 	 * 管线ID 
 	 */
-	private String pipelineOid; 
+	private String pipelineOid;
 
+	/**
+	 * 版本ID
+	 */
+	private String versionOid;
 	/**
 	 * 地区编号 
 	 */
@@ -53,7 +57,12 @@ public class HcaArea extends ArcGisSpatialObject {
 	/**
 	 * 长度 
 	 */
-	private Double areaLength; 
+	private Double areaLength;
+
+    /**
+     * 人口数量
+     */
+    private Integer population;
 
 	/**
 	 * 描述
@@ -73,6 +82,16 @@ public class HcaArea extends ArcGisSpatialObject {
 	public void setPipelineOid(String pipelineOid) {
 		this.pipelineOid = pipelineOid; 
 		super.setField("pipelineOid");
+	}
+
+	@Column(name="version_oid")
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
+		super.setField("versionOid");
 	}
 
 	@Column(name="area_code")
@@ -125,7 +144,17 @@ public class HcaArea extends ArcGisSpatialObject {
 		super.setField("areaLength");
 	}
 
-	@Column(name="remarks")
+    @Column(name="population")
+    public Integer getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(Integer population) {
+        this.population = population;
+        super.setField("population");
+    }
+
+    @Column(name="remarks")
 	public String getRemarks() {
 		return remarks; 
 	}

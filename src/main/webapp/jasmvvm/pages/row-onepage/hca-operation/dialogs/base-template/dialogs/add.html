@@ -71,13 +71,13 @@
             if(param.forBusiness){
                 this.forBusiness = param.forBusiness;
             }
-            if(param.forBusiness==1){
-                if(param.pageCode=="area-list"){
-                    that.detailPath = "/jdbc/commonData/hcahighimpactarea/getPage.do";
-                    that.savePath = "/jdbc/commonData/hca_high_impact_area/save.do";
-                    that.updatePath = "/jdbc/commonData/hca_high_impact_area/update.do";
-                }
+            if(param.versionOid){
+                this.versionOid = param.versionOid;
             }
+            if(param.pipelineOid){
+                this.pipelineOid = param.pipelineOid;
+            }
+
             if (param.oid) {
                 this.oid = param.oid;
                 this.form.oid = this.oid;
@@ -132,6 +132,12 @@
                 this.loading = true;
                 if(that.forBusiness){
                     that.form.forBusiness = that.forBusiness;
+                }
+                if(that.versionOid){
+                    that.form.versionOid = that.versionOid;
+                }
+                if(that.pipelineOid){
+                    that.form.pipelineOid = that.pipelineOid;
                 }
                 jasTools.ajax.post(url, that.form, function (data) {
                     that.loading = false;

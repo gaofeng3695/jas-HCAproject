@@ -111,14 +111,14 @@ public class HcaReportService extends CommonDataJdbcService{
 			HcaSegment s = new HcaSegment();
 			HcaHighImpactAreaBo bo = (HcaHighImpactAreaBo) hcaAreaList.get(i);
 			s.setHighImpactAreaCode(bo.getHighImpactAreaCode());
-			Double length = bo.getLength();
+			Double length = bo.getHcaLength();
 			s.setHcaLength(length == null ? "" : String.valueOf(length));
 			Double startMileage = bo.getStartMileage();
 			s.setStartMileage(startMileage == null ? "" : String.valueOf(startMileage));
 			Double endMileage = bo.getEndMileage();
 			s.setEndMileage(endMileage == null ? "" : String.valueOf(endMileage));
 			s.setHighImpactLevel(bo.getHighImpactLevelName());
-			s.setDescription(bo.getHighImpactAreaDescription());
+			s.setDescription(bo.getDescription());
 			hcaSegments.add(s);
 		}
 

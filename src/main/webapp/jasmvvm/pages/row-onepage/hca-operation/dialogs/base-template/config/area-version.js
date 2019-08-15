@@ -6,10 +6,12 @@ var pageConfig = {
     savePath: '/jdbc/commonData/hcaversion/save.do',
     updatePath: '/jdbc/commonData/hcaversion/update.do',
     searchFields: [
+        'pipelineOid',
         'versionName',
         'versionCode'
     ],
     tableFields: [
+        'pipelineName',
         'versionName',
         'versionCode',
         'modifyUserName',
@@ -20,6 +22,7 @@ var pageConfig = {
     addFields: [{
         title: '基本信息',
         fields: [
+            'pipelineOid',
             'versionName',
             'versionCode',
             'hasUsed',
@@ -33,6 +36,7 @@ var pageConfig = {
     detailFields: [{
         title: '基本信息',
         fields: [
+            'pipelineName',
             'versionName',
             'versionCode',
             'modifyUserName',
@@ -46,6 +50,16 @@ var pageConfig = {
         ]
     }],
     fieldsConfig: {
+        pipelineOid:{
+            type: 'select',
+            name: '管线名称',
+            optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
+            isRequired: true,
+            disabled: true,
+        },
+        pipelineName: {
+            name: '管线名称',
+        },
         versionName: {
             name: '版本名称',
             type: 'input',
@@ -167,7 +181,7 @@ var pageConfig = {
         areaList: function (row) {
             jasTools.mask.show({
                 title: '地区列表',
-                src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&forBusiness=0',
+                src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&pipelineOid='+row.pipelineOid+'&versionOid='+row.oid,
                 height: '80%',
                 width: '80%',
                 title: '地区列表',
