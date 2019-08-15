@@ -83,8 +83,17 @@
 				var that = this;
 				var msg = "";
 				if('2' == that.radio){
-					top.showHistoryList(0);
-				}else{
+					//top.showHistoryList(0);
+                    local.jasTools.mask.show({
+                        title: '地区版本列表',
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-version&pipelineOid='+top.pipelineOid,
+                        height: '80%',
+                        width: '80%',
+                        cbForClose: function (param) {
+                            that.$refs.table.refresh();
+                        }
+                    })
+                }else{
 					that.cancel(1);
 					top.randomSettlementData();
 				}

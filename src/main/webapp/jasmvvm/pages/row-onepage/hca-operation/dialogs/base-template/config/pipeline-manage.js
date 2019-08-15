@@ -142,8 +142,7 @@ var pageConfig = {
                         });
                         top.jasMap.updateLayer('hca_pipeline',{
                             "show":true,
-                            "fieldName":"oid",
-                            "fieldValues":["fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5"]
+                            "where":"oid like'" + item.oid + "'"
                         });
                         top.createBufferDialog(item.oid);
                     }
