@@ -69,12 +69,22 @@ public class HcaAreaBo extends CommonBaseBo {
 	/**
 	 * 空间数据状态 
 	 */
-	private String geoState; 
+	private String shapeState; 
 
 	/**
 	 * 备注 
 	 */
 	private String remarks;
+	
+	/**
+	 * 版本Oid 
+	 */
+	private String versionOid;
+	/**
+	 * 版本名称 
+	 */
+	private String versionName;
+	
 
 
 	public String getPipelineOid() {
@@ -133,12 +143,12 @@ public class HcaAreaBo extends CommonBaseBo {
 		this.areaLength = areaLength;
 	}
 
-	public String getGeoState() {
-		return geoState;
+	public String getShapeState() {
+		return shapeState;
 	}
 
-	public void setGeoState(String geoState) {
-		this.geoState = geoState;
+	public void setShapeState(String shapeState) {
+		this.shapeState = shapeState;
 	}
 
 	public String getRemarks() {
@@ -180,4 +190,21 @@ public class HcaAreaBo extends CommonBaseBo {
 	public void setPopulation(Integer population) {
 		this.population = population;
 	}
+
+	public String getVersionOid() {
+		return versionOid;
+	}
+
+	public void setVersionOid(String versionOid) {
+		this.versionOid = versionOid;
+	}
+
+	public String getVersionName() {
+		return versionName;
+	}
+
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
+	}
+	
 }

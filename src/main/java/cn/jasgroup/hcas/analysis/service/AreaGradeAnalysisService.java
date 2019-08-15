@@ -15,6 +15,7 @@ import cn.jasgroup.gis.util.*;
 import cn.jasgroup.hcas.analysis.*;
 import cn.jasgroup.hcas.versionmaanage.service.HcaVersionService;
 import cn.jasgroup.jasframework.domain.utils.DomainUtil;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -335,7 +336,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             logger.error("出错了，没有查询到管线{}坐标数据！" ,key );
         }
         double totalMileage = analysisSchema.getTotalMileage();
-        logger.info("管线{}实际里程为{}千米" ,key ,totalMileage);
+        logger.info("管线{}实际里程为{}千米" ,key ,totalMileage/1000);
 
         analysisSchema.createRecognitionAreaBuffer(buffer);
 
@@ -355,21 +356,26 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
     @Override
     public Feature[] prepareBuildingsFeatureData(HcaLinearParam bo) {
         Polygon bufferPg = bo.getRecognitionAreaBuffer();
-        String bufferWKT = GeometryUtil.toWKT(bufferPg,false ,false);
+        String bufferPgJson = bufferPg.toGeoJSON();
         //空间查询
         String buildingsSource = HcaAnalysisContext.buildingsSourceName;
         LayerQueryParam param = new LayerQueryParam() ;
         param.setSrsname(buildingsSource);
-        param.setGeometryType(GeometryType.POLYGON.name());
-        param.setGeometry(bufferWKT);
+        param.setGeometryType(GeometryType.POLYGON.getType());
+        param.setGeometry(bufferPgJson);
         param.setOutFields("*");
         param.setWhere("1=1");// where ?
+        param.setInputSRID(bufferPg.getSpatialReference().getWkid());
+        param.setOutputSRID(bufferPg.getSpatialReference().getWkid());
         param.setOrderBy("start_mileage");
         loggerUtil.time("查询识别区域内的居民地");
         FeatureCollection<Feature>  queryResult = geodataAccessService.query(param) ;
         Feature[] settlementData = queryResult.getFeatures().toArray(new Feature[0]);
         int totalSize = settlementData.length;
         loggerUtil.timeEnd("查询识别区域内的居民地","查询到" + totalSize + "处居民地");
+        if(totalSize == 0){
+            throw new RuntimeException("识别区域内没有查询到居民地要素数据，请检查居民地数据或查询参数！");
+        }
         //相交计算
         String populationFieldName = HcaAnalysisContext.buildingsSourcePopulationFieldName ;
         String startMileageFieldName = HcaAnalysisContext.startMileageFieldName ;
@@ -510,23 +516,12 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
     }
 
     /**
-     * 划分识别单元
-     * 1、划分核心识别单元 ；
-     * 2、划分标准和独立识别单元  ；
-     * 3、边界处理  ？
+     *
      * @param buildings
-     * @param bo
      * @return
      */
-    @Override
-    public Feature[] classifyAreaRankCellFeatures(Feature[] buildings, HcaLinearParam bo) {
-        //识别单元边界处理工具类
-        BuildingsMileageScope scopes = new BuildingsMileageScope(buildings);
-        scopes.setMinMileage(0d);
-        scopes.setMaxMileage(bo.getTotalMileage());
-
+    protected List<Feature> classifyCoreCells(Feature[] buildings){
         List<Feature> coreCellList = new ArrayList<>() ;
-        loggerUtil.time("划分识别单元");
         //1、核心识别单元
         for( int i = 0 ; i < buildings.length ; ++i){
             Feature feature = buildings[i] ;
@@ -542,7 +537,15 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
                 coreCellList.add( core );
             }
         }
-        //2、中心间距小于2公里合并核心识别单元
+        return coreCellList;
+    }
+
+    /**
+     *
+     * @param coreCellList
+     * @return
+     */
+    protected List<Feature> mergeCoreCells(List<Feature> coreCellList){
         Feature last = coreCellList.get(0);
         List<Feature> mergedCoreCellList = new ArrayList<>() ;
         mergedCoreCellList.add(last);
@@ -556,6 +559,29 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
                 last = feature;
             }
         }
+        return mergedCoreCellList;
+    }
+    /**
+     * 划分识别单元
+     * 1、划分核心识别单元 ；
+     * 2、划分标准和独立识别单元  ；
+     * 3、边界处理  ？
+     * @param buildings
+     * @param bo
+     * @return
+     */
+    @Override
+    public Feature[] classifyAreaRankCellFeatures(Feature[] buildings, HcaLinearParam bo) {
+        //识别单元边界处理工具类
+        BuildingsMileageScope scopes = new BuildingsMileageScope(buildings);
+        scopes.setMinMileage(0d);
+        scopes.setMaxMileage(bo.getTotalMileage());
+
+        loggerUtil.time("划分识别单元");
+        List<Feature> coreCellList = classifyCoreCells(buildings);
+
+        //2、中心间距小于2公里合并核心识别单元
+        List<Feature> mergedCoreCellList = mergeCoreCells(coreCellList);
         logger.info("合并"+ ( coreCellList.size() - mergedCoreCellList.size() ) + "个核心识别单元" );
         //两侧边界扩充200m
         for(int i= 0; i < mergedCoreCellList.size() ; i++){
