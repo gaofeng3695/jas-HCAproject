@@ -16,6 +16,7 @@ import cn.jasgroup.hcas.versionmaanage.query.HcaVersionQuery;
 import cn.jasgroup.hcas.versionmaanage.service.HcaVersionService;
 import cn.jasgroup.jasframework.dataaccess.base.BaseJdbcDao;
 import cn.jasgroup.jasframework.engine.jdbc.dao.CommonDataJdbcDao;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,7 +178,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             if(rank == HcaAnalysisContext.AreaGradeLevel_III || rank == HcaAnalysisContext.AreaGradeLevel_IV){
                 continue;
             }
-            String bufferAreaText = GeometryUtil.toWKT(bufferArea,false,false) ;
+            String bufferAreaText = polygon.toGeoJSON();
             LayerQueryParam queryParam = new LayerQueryParam();
             queryParam.setSrsname(HcaAnalysisContext.buildingsSourceName);
             queryParam.setGeometry(bufferAreaText);

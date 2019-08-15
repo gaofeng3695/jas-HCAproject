@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="./../../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="./../../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../../src/css/main.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			overflow: hidden;
+			background:transparent;
+		}
+
+		.content {
+			height: calc(100% - 40px);
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.el-input-number,
+		.el-cascader,
+		.el-select {
+			width: 100%;
+		}
+		.el-table, .el-table th, .el-table tr, .el-table td {
+			border: 0;
+			background:transparent;
+
+		}
+		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+		.el-input__inner, .el-textarea__inner {
+			height: 30px;
+			line-height: 30px;
+			border: 1px solid #466599;
+			color: #b5ddff;
+		}
+		.el-input, .el-input__inner, .el-textarea, .el-textarea__inner {
+			background: transparent;
+		}
+		.el-form-item__label {
+			color:#fff;
+		}
+		.el-input-number--small .el-input-number__decrease, .el-input-number--small .el-input-number__increase {
+			background-color: transparent;
+			border-right: 1px solid #30538c;
+			border-left: 1px solid #30538c;
+		}
+
+	</style>
+</head>
+
+<body>
+<div id="app" v-cloak>
+	<jas-dialog-wrapper>
+		<el-form ref="tableFormData" :model="tableFormData" :rules="rules"  label-width="70px">
+			<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
+				<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
+			</div>
+			<el-row :gutter="10">
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="编号" prop="buildingCode">
+						<el-input v-model="tableFormData.buildingCode" clearable placeholder="请输入构筑物编号" size="small"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="类型" prop="buildingType">
+						<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择构筑物类型" size="small" >
+							<el-option v-for="item in domain.buildingType" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<!--				<el-row>
+                <el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
+                    <el-form-item label="起始里程" prop="startMileage">
+                        <el-input-number v-model="tableFormData.startMileage" clearable placeholder="请输入起始里程" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
+                    <el-form-item label="终止里程" prop="endMileage">
+                        <el-input-number v-model="tableFormData.endMileage" clearable placeholder="请输入终止里程" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
+                    <el-form-item label="水平距离" prop="horizontalDistance">
+                        <el-input-number v-model="tableFormData.horizontalDistance" clearable placeholder="请输入水平距离" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="12" :sm="12" :md="8" :lg="6" :xl="6">
+                    <el-form-item label="垂直距离" prop="verticalDistance">
+                        <el-input-number v-model="tableFormData.verticalDistance" clearable placeholder="请输入垂直距离" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="起始坐标x" prop="pointx">
+						<el-input-number v-model="tableFormData.pointx" clearable placeholder="请输入起始坐标x" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="起始坐标y" prop="pointy">
+						<el-input-number v-model="tableFormData.pointy" clearable placeholder="请输入起始坐标y" size="small" :precision="3" :step="1" :max="999999.999" :min="0"></el-input-number>
+					</el-form-item>
+				</el-col>
+			</el-row>-->
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="建筑分布" prop="buildingDistribution" >
+						<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建筑分布">
+							<el-option v-for="item in domain.buildingDistribution" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="户数" prop="households">
+						<el-input-number v-model="tableFormData.households" clearable placeholder="请输入户数" size="small" :step="1" :max="999999" :min="0"></el-input-number>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="人口" prop="population">
+						<el-input-number v-model="tableFormData.population" clearable placeholder="请输入人口" size="small" :step="1" :max="999999" :min="0"></el-input-number>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="是否占压" prop="pressurePipeline">
+						<el-select v-model="tableFormData.pressurePipeline" clearable placeholder="请选择">
+							<el-option v-for="item in domain.pressurePipeline" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+						</el-select>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="地址" prop="address">
+						<el-input v-model="tableFormData.address" clearable placeholder="请输入地址" size="small" ></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
+				<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">其他信息</span>
+			</div>
+			<el-row>
+				<el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
+					<el-form-item label="备注" prop="remarks">
+						<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+		</el-form>
+		<div slot="footer" style="margin-bottom:10px;">
+			<el-button size="small" @click="cancel()">取 消</el-button>
+			<el-button size="small" type="primary" @click="save()">确 定</el-button>
+		</div>
+	</jas-dialog-wrapper>
+
+</div>
+</body>
+<script src="./../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="./../../../../../../lib/vue/vue.js"></script>
+<script src="./../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="./../../../../../../common/components/jas-components.js"></script>
+<script src="./../../../../../../common/js/jas-tools.js"></script>
+
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: function () {
+            var that = this;
+            return {
+                but_disabled:false,
+                rules: {
+                    buildingCode: [{
+                        required: true,
+                        message: '请输入建(构)筑物编号',
+                        trigger: 'blur'
+                    }],
+                    buildingType: [{
+                        //required: true,
+                        message: '请选择建(构)筑物类型',
+                        trigger: 'blur'
+                    }],
+                    /*		startMileage: [{
+                                //required: true,
+                                message: '请输入起始里程',
+                                trigger: 'blur'
+                            }],
+                            endMileage: [{
+                                //required: true,
+                                message: '请输入终止里程',
+                                trigger: 'blur'
+                            }],
+                            horizontalDistance: [{
+                                //required: true,
+                                message: '请输入水平距离',
+                                trigger: 'blur'
+                            }],
+                            verticalDistance: [{
+                                //required: true,
+                                message: '请输入垂直距离',
+                                trigger: 'blur'
+                            }],
+                    pointx: [{
+                        //required: true,
+                        message: '请输入起始坐标x',
+                        trigger: 'blur'
+                    }],
+                    pointy: [{
+                        //required: true,
+                        message: '请输入起始坐标y',
+                        trigger: 'blur'
+                    }]*/
+                },
+                tableFormData: {
+                    'buildingCode': '',
+                    'buildingType': '',
+                    /*	'startMileage':'',
+                        'endMileage':'',
+                        'horizontalDistance':'',
+                        'verticalDistance':'',
+                    'pointx':'',
+                    'pointy':'',*/
+                    'buildingDistribution':'',
+                    'households':'',
+                    'population':'',
+                    'address':'',
+                    'reamrks':'',
+                    'pressurePipeline': 0
+                },
+                domain: {
+                    buildingType: [],
+                    buildingDistribution:[],
+                    pressurePipeline:[
+                        {
+                            key: 0,
+                            value: '否'
+                        },
+                        {
+                            key: 1,
+                            value: '是'
+                        }
+                    ]
+                },
+                isEdit:false,
+                fId:'',
+                layerId:""
+            }
+        },
+        created: function(){
+            this.jasMap = parent.app.jasMap;
+        },
+        computed: {
+        },
+        mounted: function () {
+            var that = this;
+            var param = window.jasTools.base.getParamsInUrl(location.href);
+            that.fId = param.fId;
+            that.layerId = param.layerId;
+            if (param.oid) {
+                this.isEdit = true;
+                this.oid = param.oid;
+                this.tableFormData.oid = this.oid;
+                this.requestDetail(param.oid);
+            };
+            this.getDomainSelect('building_type_domain',function (arr) {
+                that.domain.buildingType = arr;
+            });
+            this.getDomainSelect('building_distribution_domain',function (arr) {
+                that.domain.buildingDistribution = arr;
+            });
+        },
+        methods: {
+            submit: function (formName) {
+                var that = this;
+                this.$refs[formName].validate(function (valid) {
+                    if (valid) {
+                        that.save();
+                    }
+                });
+            },
+            requestDetail: function (oid) {
+                var that = this;
+                var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+                var array=[];
+                array.push(oid);
+                jasTools.ajax.post(url, {
+                    oids: array
+                }, function (data) {
+                    that.tableFormData = data.rows[0];
+                });
+            },
+            save: function () {
+                var that = this;
+                var msg = "";
+                if (!this.isEdit) {
+                    msg = "增加成功";
+                    url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
+                } else {
+                    msg = "修改成功";
+                    url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
+                }
+                that.but_disabled = true;
+                jasTools.ajax.post(url, that.tableFormData, function (data) {
+                    window.Vue.prototype.$message({
+                        type: 'success',
+                        message: msg
+                    });
+                    that.cancel(1);
+                });
+            },
+            requestDomainFromBizTable: function (url, obj, cb) {
+                var that = this;
+                var url = jasTools.base.rootPath + url;
+                jasTools.ajax.post(url, obj, function (data) {
+                    cb && cb(data.rows);
+                }, function () {
+                    cb && cb([]);
+                });
+            },
+            getDomainSelect: function(domainName, cb){
+                var that = this;
+                var url = jasTools.base.rootPath +
+                    "/jasframework/sysdoman/getDoman.do";
+                jasTools.ajax.get(url, {
+                    "domainName": domainName
+                }, function (data) {
+                    var aDomain = data.map(function (item) {
+                        return {
+                            key: item.codeId,
+                            value: item.codeName,
+                        }
+                    });
+                    cb && cb(aDomain);
+                });
+            },
+            cancel: function (param) {
+                if(!param){
+                    this.jasMap.refreshLayerById("hca_buildings");
+                }
+                window.parent.jasTools.selfDialog.close(param);
+            }
+        },
+    });
+</script>
+
+</html>

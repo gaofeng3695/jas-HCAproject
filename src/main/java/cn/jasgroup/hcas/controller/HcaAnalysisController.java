@@ -2,11 +2,21 @@ package cn.jasgroup.hcas.controller;
 
 import cn.jasgroup.framework.data.result.BaseResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
+import cn.jasgroup.gis.data.Feature;
+import cn.jasgroup.gis.data.FeatureCollection;
+import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
+import cn.jasgroup.gis.dataaccess.LayerQueryParam;
+import cn.jasgroup.gis.geometry.Geometry;
+import cn.jasgroup.gis.geometry.Polyline;
+import cn.jasgroup.gis.geometryservice.IGeometryService;
+import cn.jasgroup.gis.geometryservice.arcgis.GeometryService;
+import cn.jasgroup.gis.util.GeometryUtil;
 import cn.jasgroup.gis.util.StringUtil;
 import cn.jasgroup.hcas.analysis.HcaAnalysisResult;
 import cn.jasgroup.hcas.analysis.IAreaGradeAnalysisService;
 import cn.jasgroup.gis.util.MapUtil;
 import cn.jasgroup.hcas.analysis.IHighImpactAnalysisService;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -31,7 +41,10 @@ public class HcaAnalysisController {
     protected IHighImpactAnalysisService highImpactAnalysisService  ;
     @Resource
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+    @Resource
+    private IGeometryService geometryService ;
+    @Resource
+    private IGeodataAccessService geodataAccessService ;
     /**
      *
      * @param params
@@ -71,7 +84,7 @@ public class HcaAnalysisController {
 
     /**
      *
-     * @param versionCode
+     * @param areaVersionId
      * @return
      * @throws Exception
      */
@@ -83,7 +96,35 @@ public class HcaAnalysisController {
         result.setData(hcaAnalysisResult);
         return result;
     }
-
+    /**
+     * 生成识别缓冲区
+     * @param params
+     * @return
+     */
+    @PostMapping(value = "area")
+    @ResponseBody
+    public BaseResult areaBuffer(@RequestBody Map<String ,Object> params){
+        SimpleResult baseResult = new SimpleResult<String>();
+        String pipelineSourceName = MapUtil.getString(params,"pipesegmentTableName","hca_pipeline");
+        String pipelineOid = MapUtil.getString(params,"pipesegmentKeyValue");
+        String pipelineKeyName = MapUtil.getString(params,"pipesegmentKeyName","oid");
+        double bufferDistance = MapUtil.getDouble(params,"bufferDistance");// m
+        //
+        LayerQueryParam layerQueryParam = new LayerQueryParam();
+        layerQueryParam.setSrsname(pipelineSourceName);
+        layerQueryParam.setWhere(pipelineKeyName + " like '" + pipelineOid +"'");
+        FeatureCollection<Feature> collection = geodataAccessService.query(layerQueryParam);
+        if(collection.getSize() < 0){
+            baseResult.setStatus(0);
+            baseResult.setMsg("没有查询到数据，table=" + pipelineSourceName + "," + pipelineKeyName + "=" + pipelineOid);
+            return baseResult;
+        }
+        Polyline polyline = (Polyline) collection.getFeatures().get(0).getGeometry();
+        Geometry area = geometryService.buffer(polyline,bufferDistance);
+        baseResult.setData(JSONObject.parse(area.toGeoJSON()));
+        baseResult.setStatus(1);
+        return baseResult ;
+    }
 
 
 }
