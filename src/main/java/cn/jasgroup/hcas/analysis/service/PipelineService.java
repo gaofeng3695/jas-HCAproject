@@ -5,6 +5,7 @@ import cn.jasgroup.gis.data.FeatureCollection;
 import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
 import cn.jasgroup.gis.dataaccess.LayerQueryParam;
 import cn.jasgroup.gis.geometry.Geometry;
+import cn.jasgroup.gis.geometry.Polygon;
 import cn.jasgroup.gis.geometry.Polyline;
 import cn.jasgroup.gis.geometryservice.IGeometryService;
 import cn.jasgroup.gis.util.GeometryUtil;
@@ -71,5 +72,6 @@ public class PipelineService {
         return Double.valueOf(f.format(lengths[0]/1000d)) ;
 
     }
+
 
 }

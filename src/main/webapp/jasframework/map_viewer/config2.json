@@ -120,16 +120,16 @@
       "label":"业务图层",
       "layerSet":[
        {
-          "id":"hca_buildings","type":"feature","label":"gzw","index":"31" ,"visible":false,
+          "id":"hca_buildings","type":"feature","label":"构筑物","index":"31" ,"visible":false,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0"
         },{
-          "id":"hca_pipeline","type":"feature","label":"guaxian","index":"31" ,
+          "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1"
         },{
-          "id":"pd_arearank","type":"feature","label":"dqdj","index":"31" ,"visible":false,"where":"1!=1",
+          "id":"pd_arearank","type":"feature","label":"地区等级","index":"31" ,"visible":false,"where":"1!=1",
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2"
         },{
-          "id":"pd_zonerankcell","type":"feature","label":"hca","index":"31" ,"visible":false,"where":"1!=1",
+          "id":"pd_zonerankcell","type":"feature","label":"高后果区评价结果","index":"31" ,"visible":false,"where":"1!=1",
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3"
         }
       ]
