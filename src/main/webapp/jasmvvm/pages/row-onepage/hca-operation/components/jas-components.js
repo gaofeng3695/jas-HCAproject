@@ -884,7 +884,17 @@ Vue.component('jas-search-for-list', {
                     if (config.optionUrl) {
                         (function (field, config) {
                             jasTools.ajax.post(jasTools.base.rootPath + "/" + config.optionUrl, {}, function (data) {
-                                config.options = data.rows;
+                                if(data.rows[0].oid && data.rows[0].pipelineName){
+                                    var pipelinList = data.rows.map(function (item) {
+                                        return {
+                                            key: item.oid,
+                                            value: item.pipelineName,
+                                        }
+                                    });
+                                    config.options = pipelinList;
+                                }else {
+                                    config.options = data.rows;
+                                }
                             });
                         })(field, config)
                     }
@@ -1661,7 +1671,17 @@ Vue.component('jas-form-items', {
                     if (config.optionUrl) {
                         (function (field, config) {
                             jasTools.ajax.post(jasTools.base.rootPath + "/" + config.optionUrl, {}, function (data) {
-                                config.options = data.rows;
+                                if(data.rows[0].oid && data.rows[0].pipelineName){
+                                    var pipelinList = data.rows.map(function (item) {
+                                        return {
+                                            key: item.oid,
+                                            value: item.pipelineName,
+                                        }
+                                    });
+                                    config.options = pipelinList;
+                                }else {
+                                    config.options = data.rows;
+                                }
                             });
                         })(field, config)
                     }
@@ -1917,7 +1937,17 @@ Vue.component('jas-form-items-group', {
                                 obj = jasTools.base.extend(obj, config.requestParams);
                             }
                             jasTools.ajax.post(jasTools.base.rootPath + "/" + config.optionUrl, obj, function (data) {
-                                config.options = data.rows ? data.rows : data;
+                                if(data.rows[0].oid && data.rows[0].pipelineName){
+                                    var pipelinList = data.rows.map(function (item) {
+                                        return {
+                                            key: item.oid,
+                                            value: item.pipelineName,
+                                        }
+                                    });
+                                    config.options = pipelinList;
+                                }else{
+                                    config.options = data.rows ? data.rows : data;
+                                }
                             });
                         })(field, config)
                     }

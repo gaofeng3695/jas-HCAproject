@@ -167,12 +167,14 @@
              }
 			.jas-dialog-self {
 				border: 1px solid #409EFF;
-				background: rgba(0, 0, 0, 0.8);
-			}
-			.jas-dialog-header {
+                background: rgba(189, 187, 187, 0.8);
+            }
+
+            .jas-dialog-header {
 				background:transparent;
 				height: 30px;
-			}
+                color: #409EFF;
+            }
 			.jas-dialog-tools {
 				right: 10px;
 				top: 0px;
@@ -190,27 +192,6 @@
 		<jas-onepage-wrapper :ismax="ismax">
 			<template slot="center" >
 				 <div class="center">
-					<div class="title-div" hidden>
-				 		<label>当前识别管线：</label>
-				 		<el-tag>  </el-tag>
-				 		<el-tooltip effect="dark" content="退出识别" placement="right">
-				 			<el-button style="padding: 8px 8px" type="primary" icon="el-icon-circle-close-outline" @click="exitHca"></el-button>
-				 		</el-tooltip>
-				 	</div>
-					<!--左侧流程操作按钮-->
-					<div class="operate-left-div">
-						<div class="item-btn" @click="createBh" v-show="!isManage">建(构)筑物管理</div>
-						<div class="item-btn" @click="showHistoryBtn(0)" v-show="!isManage">地区等级划分</div>
-						<div class="item-btn" @click="createHcaArea" v-show="!isManage">高后果区识别</div>
-					</div>
-                     <div hidden class="area-div area">
-                         <div hidden class="item-btn area" @click="showHistoryList(0)">历史信息</div>
-                         <div hidden class="item-btn area" @click="randomSettlementData">重新划分</div>
-                     </div>
-					 <div hidden class="hca-div hca">
-						<div hidden class="item-btn hca" @click="showHistoryList(1)">历史信息</div>
-						<div hidden class="item-btn hca" @click="createHcaArea">重新识别</div>
-					 </div>
 					<div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
 				 </div>
 			</template>
@@ -221,8 +202,6 @@
 <script src="../../jasmvvm/lib/vue/vue.js"></script>
 <script src="../../jasmvvm/lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="../../jasmvvm/lib/element-ui/v2.4.1/index.min.js"></script>
-
-
 <script src="../../jasmvvm/common/components/jas-components.js"></script>
 <script src="../../jasmvvm/common/js/jas-tools.js"></script>
 <script src="../../jasmvvm/pages/row-onepage/hca-operation/components/onepage-components.js"></script>
@@ -279,7 +258,7 @@
 	return "";
 }
 
-var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
+//var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 
 	top.hcaMapApp = new Vue({
 		el: '#app',
@@ -294,7 +273,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
                 isShowPipeline:false,
                 localPipelineName:'',
                 activeName:'',
-
+                pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
             }
 		},
 		computed: {},
@@ -312,41 +291,65 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
             });
 			top.jasMap = that.jasMap;
 			parent.jasMap = that.jasMap;
-			window.jasMap = that.jasMap;
-			that.jasMap.createBh = this.createBh;
-			that.jasMap.showHistoryBtn = this.showHistoryBtn;
-			that.jasMap.createHcaArea = this.createHcaArea;
-			
-			this.createBufferDialog();
+            window.jasMap = that.jasMap;
+            that.jasMap.createBh = this.createBh;
+            that.jasMap.showHistoryBtn = this.showHistoryBtn;
+            that.jasMap.createHcaArea = this.createHcaArea;
+            that.jasMap.drawSettlement = this.drawSettlement;
+            top.createBufferDialog = that.createBufferDialog;
+            top.createBuffer = that.createBuffer;
+            top.randomSettlementData = that.randomSettlementData;
+            top.showHistoryList = that.showHistoryList;
+            top.pipelineOid = that.pipelineOid;
+            top.showAreaDialogRight = that.showAreaDialogRight;
 		},
         watch: {
             // 如果需要联动
             areaVal: function (newval, oldval) {
-                
             },
             // 地图最大化的监控
             ismax:function (newval, oldval) {
                 var that = this;
-                // if(newval){
-                    // alert("执行全屏地图的操作方法")
-                    this.$nextTick(function(){
-                        that.jasMap.resizeMap()
-                    })
-                // }else{
-                //  // alert("执行缩放地图的操作方法")
-                // }
+                this.$nextTick(function(){
+                    that.jasMap.resizeMap()
+                })
             },
         },
 		methods: {
-			createBufferDialog: function(){
+            drawSettlement: function(){
+                var that = this;
+                this.jasMap.drawPolygon({
+                    drawLayerId: "hca_buildings",
+                    onDrawEnd:function(evt){
+                        var feature = evt.feature ;
+                        var fId = feature.getId();
+                        changedFeatures[fId] = feature;
+                        var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlement.html';
+                        top.jasTools.selfDialog.show({
+                            title: '建(构)筑物属性编辑',
+                            src: baseSrc,
+                            height: '55%',
+                            width: '20%',
+                            top:'155px',
+                            right:'3%',
+                            cbForClose: function () {
+                                that.jasMap.startPanMode();
+                                //that.jasMap.refreshLayerById(that.layerId)
+                            }
+                        });
+                    }
+                })
+            },
+			createBufferDialog: function(pipelinOid){
+                that.pipelineOid = pipelineOid;
 				this.closeBufferWindow();
 				window.jasTools.selfDialog.show({
 					title: '识别区条件',
-					src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/buffer.html',
-					height: '200px',
-					width: '15%',
-					left:"10%",
-					top:"140px"
+					src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html',
+					height: '180px',
+					width: '230px',
+					left:"50px",
+					top:"100px"
 				})
 			},
 			closeBufferWindow: function(){
@@ -354,7 +357,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			},
 			createBuffer: function(){
 				window.jasTools.selfDialog.close();
-				this.closeBufferWindow();
 				var gasStationId = "pd_gas_station";
 				var entertainmentPlaceId = "pd_entertainment_place";
 				var hospitalId = "pd_hospital";
@@ -370,9 +372,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var that = this;
 				this.jasMap.commonUtil.simpleAjaxLoader({
 					url:jasTools.base.rootPath + "/zone/area.do",
+					//url:jasTools.base.rootPath + "/analysis/area/grade.do",
 					data:JSON.stringify({
 						"pipesegmentTableName":"hca_pipeline",
-						"pipesegmentKeyValue":pipelineOid,
+						"pipesegmentKeyValue":that.pipelineOid,
 						"pipesegmentKeyName":"oid",
 						"bufferDistance":radius
 					}),
@@ -440,51 +443,32 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				window.jasTools.dialog.close();
 			},
 			createBh: function(){
-				window.jasTools.selfDialog.close();
+                var that = this;
+                window.jasTools.selfDialog.close();
                 //this.closeBufferWindow();
                 $('.hca').hide();
-				$('.area').hide();
-				//显示图层
+                $('.area').hide();
+                //显示图层
 				this.jasMap.zoomAt('110.56310713' ,'34.54671800' ,18);
-				var gasStationId = "pd_gas_station";
-				var entertainmentPlaceId = "pd_entertainment_place";
-				var hospitalId = "pd_hospital";
-				var governmentId = "pd_government";
-				this.jasMap.layerVisibleSwitch('pd_arearank', false);
-				this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
-				this.jasMap.layerVisibleSwitch('pd_arearankcell', false);
-				//this.jasMap.layerVisibleSwitch('pd_settlement', true);
+                var gasStationId = "pd_gas_station";
+                var entertainmentPlaceId = "pd_entertainment_place";
+                var hospitalId = "pd_hospital";
+                var governmentId = "pd_government";
+                this.jasMap.layerVisibleSwitch('pd_arearank', false);
+                this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
+                this.jasMap.layerVisibleSwitch('pd_arearankcell', false);
+                //this.jasMap.layerVisibleSwitch('pd_settlement', true);
 				this.jasMap.layerVisibleSwitch('hca_buildings', true);
-				this.jasMap.layerVisibleSwitch(gasStationId,true)
-				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
-				this.jasMap.layerVisibleSwitch(hospitalId,true)
-				this.jasMap.layerVisibleSwitch(governmentId,true)
-				var that = this;
+                this.jasMap.layerVisibleSwitch(gasStationId,true)
+                this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
+                this.jasMap.layerVisibleSwitch(hospitalId,true)
+                this.jasMap.layerVisibleSwitch(governmentId,true)
 				window.jasTools.selfDialog.close();
 				if(!this.isManage){
-					/* window.jasTools.selfDialog.show({
-						title: '建(构)筑物编辑工具',
-						src: './dialogs/hca-settlement/edit-settlement.html',
-						height: '280px',
-						width: '380px',
-						left:"10%",
-						top:"140px",
-						cbForClose: function(){
-							that.jasMap.startPanMode();
-						}
-					})
-					window.jasTools.selfDialog.show({
-						title: '建(构)筑物信息列表',
-						// src: './dialogs/detail2.html',
-						src: './dialogs/hca-settlement/settlementList.html?dataType=pipeline',
-						height: '460px',
-						width: '52%',
-						bottom:'10px',
-						left:'24%',
-					}) */
+                    top.showmap2d();
 					window.jasTools.selfDialog.show({
 						title: '',
-						src: './dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
 						height: '485px',
 						width: '388px',
 						top:'155px',
@@ -493,7 +477,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				}else{
 					window.jasTools.selfDialog.show({
 						title: '',
-						src: './dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
 						height: '485px',
 						width: '388px',
 						top:'155px',
@@ -512,8 +496,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				})
 			},
 			randomSettlementData: function(){
-                $('.area').hide();
-
                 var that = this;
 				var common = this.jasMap.commonUtil;
 				var msg = "确认重新生成地区等级？";
@@ -524,20 +506,17 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						if (action === 'confirm') {
 							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,false);
 							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-							/* app.showAreaDialogCreate('0', '地区等级列表', '150px');
-						    that.jasMap.flashGraphic('d', 'pd_arearank' ,{
-								deep:2
-							}); */
+
 							const loading = that.$loading({
 								lock: true,
 								text: '合并要素单元......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
 							})
-							// app.loaddingLayer('合并要素单元......');
 							common.simpleAjaxLoader({
-								url: jasTools.base.rootPath + "/zone/settlement/random.do",
-								data: JSON.stringify({
+								//url: jasTools.base.rootPath + "/zone/settlement/random.do",
+                                url:jasTools.base.rootPath + "/analysis/area/grade.do",
+                                data: JSON.stringify({
 									source: settlementLayerId,
 									population:true ,//重置人口
 									buildingType:true//重置建筑类型
@@ -546,7 +525,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								onSuccess: function(res){
 									var result = JSON.parse(res) ;
 									that.jasMap.updateLayer(settlementLayerId);
-									app.createRankCellData(loading);
+									that.createRankCellData(loading);
 								},
 								onError: function(){
 									that.$alert('数据处理出错', '提示')
@@ -563,7 +542,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					sourceName: "pd_arearankcell" ,
 					pipeSourceName: "pd_pipesegment" ,
 					settlementSourceName: "pd_settlement" ,
-					pipeKeyValue: pipelineOid ,
+					pipeKeyValue: that.pipelineOid ,
 					pipeKeyName: "eventid",
 					bufferDistance: this.bufferValue,
 					deleteFlag: true,
@@ -573,60 +552,25 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				setTimeout(function(){
 					loading.close();
 					that.jasMap.layerVisibleSwitch("pd_arearank" ,true);
-					/* that.jasMap.flashGraphic('d', 'pd_arearank' ,{
-						deep:2
-					}); */
-					that.saveVersion('0', function(){
-						app.showAreaDialogCreate('0', '地区等级列表', '150px');
-						//app.showAreaDialogCreate('0', '地区等级列表', '150px');
+                    that.saveVersion('0', function(){
+						//that.showAreaDialogCreate('0', '地区等级列表', '150px');
 					});
 				}, 1000);
-                /* loading.text='识别单元计算......';
-                app.createArea(loading); */
-
-                /*common.simpleAjaxLoader({
-                    url: jasTools.base.rootPath + "/zone/rank/cell/init.do",
-                    data: JSON.stringify(data) ,
-                    async:true,
-                    onSuccess:function(res){
-                        var result = JSON.parse(res) ;
-                        // that.jasMap.refreshLayerById("pd_arearankcell");
-                        that.jasMap.layerVisibleSwitch( "pd_arearankcell" ,true);
-                        loading.text='识别单元计算......';
-                        that.$message({
-                            title:'success',
-                            message:'合并识别单元'
-                        });
-                        //结果展示面板
-                        app.createArea(loading);
-                    },
-                    onError:function(){
-                        that.$alert('数据处理出错', '提示')
-                    }
-                });*/
 			},
 			createArea: function(loading){
-				//window.jasTools.selfDialog.close();
 				var msg = "确认重新生成地区等级？";
 				var radius = app.bufferValue;
 				var data = {
 					"dataSize":200,
 					"pipesegmentTableName":"pd_pipesegment",
-					"pipeKeyValue":pipelineOid,
+					"pipeKeyValue":that.pipelineOid,
 					"pipeKeyName":"eventid",
 					"bufferDistance":radius
 				};
 				var areaRankLayerId = "pd_arearank";
 				var that = this;
 				var common = this.jasMap.commonUtil;
-				/* loading = that.$loading({
-					lock: true,
-					text: '重新生成地区等级......',
-					spinner: 'el-icon-loading',
-					background: 'rgba(0, 0, 0, 0.7)'
-				}) */
 				loading.text='重新生成地区等级......';
-				// app.loaddingLayer('重新生成地区等级......');
 				common.simpleAjaxLoader({
 					url:"../../../../zone/rank/analysis.do",
 					data:JSON.stringify(data),
@@ -636,7 +580,6 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					onSuccess:function(re){
 						var result = JSON.parse(re);
 						if(result.msg==="操作成功！"){
-							// var count = result.data ? result.data.length : 0 ;
 							var count = result.data ;
 							loading.close();
 							that.$message({
@@ -649,20 +592,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 						}
 					},
 					onError:function(){
-						//
 					}
 				});
 			},
 			loadAreaRankData: function(data){	// 加载已有地区等级信息
-				//window.jasTools.selfDialog.close();
-
-				app.showAreaDialogCreate('0', '地区等级列表', '150px');
-				// this.jasMap.refreshLayerById( 'pd_arearank' );
+				that.showAreaDialogCreate('0', '地区等级列表', '150px');
 				this.jasMap.layerVisibleSwitch( 'pd_arearank' ,true);
-				/* var pipeline = app.getPipeline();
-				app.zoomToLine(pipeline,"start"); */
 				//设置表格
-				// app.refreshAreaRankDialog(data);
 				if(!Array.isArray(data)){
 					return ;
 				}
@@ -682,42 +618,33 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 			showAreaDialogCreate: function(forBusiness, title, top){
 				window.jasTools.selfDialog.show({
 					title: title,
-					src: './dialogs/hcaarea-current/areaDivideListRight.html?forBusiness=' + forBusiness,
+                    src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-divide-list.html?forBusiness=' + forBusiness,
                     height: '485px',
-                    width: '18%',
-                    top:'155px',
-                    left:'8%'
+                    width: '320px',
+                    top:'100px',
+                    left:'5%'
 				})
 			},
-			showAreaDialog: function(forBusiness, title, top){
-				window.jasTools.selfDialog.show({
-					title: title,
-					src: './dialogs/hcaarea-current/hcaAreaList.html?forBusiness=' + forBusiness,
-					height: '38%',
-					width: '40%',
-					bottom:'2%',
-					left:'30%'
-				})
-			},
-            showAreaDialogLeft: function(forBusiness, title, top){
-                window.jasTools.selfDialog.show({
-                    title: title,
-                    src: './dialogs/hcaarea-current/hcaAreaListRight.html?forBusiness=' + forBusiness+'&btnVisible=true',
-                    height: '485px',
-                    width: '18%',
-                    top:'155px',
-                    left:'8%'
-                })
-            },
-            showAreaDialogRight: function(forBusiness, title, top){
-                window.jasTools.selfDialog.show({
-                    title: title,
-                    src: './dialogs/hcaarea-current/hcaAreaListRight.html?forBusiness=' + forBusiness,
-                    height: '485px',
-                    width: '18%',
-                    top:'155px',
-                    right:'4%'
-                })
+            showAreaDialogRight: function(forBusiness,title,versionOid){
+                if(forBusiness == 0){
+                    window.jasTools.selfDialog.show({
+                        title: title,
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-divide-list.html?forBusiness=' + forBusiness + '&versionOid='+versionOid,
+                        height: '480px',
+                        width: '320px',
+                        top:'80px',
+                        right:'2%'
+                    })
+                }else {
+                    window.jasTools.selfDialog.show({
+                        title: title,
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/hca-list.html?forBusiness=' + forBusiness + '&versionOid='+versionOid,
+                        height: '480px',
+                        width: '320px',
+                        top:'80px',
+                        right:'2%'
+                    })
+                }
             },
 			refreshAreaRankDialog: function(data){
 				var module = this.jasMap.getModuleById("areaRankManager");
@@ -731,11 +658,9 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var that = this;
 				this.jasMap.startPanMode();
 				this.closeBufferWindow();
-				$('.hca').hide();
 				if(!this.jasMap.getLayerVisible('pd_arearank')){
 					that.$alert('请进行地区等级划分', '提示', {
 						callback: function(){
-							
 						}
 					});
 					return;
@@ -757,12 +682,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					type: 'warning',
 					callback: function(action){
 						if (action === 'confirm') {
-							that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
 							that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
-							/* app.showAreaDialog('1', '高后果区列表', '460px');
-							that.jasMap.flashGraphic('d', 'pd_zonerankcell' ,{
-								deep:2
-							}); */
 							var loading = that.$loading({
 								lock: true,
 								text: '计算影响区域......',
@@ -772,28 +692,12 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 							setTimeout(function(){
 								loading.text='空间相交计算......'
 							}, 1000);
-							/* common.simpleAjaxLoader({
-								url:"../../../../zone/data/analysis.do",
-								data:JSON.stringify(postData),
-								contentType:"application/json",
-								method :"post",
-								async :true,
-								onSuccess :function(re){
-									var result = JSON.parse(re); */
-									loading.text='高后果区计算......';
-									setTimeout(function(){
-										loading.close();
-									}, 1000);
-									that.saveVersion('1', function(){
-										app.showAreaDialogLeft('1', '高后果区列表', '150px');
-									});
-									//app.showAreaDialog('1', '高后果区列表', '460px');
-									app.loadZoneCell();
-								/* },
-								onError :function(){
-			
-								}
-							}); */
+                                loading.text='高后果区计算......';
+                                setTimeout(function(){
+                                    loading.close();
+                                }, 1000);
+                                that.saveVersion('1');
+                                that.loadZoneCell();
 						}
 					}
 				})
@@ -812,7 +716,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					url:"../../../../zone/area.do",
 					data:JSON.stringify({
 						"pipesegmentTableName":"pd_pipesegment",
-						"pipesegmentKeyValue":pipelineOid,
+						"pipesegmentKeyValue":that.pipelineOid,
 						"pipesegmentKeyName":"eventid",
 						"bufferDistance":radius
 					}),
@@ -867,92 +771,44 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					strategy:"all"
 				});
 			},
-			showHistoryBtn: function(forBusiness){
+			showHistoryBtn: function(){
                 var that = this;
-                //window.parent.jasTools.selfDialog.close();
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
-                if(forBusiness == "0"){
-					//$('.operate-right-div:last-of-type').hide();
-					/* $('.hca').hide();
-					$('.area').show(); */
-					
-					window.jasTools.selfDialog.show({
-						src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/area-select.html',
-						width: '18%',
-						height: '20%',
-						bottom:'40%',						
-						left:'40%',
-						title: '导入',
-					})
-				}
-				if(forBusiness == "1"){
-					$('.area').hide();
-					$('.hca').show();
-				}
+                window.jasTools.selfDialog.show({
+                    src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-select.html',
+                    width: '330px',
+                    height: '180px',
+                    bottom:'50%',
+                    left:'40%',
+                    title: '地区版本选择',
+                })
 			},
 			showHistoryList: function(forBusiness){
+                var that = this;
 				window.jasTools.selfDialog.close(this.closeBufferWindow());
-				$('.area').hide();
-				$('.hca').hide();
                 if(forBusiness == "0"){
-                    if(this.isManage) {
-                        window.jasTools.selfDialog.show({
-                            id: 'hcaAreaList',
-                            title: '',
-                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=0',
-                            height: '485px',
-                            width: '388px',
-                            top: '155px',
-                            left: '1%'
-                        })
-                    }else{
-                        /* window.jasTools.selfDialog.show({
-                            id: 'hcaAreaList',
-                            title: '地区等级历史版本数据',
-                            src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=0',
-                            height: '50%',
-                            width: '60%',
-                            bottom:'10px',
-                            left:'25%'
-                        }) */
-                        window.jasTools.selfDialog.show({
-                            id: 'hcaAreaList',
-                            title: '',
-                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=0',
-                            height: '485px',
-                            width: '388px',
-                            top: '155px',
-                            left: '8%'
-                        })
-					}
+                    window.jasTools.selfDialog.show({
+                        id: 'hcaAreaList',
+                        title: '地区版本信息',
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid,
+                        height: '485px',
+                        width: '330px',
+                        top: '60px',
+                        left: '3%'
+                    })
                 }
                 if(forBusiness == "1"){
-                    if(this.isManage) {
-                        window.jasTools.selfDialog.show({
-                            id: 'hcaAreaList',
-                            title: '',
-                            src: './dialogs/hcaarea-version/hcaAreaList.html?forBusiness=1',
-                            height: '485px',
-                            width: '388px',
-                            top: '155px',
-                            left: '1%'
-                        })
-                    }else{
-                        window.jasTools.selfDialog.show({
-                            id: 'hcaAreaList',
-                            title: '高后果区历史版本数据',
-                            src: './dialogs/hcaarea-version/hcaAreaHisVersionList.html?forBusiness=1',
-                            height: '50%',
-                            width: '60%',
-                            bottom:'10px',
-                            left:'25%'
-                        })
-					}
+                    window.jasTools.selfDialog.show({
+                        id: 'hcaAreaList',
+                        title: '高后果区版本信息',
+                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=1&pipelineOid='+that.pipelineOid,
+                        height: '485px',
+                        width: '330px',
+                        top: '60px',
+                        left: '3%'
+                    })
                 }
-			},
-			getRightOne: function(){
-				
 			},
             openMax:function(e){
                 //alert("地图最大化");
@@ -1039,25 +895,20 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
             	}
             		console.log(this.areaSelect)
             },
-            saveVersion: function(forBusiness, callback){
-            	var that = this;
-    			var title ="新增高后果区历史版信息";
-    			console.log(forBusiness)
-    			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html?forBusiness=' + forBusiness;
+            saveVersion: function(forBusiness){
+                var that = this;
+                var title ="新增高后果区历史版信息";
+    			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid;
     			if(forBusiness=="0"){
     				title='新增地区等级历史版本信息';
-    			}
+                }
     			window.jasTools.selfDialog.show({
-    				height: '485px',
-                    width: '388px',
-                    top: '155px',
-                    left: '8%',
+    				height: '460px',
+                    width: '320px',
+                    top: '60px',
+                    left: '3%',
     				title: title,
     				src: baseSrc,
-    				cbForClose: function () {
-    					
-    					callback();
-    				}
     			});
             }
 		}

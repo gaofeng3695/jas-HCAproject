@@ -61,11 +61,6 @@
             this.fieldsConfig = window.pageConfig.fieldsConfig;
             this.detailFields = window.pageConfig.detailFields;
             this.detailPath = window.pageConfig.detailPath;
-            if(param.forBusiness==1){
-                if(param.pageCode=="area-list"){
-                    that.detailPath = "/jdbc/commonData/hcahighimpactarea/getPage.do";
-                }
-            }
             if (param.oid) {
                 this.oid = param.oid;
                 this.params = param;

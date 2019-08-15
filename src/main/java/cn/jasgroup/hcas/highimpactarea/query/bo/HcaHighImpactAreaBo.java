@@ -16,16 +16,6 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	 * 数据ID 
 	 */
 	private String oid;
-	
-	/**
-	 * 项目ID 
-	 */
-	private String projectOid;
-	
-	/**
-	 * 项目name
-	 */
-	private String projectName; 
 
 	/**
 	 * 管线ID 
@@ -35,17 +25,7 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	/**
 	 * 管线name 
 	 */
-	private String pipelineName; 
-
-	/**
-	 * 地区等级区域ID 
-	 */
-	private String areaOid;
-	
-	/**
-	 * 地区等级区域name
-	 */
-	private String areaName; 
+	private String pipelineName;
 
 	/**
 	 * 高后果区编号 
@@ -65,12 +45,7 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	/**
 	 * 高后果区等级name
 	 */
-	private String highImpactLevelName; 
-
-	/**
-	 * 高后果区描述 
-	 */
-	private String highImpactAreaDescription; 
+	private String highImpactLevelName;
 
 	/**
 	 * 起始里程 
@@ -85,13 +60,12 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	/**
 	 * 长度 
 	 */
-	private Double length; 
+	private Double hcaLength;
 
 	/**
-	 * 是否历史数据 
+	 * 描述
 	 */
-	private Integer isHistory; 
-
+	private String description;
 	/**
 	 * 空间数据状态 
 	 */
@@ -101,22 +75,6 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 	 * 备注 
 	 */
 	private String remarks;
-
-	public String getProjectOid() {
-		return projectOid;
-	}
-
-	public void setProjectOid(String projectOid) {
-		this.projectOid = projectOid;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
 
 	public String getPipelineOid() {
 		return pipelineOid;
@@ -132,22 +90,6 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 
 	public void setPipelineName(String pipelineName) {
 		this.pipelineName = pipelineName;
-	}
-
-	public String getAreaOid() {
-		return areaOid;
-	}
-
-	public void setAreaOid(String areaOid) {
-		this.areaOid = areaOid;
-	}
-
-	public String getAreaName() {
-		return areaName;
-	}
-
-	public void setAreaName(String areaName) {
-		this.areaName = areaName;
 	}
 
 	public String getHighImpactAreaCode() {
@@ -182,14 +124,6 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 		this.highImpactLevelName = highImpactLevelName;
 	}
 
-	public String getHighImpactAreaDescription() {
-		return highImpactAreaDescription;
-	}
-
-	public void setHighImpactAreaDescription(String highImpactAreaDescription) {
-		this.highImpactAreaDescription = highImpactAreaDescription;
-	}
-
 	public Double getStartMileage() {
 		return startMileage;
 	}
@@ -204,22 +138,6 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 
 	public void setEndMileage(Double endMileage) {
 		this.endMileage = endMileage;
-	}
-
-	public Double getLength() {
-		return length;
-	}
-
-	public void setLength(Double length) {
-		this.length = length;
-	}
-
-	public Integer getIsHistory() {
-		return isHistory;
-	}
-
-	public void setIsHistory(Integer isHistory) {
-		this.isHistory = isHistory;
 	}
 
 	public String getGeoState() {
@@ -244,6 +162,21 @@ public class HcaHighImpactAreaBo extends CommonBaseBo{
 
 	public void setOid(String oid) {
 		this.oid = oid;
-	} 
+	}
 
+	public Double getHcaLength() {
+		return hcaLength;
+	}
+
+	public void setHcaLength(Double hcaLength) {
+		this.hcaLength = hcaLength;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

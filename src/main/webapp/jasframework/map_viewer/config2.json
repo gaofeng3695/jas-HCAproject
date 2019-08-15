@@ -299,22 +299,22 @@
       },
       {
         "type": "api",
-        "target": "createBh",
-        "label":"标绘",
-        "icon":"../../jasframework/map_viewer/images/plot/polygon.png",
+        "target": "drawSettlement",
+        "label":"构（建）筑物标绘",
+        "icon": "../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       },
       {
         "type": "api",
         "target": "showHistoryBtn",
-        "label":"标绘",
+        "label":"地区等级划分",
         "icon":"../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       },
       {
         "type": "api",
         "target": "createHcaArea",
-        "label":"标绘",
+        "label":"高后果区识别",
         "icon":"../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       }

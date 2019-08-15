@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<link rel="stylesheet" href="../../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
+	<link rel="stylesheet" href="../../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
+	<link rel="stylesheet" href="./../../../../../../src/css/main.css">
+	<link rel="stylesheet" href="./../../../css/common.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			background:transparent;
+		}
+		.el-table, .el-table th, .el-table tr, .el-table td {
+		    border: 0;
+			background:#060e22f2;
+			
+		}	
+		.el-table--striped .el-table__body tr.el-table__row--striped td {
+			/* background-color: rgba(148, 144, 144, 0.3); */
+		}
+		.el-table::before {
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			height: 0px;
+		}
+		.el-table__fixed-right-patch {
+			background:transparent;
+		}
+		
+		.el-table__fixed-right::before, .el-table__fixed::before {
+		    background-color: transparent;;
+		}
+		
+		
+		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
+			color:#b5ddff;
+			background: #0567ad78;
+		}
+		.el-input__inner {
+		    height: 30px;
+		    line-height: 30px;
+		    border: 1px solid #466599;
+		    color: #b5ddff;
+		}
+		.el-input, .el-input__inner {
+		    background: transparent;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#fff;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+		    background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		
+		.el-table--striped .el-table__body tr.el-table__row--striped.current-row td,
+			.el-table__body tr.current-row>td,
+			.el-table__body tr.hover-row.current-row>td,
+			.el-table__body tr.hover-row.el-table__row--striped.current-row>td,
+			.el-table__body tr.hover-row.el-table__row--striped>td,
+			.el-table__body tr.hover-row>td {
+			    background-color: #7fa9d838
+		}
+		::-webkit-scrollbar {background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+		/* ::-webkit-scrollbar-track {background-color:#f0f6ff;  } */ /**定义滚动条轨道 内阴影+圆角*/
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;} /*定义滑块 内阴影+圆角*/
+	</style>
+</head>
+
+<body>
+
+<div id="app">
+	<div ref="mylist">
+		<div class="filter-wrap">
+			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
+			</el-input>
+		</div>
+		<div class="orgtool">
+			<el-button title="生成报告" @click.stop='previewFile(item,index)' type="text" size="small" icon="fa fa-file-text-o pointer" >生成报告</el-button>
+		</div>
+		<div class="content-list"  v-loading="loading">
+			<div  class="table-div" v-for="item,index in tableData">
+				<ul class="data-ul" @click="locate(item,index)" :class="{active:showActive==index}" title="定位到当前位置">
+					<li><span class="name-span">编号：</span><span class="value-span">{{item.areaCode}}</span></li>
+					<li><span class="name-span">等级：</span><span class="value-span">{{item.regionLevelName}} </span></li>
+					<li><span class="name-span">起止里程：</span><span class="value-span">{{item.startMileage}}KM——{{item.endMileage}}KM （全程{{item.areaLength}}KM）</span></li>
+                    <li class="flex-li">
+                        <el-button title="修改" @click="editArea(item)" type="text" size="small" icon="fa fa-pencil"></el-button>
+                    </li>
+				</ul>
+			</div>
+		</div>
+		<div class="pagination-bottom">
+			<el-pagination small @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+						   :page-size="5" layout="total, prev, pager, next" :total="total">
+			</el-pagination>
+		</div>
+	</div>
+</div>
+</body>
+
+<script src="../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<script src="../../../../../../lib/vue/vue.js"></script>
+<script src="../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
+<script src="../../../components/jas-components.js "></script>
+<script src="../../../../../../common/js/jas-tools.js"></script>
+<script>
+
+/**
+ * @desc 获取访问路径中某个参数
+ * 
+ * @param paramName 参数名
+ * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
+ */
+ function getParamter(paramName, url) {
+	var seachUrl = window.location.search.replace("?", "");
+	if (url != null) {
+		var index = url.indexOf('?');
+		url = url.substr(index + 1);
+		seachUrl = url;
+	}
+	var ss = seachUrl.split("&");
+	var paramNameStr = "";
+	var paramNameIndex = -1;
+	for ( var i = 0; i < ss.length; i++) {
+		paramNameIndex = ss[i].indexOf("=");
+		paramNameStr = ss[i].substring(0, paramNameIndex);
+		if (paramNameStr == paramName) {
+			var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
+			if (typeof (returnValue) == "undefined") {
+				returnValue = "";
+			}
+			return returnValue;
+		}
+	}
+	return "";
+}
+var vm = new Vue({
+	el: "#app",
+	data: function () {
+		return {			
+			loading: false,
+			isClosed: true,
+			form: {},
+			tableData: [],
+			pageSize: 5,
+			currentPage: 1,
+			total: 0,
+            filterText: '',
+            showActive: -1,
+        }
+	},
+	created: function () {
+		this.jasMap = top.jasMap;
+		this.forBusiness = getParamter('forBusiness');
+        this.versionOid = getParamter('versionOid');
+		this.requestList(0,'');
+		if(this.forBusiness==0){
+			this.layerId = 'pd_arearank';
+		}else{
+			this.layerId = 'pd_zonerankcell';
+		}
+	},
+    mounted: function () {
+    },
+    watch: {
+        filterText:function(val){
+            this.requestList(2,val);
+        }
+    },
+	methods: {
+		requestList: function(param,val){
+			var that= this;
+			if (param == 1 || param == 0) {
+				that.form = {};
+				that.pageSize = 5;
+				that.currentPage = 1;
+			}
+			if (param == 2) {
+				that.pageSize = 5;
+				that.currentPage = 1;
+			}
+			that.loading = true;
+			var url = jasTools.base.rootPath + "/jdbc/commonData/hcaarea/getPage.do";
+			jasTools.ajax.post(url,{
+				forBusiness:that.forBusiness,
+                versionOid:that.versionOid,
+				areaCode: val,
+				pageNo: that.currentPage,
+				pageSize: that.pageSize,
+				page: that.currentPage,
+				rows: that.pageSize	
+			}, function (data) {
+				that.total = data.total;
+				that.tableData = data.rows;
+				that.loading = false;
+			});
+		},
+        editArea: function(row){
+            var that = this;
+            var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-current/add.html';
+            top.jasTools.selfDialog.show({
+                width: '15%',
+                height: '50%',
+                top:'155px',
+                right:'4%',
+                title: '编辑地区等级信息',
+                src: baseSrc + '?oid=' + row.oid,
+                cbForClose: function () {
+                    that.requestList(0,"");
+                }
+            });
+        },
+		locate: function(item,index){
+            this.showActive=index;
+            top.jasMap.flashGraphic(item.oid, "pd_arearank",{
+                deep:2,
+                fieldName: 'OID'
+            });
+		},
+
+		previewFile : function(){
+			top.jasTools.selfDialogNew.show({
+				title: '分析报告',
+				src: './dialogs/preview_file.html',
+				height: '740px',
+				width: '35%',
+			})
+		},
+		handleSizeChange: function (val) {
+			this.pageSize = val;
+			this.requestList();
+		},
+		handleCurrentChange: function (val) {
+			this.currentPage = val;
+			this.requestList();
+		},
+	},
+});
+
+</script>
+</html>

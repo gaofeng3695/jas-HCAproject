@@ -1,36 +1,36 @@
 var pageConfig = {
     privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete'],
-    searchPath: "/jdbc/commonData/hcaarea/getPage.do",
-    deletePath: '/jdbc/commonData/hcaarea/delete.do',
-    detailPath: '/jdbc/commonData/hcaarea/getPage.do',
-    savePath: '/jdbc/commonData/hcaarea/save.do',
-    updatePath: '/jdbc/commonData/hcaarea/update.do',
+    searchPath: "/jdbc/commonData/hcahighimpactarea/getPage.do",
+    deletePath: '/jdbc/commonData/hcahighimpactarea/delete.do',
+    detailPath: '/jdbc/commonData/hcahighimpactarea/getPage.do',
+    savePath: '/jdbc/commonData/hcahighimpactarea/save.do',
+    updatePath: '/jdbc/commonData/hcahighimpactarea/update.do',
     searchFields: [
-       // 'pipelineOid',
-        'areaCode',
-        'regionLevel',
+        //'pipelineOid',
+        'highImpactAreaCode',
+        'highImpactAreaName',
+        'highImpactLevel',
     ],
     tableFields: [
         'pipelineName',
-        'areaCode',
-        'regionLevelName',
+        'highImpactAreaCode',
+        'highImpactAreaName',
+        'highImpactLevelName',
         'startMileage',
         'endMileage',
-        'areaLength',
-        'population',
+        'hcaLength',
         'description',
         'remarks'
     ],
     addFields: [{
         title: '基本信息',
         fields: [
-           // 'pipelineOid',
-            'areaCode',
-            'regionLevel',
+            'highImpactAreaCode',
+            'highImpactAreaName',
+            'highImpactLevel',
             'startMileage',
             'endMileage',
-            'areaLength',
-            'population',
+            'hcaLength',
             'description',
         ]
     }, {
@@ -43,12 +43,12 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'pipelineName',
-            'areaCode',
-            'regionLevelName',
+            'highImpactAreaCode',
+            'highImpactAreaName',
+            'highImpactLevelName',
             'startMileage',
             'endMileage',
-            'areaLength',
-            'population',
+            'hcaLength',
             'description',
         ]
     }, {
@@ -58,28 +58,27 @@ var pageConfig = {
         ]
     }],
     fieldsConfig: {
-        /*pipelineOid:{
-            type: 'select',
-            name: '管线名称',
-            optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
-            isRequired: true,
-            disabled: true,
-        },*/
         pipelineName: {
             name: '管线名称',
         },
-        areaCode: {
+        highImpactAreaCode: {
             name: '编号',
             type: 'input',
             isRequired: true
         },
-        regionLevelName: {
+        highImpactAreaName:{
+            name: '名称',
+            type: 'input',
+            isRequired: true
+        },
+        highImpactLevelName: {
             name: '等级'
         },
-        regionLevel: {
+        highImpactLevel: {
             name: '等级',
             type: 'select',
-            domainName: 'region_level_domain',
+            domainName: 'high_impact_level_domain',
+            isRequired: true
         },
         startMileage: {
             name: '起始里程',
@@ -97,20 +96,12 @@ var pageConfig = {
             precision:3,
             isRequired: true
         },
-        areaLength: {
+        hcaLength: {
             name: '长度',
             type: 'number',
             max:999999.999,
             min: 0,
             precision:3,
-            isRequired: true
-        },
-        population:{
-            name: '人口数量',
-            type: 'number',
-            max:9999999,
-            min: 0,
-            precision:0,
             isRequired: true
         },
         description: {
@@ -127,7 +118,7 @@ var pageConfig = {
         {
             name:'定位',
             icon: 'fa fa-info-circle pointer',
-            method: 'locateArea'
+            method: 'locate'
         },
         {
             name:'生成报告',
@@ -135,9 +126,9 @@ var pageConfig = {
         }
     ],
     methods:{
-        locateArea: function(item){
+        locate: function(item){
             top.showmap2d();
-            top.jasMap.flashGraphic(item.oid, "pd_arearank",{
+            top.jasMap.flashGraphic(item.oid, "pd_zonerankcell",{
                 deep:2,
                 fieldName: 'OID'
             });

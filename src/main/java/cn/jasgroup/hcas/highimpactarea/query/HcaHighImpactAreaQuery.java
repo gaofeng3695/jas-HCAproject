@@ -18,7 +18,10 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 
 @QueryConfig(scene = "/hcahighimpactarea/getPage", resultClass = HcaHighImpactAreaBo.class)
 public class HcaHighImpactAreaQuery extends BaseJavaQuery {
-	
+	/**
+	 * oid
+	 */
+	private String oid;
 	/**
 	 * 数据oid集合
 	 */
@@ -57,26 +60,38 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='high_impact_level_domain' order by ordinal) d01\n"
 				+ " on d01.code_id=t.high_impact_level\n"
 				+ " where t.active=1";
-		if (StringUtils.isNotBlank(pipelineOid)) {
-			sql += " and t.pipeline_oid = :pipelineOid ";
+		if (StringUtils.isNotBlank(oid)) {
+			sql += " and t.oid = :oid ";
+		}else {
+			if (StringUtils.isNotBlank(pipelineOid)) {
+				sql += " and t.pipeline_oid = :pipelineOid ";
+			}
+			if (StringUtils.isNotBlank(highImpactAreaCode)) {
+				sql += " and t.high_impact_area_code like :highImpactAreaCode ";
+			}
+			if (StringUtils.isNotBlank(highImpactAreaName)) {
+				sql += " and t.high_impact_area_name like :highImpactAreaName ";
+			}
+			if (StringUtils.isNotBlank(highImpactLevel)) {
+				sql += " and t.high_impact_level = :highImpactLevel ";
+			}
+			if (null != oids && oids.size() > 0) {
+				sql += " and t.oid in (:oids) ";
+			}
+			if (StringUtils.isNotBlank(versionOid)) {
+				sql += " and t.version_oid = :versionOid ";
+			}
+			sql += " order by t.create_datetime desc";
 		}
-		if (StringUtils.isNotBlank(highImpactAreaCode)) {
-			sql += " and t.high_impact_area_code like :highImpactAreaCode ";
-		}
-		if (StringUtils.isNotBlank(highImpactAreaName)) {
-			sql += " and t.high_impact_area_name like :highImpactAreaName ";
-		}
-		if (StringUtils.isNotBlank(highImpactLevel)) {
-			sql += " and t.high_impact_type = :highImpactLevel ";
-		}
-		if (null != oids && oids.size() > 0) {
-			sql += " and t.oid in (:oids) ";
-		}
-		if (StringUtils.isNotBlank(highImpactLevel)) {
-			sql += " and t.version_oid = :versionOid ";
-		}
-		sql += " order by t.create_datetime desc";
 		return sql;
+	}
+
+	public String getOid() {
+		return oid;
+	}
+
+	public void setOid(String oid) {
+		this.oid = oid;
 	}
 
 	public List<String> getOids() {

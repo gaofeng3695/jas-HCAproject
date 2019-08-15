@@ -188,10 +188,11 @@ var pageConfig = {
     ],
     methods:{
         locateSettlement: function(item){
-            this.jasMap.flashGraphic(item.oid, 'hca_buildings',{
-                deep:2
+            top.showmap2d();
+            top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+                deep:2,
+                fieldName: 'OID'
             });
-            //this.jasMap.zoomAt(item.pointx, item.pointy, 15)
         },
     }
 };

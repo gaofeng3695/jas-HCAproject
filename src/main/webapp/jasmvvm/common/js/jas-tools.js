@@ -221,6 +221,9 @@
 				'  :iframeUrl="iframeUrl" ',
 				'  :height="height" ',
 				'  :width="width" ',
+                '  :left = "left" ',
+                '  :right = "right" ',
+                '  :top = "top" ',
 				'  :visible.sync="visible" ',
 				'  @close="close">',
 				'</jas-iframe-dialog>'
@@ -234,7 +237,10 @@
 					iframeUrl: obj.src,
 					height: obj.height,
 					width: obj.width,
-					visible: obj.visible,
+                    left: obj.left,
+                    right: obj.right,
+                    top: obj.top,
+                    visible: obj.visible,
 
 				},
 
