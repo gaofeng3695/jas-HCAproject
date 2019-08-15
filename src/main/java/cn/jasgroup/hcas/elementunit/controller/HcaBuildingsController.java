@@ -32,7 +32,7 @@ import cn.jasgroup.jasframework.utils.DateTimeUtil;
  */
 
 @RestController
-@RequestMapping("hcaarea")
+@RequestMapping("hcabuildings")
 public class HcaBuildingsController extends BaseController {
 
 	@Autowired
