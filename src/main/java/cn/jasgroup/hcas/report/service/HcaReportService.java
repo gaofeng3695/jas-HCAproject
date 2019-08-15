@@ -40,8 +40,8 @@ import cn.jasgroup.jasframework.utils.ReadConfigUtil;
 
 @Service
 @Transactional
-public class HcaReportService extends CommonDataJdbcService{
-	
+public class HcaReportService extends CommonDataJdbcService {
+
 	public String createAreaReport() {
 		/**
 		 * 管道参数：名称、编号、起始里程、终止里程、长度、外管径、最大压强
@@ -59,27 +59,37 @@ public class HcaReportService extends CommonDataJdbcService{
 		return null;
 	}
 
+	/**
+	 *<p>功能描述：生成高后果区报告。</p>
+	 * <p> 张毅 </p>	
+	 * @param pipelineOid
+	 * @param versionOid
+	 * @return
+	 * @since JDK1.8。
+	 * <p>创建日期:2019年8月13日 下午3:03:47。</p>
+	 * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	 */
 	public String createHcaReport(String pipelineOid, String versionOid) {
 		String templatePath = "";
 		String segmentPath = "";
-//		Resource templateResource = new ClassPathResource("/hca-template/hcaReport.docx");
-//		Resource segmentResource = new ClassPathResource("/hca-template/hcaReportSegment.docx");
-		String rootPath = ReadConfigUtil.getPlatformConfig("hcaReport.templatePath");
-//			templatePath = templateResource.getFile().getAbsolutePath();
-//			segmentPath = segmentResource.getFile().getAbsolutePath();
-		if(StringUtils.isNotBlank(rootPath)){
-			templatePath = rootPath;
-			segmentPath = rootPath;
+		Resource templateResource = new ClassPathResource("/hca-template/hcaReport.docx");
+		Resource segmentResource = new ClassPathResource("/hca-template/hcaReportSegment.docx");
+		templatePath = templateResource.toString();
+		segmentPath = segmentResource.toString();
+		try {
+			templatePath = templateResource.getFile().getAbsolutePath();
+			segmentPath = segmentResource.getFile().getAbsolutePath();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return null;
 		}
-		templatePath += "/hcaReport.docx";
-		segmentPath += "/hcaReportSegment.docx";
 
 		HcaDocData docData = new HcaDocData();
 		Calendar calendar = Calendar.getInstance();
-		int[] months = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+		int[] months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 		int year = calendar.get(Calendar.YEAR);
 		int month = months[calendar.get(Calendar.MONTH)];
-		docData.setReportTime(year + " 年 "+ month +" 月");
+		docData.setReportTime(year + " 年 " + month + " 月");
 		/************** 管线数据 ******************/
 		HcaPipelineQuery pipelineQuery = new HcaPipelineQuery();
 		pipelineQuery.setOid(pipelineOid);
@@ -107,7 +117,7 @@ public class HcaReportService extends CommonDataJdbcService{
 		docData.setResultDesc(getHcaResultDesc(versionOid));
 		List<HcaSegment> hcaSegments = new ArrayList<HcaSegment>();
 		int hcaListSize = hcaAreaList.size();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < hcaListSize; i++) {
 			HcaSegment s = new HcaSegment();
 			HcaHighImpactAreaBo bo = (HcaHighImpactAreaBo) hcaAreaList.get(i);
 			s.setHighImpactAreaCode(bo.getHighImpactAreaCode());
@@ -126,25 +136,24 @@ public class HcaReportService extends CommonDataJdbcService{
 		docData.setSegment(segment);
 		/************** 识别区数据 ******************/
 
-		
 		XWPFTemplate template = XWPFTemplate.compile(templatePath).render(docData);
 		FileOutputStream out = null;
-		String outFileName="";
+		String outFileName = "";
 		try {
-			
+
 			String outPath = ReadConfigUtil.getPlatformConfig("hcaReport.createDoc");
 			File outFile = new File(outPath);
-			if(!outFile.exists()){
+			if (!outFile.exists()) {
 				outFile.mkdirs();
 			}
 			outFileName = outPath + "/" + System.currentTimeMillis() + ".docx";
 			out = new FileOutputStream(outFileName);
-			template.write(out); 
+			template.write(out);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(null != out){
+				if (null != out) {
 					out.flush();
 					out.close();
 				}
@@ -153,20 +162,29 @@ public class HcaReportService extends CommonDataJdbcService{
 				e.printStackTrace();
 			}
 		}
-		
+
 		return outFileName;
 	}
-	
-	/**
-	 * 1.查管线长度
-	 * 2.统计当前管线上高后果区识别个数，总长度，长度占比
-	 * 3.统计各级高后果区个数、长度、长度占比
-	 * 
-	 * 
-	 * */
 
+	/**
+	 *<p>功能描述：生成高后果区报告描述。</p>
+	 * <p> 张毅 </p>	
+	 * @param pipelineOid
+	 * @param versionOid
+	 * @return
+	 * @since JDK1.8。
+	 * <p>创建日期:2019年8月13日 下午3:03:47。</p>
+	 * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	 */
 	@SuppressWarnings("unchecked")
 	public String getHcaResultDesc(String versionOid) {
+		/**
+		 * 1.查管线长度
+		 * 2.统计当前管线上高后果区识别个数，总长度，长度占比
+		 * 3.统计各级高后果区个数、长度、长度占比
+		 * 
+		 * 
+		 * */
 
 		HcaHighImpactAreaQuery hcaQuery = new HcaHighImpactAreaQuery();
 		hcaQuery.setVersionOid(versionOid);
@@ -179,7 +197,7 @@ public class HcaReportService extends CommonDataJdbcService{
 		for (int i = 0; i < hcaListSize; i++) {
 			HcaHighImpactAreaBo bo = hcaList.get(i);
 			String level = bo.getHighImpactLevelName();
-			if(StringUtils.isBlank(level)){
+			if (StringUtils.isBlank(level)) {
 				continue;
 			}
 			switch (level) {
@@ -209,7 +227,7 @@ public class HcaReportService extends CommonDataJdbcService{
 			String pipelineOid = hcaList.get(0).getPipelineOid();
 			pipelineQuery.setOid(pipelineOid);
 			List<?> pipelineList = super.getList(pipelineQuery);
-			if(pipelineList.size() > 0){
+			if (pipelineList.size() > 0) {
 				pipelineBo = (HcaPipelineBo) pipelineList.get(0);
 			}
 		}
@@ -219,7 +237,7 @@ public class HcaReportService extends CommonDataJdbcService{
 		String onePercent = countLength(oneLength, pipelineLength);
 		String twoPercent = countLength(twoLength, pipelineLength);
 		String threePercent = countLength(threeLength, pipelineLength);
-		
+
 		StringBuilder resultDesc = new StringBuilder("本次共识别");
 		resultDesc.append(pipelineName);
 		resultDesc.append(pipelineLength);
@@ -231,9 +249,9 @@ public class HcaReportService extends CommonDataJdbcService{
 		resultDesc.append("高后果区长度占管道识别总长度");
 		resultDesc.append(hcaPercent);
 		resultDesc.append("。");
-		if(oneSize>0 || twoSize>0 || threeSize>0){
+		if (oneSize > 0 || twoSize > 0 || threeSize > 0) {
 			resultDesc.append("其中，");
-			if(oneSize>0){
+			if (oneSize > 0) {
 				resultDesc.append("Ⅰ级高后果区");
 				resultDesc.append(oneSize);
 				resultDesc.append("段，长度");
@@ -243,7 +261,7 @@ public class HcaReportService extends CommonDataJdbcService{
 				resultDesc.append(onePercent);
 				resultDesc.append("；");
 			}
-			if(twoSize>0){
+			if (twoSize > 0) {
 				resultDesc.append("Ⅱ级高后果区");
 				resultDesc.append(twoSize);
 				resultDesc.append("段，长度");
@@ -253,7 +271,7 @@ public class HcaReportService extends CommonDataJdbcService{
 				resultDesc.append(twoPercent);
 				resultDesc.append("；");
 			}
-			if(threeSize>0){
+			if (threeSize > 0) {
 				resultDesc.append("Ⅲ级高后果区");
 				resultDesc.append(threeSize);
 				resultDesc.append("段，长度");
@@ -265,10 +283,19 @@ public class HcaReportService extends CommonDataJdbcService{
 			}
 		}
 		int resultDescLength = resultDesc.length();
-		resultDesc.replace(resultDescLength-1, resultDescLength, "。");
+		resultDesc.replace(resultDescLength - 1, resultDescLength, "。");
 		return resultDesc.toString();
 	}
 
+	/**
+	 *<p>功能描述：计算长度。</p>
+	 * <p> 张毅 </p>	
+	 * @param list
+	 * @return
+	 * @since JDK1.8。
+	 * <p>创建日期:2019年8月15日 下午2:53:26。</p>
+	 * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	 */
 	public Double countLength(List<HcaHighImpactAreaBo> list) {
 		int size = list.size();
 		Double totalLength = 0d;
@@ -278,16 +305,29 @@ public class HcaReportService extends CommonDataJdbcService{
 			Double endMileage = bo.getEndMileage();
 			totalLength += (endMileage - startMileage);
 		}
-		return totalLength;
+		NumberFormat numberFormat = NumberFormat.getInstance();
+		numberFormat.setMaximumFractionDigits(4);
+		String result = numberFormat.format(totalLength);
+		return Double.valueOf(result);
 	}
 
+	/**
+	 *<p>功能描述：计算百分比。</p>
+	 * <p> 张毅 </p>	
+	 * @param a
+	 * @param b
+	 * @return
+	 * @since JDK1.8。
+	 * <p>创建日期:2019年8月15日 下午2:53:22。</p>
+	 * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	 */
 	public String countLength(Double a, Double b) {
-		if(null == a && null == b || 0d ==b){
+		if (null == a && null == b || 0d == b) {
 			return null;
 		}
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		numberFormat.setMaximumFractionDigits(2);
-		String result = numberFormat.format((Double)(a / b) * 100) + "%";
+		String result = numberFormat.format((Double) (a / b) * 100) + "%";
 		return result;
 	}
 }
