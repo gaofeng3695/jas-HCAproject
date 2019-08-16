@@ -25,39 +25,9 @@
 			overflow-y: auto;
 			overflow-x: hidden;
 		}
-
-		.el-input-number,
-		.el-cascader,
-		.el-select {
-			width: 100%;
-		}
-		.el-table, .el-table th, .el-table tr, .el-table td {
-		    border: 0;
-			background:transparent;
-			
-		}	
-		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
-			color:#b5ddff;
-			background: #0567ad78;
-		}
-		.el-input__inner, .el-textarea__inner {
-		    height: 30px;
-		    line-height: 30px;
-		    border: 1px solid #466599;
-		    color: #b5ddff;
-		}
-		.el-input, .el-input__inner, .el-textarea, .el-textarea__inner {
-		    background: transparent;
-		}
-		.el-form-item__label {
-			color:#fff;
-			font-size: 13px;
-			line-height: 20px;
-		}
-		.el-form-item__content {
-			line-height: 20px;
-			font-size: 13px;
-		}
+        .el-form-item {
+            margin-bottom: 10px;
+        }
 	</style>
 </head>
 
@@ -65,10 +35,7 @@
 	<div id="app" v-cloak style="font-size: 13px;">
 		<jas-dialog-wrapper>
 			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="80px">
-				<!-- <jas-base-group-title name="基本信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px;  line-height: 32px; padding-top: 25px; border-bottom: 1px solid rgb(16, 39, 65);">
-					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
-				</div>
+				 <jas-base-group-title name="基本信息"></jas-base-group-title>
 				<el-row :gutter="10">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
 						<el-form-item label="版本名称" prop="versionName">
@@ -82,14 +49,11 @@
 					</el-col>		
 				</el-row>
 				
-				<!-- <jas-base-group-title name="其他信息"></jas-base-group-title> -->
-				<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
-					<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">其他信息</span>
-				</div>
+				 <jas-base-group-title name="其他信息"></jas-base-group-title>
 				<el-row>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 						<el-form-item label="备注" prop="remarks">
-							<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
+							<el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -128,11 +92,16 @@
 					}]
 				},
 				tableFormData: {
+				    "oid":"",
+				    "forBusiness":"",
+                    "pipelineOid":"",
 					"versionName": "", 
 					"versionCode": "",
 					"remarks": ""
-				}
-			}
+				},
+                isEdit:false,
+                oid:''
+            }
 		},
 			
 		computed: {
@@ -141,10 +110,27 @@
 			var param = window.jasTools.base.getParamsInUrl(location.href);
 			this.forBusiness = param.forBusiness;
 			this.pipelineOid = param.pipelineOid;
+            this.tableFormData.forBusiness = this.forBusiness;
+            this.tableFormData.pipelineOid = this.pipelineOid;
+            if (param.versionOid) {
+                this.isEdit = true;
+                this.oid = param.versionOid;
+                this.tableFormData.oid = this.oid;
+                this.requestDetail(this.oid);
+            };
         },
 		mounted: function () {
         },
 		methods: {
+            requestDetail: function (oid) {
+                var that = this;
+                var url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/getPage.do";
+                jasTools.ajax.post(url, {
+                    oid: that.oid
+                }, function (data) {
+                    that.tableFormData = data.rows[0];
+                });
+            },
 			submit: function (formName) {
 				var that = this;
 				this.$refs[formName].validate(function (valid) {
@@ -155,37 +141,42 @@
 			},
 			save: function () {
 				var that = this;
-				var msg = "";
-                msg = "增加成功";
-                url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/save.do";
-                that.tableFormData.forBusiness = this.forBusiness;
-                that.tableFormData.pipelineOid = this.pipelineOid;
+                var msg = "";
+                var url="";
+                if (!this.isEdit) {
+                    msg = "增加成功";
+                    url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/save.do";
+                } else {
+                    msg = "保存成功";
+                    url = jasTools.base.rootPath + "/jdbc/commonData/hcaversion/update.do";
+                }
 				jasTools.ajax.post(url, that.tableFormData, function (data) {
-					window.Vue.prototype.$message({
+					top.Vue.prototype.$message({
 						type: 'success',
 						message: msg
 					});
-                    top.showAreaDialogRight('1', '高后果区列表', data.data);
-                    that.cancel(1,data.data);
+                    if(that.forBusiness == 0){
+                        parent.app.localAreaVersionOid = data.data;
+                    }
+                    window.parent.closeDlg("createVersionIframe");
 				});
 			},
-			cancel: function (param,versionOid) {
-				window.parent.jasTools.selfDialog.close(param);
-				if(!param){
-					if(this.forBusiness == "0"){
-						parent.app.$message({
-							type: 'success',
-							message: "未填写信息，系统自动保存！"
-						});
-						parent.app.showAreaDialogCreate('0', '地区等级列表', '150px');
-					}else{
-						parent.app.$message({
-							type: 'success',
-							message: "未填写信息，系统自动保存！"
-						});
-						top.showAreaDialogRight('1', '高后果区列表', versionOid);
-					}
-				}
+			cancel: function () {
+                var that = this;
+                if(this.forBusiness == "0"){
+                    top.Vue.prototype.$message({
+                        type: 'warning',
+                        message: "未填写地区等级评价信息，系统自动保存！"
+                    });
+                }else{
+                    if(this.forBusiness == "1") {
+                        top.Vue.prototype.$message({
+                            type: 'warning',
+                            message: "未填写高后果区评价信息，系统自动保存评价信息！"
+                        });
+                    }
+                }
+                that.save();
 			}
 		},
 	});

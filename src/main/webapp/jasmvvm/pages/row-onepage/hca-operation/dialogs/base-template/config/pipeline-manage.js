@@ -128,14 +128,14 @@ var pageConfig = {
     methods:{
         createBuffer: function(item){
             var that = this;
-            window.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
+            top.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
                 type: 'warning',
                 callback: function(action){
                     if (action === 'confirm') {
-                        if(!top.hcaMapApp){
+                       /* if(!top.hcaMapApp){
                             top.showmap2d();
                             return;
-                        }
+                        }*/
                         top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
                             deep:2,
                             fieldName: 'OID'
@@ -160,11 +160,6 @@ var pageConfig = {
             })
         },
         locatePipeline: function(item){
-            if(!top.hcaMapApp){
-                top.showmap2d();
-                return;
-            }
-            top.showmap2d();
             top.jasMap.flashGraphic(item.oid, 'hca_pipeline', {
                 deep: 2,
                 fieldName: 'OID'
