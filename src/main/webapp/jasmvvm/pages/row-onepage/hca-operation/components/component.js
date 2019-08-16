@@ -499,7 +499,7 @@ Vue.component('jas-table-for-list', {
         add: function () {
             var that = this;
             if (!this.addUrl) return;
-            window.jasTools.dialog.show({
+            top.jasTools.dialog.show({
                 width: this.dialogconfig.addWidth || '60%',
                 height: this.dialogconfig.addHeight || '80%',
                 title: '增加',
@@ -526,7 +526,7 @@ Vue.component('jas-table-for-list', {
                 oid: row[that.prop.oid]
             };
             url = jasTools.base.setParamsToUrl(url, paramObj);
-            window.jasTools.dialog.show({
+            top.jasTools.dialog.show({
                 width: this.dialogconfig.detailWidth || '60%',
                 height: this.dialogconfig.detailHeight || '80%',
                 title: '查看',
@@ -564,7 +564,7 @@ Vue.component('jas-table-for-list', {
         edit: function (row) {
             var that = this;
             var url = jasTools.base.setParamsToUrl(this.addUrl, row)
-            window.jasTools.dialog.show({
+            top.jasTools.dialog.show({
                 width: this.dialogconfig.addWidth || '60%',
                 height: this.dialogconfig.addHeight || '80%',
                 title: '修改',
@@ -576,7 +576,7 @@ Vue.component('jas-table-for-list', {
         },
         deleteItem: function (row) {
             var that = this;
-            window.Vue.prototype.$confirm('您确定要删除本条数据吗？', '提示', {
+            top.Vue.prototype.$confirm('您确定要删除本条数据吗？', '提示', {
                 type: 'warning',
                 callback: function (action) {
                     if (action === 'confirm') {
@@ -592,7 +592,7 @@ Vue.component('jas-table-for-list', {
                 jasTools.ajax.post(url, {
                     oid: row[that.prop.oid]
                 }, function (data) {
-                    window.Vue.prototype.$message({
+                    top.Vue.prototype.$message({
                         type: 'success',
                         message: '删除成功'
                     });

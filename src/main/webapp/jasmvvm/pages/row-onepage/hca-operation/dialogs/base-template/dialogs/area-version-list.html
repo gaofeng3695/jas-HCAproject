@@ -9,7 +9,97 @@
 	<link rel="stylesheet" href="../../../../../../lib/font-awesome-4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="../../../../../../lib/element-ui/v2.4.1/theme-chalk/index.min.css">
 	<link rel="stylesheet" href="./../../../../../../src/css/main.css">
-	<link rel="stylesheet" href="./../../../css/common.css">
+	<style>
+		html,body,
+		#app {
+			width: 100%;
+			height: 100%;
+			overflow-y: hidden;
+			overflow-x: hidden;
+			position: relative;
+		}
+		::-webkit-scrollbar-thumb {background-color:#8F8F8F; border-radius:6px;}
+		.filter-wrap {
+			margin-left: 10px;
+			height:50px;
+		}
+		.content-list{
+			margin-top:15px;
+			height: 280px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+		.el-pager ul, .el-pager li {
+			background:transparent;
+			color:#000;
+		}
+		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
+			background: transparent;
+		}
+		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
+			color:#fff;
+		}
+		.jas-dialog-self {
+			border: 1px solid #409EFF;
+			background: rgba(0, 0, 0, 0.9);
+		}
+		.jas-dialog-header {
+			background:transparent;
+			height: 40px;
+		}
+		.pagination-bottom{
+			float:right;
+			position:fixed;
+			right:5px;
+			bottom:10px;
+		}
+		.el-input .el-input__inner {
+			background: transparent;
+			font-size: 14px;
+			width: 85%;
+			position:fixed;
+		}
+		.el-input__inner {
+			background:transparent;
+			border: 1px solid #909399;
+			color: #000;
+		}
+		.orgtool {
+			height: 30px;
+			float:right;
+			margin-right:10px;
+		}
+		.data-ul {
+			margin-top:5px;
+			margin-bottom:5px;
+			cursor: pointer;
+			padding: 3px;
+			border: 1px solid transparent;
+		}
+		.data-ul:hover,
+		.data-ul.active{
+			border-style: solid;
+			border-color:#409eff;
+		}
+		.name-span {
+			color:#000;
+		}
+		.value-span{
+			color:#909399;
+		}
+		.used-span{
+			color:red;
+		}
+		.table-div{
+			margin-left:10px;
+			font-size: 13px;
+		}
+		.flex-li{
+			display: flex;
+			justify-content: flex-end;
+		}
+        li{list-style:none;}
+	</style>
 </head>
 <body>
 <div id="app">
@@ -20,7 +110,7 @@
 		</div>
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
-				<ul class="data-ul" @click="openAreaList(item,index)" :class="{active:showActive==index}">
+				<ul class="data-ul" @click="locateAreaList(item,index)" :class="{active:showActive==index}">
                     <li><span class="name-span">版本名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
 					<li><span class="name-span">版本编号：</span><span class="value-span">{{item.versionCode}}</span></li>
 					<li><span class="name-span">创建人：</span><span class="value-span">{{item.createUserName}} </span></li>
@@ -146,7 +236,7 @@ var vm = new Vue({
 				})
 			});
 		},
-		openAreaList: function(item, index){
+        locateAreaList: function(item, index){
             this.showActive=index;
 			var title = '地区等级列表';
 			var layerId = 'pd_arearank';
@@ -159,7 +249,8 @@ var vm = new Vue({
                 top.jasMap.layerVisibleSwitch('pd_arearank',false);
 			}
             top.jasMap.layerVisibleSwitch(layerId,true);
-			top.showAreaDialogRight(this.forBusiness,title,item.oid);
+			parent.app.localAreaVersionOid = item.oid;
+			//top.showAreaDialogRight(this.forBusiness,title,item.oid);
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;
