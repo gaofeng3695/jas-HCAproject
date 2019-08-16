@@ -244,7 +244,7 @@
 
 							<jas-two-panel-resizer :showed="panelShowed" ref="resizer" layout="horizontal" length="40%" @paneresize="paneresize" @statuschanged="statuschanged">
 								<div slot="closePanel"  style="height:100%;;width:100%;background-color: #ececec;"> 
-									<iframe src="../../jasframework/map_viewer/operation.html" style="height:100%;width:100%;"></iframe>
+									<iframe src="../jasframework/map_viewer/operation.html" style="height:100%;width:100%;"></iframe>
 								</div>
 								<el-tabs id="tabs" style="position:relative" slot="mainPanel" class="tabswrapper jas-flex-box" v-model="currentTap" type="card"
 								 @tab-remove="removeTab">

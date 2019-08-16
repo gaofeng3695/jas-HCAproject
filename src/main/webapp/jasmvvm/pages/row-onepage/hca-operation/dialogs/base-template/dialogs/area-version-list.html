@@ -248,7 +248,11 @@ var vm = new Vue({
 				layerId = 'pd_zonerankcell';
                 top.jasMap.layerVisibleSwitch('pd_arearank',false);
 			}
-            top.jasMap.layerVisibleSwitch(layerId,true);
+            //top.jasMap.layerVisibleSwitch(layerId,true);
+            top.jasMap.updateLayer('hca_area',{
+                "show":true,
+                "where":"version_oid like'" + item.oid + "'"
+            })
 			parent.app.localAreaVersionOid = item.oid;
 			//top.showAreaDialogRight(this.forBusiness,title,item.oid);
 		},
