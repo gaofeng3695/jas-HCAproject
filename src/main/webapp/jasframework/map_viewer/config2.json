@@ -118,13 +118,20 @@
     "optionallayers":[{
       "id":"layerSet001",
       "label":"业务图层",
-      "layerSet":[
+      "layerSet":
+      [
         {
           "id":"hca_buildings","type":"feature","label":"构（建）筑物","index":"31" ,"visible":false,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0"
         },{
           "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1"
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "管线名称：${pipeline_name}<br>管线长度：${pipeline_length}<br>"
+            }
+          }
         },{
           "id":"pd_arearank","type":"feature","label":"地区等级","index":"31" ,"visible":false,"where":"1!=1",
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2"
@@ -306,7 +313,7 @@
         "icon": "../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       },
-      {
+     {
         "type": "api",
         "target": "showHistoryBtn",
         "label":"地区等级划分",
