@@ -16,7 +16,6 @@ var pageConfig = {
         'versionCode',
         'modifyUserName',
         'modifyDatetime',
-        'hasUsed',
         'remarks'
     ],
     addFields: [{
@@ -25,7 +24,6 @@ var pageConfig = {
             'pipelineOid',
             'versionName',
             'versionCode',
-            'hasUsed',
         ]
     }, {
         title: '其他信息',
@@ -41,7 +39,6 @@ var pageConfig = {
             'versionCode',
             'modifyUserName',
             'modifyDatetime',
-            'hasUsed',
         ]
     }, {
         title: '其他信息',
@@ -52,21 +49,21 @@ var pageConfig = {
     fieldsConfig: {
         pipelineOid:{
             type: 'select',
-            name: '管线名称',
+            name: '评价管线',
             optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
             isRequired: true,
             disabled: true,
         },
         pipelineName: {
-            name: '管线名称',
+            name: '评价管线',
         },
         versionName: {
-            name: '版本名称',
+            name: '地区等级评价名称',
             type: 'input',
             isRequired: true
         },
         versionCode: {
-            name: '版本编号',
+            name: '地区等级评价编号',
             type: 'input',
             isRequired: true
         },
@@ -75,12 +72,12 @@ var pageConfig = {
             type: "textarea"
         },
         modifyUserName: {
-            name: "版本修改人"
+            name: "评价人"
         },
         modifyDatetime: {
-            name: "版本修改时间"
+            name: "评价时间"
         },
-        hasUsed: {
+        /*hasUsed: {
             name: "是否启用",
             type: "select",
             options: [{
@@ -95,24 +92,16 @@ var pageConfig = {
                 if (value == 1) return '是';
                 return '-';
             }
-        }
+        }*/
     },
     btncolwidth:360,
     rowBtns:[
         {
-            name: '导入',
-            method: 'importFile'
-        },
-        {
-            name: '启用',
+            name: '定位',
             method: 'enableUse'
         },
         {
-            name:'生成报告',
-            method: 'previewFile'
-        },
-        {
-            name:'地区列表',
+            name:'地区划分详情',
             method: 'areaList'
         },
     ],
@@ -129,32 +118,20 @@ var pageConfig = {
         },
         enableUse: function(row) {
             var that = this;
-            row.hasUsed = 1;
-            url = jasTools.base.rootPath + "/hcaversion/updateUsed.do";
-            jasTools.ajax.post(url, row, function (data) {
-                if(data==1){
-                    window.Vue.prototype.$message({
-                        type: 'success',
-                        message: '启用成功'
-                    });
-                    that.searchList();
-                }else{
-                    window.Vue.prototype.$message({
-                        type: 'waring',
-                        message: '启用失败'
-                    });
-                }
-            });
-            that.jasMap.layerVisibleSwitch('pd_arearank',false);
-            that.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
-            this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+            that.jasMap.layerVisibleSwitch('hca_area',false);
+            that.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
+            //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
             if(that.forBusiness=="1"){
                 setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('pd_zonerankcell',true);
+                    that.jasMap.layerVisibleSwitch('hca_high_impact_area',true);
                 }, 1000);
             }else{
                 setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('pd_arearank',true);
+                    that.jasMap.layerVisibleSwitch('hca_area',true);
+                    that.jasMap.flashGraphic(row.oid, 'hca_area', {
+                    	deep: 2,
+                    	fieldName: 'VERSION_OID'
+                    });
                 }, 1000);
             }
         },
@@ -169,6 +146,7 @@ var pageConfig = {
             })
         },
         areaList: function (row) {
+        	var that = this;
             jasTools.mask.show({
                 title: '地区列表',
                 src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&pipelineOid='+row.pipelineOid+'&versionOid='+row.oid,
