@@ -693,7 +693,7 @@ var M = JasMap = null;
                     "fontSize": "10px",
                     "fontStyle": "STYLE_NORMAL",
                     "fontFamily": "Serif",
-                    "template": "${0}",
+                    "template": "{0}",
                     "filterFunc":null
                 };
                 defaults = lang.mixin({}, defaults, options);
@@ -704,14 +704,14 @@ var M = JasMap = null;
                         fieldNames = names.split(",");
                     else
                         fieldNames.push(names);
-                    if (fieldNames.length > 1 && template === "${0}") {
+                    if (fieldNames.length > 1 && template === "{0}") {
                         for (var idx = 1; idx < fieldNames.length; idx++) {
-                            template = template + "<br>" + "${" + idx + "}";
+                            template = template + "<br>" + "{" + idx + "}";
                         }
                     }
                     var result = template;
                     for (var i = 0; i < fieldNames.length; i++) {
-                        var ss = "${" + i + "}";
+                        var ss = "{" + i + "}";
                         var attr = attributes[fieldNames[i]];
                         if (result.indexOf(ss) >= 0 ) {
                             result = result.replace(ss, attr ? attr : _this.Strings.blankContentTip);
@@ -2658,6 +2658,14 @@ var M = JasMap = null;
                         var layer = _this.getLayerById(layerId);
                         query.where = q.where ? q.where : "1=1";
                         query.objectIds = typeof q.featureId !== "string" ?  [ q.featureId ] : q.featureId.split(",");
+                        if(!layer ){
+                            eventManager.publishError(_this.Strings.layerNotLoaded + ",layerId=" + layerId);
+                            return ;
+                        }
+                        if(!layer.queryFeatures){
+                            eventManager.publishError(_this.Strings.layerTypeError + ",应该是要素图层");
+                            return ;
+                        }
                         deferredArray.push(layer.queryFeatures(query));
                     }else{
                         var url = q.url ;
@@ -3741,7 +3749,7 @@ var M = JasMap = null;
                 _class.drawToolActivate = function(tool, options){
                     var drawType = tool.toLowerCase();
                     var defaults = {
-                        drawLayerId:"",
+                        layerId:"",
                         onDrawEnd:null
                     };
                     var params = lang.mixin({},defaults,options);
@@ -5356,7 +5364,7 @@ var M = JasMap = null;
                         data:null,
                         method:"post",
                         async:true,
-                        contentType:"application/json",
+                        contentType:"application/x-www-form-urlencoded",
                         onSuccess:function(){
 
                         },
@@ -5393,7 +5401,8 @@ var M = JasMap = null;
                         }
                     };
                     xmlHttp.open(method,url,async);
-                    xmlHttp.setRequestHeader("content-type",contentType);
+                    //xmlHttp.setRequestHeader("Content-type","application/json");
+                    xmlHttp.setRequestHeader("Content-type",contentType);
                     xmlHttp.send(formData ? formData : null);
                 };
                 _class.appendUrl = function(url, fieldName , fieldValue){
@@ -5571,7 +5580,7 @@ var M = JasMap = null;
                 };
                 _class.parseTemplate = function(template,attribute){
                     var result = template;
-                    var fieldNames = template.match(/\${(.*?)}/g);
+                    var fieldNames = template.match(/\{(.*?)}/g);
                     if(fieldNames === null){
                         return null;
                     }
@@ -5591,6 +5600,9 @@ var M = JasMap = null;
                 };
                 //format : #.##### 或 .#####
                 _class.formatNumber = function(value ,format){
+                    if(isNaN(value) || (!value && value!==0)){
+                        return "";
+                    }
                     var dotIndex = format.indexOf(".");
                     var count = format.length - dotIndex - 1;
                     if(count > 0){

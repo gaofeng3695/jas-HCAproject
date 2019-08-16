@@ -216,13 +216,13 @@ define([
                     _layer._map.setScale(scale);
                 }
 
-                _layer._mapApi.centerAt(avgX,avgY).then(function(){
+                return _layer._mapApi.centerAt(avgX,avgY).then(function(){
                     if(_layer.mode === 0){
                         _layer.refresh();
                     }
                 });
             }else{
-                _layer._map.setExtent(ext.expand(expand)).then(function(){
+                return _layer._map.setExtent(ext.expand(expand)).then(function(){
                     if(_layer.mode === 0){
                         _layer.refresh();
                     }

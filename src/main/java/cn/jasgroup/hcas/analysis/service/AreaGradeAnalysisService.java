@@ -510,9 +510,11 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         hcaAnalysisResult.setVersionId( versionOid);
         hcaAnalysisResult.setTotal( count);
-        hcaAnalysisResult.setFeatures( resultFeatures);
+        //暂时不返回要素结果，前端通过更新图层获取计算结果数据
+        //hcaAnalysisResult.setFeatures( resultFeatures);
         return hcaAnalysisResult;
     }
+
     /**
      *
      * @param buildings
@@ -576,6 +578,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             feature.getAttributes().put(endMileageFieldName,newEndMileage);
         }
     }
+
     /**
      *
      * @param buildings
@@ -643,6 +646,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         return cellsList;
     }
+
     /**
      * 划分识别单元
      * 1、划分核心识别单元 ；
@@ -665,6 +669,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         //4、
         return cellsList.toArray(new Feature[0]);
     }
+
     /**
      *
      * @param features
@@ -737,4 +742,5 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         logger.info("地区等级划分结束，四级地区" + count4 + "处，三级地区"+ count3 + "处，二级地区" + count2 + "处 ，一级地区"+ count1 + "处。");
         return  features;
     }
+
 }
