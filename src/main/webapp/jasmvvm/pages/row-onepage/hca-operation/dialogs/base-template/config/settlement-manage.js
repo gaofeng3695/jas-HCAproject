@@ -1,9 +1,9 @@
 var pageConfig = {
-    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position'],
+    privilegeCode: ['bt_select', 'bt_update', 'bt_delete', 'bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcaelementunit/getPage.do",
     deletePath: '/jdbc/commonData/hcabuildings/delete.do',
     detailPath: '/jdbc/commonData/hcaelementunit/getPage.do',
-    savePath: '/jdbc/commonData/hcabuildings/save.do',
+    //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
     searchFields: [
         'buildingCode',
@@ -16,8 +16,6 @@ var pageConfig = {
         'endMileage',
         'horizontalDistance',
         'verticalDistance',
-        'pointx',
-        'pointy',
         'buildingDistributionName',
         'households',
         'population',
@@ -34,8 +32,6 @@ var pageConfig = {
             'endMileage',
             'horizontalDistance',
             'verticalDistance',
-            'pointx',
-            'pointy',
             'buildingDistribution',
             'households',
             'population',
@@ -57,8 +53,6 @@ var pageConfig = {
             'endMileage',
             'horizontalDistance',
             'verticalDistance',
-            'pointx',
-            'pointy',
             'buildingDistributionName',
             'households',
             'population',
@@ -87,7 +81,7 @@ var pageConfig = {
             isRequired: true
         },
         startMileage: {
-            name: '起始里程',
+            name: '起始里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -95,7 +89,7 @@ var pageConfig = {
             isRequired: true
         },
         endMileage: {
-            name: '终止里程',
+            name: '终止里程（km）',
             type: 'number',
             isRequired: true,
             max:999999.999,
@@ -111,20 +105,6 @@ var pageConfig = {
         },
         verticalDistance: {
             name: '垂直距离',
-            type: 'number',
-            max:999999.999,
-            min: 0,
-            precision:3
-        },
-        pointx: {
-            name: '起始坐标x',
-            type: 'number',
-            max:999999.999,
-            min: 0,
-            precision:3
-        },
-        pointy: {
-            name: '起始坐标y',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -188,7 +168,7 @@ var pageConfig = {
     ],
     methods:{
         locateSettlement: function(item){
-            top.showmap2d();
+            //top.showmap2d();
             top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
                 deep:2,
                 fieldName: 'OID'

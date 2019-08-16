@@ -1,5 +1,5 @@
 var pageConfig = {
-    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position'],
+    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcapipeline/getPage.do",
     deletePath: '/jdbc/commonData/hcapipeline/delete.do',
     detailPath: '/jdbc/commonData/hcapipeline/getPage.do',
@@ -65,7 +65,7 @@ var pageConfig = {
             isRequired: true
         },
         startMileage: {
-            name: '起始里程',
+            name: '起始里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -73,7 +73,7 @@ var pageConfig = {
             isRequired: true
         },
         endMileage: {
-            name: '终止里程',
+            name: '终止里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -81,7 +81,7 @@ var pageConfig = {
             isRequired: true
         },
         pipelineLength: {
-            name: '管道长度',
+            name: '管道长度（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -109,11 +109,11 @@ var pageConfig = {
     },
     btncolwidth:320,
     rowBtns:[
-        {
+        /*{
             name: '导入',
             icon: 'fa fa-mail-forward',
             method: 'importFile'
-        },
+        },*/
         {
             name:'定位',
             icon: 'fa fa-info-circle pointer',
@@ -128,12 +128,12 @@ var pageConfig = {
     methods:{
         createBuffer: function(item){
             var that = this;
-            window.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
+            top.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
                 type: 'warning',
                 callback: function(action){
                     if (action === 'confirm') {
                         if(!top.hcaMapApp){
-                            top.showmap2d();
+                            //top.showmap2d();
                             return;
                         }
                         top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
@@ -150,7 +150,7 @@ var pageConfig = {
             });
         },
         importFile: function(row){
-            window.jasTools.dialog.show({
+            top.jasTools.dialog.show({
                 src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/upload.html?forbusiness=3',
                 width: '50%',
                 height: '80%',
@@ -161,10 +161,10 @@ var pageConfig = {
         },
         locatePipeline: function(item){
             if(!top.hcaMapApp){
-                top.showmap2d();
+                //top.showmap2d();
                 return;
             }
-            top.showmap2d();
+            //top.showmap2d();
             top.jasMap.flashGraphic(item.oid, 'hca_pipeline', {
                 deep: 2,
                 fieldName: 'OID'

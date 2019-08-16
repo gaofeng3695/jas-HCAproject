@@ -1,5 +1,5 @@
 var pageConfig = {
-    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete'],
+    privilegeCode: ['bt_select', 'bt_delete', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcaarea/getPage.do",
     deletePath: '/jdbc/commonData/hcaarea/delete.do',
     detailPath: '/jdbc/commonData/hcaarea/getPage.do',
@@ -82,7 +82,7 @@ var pageConfig = {
             domainName: 'region_level_domain',
         },
         startMileage: {
-            name: '起始里程',
+            name: '起始里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -90,7 +90,7 @@ var pageConfig = {
             isRequired: true
         },
         endMileage: {
-            name: '终止里程',
+            name: '终止里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -98,7 +98,7 @@ var pageConfig = {
             isRequired: true
         },
         areaLength: {
-            name: '长度',
+            name: '长度（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -128,21 +128,17 @@ var pageConfig = {
             name:'定位',
             icon: 'fa fa-info-circle pointer',
             method: 'locateArea'
-        },
-        {
-            name:'生成报告',
-            method: 'previewFile'
         }
     ],
     methods:{
         locateArea: function(item){
-            top.showmap2d();
+            //top.showmap2d();
             top.jasMap.flashGraphic(item.oid, "pd_arearank",{
                 deep:2,
                 fieldName: 'OID'
             });
         },
-        previewFile : function(){
+        /*previewFile : function(){
             window.jasTools.dialog.show({
                 title: '分析报告',
                 src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/preview_file.html',
@@ -151,6 +147,6 @@ var pageConfig = {
                 left:'35%',
                 bottom:'5%',
             })
-        },
+        },*/
     }
 };
