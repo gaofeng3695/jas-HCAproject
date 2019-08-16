@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.jasgroup.hcas.areamanage.query.HcaAreaQuery;
+import cn.jasgroup.hcas.elementunit.query.HcaBuildingsQuery;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
 import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
@@ -51,9 +51,9 @@ public class HcaBuildingsController extends BaseController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/exportToExcelAction")
-	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaAreaQuery query) {
+	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaBuildingsQuery query) {
 		// 列属性名称
-		String propertyName = "buildingCode,buildingType,buildingDistribution,households,population,address,collectDate,address";
+		String propertyName = "buildingCode,buildingType,buildingDistribution,households,population,address,collectDate,remarks";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyList = Arrays.asList(propertyName.split(","));
@@ -74,6 +74,12 @@ public class HcaBuildingsController extends BaseController {
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String s = (String) it.next();
 				Object valueObject = ms.get(s);
+				if("buildingType".equals(s)){
+					valueObject = ms.get("buildingTypeName");
+				}
+				if("buildingDistribution".equals(s)){
+					valueObject = ms.get("buildingDistributionName");
+				}
 				String valueString = "";
 				// 如果为日期
 				if (valueObject instanceof Date) {
@@ -89,7 +95,7 @@ public class HcaBuildingsController extends BaseController {
 		// 调用导出工具类导出数据
 		String[] typeArr = { "建（构）筑物导入模板", "建（构）筑物导入模板" }; // {标题名,sheet名}
 		// 第一个参数表名为非空字符串,则进行模板查询,若有模板利用模板导出,没有则自动生成Excel导出;参数为空,则自动生成Excel导出
-		new ExcelExportUtil().exportWithTemplate("hca_area", "建构筑物", "建（构）筑物导入模板.xlsx", map, propertyList,
+		new ExcelExportUtil().exportWithTemplate("hca_buildings", "建构筑物", "建（构）筑物导入模板.xlsx", map, propertyList,
 				propertyDesList, request, response, typeArr);
 		return null;
 	}

@@ -16,8 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import cn.jasgroup.hcas.areamanage.query.HcaAreaQuery;
-import cn.jasgroup.hcas.areamanage.query.bo.HcaAreaBo;
+import cn.jasgroup.hcas.highimpactarea.query.HcaHighImpactAreaQuery;
 import cn.jasgroup.hcas.highimpactarea.query.bo.HcaHighImpactAreaBo;
 import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
@@ -52,9 +51,9 @@ public class HcaHighController extends BaseController {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/exportToExcelAction")
-	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaAreaQuery query) {
+	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaHighImpactAreaQuery query) {
 		// 列属性名称
-		String propertyName = "pipelineOid,versionOid,highImpactAreaCode,highImpactAreaName,high_impact_level,"
+		String propertyName = "pipelineOid,versionOid,highImpactAreaCode,highImpactAreaName,highImpactLevel,"
 				+ "startMileage,endMileage,hcaLength,description,shape";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
@@ -75,7 +74,21 @@ public class HcaHighController extends BaseController {
 			Map<String, String> mss = new HashMap<>();
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String s = (String) it.next();
-				Object valueObject = ms.get(s);
+				Object valueObject = null;
+				switch (s) {
+				case "pipelineOid":
+					valueObject = ms.get("pipelineName");
+					break;
+				case "versionOid":
+					valueObject = ms.get("versionName");
+					break;
+				case "highImpactLevel":
+					valueObject = ms.get("highImpactLevelName");
+					break;
+				default:
+					valueObject = ms.get(s);
+					break;
+				}
 				String valueString = "";
 				// 如果为日期
 				if (valueObject instanceof Date) {
@@ -90,7 +103,7 @@ public class HcaHighController extends BaseController {
 		// 调用导出工具类导出数据
 		String[] typeArr = { "高后果区识别信息", "高后果区识别信息" }; // {标题名,sheet名}
 		// 第一个参数表名为非空字符串,则进行模板查询,若有模板利用模板导出,没有则自动生成Excel导出;参数为空,则自动生成Excel导出
-		new ExcelExportUtil().exportWithTemplate("hca_area", "高后果区识别信息", "高后果区识别信息.xls", map, propertyList,
+		new ExcelExportUtil().exportWithTemplate("hca_high_impact_area", "高后果区识别信息", "高后果区识别信息.xls", map, propertyList,
 				propertyDesList, request, response, typeArr);
 		return null;
 	}
