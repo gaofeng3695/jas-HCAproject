@@ -809,7 +809,7 @@ function getDlg(url, dialogid, title, w, h, modal, closable,maximizable,resizabl
 		maximizable = false;
 	}
 	if (resizable == null) {
-		resizable = false;
+		resizable = true;
 	}
 	
 	if (dlgNumber > 5) {
@@ -856,6 +856,8 @@ function getDlg(url, dialogid, title, w, h, modal, closable,maximizable,resizabl
 		modal : modal,
 		shadow : false,
 		closable : closable,
+        collapsed:false,
+        collapsible:true,
 		maximizable:maximizable,
 		resizable:resizable,
 		onMove : function(left, top) {

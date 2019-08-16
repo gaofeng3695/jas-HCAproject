@@ -9,8 +9,6 @@ import cn.jasgroup.gis.dataaccess.LayerQueryParam;
 import cn.jasgroup.gis.geometry.Geometry;
 import cn.jasgroup.gis.geometry.Polyline;
 import cn.jasgroup.gis.geometryservice.IGeometryService;
-import cn.jasgroup.gis.geometryservice.arcgis.GeometryService;
-import cn.jasgroup.gis.util.GeometryUtil;
 import cn.jasgroup.gis.util.StringUtil;
 import cn.jasgroup.hcas.analysis.HcaAnalysisResult;
 import cn.jasgroup.hcas.analysis.IAreaGradeAnalysisService;

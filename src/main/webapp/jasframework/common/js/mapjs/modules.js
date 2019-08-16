@@ -1583,7 +1583,7 @@ var DrawAndEditPanel = function(options){
     };
     var activateDrawTool = function(){
         if(currentTool === "DELETE"){
-            _self.mapApi.startDrawAndEditMode(currentTool);
+            _self.mapApi.startDrawAndEditMode(currentTool );
             return
         }
         var pickObject = pickerObjectContainer[currentTool];

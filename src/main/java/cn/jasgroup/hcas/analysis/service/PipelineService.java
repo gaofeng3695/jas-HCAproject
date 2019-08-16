@@ -70,7 +70,6 @@ public class PipelineService {
         Double[] lengths = geometryService.lengths(geometries);
         DecimalFormat f = new DecimalFormat("#.######");
         return Double.valueOf(f.format(lengths[0]/1000d)) ;
-
     }
 
 

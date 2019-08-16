@@ -20,7 +20,7 @@
             background:transparent;
 		}
 		.content{
-			padding-left: 20px;
+			padding-left: 10px;
     		padding-top: 30px;
     		color: #4c5054;
 		}
@@ -76,27 +76,19 @@
 					}
 				});
 			},
-			cancel: function (param) {
-				window.parent.jasTools.selfDialog.close(param);
+			cancel: function () {
+				window.parent.closeDlg("areaSelectIframe");
 			},
 			save: function () {
 				var that = this;
 				var msg = "";
 				if('2' == that.radio){
-					//top.showHistoryList(0);
-                    local.jasTools.mask.show({
-                        title: '地区版本列表',
-                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-version&pipelineOid='+top.pipelineOid,
-                        height: '80%',
-                        width: '80%',
-                        cbForClose: function (param) {
-                            that.$refs.table.refresh();
-                        }
-                    })
+					top.showHistoryList(0);
+                    window.parent.closeDlg("areaSelectIframe");
                 }else{
-					that.cancel(1);
 					top.randomSettlementData();
-				}
+                    that.cancel();
+                }
 			},
 		},
 	});

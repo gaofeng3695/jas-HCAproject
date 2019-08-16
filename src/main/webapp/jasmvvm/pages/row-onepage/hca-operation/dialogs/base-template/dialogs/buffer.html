@@ -43,6 +43,8 @@
 <script src="../../../../../../lib/vue/vue.js"></script>
 <script src="../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
 <script src="../../../components/onepage-components.js "></script>
+<script src="../../../../../../../jasframework/common/js/common.js"></script>
+
 <script>
 	var app = new Vue({
 		el: "#app",
@@ -56,12 +58,14 @@
 		},
 		methods: {
             cancel: function(){
-                parent.app.closeBufferWindow();
+                window.parent.closeDlg("bufferIframe");
             },
             createBuffer: function(){
                 var radius = $('#radius').val();
                 parent.app.bufferValue=radius;
+                parent.app.isManage = true;
                 top.createBuffer();
+                window.parent.closeDlg("bufferIframe");
             }
 		},
 	});
