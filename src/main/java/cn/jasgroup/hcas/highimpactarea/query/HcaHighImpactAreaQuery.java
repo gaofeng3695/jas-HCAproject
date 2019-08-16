@@ -82,7 +82,7 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 			if (StringUtils.isNotBlank(versionOid)) {
 				sql += " and t.version_oid = :versionOid ";
 			}
-			sql += " order by t.create_datetime desc";
+			sql += " order by t.start_mileage asc";
 		}
 		return sql;
 	}
