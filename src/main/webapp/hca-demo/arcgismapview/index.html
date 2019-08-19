@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>地图应用</title>
+    <link rel="stylesheet" href="../../jasframework/common/lib/esri/3.18/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="../../jasframework/common/lib/esri/3.18/esri/css/esri.css">
+    <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/icon.css">
+    <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../jasframework/common/lib/esri/3.18/jasgroup/styles/default/style.css">
+
+    <script src="../../jasframework/common/lib/jquery.min.js"></script>
+    <script src="../../jasframework/common/lib/easyui/jquery.easyui.min.js"></script>
+    <script src="../../jasframework/common/js/mapjs/modules.js"></script>
+
+    <!--项目-->
+    <script src="index.js"></script>
+    <script src="../../jasframework/common/lib/esri/3.18/init.js"></script>
+    <script src="../../jasframework/common/js/mapjs/map2DApi.js"></script>
+    <!--api-->
+    <script>
+        var jasMap = new JasMap();
+    </script>
+
+</head>
+<body class="claro">
+    <div>
+        <input id="do_area_eva" type="button" value="计算地区等级"><label>计算结果版本：</label><input id="area_version_id" type="text"><input id="area_data_refresh" type="button" value="刷新图层">
+    </div>
+    <div>
+        <input id="do_high_eva" type="button" value="计算高后果区"><label>计算结果版本：</label><input id="high_version_id" type="text"><input id="high_data_refresh" type="button" value="刷新图层">
+    </div>
+    <div id="jasMap"></div>
+    <script>
+        document.getElementById("do_area_eva").onclick = function(){
+            $.ajax({
+                url:"http://localhost:8092/HCAProject/analysis/area/grade.do",
+                type:"post",
+                dataType:"json",
+                contentType:"application/json",
+                data:JSON.stringify({
+                    "pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+                    "bufferDistance":200.0
+                }),
+                success:function(re){
+                    var versionId = re.data.versionId;
+                    $("#area_version_id").val(versionId);
+                }
+            });
+        };
+        document.getElementById("area_data_refresh").onclick = function(){
+            var vId = $("#area_version_id").val();
+            jasMap.updateLayer("pd_arearank",{
+                "show":true,
+                "where":"VERSION_OID like '" + vId + "'"
+            })
+        };
+
+        document.getElementById("do_high_eva").onclick = function(){
+            var versionId = re.data.versionId;
+            $.ajax({
+                url:"http://localhost:8097/HCAProject/analysis/high/"+ versionId +"/doHcaAnalysis.do",
+                type:"post",
+                dataType:"json",
+                contentType:"application/json",
+                data:JSON.stringify({
+                    "pipesegmentTableName":"pd_pipesegment",
+                    "pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
+                    "pipesegmentKeyName":"eventid",
+                    "bufferDistance":200.0
+                }),
+                success:function(re){
+                    var versionId = re.data.versionId;
+                    $("#high_version_id").val(versionId);
+
+                }
+            });
+            document.getElementById("high_data_refresh").onclick = function(){
+                var vId = $("#high_version_id").val();
+                jasMap.updateLayer("pd_zonerankcell",{
+                    "show":true,
+                    "where":"VERSION_OID like '" + vId + "'"
+                })
+            };
+        };
+    </script>
+</body>
+</html>

@@ -336,7 +336,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             logger.error("出错了，没有查询到管线{}坐标数据！" ,key );
         }
         double totalMileage = analysisSchema.getTotalMileage();
-        logger.info("管线{}实际里程为{}千米" ,key ,totalMileage/1000);
+        logger.info("管线{}实际里程为{}千米" ,key ,String.format("%.3f",totalMileage/1000));
 
         analysisSchema.createRecognitionAreaBuffer(buffer);
 
@@ -355,7 +355,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      */
     @Override
     public Feature[] prepareBuildingsFeatureData(HcaLinearParam bo) {
-        Polygon bufferPg = bo.getRecognitionAreaBuffer();
+        Geometry bufferPg = bo.getRecognitionAreaBuffer();
         String bufferPgJson = bufferPg.toGeoJSON();
         //空间查询
         String buildingsSource = HcaAnalysisContext.buildingsSourceName;
@@ -488,7 +488,6 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      */
     @Override
     public HcaAnalysisResult executeAnalysis(String pipelineOid, Double buffer) {
-        Feature[] resultFeatures = null ;
         HcaAnalysisResult hcaAnalysisResult = new HcaAnalysisResult();
         HcaLinearParam analysisGeometryBO = preparePipelineData(pipelineOid ,buffer) ;
         Feature[] settlementFeatures = prepareBuildingsFeatureData(analysisGeometryBO);
@@ -498,7 +497,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             return hcaAnalysisResult;
         }
         Feature[] cellFeatures = classifyAreaRankCellFeatures(settlementFeatures ,analysisGeometryBO);
-        resultFeatures = classifyAreaRankGradeFeatures(cellFeatures,analysisGeometryBO);
+        Feature[] resultFeatures = classifyAreaRankGradeFeatures(cellFeatures,analysisGeometryBO);
 
         String versionOid = UUID.randomUUID().toString();
         prepareHcaAttributes( resultFeatures,versionOid ,pipelineOid);
@@ -511,7 +510,8 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         hcaAnalysisResult.setVersionId( versionOid);
         hcaAnalysisResult.setTotal( count);
-        hcaAnalysisResult.setFeatures( resultFeatures);
+        //暂时不返回要素结果，前端通过更新图层获取计算结果数据
+        //hcaAnalysisResult.setFeatures( resultFeatures);
         return hcaAnalysisResult;
     }
 
@@ -561,31 +561,15 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         return mergedCoreCellList;
     }
+
     /**
-     * 划分识别单元
-     * 1、划分核心识别单元 ；
-     * 2、划分标准和独立识别单元  ；
-     * 3、边界处理  ？
-     * @param buildings
-     * @param bo
-     * @return
+     * 扩充核心识别单元边界
+     * @param cellList
+     * @param scopes
      */
-    @Override
-    public Feature[] classifyAreaRankCellFeatures(Feature[] buildings, HcaLinearParam bo) {
-        //识别单元边界处理工具类
-        BuildingsMileageScope scopes = new BuildingsMileageScope(buildings);
-        scopes.setMinMileage(0d);
-        scopes.setMaxMileage(bo.getTotalMileage());
-
-        loggerUtil.time("划分识别单元");
-        List<Feature> coreCellList = classifyCoreCells(buildings);
-
-        //2、中心间距小于2公里合并核心识别单元
-        List<Feature> mergedCoreCellList = mergeCoreCells(coreCellList);
-        logger.info("合并"+ ( coreCellList.size() - mergedCoreCellList.size() ) + "个核心识别单元" );
-        //两侧边界扩充200m
-        for(int i= 0; i < mergedCoreCellList.size() ; i++){
-            Feature feature = mergedCoreCellList.get(i) ;
+    protected void expendCellBorder(List<Feature> cellList ,BuildingsMileageScope scopes){
+        for(int i= 0; i < cellList.size() ; i++){
+            Feature feature = cellList.get(i) ;
             Double startMileage = MapUtil.getDouble(feature.getAttributes() ,startMileageFieldName);
             Double endMileage = MapUtil.getDouble(feature.getAttributes() ,endMileageFieldName);
             Double newStartMileage = scopes.checkStartMileageBorder(startMileage, HcaAnalysisContext.ConfigAreaRankBorderBufferDistance );
@@ -593,13 +577,53 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             feature.getAttributes().put(startMileageFieldName,newStartMileage);
             feature.getAttributes().put(endMileageFieldName,newEndMileage);
         }
+    }
 
-        //3、标准识别单元和独立识别单元
-        int coreCellSize = mergedCoreCellList.size() ;
+    /**
+     *
+     * @param buildings
+     * @param bo
+     * @return
+     */
+    public List<Feature> classifyCoreCellFeatures(Feature[] buildings,HcaLinearParam bo){
+        //识别单元边界处理工具类
+        BuildingsMileageScope scopes = new BuildingsMileageScope(buildings);
+        scopes.setMinMileage(0d);
+        scopes.setMaxMileage(bo.getTotalMileage());
+
+        loggerUtil.time("划分识别单元");
+        List<Feature> coreCellList = classifyCoreCells(buildings);
+        if(coreCellList.size() == 0){
+            logger.warn("没有划分出核心识别单元，请检查构筑属性信息中人口或建筑类型数据是否完整！");
+            return new ArrayList<>(0);
+        }
+        //2、中心间距小于2公里合并核心识别单元
+        List<Feature> mergedCoreCellList = mergeCoreCells(coreCellList);
+        logger.info("合并"+ ( coreCellList.size() - mergedCoreCellList.size() ) + "个核心识别单元" );
+        //3.两侧边界扩充200m
+        expendCellBorder(mergedCoreCellList,scopes);
+
+        return  mergedCoreCellList ;
+    }
+
+    /**
+     *
+     * @param buildings
+     * @param coreCellList
+     * @return
+     */
+    public List<Feature> classifyStandardCellFeatures(Feature[] buildings ,List<Feature> coreCellList){
+        int coreCellSize = coreCellList.size() ;
+        List<Feature> dataList = null;
+        if(coreCellSize == 0 ){
+            dataList = Arrays.asList(buildings);
+        }else{
+            dataList = coreCellList;
+        }
         Double currentStartMileage = 0d ;
         List<Feature> cellsList = new ArrayList<>() ;
-        for(int i = 0 ; i < coreCellSize ;i++ ){
-            Feature coreCell = mergedCoreCellList.get(i);
+        for(int i = 0 ; i < dataList.size() ;i++ ){
+            Feature coreCell = dataList.get(i);
             Map<String ,Object> attr = coreCell.getAttributes();
             Double startMileage = MapUtil.getDouble(attr,startMileageFieldName);
             Double endMileage = MapUtil.getDouble(attr,endMileageFieldName);
@@ -620,6 +644,29 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             Feature feature = cellsList.get(i) ;
             countPopulationByMileage(feature ,buildings) ;
         }
+        return cellsList;
+    }
+
+    /**
+     * 划分识别单元
+     * 1、划分核心识别单元 ；
+     * 2、划分标准和独立识别单元  ；
+     * 3、边界处理  ？
+     * @param buildings
+     * @param bo
+     * @return
+     */
+    @Override
+    public Feature[] classifyAreaRankCellFeatures(Feature[] buildings, HcaLinearParam bo) {
+        if(buildings.length == 0){
+            logger.warn("识别区域内没有查询到构筑物数据！");
+            return new Feature[0] ;
+        }
+        //划分核心识别单元
+        List<Feature> mergedCoreCellList = classifyCoreCellFeatures(buildings,bo);
+        //3、标准识别单元和独立识别单元
+        List<Feature> cellsList = classifyStandardCellFeatures(buildings,mergedCoreCellList) ;
+        //4、
         return cellsList.toArray(new Feature[0]);
     }
 
@@ -687,13 +734,13 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
                 logger.error( "识别单元" + oid + "起始的测量值" + startMileage + "不能大于结束测量值" + endMileage);
             }
             Polyline po =  bo.getLinearReferenceUtil().locateBetween(startMileage,endMileage,0d);
-            Polygon buffer = JtsUtil.buffer(po, HcaAnalysisContext.ConfigRankAreaBufferDistance,2); //直角的buffer
-            Geometry gg = geometryService.transform(buffer, pcsSrid, gcsSrid);
+            Geometry buffer = JtsUtil.buffer(po, HcaAnalysisContext.ConfigRankAreaBufferDistance,2); //直角的buffer
+            //Geometry gg = geometryService.transform(buffer, pcsSrid, gcsSrid);
+            Geometry gg = GeometryUtil.gaussToBL(buffer);
             feature.setGeometry(gg);
         }
         logger.info("地区等级划分结束，四级地区" + count4 + "处，三级地区"+ count3 + "处，二级地区" + count2 + "处 ，一级地区"+ count1 + "处。");
         return  features;
     }
-
 
 }

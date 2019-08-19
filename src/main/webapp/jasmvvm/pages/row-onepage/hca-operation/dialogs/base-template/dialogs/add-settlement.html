@@ -24,37 +24,8 @@
 			overflow-y: auto;
 			overflow-x: hidden;
 		}
-
-		.el-input-number,
-		.el-cascader,
-		.el-select {
-			width: 100%;
-		}
-		.el-table, .el-table th, .el-table tr, .el-table td {
-			border: 0;
-			background:transparent;
-
-		}
-		.el-button--primary.is-plain, .el-button--default, .el-button--primary {
-			color:#b5ddff;
-			background: #0567ad78;
-		}
-		.el-input__inner, .el-textarea__inner {
-			height: 30px;
-			line-height: 30px;
-			border: 1px solid #466599;
-			color: #b5ddff;
-		}
-		.el-input, .el-input__inner, .el-textarea, .el-textarea__inner {
-			background: transparent;
-		}
-		.el-form-item__label {
-			color:#fff;
-		}
-		.el-input-number--small .el-input-number__decrease, .el-input-number--small .el-input-number__increase {
-			background-color: transparent;
-			border-right: 1px solid #30538c;
-			border-left: 1px solid #30538c;
+		.el-form-item {
+			margin-bottom: 10px;
 		}
 
 	</style>
@@ -64,9 +35,7 @@
 <div id="app" v-cloak>
 	<jas-dialog-wrapper>
 		<el-form ref="tableFormData" :model="tableFormData" :rules="rules"  label-width="70px">
-			<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
-				<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">基本信息</span>
-			</div>
+			<jas-base-group-title name="基本信息"></jas-base-group-title>
 			<el-row :gutter="10">
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="编号" prop="buildingCode">
@@ -124,7 +93,7 @@
 			<el-row>
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="建筑分布" prop="buildingDistribution" >
-						<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建筑分布">
+						<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建筑分布" size="small" >
 							<el-option v-for="item in domain.buildingDistribution" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 						</el-select>
 					</el-form-item>
@@ -147,7 +116,7 @@
 			<el-row>
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="是否占压" prop="pressurePipeline">
-						<el-select v-model="tableFormData.pressurePipeline" clearable placeholder="请选择">
+						<el-select v-model="tableFormData.pressurePipeline" clearable placeholder="请选择是否占压" size="small" >
 							<el-option v-for="item in domain.pressurePipeline" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 						</el-select>
 					</el-form-item>
@@ -160,13 +129,11 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<div style="margin: 0px 0px 6px; line-height: 32px; padding-top: 10px; border-bottom: 1px solid rgb(16, 39, 65);">
-				<span style="padding: 0px 4px; height: 22px; line-height: 22px; display: inline-block; color: #fff; border-left: 2px solid rgb(64, 158, 255);">其他信息</span>
-			</div>
+			<jas-base-group-title name="其他信息"></jas-base-group-title>
 			<el-row>
 				<el-col :xs="24" :sm="24" :md="8" :lg="6" :xl="6">
 					<el-form-item label="备注" prop="remarks">
-						<el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
+						<el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" :rows="2" size="small" v-model="tableFormData.remarks"></el-input>
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -324,7 +291,7 @@
                 }
                 that.but_disabled = true;
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
-                    window.Vue.prototype.$message({
+                    top.Vue.prototype.$message({
                         type: 'success',
                         message: msg
                     });
@@ -358,9 +325,9 @@
             },
             cancel: function (param) {
                 if(!param){
-                    this.jasMap.refreshLayerById("hca_buildings");
+                    top.jasMap.refreshLayerById("hca_buildings");
                 }
-                window.parent.jasTools.selfDialog.close(param);
+                window.parent.closeDlg("editSettlementIframe");
             }
         },
     });

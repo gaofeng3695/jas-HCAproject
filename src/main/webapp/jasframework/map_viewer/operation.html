@@ -74,19 +74,20 @@
             z-index: 10;
         }
         .item-btn{
+            /*icon:url(../../jasframework/map_viewer/images/dock/draw.png);*/
             cursor: pointer;
             color: rgb(184, 222, 255);
             height: 49px;
             line-height: 49px;
             text-align: center;
             width: 116px;
-            background: url(../../../src/images/normal_right.png) no-repeat rgba(255, 255, 255, 0);
+            background: url(../../jasmvvm/src/images/normal_right.png) no-repeat rgba(255, 255, 255, 0);
             margin: 26px 1px 0px;
         }
         .top-center{
             z-index: 20;
             position: absolute;
-            background: url(../../../src/images/title.png);
+            background: url(../../jasmvvm/src/images/title.png);
             left: calc(50% - 327px);
             height: 89px;
             width: 654px;
@@ -184,6 +185,9 @@
             height: 15px;
             background-size: 15px 15px;
         }
+        .panel-body.panel-body-noborder.window-body{
+            overflow-y:hidden
+        }
     </style>
 </head>
 
@@ -192,6 +196,11 @@
     <jas-onepage-wrapper :ismax="ismax">
         <template slot="center" >
             <div class="center">
+                <!--左侧流程操作按钮-->
+                <div class="operate-left-div">
+                    <div class="item-btn" @click="showHistoryBtn" v-show="isManage">地区等级划分</div>
+                    <div class="item-btn" @click="createHcaArea" v-show="isManage">高后果区识别</div>
+                </div>
                 <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
             </div>
         </template>
@@ -205,6 +214,7 @@
 <script src="../../jasmvvm/common/components/jas-components.js"></script>
 <script src="../../jasmvvm/common/js/jas-tools.js"></script>
 <script src="../../jasmvvm/pages/row-onepage/hca-operation/components/onepage-components.js"></script>
+<script type="text/javascript" src="../../jasframework/common/js/common.js"></script>
 
 
 <script>
@@ -254,9 +264,6 @@
         }
         return "";
     }
-
-    //var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
-
     top.hcaMapApp = new Vue({
         el: '#app',
         data: function () {
@@ -300,6 +307,7 @@
             top.showHistoryList = that.showHistoryList;
             top.pipelineOid = that.pipelineOid;
             top.showAreaDialogRight = that.showAreaDialogRight;
+            top.closeBufferWindow = that.closeBufferWindow;
         },
         watch: {
             // 如果需要联动
@@ -321,14 +329,14 @@
                     //drawLayerId: "hca_buildings",
                     layerId: "drawlayer_hca_buildings",
                     onDrawEnd:function(evt){
-
                         var feature = evt ;
                         var fId = new Date().getTime();
                         feature.attributes = { id :fId};
                         //changedFeatures[fId] = feature;
 
                         var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&lyaerId=drawlayer_hca_buildings"
-                        window.jasTools.selfDialog.show({
+                        window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 300,350);
+                        /* window.jasTools.selfDialog.show({
                             title: '建(构)筑物属性编辑',
                             src: baseSrc,
                             height: '400px',
@@ -339,26 +347,30 @@
                                 that.jasMap.startPanMode();
                                 //that.jasMap.refreshLayerById(that.layerId)
                             }
-                        });
+                        });*/
                     }
                 })
             },
             createBufferDialog: function(pipelineOid){
                 this.pipelineOid = pipelineOid;
                 this.closeBufferWindow();
-                window.jasTools.selfDialog.show({
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
+               /* window.jasTools.selfDialog.show({
                     title: '识别区条件',
                     src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html',
                     height: '180px',
                     width: '230px',
                     left:"50px",
                     top:"100px"
-                })
+                })*/
             },
             closeBufferWindow: function(){
                 $('span.jas-dialog-close').trigger('click');
             },
             createBuffer: function(){
+                var that = this;
+                var radius = app.bufferValue;
+                that.isManage = app.isManage;
                 window.jasTools.selfDialog.close();
                 var gasStationId = "pd_gas_station";
                 var entertainmentPlaceId = "pd_entertainment_place";
@@ -371,8 +383,6 @@
                 this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
                 this.jasMap.layerVisibleSwitch('pd_arearank',false)
                 this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
-                var radius=app.bufferValue;
-                var that = this;
                 this.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({
@@ -394,28 +404,10 @@
                             color:[255,0,0,100],
                             outlineColor:[255,0,0,255]
                         });
-
                         var lineGraphic = that.getPipeline();
                         var x = lineGraphic.geometry.paths[0][0][0];
                         var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
                         this.jasMap.zoomAt(15,x ,y );
-
-                        /*
-						var format = new ol.format.WKT();
-						var geom = format.readGeometryFromText(json.data);
-						var options = {
-							layerId:'bufferLayerId',
-							style:'bufferarea'
-						};
-						that.jasMap.clearGraphicsLayer('bufferLayerId');
-						that.jasMap.addPolygonGraphic(geom,options);
-						var pipeline = app.getPipeline();
-						app.zoomToLine(pipeline,"start");
-						var mileage = pipeline.getCoordinates()[0].length;//! size
-						// 窗口关闭
-						app.onZoneBufferOpacityChanged();
-						window.jasTools.selfDialog.close();
-						*/
                     }
                 });
             },
@@ -532,26 +524,23 @@
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
                             })
-                            common.simpleAjaxLoader({
+                            /*common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
                                     pipesegmentKeyValue: that.pipelineOid,
                                     bufferDistance:app.bufferValue,
-                                    /*source: settlementLayerId,
-                                    population:true ,//重置人口
-                                    buildingType:true//重置建筑类型*/
                                 }) ,
                                 async: true,
                                 onSuccess: function(res){
-                                    var result = JSON.parse(res) ;
+                                    var result = JSON.parse(res) ;*/
                                     that.jasMap.updateLayer(settlementLayerId);
                                     that.createRankCellData(loading);
-
+/*
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
                                 }
-                            });
+                            });*/
                         }
                     }
                 });
@@ -573,9 +562,12 @@
                 setTimeout(function(){
                     loading.close();
                     that.jasMap.layerVisibleSwitch("pd_arearank" ,true);
-                    that.saveVersion('0', function(){
-                        //that.showAreaDialogCreate('0', '地区等级列表', '150px');
-                    });
+                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
+                    //that.saveVersion('0',result.versionOid);
+                    that.saveVersion('0','');
+                    /*that.saveVersion('0', function(){
+                        that.showAreaDialogCreate('0', '地区等级列表', '150px');
+                    });*/
                 }, 1000);
             },
             loadAreaRankData: function(data){	// 加载已有地区等级信息
@@ -643,7 +635,7 @@
             //2、通过code刷新高后果区图层 updateLayer() ; where :"code=="
             createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
                 var that = this;
-                var localAreaVersionOid = that.localAreaVersionOid;
+                var localAreaVersionOid = app.localAreaVersionOid; //that.localAreaVersionOid;
                 var settlementLayerId = "pd_settlement";
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
@@ -671,7 +663,7 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+                            that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
                             that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
                             var loading = that.$loading({
                                 lock: true,
@@ -679,28 +671,27 @@
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
                             });
-                            common.simpleAjaxLoader({
+                           /* common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/high/"+localAreaVersionOid+"/doHcaAnalysis.do",
                                 data: JSON.stringify({
-                                    /*source: settlementLayerId,
-                                    population:true ,//重置人口
-                                    buildingType:true//重置建筑类型*/
                                 }) ,
                                 async: true,
                                 onSuccess: function(res){
-                                    var result = JSON.parse(res) ;
+                                    var result = JSON.parse(res) ;*/
                                     that.jasMap.updateLayer(settlementLayerId);
-                                    tloading.text='高后果区计算......';
+                                    loading.text='高后果区计算......';
                                     setTimeout(function(){
                                         loading.close();
                                     }, 1000);
-                                    that.saveVersion('1');
-                                    that.loadZoneCell();
-                                },
+                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
+                                    //that.saveVersion('1',result.versionOid);
+                                      that.saveVersion('1','');
+                                      that.loadZoneCell();
+                                /*},
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
                                 }
-                            });
+                            });*/
                         }
                     }
                 })
@@ -778,28 +769,13 @@
                 var that = this;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
-                window.jasTools.selfDialog.show({
-                    src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-select.html',
-                    width: '330px',
-                    height: '180px',
-                    bottom:'50%',
-                    left:'40%',
-                    title: '地区版本选择',
-                })
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-select.html', "areaSelectIframe", "地区等级划分", 320,140);
             },
             showHistoryList: function(forBusiness){
                 var that = this;
                 window.jasTools.selfDialog.close(this.closeBufferWindow());
                 if(forBusiness == "0"){
-                    window.jasTools.selfDialog.show({
-                        id: 'hcaAreaList',
-                        title: '地区版本信息',
-                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid,
-                        height: '485px',
-                        width: '330px',
-                        top: '60px',
-                        left: '3%'
-                    })
+                    window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid, "areaVersionSelectIframe", "地区版本信息", 360,400);
                 }
                 if(forBusiness == "1"){
                     window.jasTools.selfDialog.show({
@@ -813,60 +789,6 @@
                     })
                 }
             },
-            openMax:function(e){
-                //alert("地图最大化");
-                this.ismax = !this.ismax;
-            },
-            clearMap:function(e){
-                //alert("清除所有图层");
-            },
-            areaChange:function(){
-                //alert(this.areaVal)
-            },
-            companyChange:function(){
-                //alert(this.companyVal)
-            },
-            openTuCeng:function(){
-                jasTools.selfDialog.show({
-                    title: '图层列表',
-                    src: './dialogs/mapList.html',
-                    height: '265px',
-                    width: '200px',
-                    isDetail:true,
-                    right:"3%",
-                    top:"215px",
-                })
-            },
-            switchImageMap:function(e){
-                if(this.baseMap !== "google_img"){
-                    this.baseMap = "google_img";
-                }else{
-                    this.baseMap = "dark_shp";
-                }
-                this.jasMap.switchBaseMap(this.baseMap);
-            },
-            switchVecMap:function(e){
-                if(this.baseMap !== "google_vec"){
-                    this.baseMap = "google_vec";
-                }else{
-                    this.baseMap = "google_img";
-                }
-                this.jasMap.switchBaseMap(this.baseMap);
-            },
-            loaddingLayer: function(info){
-                var that = this;
-                var options = {
-                    lock: true,
-                    text: info,
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                }
-                that.$loading(options)
-            },
-            toggleBtn: function(){
-                $("span[class=el-tag]").html(this.localPipelineName);
-                $('.title-div').toggle();
-            },
             exitHca: function(){
                 var that = this;
                 app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
@@ -879,43 +801,62 @@
                     }
                 });
             },
-            handleClick(tab, event) {
-                if(tab.name=="pipelineManage"){
-                    this.pipelineOperation();
-                }else if(tab.name=="buildingManage"){
-                    this.createBh();
-                }else if(tab.name=="areaVersion"){
-                    this.showHistoryList(0);
-                }else if(tab.name=="hcaAreaVersion"){
-                    this.showHistoryList(1);
-                }
-            },
-            clickRadio: function(item){
-                if(item == "2"){
-                    this.areaSelect == 2;
-                }else{
-                    this.areaSelect == 1;
-                }
-                console.log(this.areaSelect)
-            },
-            saveVersion: function(forBusiness){
+            saveVersion: function(forBusiness,versionOid){
                 var that = this;
                 var title ="新增高后果区历史版信息";
-                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid;
                 if(forBusiness=="0"){
                     title='新增地区等级历史版本信息';
                 }
-                window.jasTools.selfDialog.show({
-                    height: '460px',
-                    width: '320px',
-                    top: '60px',
-                    left: '3%',
-                    title: title,
-                    src: baseSrc,
-                });
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
             }
         }
     })
+
+
+/*      [
+        {
+          "id":"hca_buildings","type":"feature","label":"构（建）筑物","index":"31" ,"visible":false,
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "编号${building_code},<br>类型${building_type},<br>人口：${population}"
+            }
+          }
+        },{
+          "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
+          "outFields":"gid,oid,pipeline_name,pipeline_length",
+          "declutter":true,
+          "strategy":"all",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "管线名称：${pipeline_name}<br>管线长度：${pipeline_length}<br>"
+            }
+          }
+        },{
+          "id":"pd_arearank","type":"feature","label":"地区等级","index":"31" ,"visible":false,"where":"1!=1",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "地区编号：${area_code},<br>地区等级：${region_level},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
+            }
+          }
+        },{
+          "id":"pd_zonerankcell","type":"feature","label":"高后果区","index":"31" ,"visible":false,"where":"1!=1",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "高后果区名称：${high_impact_area_name},<br>高后果区编号：${high_impact_area_code},<br>高后果区等级：${high_impact_level},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
+            }
+          }
+        },{
+          "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"11"
+        }
+      ]*/
 </script>
 
 </html>

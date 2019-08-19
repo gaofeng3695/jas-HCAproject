@@ -170,7 +170,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) * 1000  ;
             Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) * 1000   ;
             Polyline polyline = linearReferenceUtil.locateBetween( startMileage,endMileage,0d);
-            Polygon bufferArea = JtsUtil.buffer( polyline,buffer,2) ;
+            Geometry bufferArea = JtsUtil.buffer( polyline,buffer,2) ;
             Geometry polygon = geometryService.transform( bufferArea,  inSrid ,outSrid);
             hcaFeatures[i].setGeometry(polygon);
 
@@ -241,7 +241,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
                 continue;
             }
             Polyline polyline = linearReferenceUtil.locateBetween(startMileage,endMileage,0d);
-            Polygon bufferArea = JtsUtil.buffer(polyline,buffer,2) ;
+            Geometry bufferArea = JtsUtil.buffer(polyline,buffer,2) ;
             String bufferAreaText = GeometryUtil.toWKT(bufferArea,false,false) ;
             LayerQueryParam queryParam = new LayerQueryParam();
             queryParam.setSrsname(HcaAnalysisContext.buildingsSourceName);

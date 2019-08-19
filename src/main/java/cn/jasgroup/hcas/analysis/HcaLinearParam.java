@@ -1,5 +1,6 @@
 package cn.jasgroup.hcas.analysis;
 
+import cn.jasgroup.gis.geometry.Geometry;
 import cn.jasgroup.gis.geometry.Polygon;
 import cn.jasgroup.gis.geometry.Polyline;
 import cn.jasgroup.gis.util.JtsUtil;
@@ -25,7 +26,7 @@ public class HcaLinearParam {
     /**
      * 识别区缓冲区几何对象
      */
-    private Polygon recognitionAreaBuffer;
+    private Geometry recognitionAreaBuffer;
     /**
      * 管线外径
      */
@@ -60,15 +61,16 @@ public class HcaLinearParam {
         initLinearReference();
     }
 
-    public Polygon getRecognitionAreaBuffer() {
+    public Geometry getRecognitionAreaBuffer() {
         return recognitionAreaBuffer;
     }
 
-    public void setRecognitionAreaBuffer(Polygon recognitionAreaBuffer) {
+    public void setRecognitionAreaBuffer(Geometry recognitionAreaBuffer) {
         this.recognitionAreaBuffer = recognitionAreaBuffer;
     }
+
     public void createRecognitionAreaBuffer(double buffer) {
-        Polygon bufferArea = JtsUtil.buffer(linearReferenceUtil.getLinearPolyline().getPolyline(),buffer ,2);
+        Geometry bufferArea = JtsUtil.buffer(linearReferenceUtil.getLinearPolyline().getPolyline(),buffer ,2);
         this.recognitionAreaBuffer = bufferArea;
     }
     public Polygon getPotentialInfluenceBuffer() {

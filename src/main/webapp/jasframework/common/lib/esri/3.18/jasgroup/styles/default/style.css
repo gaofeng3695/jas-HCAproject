@@ -8,7 +8,7 @@ html, body, div.map {width: 100%;height:100%;padding:0;margin:0 auto;overflow: h
 .Map-Widget-BaseMapToolsBar ul li.selected{ background: #6c8add; }
 .Map-Widget-BaseMapToolsBar ul li img{ width:30px;height:30px;}
 
-.Map-Widget-CoorsPicker{ position: absolute;bottom:30px; left:0 ;right:0 ;text-align:center ;text-shadow:0 0 2px #fff;font-size: smaller;}
+.Map-Widget-CoorsPicker{ position: absolute;bottom:10px; left:0 ;right:0 ;text-align:center ;text-shadow:0 0 2px #fff;font-size: smaller;}
 
 .mapLayerListSliderPanel .Map-Widget-LayerList{ width:100%;height: 100%;overflow-y: auto;}
 .mapLayerListSliderPanel .panel .panel-body{ left: 0;top: 30px; padding: 5px;}
