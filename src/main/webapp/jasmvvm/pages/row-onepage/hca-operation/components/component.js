@@ -644,9 +644,7 @@ Vue.component('jas-hca-import-export-btns', {
             type: Boolean,
             default: true,
         },
-        importConfig: {
-        	type: Object
-        }
+        importConfig: {}
     },
     data: function () {
         return {}
@@ -661,12 +659,9 @@ Vue.component('jas-hca-import-export-btns', {
     ].join(''),
     methods: {
         bt_import: function () { // 导入
-        	console.log(this.templateCode);
-            alert(this.importConfig)
-
             var that = this;
             var src = jasTools.base.rootPath + '/jasframework/components/excel/importExcelData.htm?tableName=' + this.importConfig.tableName;
-            src += "&functionName=" + encodeURI(encodeURI(this.importConfig.functionName));
+            src += "&functionName=" + this.importConfig.functionName;
             /*top.jasTools.dialog.show({
                 title: '导入',
                 width: '700px',
@@ -676,19 +671,19 @@ Vue.component('jas-hca-import-export-btns', {
                     that.$emit('refreshtable');
                 }
             });*/
-        	top.getDlg(src, "importiframe","导入", 700, 450);
+        	top.getDlg(src, "importiframe","导入", 700, 500);
 
         },
         bt_export: function (obj) {
             var that = this;
-            var url = jasTools.base.rootPath + this.importConfig.exportUrl +'/exportToExcelAction.do';
+            var url = jasTools.base.rootPath + this.importConfig.exportUrl;
             jasTools.ajax.downloadByIframe('post', url, {
             	oids: this.oids
             });
         },
         bt_export_all: function (obj) { // 导出全部
             var that = this;
-            var url = jasTools.base.rootPath + this.importConfig.exportUrl +'/exportToExcelAction.do';
+            var url = jasTools.base.rootPath + this.importConfig.exportUrl;
             jasTools.ajax.downloadByIframe('post', url, this.form);
         },
         bt_download: function () { // 下载模板
