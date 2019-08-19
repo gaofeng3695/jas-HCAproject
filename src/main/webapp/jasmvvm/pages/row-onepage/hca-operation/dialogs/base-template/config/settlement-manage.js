@@ -5,6 +5,11 @@ var pageConfig = {
     detailPath: '/jdbc/commonData/hcaelementunit/getPage.do',
     //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
+    importConfig: {
+    	'functionName': "建构筑物",
+        'tableName': "hca_buildings",
+        'exportUrl': "/hcabuildings/exportToExcelAction.do",
+    },
     searchFields: [
         'buildingCode',
         'buildingType'
@@ -97,14 +102,14 @@ var pageConfig = {
             precision:3
         },
         horizontalDistance: {
-            name: '水平距离',
+            name: '水平距离（m）',
             type: 'number',
             max:999999.999,
             min: 0,
             precision:3
         },
         verticalDistance: {
-            name: '垂直距离',
+            name: '垂直距离（m）',
             type: 'number',
             max:999999.999,
             min: 0,
