@@ -22,6 +22,11 @@
 </body>
 
 <script src="../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
+<!-- 老框架的JS依赖END -->
+<script type="text/javascript" src="../../../../../../jasframework/common/lib/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../../../../../jasframework/common/js/AppConfig.js"></script>
+<script type="text/javascript" src="../../../../../../jasframework/common/js/common.js"></script>
+<!-- 老框架的JS依赖END -->
 <script src="../../../../../lib/vue/vue.js"></script>
 <script src="../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
 <script src="../../components/jas-components.js "></script>
@@ -65,6 +70,7 @@
                     var param = window.jasTools.base.getParamsInUrl(location.href);
                     that.privilegeCode = param.privilegeCode || pageConfig.privilegeCode;
                     that.templateCode = param.templateCode; // 导入导出模板
+                   	that.importConfig = that.pageConfig.importConfig;
                     that.pageCode = param.pageCode;
                     that.className = param.className;
                     that.versionOid = param.versionOid;
