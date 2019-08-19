@@ -259,9 +259,13 @@ Vue.component('jas-table-for-list', {
         '	<el-button size="small" plain type="primary" icon="fa fa-level-up" v-if="isApprove&&isHasPrivilege(' + "'bt_report'" + ')"  :disabled="reportRows.length==0" @click="upcall">上报</el-button>',
         '	<el-button size="small" plain type="primary" icon="fa fa-check" v-if="isApprove&&isHasPrivilege(' + "'bt_approve'" + ')" :disabled="approveRows.length==0" @click="approve">审核</el-button>',
         '   <slot name="btns"></slot>',
-        '<jas-import-export-btns  @refreshtable="refresh" :is-import="isHasPrivilege(' + "'bt_import'" + ')" :is-export="isHasPrivilege(' + "'bt_export'" + ')" ',
+        '<jas-hca-import-export-btns  @refreshtable="refresh" :is-import="isHasPrivilege(' + "'bt_import'" + ')" :is-export="isHasPrivilege(' + "'bt_export'" + ')" ',
+        '		:form="form" :oids="oids" :import-config="importConfig" :template-code="_templateCode" :export-template-code="_exportTemplateCode" :function-code="functionCode" ', 
+        '		:class-name="_classNameQuery"></jas-hca-import-export-btns>',
+        //':class-name="_classNameQuery" :export-url=exportUrl :table-name=tableName :function-name=functionName></jas-hca-import-export-btns>',
+/*        '<jas-import-export-btns  @refreshtable="refresh" :is-import="isHasPrivilege(' + "'bt_import'" + ')" :is-export="isHasPrivilege(' + "'bt_export'" + ')" ',
         '		:form="form" :oids="oids" :import-config="importConfig" :template-code="_templateCode" :export-template-code="_exportTemplateCode" :function-code="functionCode" :class-name="_classNameQuery"></jas-import-export-btns>',
-
+*/
         '  <span class="fr">',
         '		<el-popover ref="popover4" placement="bottom" trigger="click">',
         '			<el-checkbox-group v-model="fieldshowed">',
@@ -612,4 +616,90 @@ Vue.component('jas-table-for-list', {
         }
     },
 
+});
+
+
+Vue.component('jas-hca-import-export-btns', {
+    props: {
+        templateCode: { // horizontal
+            type: String,
+        },
+        exportTemplateCode: { // horizontal
+            type: String,
+        },
+        functionCode: {
+            type: String,
+        },
+        oids: {
+            type: Array,
+        },
+        form: {
+            type: Object,
+        },
+        isImport: {
+            type: Boolean,
+            default: true,
+        },
+        isExport: {
+            type: Boolean,
+            default: true,
+        },
+        importConfig: {
+        	type: Object
+        }
+    },
+    data: function () {
+        return {}
+    },
+    template: [
+        '<span style="margin-left: 10px;" >',
+        '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-mail-forward" @click="bt_import">导入</el-button>',
+        '<el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导出已选</el-button>',
+        '<el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出全部</el-button>',
+        '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
+        '</span>',
+    ].join(''),
+    methods: {
+        bt_import: function () { // 导入
+        	console.log(this.templateCode);
+            alert(this.importConfig)
+
+            var that = this;
+            var src = jasTools.base.rootPath + '/jasframework/components/excel/importExcelData.htm?tableName=' + this.importConfig.tableName;
+            src += "&functionName=" + encodeURI(encodeURI(this.importConfig.functionName));
+            /*top.jasTools.dialog.show({
+                title: '导入',
+                width: '700px',
+                height: '600px',
+                src: src,
+                cbForClose: function () {
+                    that.$emit('refreshtable');
+                }
+            });*/
+        	top.getDlg(src, "importiframe","导入", 700, 450);
+
+        },
+        bt_export: function (obj) {
+            var that = this;
+            var url = jasTools.base.rootPath + this.importConfig.exportUrl +'/exportToExcelAction.do';
+            jasTools.ajax.downloadByIframe('post', url, {
+            	oids: this.oids
+            });
+        },
+        bt_export_all: function (obj) { // 导出全部
+            var that = this;
+            var url = jasTools.base.rootPath + this.importConfig.exportUrl +'/exportToExcelAction.do';
+            jasTools.ajax.downloadByIframe('post', url, this.form);
+        },
+        bt_download: function () { // 下载模板
+            var that = this;
+            jasTools.ajax.downloadByIframe('post', jasTools.base.rootPath + "/jasframework/excel/downloadExcelTemplate.do", {
+            	functionName: this.importConfig.functionName
+            });
+        },
+
+    },
+    mounted: function () {
+        console.log(this.importConfig);
+    }
 });

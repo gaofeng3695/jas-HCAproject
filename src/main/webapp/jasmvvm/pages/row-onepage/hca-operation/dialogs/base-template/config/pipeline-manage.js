@@ -5,6 +5,11 @@ var pageConfig = {
     detailPath: '/jdbc/commonData/hcapipeline/getPage.do',
     savePath: '/jdbc/commonData/hcapipeline/save.do',
     updatePath: '/jdbc/commonData/hcapipeline/update.do',
+    importConfig: {
+    	'functionName': "管线信息",
+        'tableName': "hca_pipeline",
+        'exportUrl': "hcapipeline",
+    },
     searchFields: [
         'pipelineName',
         'pipelineCode'
