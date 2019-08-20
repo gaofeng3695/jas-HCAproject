@@ -108,7 +108,6 @@ public class HcaReportController extends BaseController {
 					os.write(b, 0, rc);
 				}
 				os.flush();
-				file.delete();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

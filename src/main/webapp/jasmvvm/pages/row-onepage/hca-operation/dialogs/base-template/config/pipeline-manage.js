@@ -1,5 +1,5 @@
 var pageConfig = {
-    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position'],
+    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcapipeline/getPage.do",
     deletePath: '/jdbc/commonData/hcapipeline/delete.do',
     detailPath: '/jdbc/commonData/hcapipeline/getPage.do',
@@ -8,7 +8,7 @@ var pageConfig = {
     importConfig: {
     	'functionName': "管线信息",
         'tableName': "hca_pipeline",
-        'exportUrl': "hcapipeline",
+        'exportUrl': "/hcapipeline/exportToExcelAction.do",
     },
     searchFields: [
         'pipelineName',
@@ -70,7 +70,7 @@ var pageConfig = {
             isRequired: true
         },
         startMileage: {
-            name: '起始里程',
+            name: '起始里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -78,7 +78,7 @@ var pageConfig = {
             isRequired: true
         },
         endMileage: {
-            name: '终止里程',
+            name: '终止里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -86,7 +86,7 @@ var pageConfig = {
             isRequired: true
         },
         pipelineLength: {
-            name: '管道长度',
+            name: '管道长度（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -114,11 +114,11 @@ var pageConfig = {
     },
     btncolwidth:320,
     rowBtns:[
-        {
+        /*{
             name: '导入',
             icon: 'fa fa-mail-forward',
             method: 'importFile'
-        },
+        },*/
         {
             name:'定位',
             icon: 'fa fa-info-circle pointer',

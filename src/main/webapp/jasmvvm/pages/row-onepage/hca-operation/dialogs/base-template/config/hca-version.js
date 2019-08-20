@@ -58,12 +58,12 @@ var pageConfig = {
             name: '评价管线',
         },
         versionName: {
-            name: '高后果区名称',
+            name: '高后果区评价名称',
             type: 'input',
             isRequired: true
         },
         versionCode: {
-            name: '高后果区编号',
+            name: '高后果区评价编号',
             type: 'input',
             isRequired: true
         },
@@ -106,34 +106,40 @@ var pageConfig = {
         },*/
         enableUse: function(row) {
             var that = this;
-            row.hasUsed = 1;
-            that.jasMap.layerVisibleSwitch('hca_area',false);
-            that.jasMap.layerVisibleSwitch('hca_high_impact_area',true);
-            //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-            if(that.forBusiness=="1"){
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_high_impact_area',true);
-                }, 1000);
-            }else{
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_area',true);
-                }, 1000);
-            }
+            that.jasMap.updateLayer("hca_high_impact_area", {
+            	show: true,
+            	where: "VERSION_OID = '" + row.oid +"'"
+            });
         },
-        previewFile : function(){
-            window.jasTools.dialog.show({
-                title: '分析报告',
-                src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/preview_file.html',
-                height: '700px',
-                width: '35%',
-                left:'35%',
-                bottom:'5%',
+        previewFile : function(row){
+        	var that = this;
+        	var loading = top.app.$loading({
+                lock: true,
+                text: '报告生成中......',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
             })
+        	var url = jasTools.base.rootPath + '/hcaReport/createHcaDoc.do';
+        	jasTools.ajax.post(url, {
+        		pipelineOid: row.pipelineOid,
+        		versionOid: row.oid
+            }, function (data) {
+            	loading.close();
+                top.jasTools.dialog.show({
+                	title: '分析报告',
+                	src: jasTools.base.rootPath + '/jasmvvm/common/pages/pdfjs_1.10.88/web/viewer.html?isHcaReport=true&fileId=' + data.data,
+                	height: '700px',
+                	width: '35%',
+                	left:'35%',
+                	bottom:'5%',
+                })
+            }, function(data){
+            	loading.close();
+            });
         },
         hcaAreaList: function (row) {
         	var that = this;
             jasTools.mask.show({
-                title: '地区列表',
                 src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=hca-list&pipelineOid='+row.pipelineOid+'&versionOid='+row.oid,
                 height: '80%',
                 width: '80%',
@@ -142,16 +148,6 @@ var pageConfig = {
                     that.$refs.table.refresh();
                 }
             })
-        },
-/*        hcaAreaList: function (row) {
-            window.jasTools.dialog.show({
-                title: '地区列表',
-                src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/base-template.html?pageCode=area-list&forBusiness=1',
-                height: '70%',
-                width: '80%',
-                left:'10%',
-                bottom:'5%',
-            })
-        },*/
+        }
     }
 };

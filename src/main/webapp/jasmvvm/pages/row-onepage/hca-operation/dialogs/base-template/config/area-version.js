@@ -118,22 +118,17 @@ var pageConfig = {
         },
         enableUse: function(row) {
             var that = this;
-            that.jasMap.layerVisibleSwitch('hca_area',false);
-            that.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
+            var layerId = "";
             //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
             if(that.forBusiness=="1"){
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_high_impact_area',true);
-                }, 1000);
+            	layerId = "hca_high_impact_area";
             }else{
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_area',true);
-                    that.jasMap.flashGraphic(row.oid, 'hca_area', {
-                    	deep: 2,
-                    	fieldName: 'VERSION_OID'
-                    });
-                }, 1000);
+            	layerId = "hca_area";
             }
+            that.jasMap.updateLayer(layerId, {
+            	show: true,
+            	where: "VERSION_OID = '" + row.oid +"'"
+            });
         },
         previewFile : function(){
             window.jasTools.dialog.show({

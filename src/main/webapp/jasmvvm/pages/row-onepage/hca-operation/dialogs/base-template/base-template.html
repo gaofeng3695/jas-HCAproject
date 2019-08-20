@@ -15,7 +15,8 @@
 		<jas-search-for-list slot="search" :form="topSearch" :fields="searchFields" :fields-config="fieldsConfig" @search="searchList"></jas-search-for-list>
 		<jas-table-for-list slot="list" ref="table" :privilege-code="privilegeCode" :fields="tableFields" :form="topSearch" :search-path="searchPath"
 							:add-url="addUrl" :detail-url="detailUrl" :delete-path="deletePath" :class-name="className"
-                            @clickrowbtn="clickrowbtn" :row-btns="rowBtns" :btncolwidth="btncolwidth"  :template-code="templateCode" @selectchanged="selectedRows">
+                            @clickrowbtn="clickrowbtn" :row-btns="rowBtns" :btncolwidth="btncolwidth"  :import-config="importConfig" 
+                            :template-code="templateCode" :oids="oids" @selectchanged="selectedRows">
 		</jas-table-for-list>
 	</jas-list-wrapper>
 </div>
@@ -59,6 +60,7 @@
                         rowBtns: [],
                         btncolwidth: '180px',
                         mapConfig:"config.onepage.json",
+                        oids: []
                     }
                 },
                 created: function () {
@@ -135,7 +137,7 @@
                             selects.push(item.oid);
                         });
                         this.selectedRowOids = selects;
-
+                        this.oids = this.selectedRowOids;
                     },
                     searchList: function () {
                         this.$refs.table.search();
