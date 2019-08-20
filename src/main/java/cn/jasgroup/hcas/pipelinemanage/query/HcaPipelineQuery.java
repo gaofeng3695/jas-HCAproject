@@ -1,5 +1,7 @@
 package cn.jasgroup.hcas.pipelinemanage.query;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 
 import cn.jasgroup.hcas.pipelinemanage.query.bo.HcaPipelineBo;
@@ -31,13 +33,20 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 	private String pipelineCode;
 
 	private String keyWord;
+	
+	/**
+	 * 数据oid集合
+	 */
+	private List<String> oids;
 
 	@Override
 	public String getQuerySql() {
 		String sql = "select t.* from hca_pipeline t where t.active=1 ";
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
-		}else{
+		} else if (null != oids && oids.size() > 0) {
+			sql += " and t.oid in (:oids) ";
+		} else {
 			if (StringUtils.isNotBlank(pipelineCode)) {
 				sql += " and t.pipeline_code like :pipelineCode ";
 			}
@@ -91,5 +100,13 @@ public class HcaPipelineQuery extends BaseJavaQuery {
 
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
+	}
+	
+	public List<String> getOids() {
+		return oids;
+	}
+
+	public void setOids(List<String> oids) {
+		this.oids = oids;
 	}
 }
