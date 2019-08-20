@@ -27,6 +27,7 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'buildingCode',
+            //'buildingTypeParent',
             'buildingType',
             'startMileage',
             'endMileage',
@@ -71,6 +72,15 @@ var pageConfig = {
             type: 'input',
             isRequired: true
         },
+      /*  buildingTypeParentName: {
+            name: '建(构)筑物类别'
+        },
+        buildingTypeParent: {
+            name: '建(构)筑物类别',
+            type: 'select',
+            domainName: 'building_type_parent_domain',
+            isRequired: true
+        },*/
         buildingTypeName: {
             name: '建(构)筑物类型'
         },
@@ -79,6 +89,13 @@ var pageConfig = {
             type: 'select',
             domainName: 'building_type_domain',
             isRequired: true
+           /* type: 'cascader',
+            disabled: true,
+            optionUrl: '/jdbc/commonData/hcabuildings/getBuildingTypeTree.do?domainName=building_type_parent_domain',
+            props:{
+                value:'id',
+                label:'text',
+            },*/
         },
         startMileage: {
             name: '起始里程（km）',
