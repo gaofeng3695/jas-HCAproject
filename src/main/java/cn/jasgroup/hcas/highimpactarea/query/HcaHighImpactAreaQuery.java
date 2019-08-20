@@ -63,7 +63,9 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 				+ " where t.active=1";
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
-		}else {
+		} else if (null != oids && oids.size() > 0) {
+			sql += " and t.oid in (:oids) ";
+		} else {
 			if (StringUtils.isNotBlank(pipelineOid)) {
 				sql += " and t.pipeline_oid = :pipelineOid ";
 			}
@@ -76,14 +78,11 @@ public class HcaHighImpactAreaQuery extends BaseJavaQuery {
 			if (StringUtils.isNotBlank(highImpactLevel)) {
 				sql += " and t.high_impact_level = :highImpactLevel ";
 			}
-			if (null != oids && oids.size() > 0) {
-				sql += " and t.oid in (:oids) ";
-			}
 			if (StringUtils.isNotBlank(versionOid)) {
 				sql += " and t.version_oid = :versionOid ";
 			}
-			sql += " order by t.start_mileage asc";
 		}
+		sql += " order by t.start_mileage asc";
 		return sql;
 	}
 

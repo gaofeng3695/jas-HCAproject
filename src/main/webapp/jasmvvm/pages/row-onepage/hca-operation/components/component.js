@@ -652,8 +652,15 @@ Vue.component('jas-hca-import-export-btns', {
     template: [
         '<span style="margin-left: 10px;" >',
         '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-mail-forward" @click="bt_import">导入</el-button>',
-        '<el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导出已选</el-button>',
-        '<el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出全部</el-button>',
+        /*'<el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导出已选</el-button>',
+        '<el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出全部</el-button>',*/
+        '<el-dropdown placement="bottom">',
+		  	'<el-button size="small" plain type="primary" icon="fa fa-mail-reply-all">导出<i class="el-icon-arrow-down el-icon--right"></i></el-button>',
+			  	'<el-dropdown-menu slot="dropdown" >',
+			    '<el-dropdown-item v-if="isExport"><el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导&#8197;出&#8197;全&#8197;部</el-button></el-dropdown-item>',
+			    '<el-dropdown-item v-if="isExport"><el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导&#8197;出&#8197;已&#8197;选</el-button></el-dropdown-item>',
+		    '</el-dropdown-menu>',
+		'</el-dropdown>',
         '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
         '</span>',
     ].join(''),

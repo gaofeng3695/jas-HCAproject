@@ -34,7 +34,7 @@ body,
 
 .logo {
 	width: 60px;
-	background: url(./../images/logo-meng.png) no-repeat center center;
+	background: url(./../images/logo.png) no-repeat center center;
 	background-size: 40px;
 	margin: 0 10px 0 10px;
 }
@@ -452,6 +452,7 @@ a:hover {
 	/* font-size: 12px; */
 	/* color: #ececec; */
 	color: #333333;
+    cursor: pointer;
 }
 
 .el-menu .el-submenu__title:hover {
