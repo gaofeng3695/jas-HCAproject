@@ -80,6 +80,5 @@ public class HcaCommonController extends BaseController {
 			e.printStackTrace();
 		}
 		return result;
-
 	}
 }
