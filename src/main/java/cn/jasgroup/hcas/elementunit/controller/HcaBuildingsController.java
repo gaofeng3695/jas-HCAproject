@@ -12,6 +12,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.jasgroup.jasframework.domain.service.SysDomainService;
+import cn.jasgroup.jasframework.domain.service.bo.SysDomainBo;
+import cn.jasgroup.jasframework.security.service.bo.UnitBo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +26,7 @@ import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.excel.util.ExcelExportUtil;
 import cn.jasgroup.jasframework.utils.DateTimeUtil;
+import cn.jasgroup.jasframework.domain.utils.DomainUtil;
 
 /**
  * @description 建构筑物
@@ -37,7 +42,8 @@ public class HcaBuildingsController extends BaseController {
 
 	@Autowired
 	private CommonDataJdbcService commonDataJdbcService;
-
+    @Autowired
+    private SysDomainService sysDomainService;
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
 	 * <p> 张毅 </p>	
@@ -99,4 +105,55 @@ public class HcaBuildingsController extends BaseController {
 				propertyDesList, request, response, typeArr);
 		return null;
 	}
+
+	/**
+	 *
+	 *<p>功能描述：获取构建筑物类型下拉选。</p>
+	 * <p> 陈祥思 </p>
+	 * @param request
+	 * @return
+	 * @since JDK1.8。
+	 * <p>创建日期:2019年8月19日 上午10:39:16。</p>
+	 * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	 */
+/*	@RequestMapping(value = "/getBuildingTypeTree")
+	public Object getBuildingTypeTree(HttpServletRequest request) {
+		String domainName = request.getParameter("domainName");
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		List<SysDomainBo> listBo = DomainUtil.getDomainList(domainName);
+		for (SysDomainBo boinfo : listBo) {
+            List<SysDomainBo> childrenList = this.sysDomainService.getChildSysdoman(domainName, boinfo.getParentCodeId());
+			Map<String, Object> item = new HashMap<String, Object>();
+			item.put("id", boinfo.getCodeId());
+			item.put("text", boinfo.getCodeName());
+			item.put("children", getChildren(boinfo, childrenList, domainName));
+			result.add(item);
+		}
+		return result;
+	}
+    public List<Map<String, Object>> getChildren(SysDomainBo domainBo, List<SysDomainBo> boList, String domainName) {
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+
+        for (int k = 0; k < boList.size(); k++) {
+            if (domainBo.getCodeId().equals(boList.get(k).getParentCodeId())) {
+                SysDomainBo bo = (SysDomainBo) boList.get(k);
+                Map<String, Object> item = new HashMap<String, Object>();
+                item.put("id", bo.getCodeId());
+                item.put("text", bo.getCodeName());
+                try {
+                    if(getChildren(bo, boList, domainName).size() == 0 || getChildren(bo, boList, domainName) == null || getChildren(bo, boList, domainName).equals("")){
+                    }else{
+                        item.put("children", getChildren(bo, boList, domainName));
+                    }
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                items.add(item);
+            }
+        }
+        return items;
+    }*/
+
+
 }

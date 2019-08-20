@@ -121,23 +121,50 @@
       "layerSet":
       [
         {
-          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"31" ,"visible":false,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0"
+          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"31" ,"visible":false,"label2":{},
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "编号：{BUILDING_CODE}<br>人口：{POPULATION}"
+            },
+            "onClick":{
+              "responseType":"dialog",
+              "title":"信息弹窗",
+              "iframe":true,
+              "width": "350px",
+              "height": "350px",
+              "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+            }
+
+      }
         },{
           "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
           "listener": {
             "onHover": {
               "responseType": "tip",
-              "template": "管线名称：{PIPELINE_NAME}<br>管线长度：{pipeline_length}<br>"
+              "template": "管线名称：{PIPELINE_NAME}<br>管线长度：{PIPELINE_LENGTH}KM<br>"
             }
           }
         },{
-          "id":"hca_area","type":"feature","label":"地区等级","index":"31" ,"visible":false,"where":"1!=1",
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2"
+          "id":"hca_area","type":"feature","label":"地区等级","index":"30" ,"visible":false,"where":"1!=1",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "地区编号：{AREA_CODE}<br>地区等级：{REGION_LEVEL}<br>起止里程：{START_MILEAGE}KM——{END_MILEAGE}KM<br>人口：{POPULATION}<br>描述：{DESCRIPTION}"
+            }
+          }
         },{
           "id":"hca_high_impact_area","type":"feature","label":"高后果区","index":"31" ,"visible":false,"where":"1!=1",
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3"
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "高后果区名称：{HIGH_IMPACT_AREA_NAME}<br>高后果区编号：{HIGH_IMPACT_AREA_CODE}<br>高后果区等级：{HIGH_IMPACT_LEVEL}<br>开始里程：{START_MILEAGE}<br>结束里程：{END_MILEAGE}<br>描述：{DESCRIPTION}"
+            }
+          }
         },{
           "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"11"
         }
@@ -146,49 +173,18 @@
     "id":"layerSet002",
     "label":"特定场所",
     "layerSet":[
-      {
-        "id":"pd_government",
-        "label":"政府机构",
-        "maxScale":100000,
-        "outFields":"","strategy":"bbox",
-        "visible":false,
-        "renderer":{
-          "style":"government_style"
-        },
-        "index":31
-      }, {
-        "id":"pd_hospital",
-        "label":"医疗院所","strategy":"bbox",
-        "outFields":"",
-        "visible":false,
-        "maxScale":100000,
-        "renderer":{
-          "style":"hospital_style"
-        },
-        "index":31
-      },{
-        "id":"pd_gas_station",
-        "index":31,"strategy":"bbox",
-        "label":"加油站",
-        "maxScale":100000,
-        "outFields":"",
-        "visible":false,
-        "renderer":{
-          "style":"gas_station_style"
-        }
-      },{
-        "id":"pd_entertainment_place",
-        "index":31,"strategy":"bbox",
-        "label":"娱乐场所",
-        "maxScale":100000,
-        "outFields":"",
-        "visible":false,
-        "renderer":{
-          "style":"entertainment_style"
-        }
-      }
     ]
-  }
+  },{
+      "id":"layerSet003",
+      "label":"非特定场所",
+      "layerSet":[
+      ]
+    },{
+      "id":"layerSet004",
+      "label":"易燃易爆场所",
+      "layerSet":[
+      ]
+    }
   ]
 },
   "proxy":[],
@@ -311,20 +307,6 @@
         "target": "drawSettlement",
         "label":"构（建）筑物标绘",
         "icon": "../../jasframework/map_viewer/images/dock/draw.png",
-        "index": ""
-      },
-     {
-        "type": "api",
-        "target": "showHistoryBtn",
-        "label":"地区等级划分",
-        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
-        "index": ""
-      },
-      {
-        "type": "api",
-        "target": "createHcaArea",
-        "label":"高后果区识别",
-        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       }
     ]

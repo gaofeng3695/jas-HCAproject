@@ -188,6 +188,26 @@
         .panel-body.panel-body-noborder.window-body{
             overflow-y:hidden
         }
+        .area-btn{
+            cursor: pointer;
+            color: rgb(184, 222, 255);
+            height: 40px;
+            line-height: 49px;
+            text-align: center;
+            width: 40px;
+            background: url(../../jasmvvm/src/images/pptbtn.png) no-repeat rgba(255, 255, 255, 0);
+            margin: 26px 1px 0px;
+        }
+        .hca-btn{
+            cursor: pointer;
+            color: rgb(184, 222, 255);
+            height: 40px;
+            line-height: 49px;
+            text-align: center;
+            width: 40px;
+            background: url(../../jasmvvm/src/images/pptbtn.png) no-repeat rgba(255, 255, 255, 0);
+            margin: 26px 1px 0px;
+        }
     </style>
 </head>
 
@@ -198,8 +218,8 @@
             <div class="center">
                 <!--左侧流程操作按钮-->
                 <div class="operate-left-div">
-                    <div class="item-btn" @click="showHistoryBtn" v-show="isManage">地区等级划分</div>
-                    <div class="item-btn" @click="createHcaArea" v-show="isManage">高后果区识别</div>
+                    <div class="area-btn" @click="showHistoryBtn" v-show="isManage" title="地区等级划分"></div>
+                    <div class="hca-btn" @click="createHcaArea" v-show="isManage" title="高后果区识别"></div>
                 </div>
                 <div id="jasMap" class="jasmap" style="height:100%;width:100%;background: transparent"></div>
             </div>
@@ -301,6 +321,7 @@
             that.jasMap.showHistoryBtn = this.showHistoryBtn;
             that.jasMap.createHcaArea = this.createHcaArea;
             that.jasMap.drawSettlement = this.drawSettlement;
+            //that.jasMap.deleteSettlement = this.deleteSettlement;
             top.createBufferDialog = that.createBufferDialog;
             top.createBuffer = that.createBuffer;
             top.randomSettlementData = that.randomSettlementData;
@@ -334,20 +355,8 @@
                         feature.attributes = { id :fId};
                         //changedFeatures[fId] = feature;
 
-                        var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&lyaerId=drawlayer_hca_buildings"
+                        var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings"
                         window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 300,350);
-                        /* window.jasTools.selfDialog.show({
-                            title: '建(构)筑物属性编辑',
-                            src: baseSrc,
-                            height: '400px',
-                            width: '320px',
-                            top:'80px',
-                            right:'2%',
-                            cbForClose: function () {
-                                that.jasMap.startPanMode();
-                                //that.jasMap.refreshLayerById(that.layerId)
-                            }
-                        });*/
                     }
                 })
             },
@@ -355,14 +364,6 @@
                 this.pipelineOid = pipelineOid;
                 this.closeBufferWindow();
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
-               /* window.jasTools.selfDialog.show({
-                    title: '识别区条件',
-                    src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html',
-                    height: '180px',
-                    width: '230px',
-                    left:"50px",
-                    top:"100px"
-                })*/
             },
             closeBufferWindow: function(){
                 $('span.jas-dialog-close').trigger('click');
@@ -401,8 +402,10 @@
                         that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
                         this.jasMap.addPolygonGraphic(rings,{
                             layerId:'drawlayer_area_buffer',
-                            color:[255,0,0,100],
-                            outlineColor:[255,0,0,255]
+                            color:[42,42,42,100],
+                            outlineColor:[255,0,0,255],
+                            //fillColor:[42,42,42,1],
+                            //borderColor:[186,218,37,1],
                         });
                         var lineGraphic = that.getPipeline();
                         var x = lineGraphic.geometry.paths[0][0][0];
@@ -524,23 +527,28 @@
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
                             })
-                            /*common.simpleAjaxLoader({
+                            common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
                                     pipesegmentKeyValue: that.pipelineOid,
                                     bufferDistance:app.bufferValue,
                                 }) ,
+                                method:"post",
+                                contentType:"application/json",
                                 async: true,
                                 onSuccess: function(res){
-                                    var result = JSON.parse(res) ;*/
+                                    var result = JSON.parse(res) ;
                                     that.jasMap.updateLayer(settlementLayerId);
                                     that.createRankCellData(loading);
-/*
+                                    /*that.jasMap.updateLayer('hca_area',{
+                                        "show":true,
+                                        "where":"version_oid like'" + result+ "'"
+                                    })*/
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
                                 }
-                            });*/
+                            });
                         }
                     }
                 });
@@ -630,16 +638,15 @@
                 module.open(true);
                 module.refresh(data);
             },
-
             //1、拿到地区等级版本，发起请求，计算高后果区，返回高后果计算结果版本code
             //2、通过code刷新高后果区图层 updateLayer() ; where :"code=="
             createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
                 var that = this;
                 var localAreaVersionOid = app.localAreaVersionOid; //that.localAreaVersionOid;
-                var settlementLayerId = "pd_settlement";
+                var settlementLayerId = "hca_high_impact_area";
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
-                if(!this.jasMap.getLayerVisible('pd_arearank')){
+                if(!this.jasMap.getLayerVisible('hca_area')){
                     that.$alert('请先进行地区等级划分', '提示', {
                         callback: function(){
                         }
@@ -671,13 +678,13 @@
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
                             });
-                           /* common.simpleAjaxLoader({
+                            common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/high/"+localAreaVersionOid+"/doHcaAnalysis.do",
                                 data: JSON.stringify({
                                 }) ,
                                 async: true,
                                 onSuccess: function(res){
-                                    var result = JSON.parse(res) ;*/
+                                    var result = JSON.parse(res) ;
                                     that.jasMap.updateLayer(settlementLayerId);
                                     loading.text='高后果区计算......';
                                     setTimeout(function(){
@@ -687,11 +694,16 @@
                                     //that.saveVersion('1',result.versionOid);
                                       that.saveVersion('1','');
                                       that.loadZoneCell();
-                                /*},
+
+                                    /*that.jasMap.updateLayer('hca_high_impact_area',{
+                                        "show":true,
+                                        "where":"version_oid like'" + result+ "'"
+                                    })*/
+                                },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
                                 }
-                            });*/
+                            });
                         }
                     }
                 })
@@ -769,7 +781,7 @@
                 var that = this;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
-                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-select.html', "areaSelectIframe", "地区等级划分", 320,140);
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/select-area.html', "areaSelectIframe", "地区等级划分", 320,140);
             },
             showHistoryList: function(forBusiness){
                 var that = this;
@@ -808,55 +820,11 @@
                     title='新增地区等级历史版本信息';
                 }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
-            }
+            },
         }
+        /*              "content":"编号：{BUILDING_CODE}<br>人口：{POPULATION}<br><a data-oid='{OID}' href='javascript:void(0);' onclick='drawSettlement(this)'>绘制</a><a data-oid='{OID}' href='javascript:void(0);' style='margin-left:15px;' onclick='editSettlement(this)'>编辑</a><a data-oid='{OID}' href='javascript:void(0);' style='margin-left:15px;' onclick='deleteSettlement(this)'>删除</a>"
+*/
     })
-
-
-/*      [
-        {
-          "id":"hca_buildings","type":"feature","label":"构（建）筑物","index":"31" ,"visible":false,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
-          "listener": {
-            "onHover": {
-              "responseType": "tip",
-              "template": "编号${building_code},<br>类型${building_type},<br>人口：${population}"
-            }
-          }
-        },{
-          "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
-          "outFields":"gid,oid,pipeline_name,pipeline_length",
-          "declutter":true,
-          "strategy":"all",
-          "listener": {
-            "onHover": {
-              "responseType": "tip",
-              "template": "管线名称：${pipeline_name}<br>管线长度：${pipeline_length}<br>"
-            }
-          }
-        },{
-          "id":"pd_arearank","type":"feature","label":"地区等级","index":"31" ,"visible":false,"where":"1!=1",
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
-          "listener": {
-            "onHover": {
-              "responseType": "tip",
-              "template": "地区编号：${area_code},<br>地区等级：${region_level},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>人口：${population}"
-            }
-          }
-        },{
-          "id":"pd_zonerankcell","type":"feature","label":"高后果区","index":"31" ,"visible":false,"where":"1!=1",
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3",
-          "listener": {
-            "onHover": {
-              "responseType": "tip",
-              "template": "高后果区名称：${high_impact_area_name},<br>高后果区编号：${high_impact_area_code},<br>高后果区等级：${high_impact_level},<br>开始里程：${start_mileage},<br>结束里程：${end_mileage},<br>描述：${description}"
-            }
-          }
-        },{
-          "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"11"
-        }
-      ]*/
 </script>
 
 </html>
