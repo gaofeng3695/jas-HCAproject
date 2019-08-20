@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -72,6 +73,11 @@ public class HcaBuildings extends ArcGisSpatialObject {
 	 * 起始坐标Y 
 	 */
 	private Double pointy;
+	
+	/**
+	 * 构筑物类别（特定场所、非特定场所、易燃易爆场所）
+	 */
+	private String buildingCategory;
 
 	/**
 	 * 构筑物类型 
@@ -324,5 +330,4 @@ public class HcaBuildings extends ArcGisSpatialObject {
 		this.pressurePipeline = pressurePipeline;
 	}
 
-	
 }

@@ -2016,9 +2016,26 @@ Vue.component('jas-form-items-group', {
                         obj = jasTools.base.extend(obj, fieldConfig.requestParams);
                     }
                     obj[fatherField] = fatherValue;
-                    jasTools.ajax.post(jasTools.base.rootPath + "/" + requestUrl, obj, function (data) {
-                        setChildOptionsAndValue(childField, data.rows)
-                    });
+                    /**更改组件20190820，增加通过parentCodeId获取子类下拉选功能*/
+                    if(fieldConfig.requestParams.parentCodeId){
+                    	fieldConfig.requestParams.parentCodeId = fatherValue;
+                    	var getURL = requestUrl + fieldConfig.requestParams.parentCodeId;
+                    	jasTools.ajax.post(jasTools.base.rootPath + "/" + getURL, {}, function (data) {
+                    		if(data){
+                    			data = data.map(function (item) {
+                                    return {
+                                        key: item.codeId,
+                                        value: item.codeName,
+                                    }
+                                });
+                    		}
+                    		setChildOptionsAndValue(childField, data)
+                    	});
+                    }else{
+                    	jasTools.ajax.post(jasTools.base.rootPath + "/" + requestUrl, obj, function (data) {
+                    		setChildOptionsAndValue(childField, data.rows)
+                    	});
+                    }
                 } else {
                     setChildOptionsAndValue(childField, []);
                 }
