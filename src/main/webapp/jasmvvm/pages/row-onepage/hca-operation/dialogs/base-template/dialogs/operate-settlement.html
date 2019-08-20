@@ -24,23 +24,25 @@
 <body>
 <div id="app" v-cloak style="font-size: 13px;overflow-y:auto" >
 	<div style="margin: 0px 20px 20px 20px">
-		<jas-base-group-title name="基本信息"></jas-base-group-title>
-		<jas-detail-table :titles="fields" :detail="detail"></jas-detail-table>
-		<jas-base-group-title name="其他信息"></jas-base-group-title>
-		<jas-detail-table :titles="fields2" :detail="detail"></jas-detail-table>
-	</div>
-    <div slot="footer" style="margin-bottom:10px;text-align:center">
+        <template>
+            <jas-base-group-title name="基本信息"></jas-base-group-title>
+            <jas-detail-table :titles="fields" :detail="detail"></jas-detail-table>
+            <jas-base-group-title name="其他信息"></jas-base-group-title>
+            <jas-detail-table :titles="fields2" :detail="detail"></jas-detail-table>
+        </template>
+    <div slot="footer" style="margin-bottom:10px;margin-top:10px;text-align:center">
         <!--<el-button size="small" type="primary" @click="drawSettlement()">绘制</el-button>-->
         <el-button size="small" type="primary" @click="editSettlement()">编辑</el-button>
         <el-button size="small" type="primary" @click="deleteSettlement()">删除</el-button>
     </div>
-</div>
+
 </body>
 <script src="../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="../../../../../../lib/vue/vue.js"></script>
 <script src="../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
 <script src="../../../components/jas-components.js "></script>
 <script src="../../../../../../common/js/jas-tools.js"></script>
+
 <script type="text/javascript" src="../../../../../../../jasframework/common/js/common.js"></script>
 
 <script>
@@ -50,6 +52,10 @@
                 {
                     "name": "建(构)筑物编号",
                     "field": "buildingCode"
+                },
+                {
+                    "name":"建(构)筑物类别",
+                    "field": "buildingTypeParent"
                 },
                 {
                     "name": "建(构)筑物类型",
@@ -80,7 +86,7 @@
                     "field": "pointy"
                 },
                 {
-                    "name": "建筑分布",
+                    "name": "建(构)筑物分布",
                     "field": "buildingDistributionName"
                 },
                 {

@@ -190,23 +190,24 @@
         }
         .area-btn{
             cursor: pointer;
-            color: rgb(184, 222, 255);
             height: 40px;
             line-height: 49px;
             text-align: center;
             width: 40px;
-            background: url(../../jasmvvm/src/images/pptbtn.png) no-repeat rgba(255, 255, 255, 0);
-            margin: 26px 1px 0px;
+            background: url(images/lan_s1.png) no-repeat;
+            margin: 26px 1px 0px 6px;
         }
         .hca-btn{
             cursor: pointer;
-            color: rgb(184, 222, 255);
             height: 40px;
             line-height: 49px;
             text-align: center;
             width: 40px;
-            background: url(../../jasmvvm/src/images/pptbtn.png) no-repeat rgba(255, 255, 255, 0);
+            background: url(images/icon_view.png) no-repeat;
             margin: 26px 1px 0px;
+        }
+        .panel-body.panel-body-noborder.window-body {
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -356,7 +357,7 @@
                         //changedFeatures[fId] = feature;
 
                         var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings"
-                        window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 300,350);
+                        window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320,350);
                     }
                 })
             },
@@ -402,7 +403,7 @@
                         that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
                         this.jasMap.addPolygonGraphic(rings,{
                             layerId:'drawlayer_area_buffer',
-                            color:[42,42,42,100],
+                            color:[255,255,255,100],
                             outlineColor:[255,0,0,255],
                             //fillColor:[42,42,42,1],
                             //borderColor:[186,218,37,1],
@@ -822,8 +823,6 @@
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
             },
         }
-        /*              "content":"编号：{BUILDING_CODE}<br>人口：{POPULATION}<br><a data-oid='{OID}' href='javascript:void(0);' onclick='drawSettlement(this)'>绘制</a><a data-oid='{OID}' href='javascript:void(0);' style='margin-left:15px;' onclick='editSettlement(this)'>编辑</a><a data-oid='{OID}' href='javascript:void(0);' style='margin-left:15px;' onclick='deleteSettlement(this)'>删除</a>"
-*/
     })
 </script>
 
