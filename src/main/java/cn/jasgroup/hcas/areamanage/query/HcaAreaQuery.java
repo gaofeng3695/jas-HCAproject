@@ -40,6 +40,11 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	 * 版本Oid
 	 */
 	private String versionOid;
+	
+	/**
+	 * 数据oid集合
+	 */
+	private List<String> oids;
 
 	@Override
 	public String getQuerySql() {
@@ -51,7 +56,9 @@ public class HcaAreaQuery extends BaseJavaQuery {
 				+ " where t.active=1 ";
 		if (StringUtils.isNotBlank(oid)) {
 			sql += " and t.oid = :oid ";
-		}else{
+		} else if (null != oids && oids.size() > 0) {
+			sql += " and t.oid in (:oids) ";
+		} else {
 			if (StringUtils.isNotBlank(pipelineOid)) {
 				sql += " and t.pipeline_oid = :pipelineOid ";
 			}
@@ -111,4 +118,13 @@ public class HcaAreaQuery extends BaseJavaQuery {
 	public void setVersionOid(String versionOid) {
 		this.versionOid = versionOid;
 	}
+
+	public List<String> getOids() {
+		return oids;
+	}
+
+	public void setOids(List<String> oids) {
+		this.oids = oids;
+	}
+	
 }
