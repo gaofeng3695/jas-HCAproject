@@ -841,7 +841,7 @@ function getDlg(url, dialogid, title, w, h, modal, closable,maximizable,resizabl
 		// 在窗口下面添加一个遮罩层，解决窗口被activie控件遮挡问题
 		window_mask = $("<div id=\""
 				+ dlgid
-				+ "-mask\" class=\"window-maskDiv\" style='position: absolute;top:0;left:0;width:100%;height:100%;background-color:white;opacity:0;'></div>");
+				+ "-mask\" class=\"window-maskDiv\" style='top:0;left:0;width:100%;height:100%;background-color:white;opacity:0;'></div>");
 //		window_mask.width(w);
 //		window_mask.height(h);
 		window_mask.appendTo("body");

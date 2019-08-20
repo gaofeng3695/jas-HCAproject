@@ -397,7 +397,7 @@
   opacity: 0.05;
 }
 .window-mask {
-  position: absolute;
+  /*position: absolute;*/
   left: 0;
   top: 0;
   width: 100%;
@@ -3219,7 +3219,7 @@
   cursor: default;
 }
 
-/* 数据网格单元格展示不全的处理 */
+/* 锟斤拷锟斤拷锟斤拷锟斤拷元锟斤拷展示锟斤拷全锟侥达拷锟斤拷 */
 .td-overflow-ellipsis{
 	overflow: hidden;
 	text-overflow:ellipsis;
