@@ -121,12 +121,12 @@
       "layerSet":
       [
         {
-          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"31" ,"visible":false,"label2":{},
+          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"32" ,"visible":false,"label2":{},
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
           "listener": {
             "onHover": {
               "responseType": "tip",
-              "template": "编号：{BUILDING_CODE}<br>人口：{POPULATION}"
+              "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE}<br>人口：{POPULATION}"
             },
             "onClick":{
               "responseType":"dialog",
@@ -136,10 +136,9 @@
               "height": "350px",
               "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
             }
-
-      }
+          }
         },{
-          "id":"hca_pipeline","type":"feature","label":"管线","index":"31" ,
+          "id":"hca_pipeline","type":"feature","label":"管线","index":"29" ,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
           "listener": {
             "onHover": {
@@ -166,23 +165,134 @@
             }
           }
         },{
-          "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"11"
+          "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"28"
         }
       ]
   },{
     "id":"layerSet002",
     "label":"特定场所",
     "layerSet":[
+      {
+        "id": "yiyuan",
+        "label": "医院",
+        "index": "41"
+      },{
+        "id": "xuexiao",
+        "label": "学校",
+        "index": "42"
+      },{
+        "id": "tuoersuo",
+        "label": "托儿所",
+        "index": "43"
+      },{
+        "id": "youeryuan",
+        "label": "幼儿园",
+        "index": "44"
+      },{
+        "id": "yanglaoyuan",
+        "label": "养老院",
+        "index": "45"
+      },{
+        "id": "jianyu",
+        "label": "监狱",
+        "index": "6"
+      },{
+        "id": "gongchang",
+        "label": "工厂",
+        "index": "47"
+      },{
+        "id": "shangchang",
+        "label": "商场",
+        "index": "48"
+      },{
+        "id": "jimaoshichang",
+        "label": "集贸市场",
+        "index": "49"
+      },{
+        "id": "simiao",
+        "label": "寺庙",
+        "index": "50"
+      },{
+        "id": "yundongchang",
+        "label": "运动场",
+        "index": "51"
+      },{
+        "id": "guangchang",
+        "label": "广场",
+        "index": "52"
+      },{
+        "id": "yule",
+        "label": "娱乐休闲地",
+        "index": "53"
+      },{
+        "id": "juyuan",
+        "label": "剧院",
+        "index": "54"
+      },{
+        "id": "luyingdi",
+        "label": "露营地",
+        "index": "55"
+      },{
+        "id": "qita1",
+        "label": "其他",
+        "index": "56"
+      }
     ]
   },{
       "id":"layerSet003",
       "label":"非特定场所",
       "layerSet":[
+        {
+          "id": "dulijuming",
+          "label": "独立民居",
+          "index": "57"
+        },{
+          "id": "jumingqu",
+          "label": "居民区",
+          "index": "58"
+        },{
+          "id": "shangyequ",
+          "label": "商业区",
+          "index": "59"
+        },{
+          "id": "gongyequ",
+          "label": "工业区",
+          "index": "60"
+        },{
+          "id": "guihuaqu",
+          "label": "规划区",
+          "index": "61"
+        },{
+          "id": "shijiao",
+          "label": "市郊居民区",
+          "index": "62"
+        },{
+          "id": "qita2",
+          "label": "其他",
+          "index": "63"
+        }
       ]
     },{
       "id":"layerSet004",
       "label":"易燃易爆场所",
       "layerSet":[
+        {
+          "id": "jiayouzhan",
+          "label": "加油站",
+          "index": "64"
+        },{
+          "id": "jiaqizhan",
+          "label": "加气站",
+          "index": "65"
+        },{
+          "id": "zhayaoku",
+          "label": "炸药库",
+          "index": "66"
+        },{
+          "id": "qita3",
+          "label": "其他",
+          "index": "67"
+        }
       ]
     }
   ]
