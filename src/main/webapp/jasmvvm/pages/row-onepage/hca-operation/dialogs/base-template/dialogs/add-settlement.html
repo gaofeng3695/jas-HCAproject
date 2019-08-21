@@ -39,16 +39,29 @@
 			<el-row :gutter="10">
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="编号" prop="buildingCode">
-						<el-input v-model="tableFormData.buildingCode" clearable placeholder="请输入构筑物编号" size="small"></el-input>
+						<el-input v-model="tableFormData.buildingCode" clearable placeholder="请输入建(构)筑物编号" size="small"></el-input>
+					</el-form-item>
+				</el-col>
+			</el-row>
+			<el-row>
+				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+					<el-form-item label="类别" prop="buildingTypeParent">
+						<el-select v-model="tableFormData.buildingTypeParent" filterable clearable placeholder="请选择建(构)筑物类别" size="small" @change="parentDomainChange">
+							<el-option v-for="item in domain.buildingTypeParent" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+						</el-select>
+						<!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
+
 					</el-form-item>
 				</el-col>
 			</el-row>
 			<el-row>
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="类型" prop="buildingType">
-						<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择构筑物类型" size="small" >
+						<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择建(构)筑物类型" size="small" >
 							<el-option v-for="item in domain.buildingType" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 						</el-select>
+						<!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
+
 					</el-form-item>
 				</el-col>
 			</el-row>
@@ -92,8 +105,8 @@
 			</el-row>-->
 			<el-row>
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-					<el-form-item label="建筑分布" prop="buildingDistribution" >
-						<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建筑分布" size="small" >
+					<el-form-item label="分布" prop="buildingDistribution" >
+						<el-select v-model="tableFormData.buildingDistribution" clearable placeholder="请选择建(构)筑物分布" size="small" >
 							<el-option v-for="item in domain.buildingDistribution" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 						</el-select>
 					</el-form-item>
@@ -165,51 +178,57 @@
                         message: '请输入建(构)筑物编号',
                         trigger: 'blur'
                     }],
+                    buildingTypeParent: [{
+                        required: true,
+                        message: '请选择建(构)筑物类别',
+                        trigger: 'blur'
+                    }],
                     buildingType: [{
-                        //required: true,
+                        required: true,
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
-                    /*		startMileage: [{
-                                //required: true,
-                                message: '请输入起始里程',
-                                trigger: 'blur'
-                            }],
-                            endMileage: [{
-                                //required: true,
-                                message: '请输入终止里程',
-                                trigger: 'blur'
-                            }],
-                            horizontalDistance: [{
-                                //required: true,
-                                message: '请输入水平距离',
-                                trigger: 'blur'
-                            }],
-                            verticalDistance: [{
-                                //required: true,
-                                message: '请输入垂直距离',
-                                trigger: 'blur'
-                            }],
-                    pointx: [{
-                        //required: true,
-                        message: '请输入起始坐标x',
-                        trigger: 'blur'
-                    }],
-                    pointy: [{
-                        //required: true,
-                        message: '请输入起始坐标y',
-                        trigger: 'blur'
-                    }]*/
+					/*		startMileage: [{
+					 //required: true,
+					 message: '请输入起始里程',
+					 trigger: 'blur'
+					 }],
+					 endMileage: [{
+					 //required: true,
+					 message: '请输入终止里程',
+					 trigger: 'blur'
+					 }],
+					 horizontalDistance: [{
+					 //required: true,
+					 message: '请输入水平距离',
+					 trigger: 'blur'
+					 }],
+					 verticalDistance: [{
+					 //required: true,
+					 message: '请输入垂直距离',
+					 trigger: 'blur'
+					 }],
+					 pointx: [{
+					 //required: true,
+					 message: '请输入起始坐标x',
+					 trigger: 'blur'
+					 }],
+					 pointy: [{
+					 //required: true,
+					 message: '请输入起始坐标y',
+					 trigger: 'blur'
+					 }]*/
                 },
                 tableFormData: {
                     'buildingCode': '',
                     'buildingType': '',
-                    /*	'startMileage':'',
-                        'endMileage':'',
-                        'horizontalDistance':'',
-                        'verticalDistance':'',
-                    'pointx':'',
-                    'pointy':'',*/
+                    'buildingTypeParent': '',
+					/*	'startMileage':'',
+					 'endMileage':'',
+					 'horizontalDistance':'',
+					 'verticalDistance':'',
+					 'pointx':'',
+					 'pointy':'',*/
                     'buildingDistribution':'',
                     'households':'',
                     'population':'',
@@ -219,6 +238,7 @@
                 },
                 domain: {
                     buildingType: [],
+                    buildingTypeParent: [],
                     buildingDistribution:[],
                     pressurePipeline:[
                         {
@@ -231,9 +251,10 @@
                         }
                     ]
                 },
+                changeParentCodeId:'',
                 isEdit:false,
                 fId:'',
-                layerId:""
+                layerId:"",
             }
         },
         created: function(){
@@ -251,10 +272,11 @@
                 this.oid = param.oid;
                 this.tableFormData.oid = this.oid;
                 this.requestDetail(param.oid);
-            }
-            this.getDomainSelect('building_type_domain',function (arr) {
-                that.domain.buildingType = arr;
+            };
+            this.getDomainSelect('building_type_parent_domain',function (arr) {
+                that.domain.buildingTypeParent = arr;
             });
+
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
             });
@@ -268,13 +290,18 @@
                     }
                 });
             },
+            parentDomainChange: function(codeId){
+                var that = this;
+                this.changeParentCodeId = codeId;
+                this.getChildDomainSelect('building_type_domain',function (arr) {
+                    that.domain.buildingType = arr;
+                });
+            },
             requestDetail: function (oid) {
                 var that = this;
                 var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
-                var array=[];
-                array.push(oid);
                 jasTools.ajax.post(url, {
-                    oids: array
+                    oid: oid
                 }, function (data) {
                     that.tableFormData = data.rows[0];
                 });
@@ -323,12 +350,29 @@
                     cb && cb(aDomain);
                 });
             },
+            getChildDomainSelect: function(domainName, cb){
+                var that = this;
+                var url = jasTools.base.rootPath +
+                    "/jasframework/sysdoman/getChildDoman.do";
+                jasTools.ajax.get(url, {
+                    "domainName": domainName,
+                    "parentCodeId": that.changeParentCodeId,
+                }, function (data) {
+                    var aDomain = data.map(function (item) {
+                        return {
+                            key: item.codeId,
+                            value: item.codeName,
+                        }
+                    });
+                    cb && cb(aDomain);
+                });
+            },
             cancel: function (param) {
                 if(!param){
                     top.jasMap.refreshLayerById("hca_buildings");
                 }
                 window.parent.closeDlg("editSettlementIframe");
-            }
+            },
         },
     });
 </script>
