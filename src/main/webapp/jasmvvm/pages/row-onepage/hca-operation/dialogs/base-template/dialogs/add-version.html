@@ -35,7 +35,7 @@
 	<div id="app" v-cloak style="font-size: 13px;">
 		<jas-dialog-wrapper>
 			<el-form ref="tableFormData" :rules="rules" :model="tableFormData" label-width="80px">
-				 <jas-base-group-title name="基本信息"></jas-base-group-title>
+				<jas-base-group-title name="基本信息"></jas-base-group-title>
 				<el-row :gutter="10">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
 						<el-form-item label="版本名称" prop="versionName">
@@ -176,8 +176,9 @@
                         });
                     }
                 }
-                that.save();
-			}
+                //that.save();
+                window.parent.closeDlg("createVersionIframe");
+            }
 		},
 	});
 </script>

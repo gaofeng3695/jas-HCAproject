@@ -57,6 +57,16 @@ public class HcaBuildingsBo extends CommonBaseBo {
 	private Double pointy;
 
 	/**
+	 * 构筑物类别（特定场所、非特定场所、易燃易爆场所）
+	 */
+	private String buildingTypeParent;
+	
+	/**
+	 * 构筑物类别（特定场所、非特定场所、易燃易爆场所）
+	 */
+	private String buildingTypeParentName;
+	
+	/**
 	 * 构筑物类型 
 	 */
 	private String buildingType;
@@ -316,6 +326,22 @@ public class HcaBuildingsBo extends CommonBaseBo {
 
 	public void setPressurePipeline(Integer pressurePipeline) {
 		this.pressurePipeline = pressurePipeline;
+	}
+
+	public String getBuildingTypeParent() {
+		return buildingTypeParent;
+	}
+
+	public void setBuildingTypeParent(String buildingTypeParent) {
+		this.buildingTypeParent = buildingTypeParent;
+	}
+
+	public String getBuildingTypeParentName() {
+		return buildingTypeParentName;
+	}
+
+	public void setBuildingTypeParentName(String buildingTypeParentName) {
+		this.buildingTypeParentName = buildingTypeParentName;
 	}
 	
 }

@@ -5,6 +5,11 @@ var pageConfig = {
     detailPath: '/jdbc/commonData/hcahighimpactarea/getPage.do',
     savePath: '/jdbc/commonData/hcahighimpactarea/save.do',
     updatePath: '/jdbc/commonData/hcahighimpactarea/update.do',
+    importConfig: {
+    	'functionName': "高后果区识别信息",
+        'tableName': "hca_high_impact_area",
+        'exportUrl': "/hcahighimpactarea/exportToExcelAction.do",
+    },
     searchFields: [
         //'pipelineOid',
         'highImpactAreaCode',
@@ -123,7 +128,9 @@ var pageConfig = {
     ],
     methods:{
         locate: function(item){
-            //top.showmap2d();
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             top.jasMap.flashGraphic(item.oid, "hca_high_impact_area",{
                 deep:2,
                 fieldName: 'OID'

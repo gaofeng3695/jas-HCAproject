@@ -12,6 +12,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.jasgroup.jasframework.domain.service.SysDomainService;
+import cn.jasgroup.jasframework.domain.service.bo.SysDomainBo;
+import cn.jasgroup.jasframework.security.service.bo.UnitBo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +26,7 @@ import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.excel.util.ExcelExportUtil;
 import cn.jasgroup.jasframework.utils.DateTimeUtil;
+import cn.jasgroup.jasframework.domain.utils.DomainUtil;
 
 /**
  * @description 建构筑物
@@ -37,7 +42,8 @@ public class HcaBuildingsController extends BaseController {
 
 	@Autowired
 	private CommonDataJdbcService commonDataJdbcService;
-
+    @Autowired
+    private SysDomainService sysDomainService;
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
 	 * <p> 张毅 </p>	

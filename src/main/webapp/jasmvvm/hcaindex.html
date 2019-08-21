@@ -12,14 +12,21 @@
 	<link rel="stylesheet" href="../jasframework/common/css/jasframework-layout.css" />
 	<link rel="stylesheet" href="../jasframework/common/lib/easyui/themes/default/easyui.css" />
 	<link rel="stylesheet" href="../jasframework/common/lib/easyui/themes/icon.css" />
-	<!-- <link rel="stylesheet" href="../jasframework/common/css/common.css" /> -->
-	<link rel="stylesheet" href="../jasframework/common/css/main.css" type="text/css" />
+	<link rel="stylesheet" href="../jasframework/common/css/common.css" />
+	<!-- <link rel="stylesheet" href="../jasframework/common/css/main.css" type="text/css" /> -->
 
 	<!-- 老框架的样式依赖END -->
 	<link rel="stylesheet" href="./lib/element-ui/v2.4.1/theme-chalk/index.min.css">
 	<link rel="stylesheet" href="./lib/font-awesome-4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="./src/css/main.css">
 	<link rel="stylesheet" href="./src/css/index.css">
+	
+	<style>
+	/* 解决vue框架下弹出easyui-panel样式bug*/
+	.window-maskDiv{
+		height: 0 !important
+	}
+	</style>
 </head>
 
 <body>

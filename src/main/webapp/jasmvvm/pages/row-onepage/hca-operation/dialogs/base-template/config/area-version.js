@@ -52,18 +52,18 @@ var pageConfig = {
             name: '评价管线',
             optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
             isRequired: true,
-            disabled: true,
+//            disabled: true,
         },
         pipelineName: {
             name: '评价管线',
         },
         versionName: {
-            name: '地区等级评价名称',
+            name: '评价名称',
             type: 'input',
             isRequired: true
         },
         versionCode: {
-            name: '地区等级评价编号',
+            name: '评价编号',
             type: 'input',
             isRequired: true
         },
@@ -117,23 +117,21 @@ var pageConfig = {
             })
         },
         enableUse: function(row) {
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             var that = this;
-            that.jasMap.layerVisibleSwitch('hca_area',false);
-            that.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
+            var layerId = "";
             //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
             if(that.forBusiness=="1"){
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_high_impact_area',true);
-                }, 1000);
+            	layerId = "hca_high_impact_area";
             }else{
-                setTimeout(function(){
-                    that.jasMap.layerVisibleSwitch('hca_area',true);
-                    that.jasMap.flashGraphic(row.oid, 'hca_area', {
-                    	deep: 2,
-                    	fieldName: 'VERSION_OID'
-                    });
-                }, 1000);
+            	layerId = "hca_area";
             }
+            that.jasMap.updateLayer(layerId, {
+            	show: true,
+            	where: "VERSION_OID = '" + row.oid +"'"
+            });
         },
         previewFile : function(){
             window.jasTools.dialog.show({

@@ -5,6 +5,11 @@ var pageConfig = {
     detailPath: '/jdbc/commonData/hcaarea/getPage.do',
     savePath: '/jdbc/commonData/hcaarea/save.do',
     updatePath: '/jdbc/commonData/hcaarea/update.do',
+    importConfig: {
+    	'functionName': "地区等级划分信息",
+        'tableName': "hca_area",
+        'exportUrl': "/hcaarea/exportToExcelAction.do",
+    },
     searchFields: [
        // 'pipelineOid',
         'areaCode',
@@ -132,8 +137,10 @@ var pageConfig = {
     ],
     methods:{
         locateArea: function(item){
-            //top.showmap2d();
-            top.jasMap.flashGraphic(item.oid, "pd_arearank",{
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
+            top.jasMap.flashGraphic(item.oid, "hca_area",{
                 deep:2,
                 fieldName: 'OID'
             });

@@ -376,6 +376,8 @@ window.app = new Vue({
 						that.initJasMap();
 					}, 300);
 				}
+			}else{
+				this.panelShowed=false;
 			}
 		},
 		initJasMap: function (fn) {
@@ -486,11 +488,13 @@ window.app = new Vue({
 			var that=this;
 			if (!that.$refs.resizer.panelShowed) {
 				that.$refs.resizer.panelShowed = true;
+				this.panelShowed = true;
 				if (!that.isMapInited) {
 					that.isMapInited = true;
 					that.initJasMap();
 				}
 			}else{
+				this.panelShowed = false;
 				that.$refs.resizer.panelShowed = false;	
 			}
 		}

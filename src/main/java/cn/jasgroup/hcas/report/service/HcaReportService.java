@@ -146,8 +146,9 @@ public class HcaReportService extends CommonDataJdbcService {
 			if (!outFile.exists()) {
 				outFile.mkdirs();
 			}
-			outFileName = outPath + "/" + System.currentTimeMillis() + ".docx";
-			out = new FileOutputStream(outFileName);
+			outFileName = String.valueOf(System.currentTimeMillis());
+			String outFilePathName  = outPath + "/" + outFileName  + ".docx";
+			out = new FileOutputStream(outFilePathName);
 			template.write(out);
 		} catch (IOException e) {
 			e.printStackTrace();

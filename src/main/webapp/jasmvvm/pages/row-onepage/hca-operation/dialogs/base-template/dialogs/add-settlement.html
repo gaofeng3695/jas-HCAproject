@@ -43,26 +43,26 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-			<el-row>
-				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
-					<el-form-item label="类别" prop="buildingTypeParent">
-						<el-select v-model="tableFormData.buildingTypeParent" filterable clearable placeholder="请选择建(构)筑物类别" size="small" @change="parentDomainChange">
-							<el-option v-for="item in domain.buildingTypeParent" :key="item.key" :label="item.value" :value="item.key"> </el-option>
-						</el-select>
-						<!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
+            <el-row>
+                <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
+                    <el-form-item label="类别" prop="buildingTypeParent">
+                        <el-select v-model="tableFormData.buildingTypeParent" filterable clearable placeholder="请选择建(构)筑物类别" size="small" @change="parentDomainChange">
+                            <el-option v-for="item in domain.buildingTypeParent" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+                        </el-select>
+                        <!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
 
-					</el-form-item>
-				</el-col>
-			</el-row>
+                    </el-form-item>
+                </el-col>
+            </el-row>
 			<el-row>
 				<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6">
 					<el-form-item label="类型" prop="buildingType">
 						<el-select v-model="tableFormData.buildingType" filterable clearable placeholder="请选择建(构)筑物类型" size="small" >
 							<el-option v-for="item in domain.buildingType" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 						</el-select>
-						<!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
+                        <!--<el-cascader :options="options" :show-all-levels="false" filterable></el-cascader>-->
 
-					</el-form-item>
+                    </el-form-item>
 				</el-col>
 			</el-row>
 			<!--				<el-row>
@@ -188,47 +188,47 @@
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
-					/*		startMileage: [{
-					 //required: true,
-					 message: '请输入起始里程',
-					 trigger: 'blur'
-					 }],
-					 endMileage: [{
-					 //required: true,
-					 message: '请输入终止里程',
-					 trigger: 'blur'
-					 }],
-					 horizontalDistance: [{
-					 //required: true,
-					 message: '请输入水平距离',
-					 trigger: 'blur'
-					 }],
-					 verticalDistance: [{
-					 //required: true,
-					 message: '请输入垂直距离',
-					 trigger: 'blur'
-					 }],
-					 pointx: [{
-					 //required: true,
-					 message: '请输入起始坐标x',
-					 trigger: 'blur'
-					 }],
-					 pointy: [{
-					 //required: true,
-					 message: '请输入起始坐标y',
-					 trigger: 'blur'
-					 }]*/
+                    /*		startMileage: [{
+                                //required: true,
+                                message: '请输入起始里程',
+                                trigger: 'blur'
+                            }],
+                            endMileage: [{
+                                //required: true,
+                                message: '请输入终止里程',
+                                trigger: 'blur'
+                            }],
+                            horizontalDistance: [{
+                                //required: true,
+                                message: '请输入水平距离',
+                                trigger: 'blur'
+                            }],
+                            verticalDistance: [{
+                                //required: true,
+                                message: '请输入垂直距离',
+                                trigger: 'blur'
+                            }],
+                    pointx: [{
+                        //required: true,
+                        message: '请输入起始坐标x',
+                        trigger: 'blur'
+                    }],
+                    pointy: [{
+                        //required: true,
+                        message: '请输入起始坐标y',
+                        trigger: 'blur'
+                    }]*/
                 },
                 tableFormData: {
                     'buildingCode': '',
                     'buildingType': '',
                     'buildingTypeParent': '',
-					/*	'startMileage':'',
-					 'endMileage':'',
-					 'horizontalDistance':'',
-					 'verticalDistance':'',
-					 'pointx':'',
-					 'pointy':'',*/
+                    /*	'startMileage':'',
+                        'endMileage':'',
+                        'horizontalDistance':'',
+                        'verticalDistance':'',
+                    'pointx':'',
+                    'pointy':'',*/
                     'buildingDistribution':'',
                     'households':'',
                     'population':'',

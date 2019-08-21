@@ -173,7 +173,6 @@ var vm = new Vue({
             total: 0,
             showActive: -1,
             filterText:'',
-			isHca:false,
             headStyle: {
 				'background': 'transparent',
 				'color': '#F1F2EA'
@@ -193,11 +192,6 @@ var vm = new Vue({
 		this.forBusiness = getParamter('forBusiness');
         this.pipelineOid = getParamter('pipelineOid');
 		this.requestVersionList(0,"");
-		if(this.forBusiness=="1"){
-		    this.isHca=false;
-		}else{
-		    this.isHca=true;
-		}
 	},
     mounted: function () {
     },
@@ -248,13 +242,13 @@ var vm = new Vue({
 				layerId = 'pd_zonerankcell';
                 top.jasMap.layerVisibleSwitch('pd_arearank',false);
 			}
-            //top.jasMap.layerVisibleSwitch(layerId,true);
             top.jasMap.updateLayer('hca_area',{
                 "show":true,
                 "where":"version_oid like'" + item.oid + "'"
             });
 			parent.app.localAreaVersionOid = item.oid;
-			//top.showAreaDialogRight(this.forBusiness,title,item.oid);
+            window.parent.closeDlg("areaVersionSelectIframe");
+            //top.showAreaDialogRight(this.forBusiness,title,item.oid);
 		},
 		handleSizeChange: function (val) {
 			this.pageSize = val;
@@ -266,6 +260,5 @@ var vm = new Vue({
 		},
 	},
 });
-
 </script>
 </html>

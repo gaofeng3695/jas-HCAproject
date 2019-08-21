@@ -5,8 +5,6 @@ import javax.persistence.Column;
 import cn.jasgroup.framework.spatial.annotation.Surface;
 import cn.jasgroup.framework.spatial.entity.ArcGisSpatialObject;
 import cn.jasgroup.jasframework.base.annotation.CommonDeleteConfig;
-import cn.jasgroup.jasframework.base.annotation.CommonSaveConfig;
-import cn.jasgroup.jasframework.base.annotation.CommonUpdateConfig;
 import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
 
 /**
@@ -17,8 +15,6 @@ import cn.jasgroup.jasframework.base.annotation.JdbcEntity;
  * @since JDK 1.80
  */
 
-@CommonSaveConfig(scene="/hcahighimpactarea/save")
-@CommonUpdateConfig(scene="/hcahighimpactarea/update")
 @CommonDeleteConfig(scene="/hcahighimpactarea/delete")
 @Surface(geometryColumnName = "shape")
 @JdbcEntity(name="hca_high_impact_area")

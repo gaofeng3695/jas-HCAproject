@@ -1,10 +1,15 @@
 var pageConfig = {
-    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position'],
+    privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcapipeline/getPage.do",
     deletePath: '/jdbc/commonData/hcapipeline/delete.do',
     detailPath: '/jdbc/commonData/hcapipeline/getPage.do',
     savePath: '/jdbc/commonData/hcapipeline/save.do',
     updatePath: '/jdbc/commonData/hcapipeline/update.do',
+    importConfig: {
+    	'functionName': "管线信息",
+        'tableName': "hca_pipeline",
+        'exportUrl': "/hcapipeline/exportToExcelAction.do",
+    },
     searchFields: [
         'pipelineName',
         'pipelineCode'
@@ -65,7 +70,7 @@ var pageConfig = {
             isRequired: true
         },
         startMileage: {
-            name: '起始里程',
+            name: '起始里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -73,7 +78,7 @@ var pageConfig = {
             isRequired: true
         },
         endMileage: {
-            name: '终止里程',
+            name: '终止里程（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -81,7 +86,7 @@ var pageConfig = {
             isRequired: true
         },
         pipelineLength: {
-            name: '管道长度',
+            name: '管道长度（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -91,9 +96,10 @@ var pageConfig = {
         outsideDiameter: {
             name: '管道外管径(mm)',
             type: 'number',
-            max:999999999999999,
+            max:9999999,
             min: 0,
-            precision:0
+            precision:0,
+            isRequired: true
         },
         pressure: {
             name: '管线稳态运行时允许的最大压力(mpa)',
@@ -101,6 +107,7 @@ var pageConfig = {
             max:999999.999,
             min: 0,
             precision:3,
+            isRequired: true
         },
         remarks: {
             name: "备注",
@@ -109,11 +116,11 @@ var pageConfig = {
     },
     btncolwidth:320,
     rowBtns:[
-        {
+        /*{
             name: '导入',
             icon: 'fa fa-mail-forward',
             method: 'importFile'
-        },
+        },*/
         {
             name:'定位',
             icon: 'fa fa-info-circle pointer',
@@ -160,6 +167,9 @@ var pageConfig = {
             })
         },
         locatePipeline: function(item){
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             top.jasMap.flashGraphic(item.oid, 'hca_pipeline', {
                 deep: 2,
                 fieldName: 'OID'

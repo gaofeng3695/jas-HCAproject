@@ -5,12 +5,19 @@ var pageConfig = {
     detailPath: '/jdbc/commonData/hcaelementunit/getPage.do',
     //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
+    importConfig: {
+    	'functionName': "建构筑物",
+        'tableName': "hca_buildings",
+        'exportUrl': "/hcabuildings/exportToExcelAction.do",
+    },
     searchFields: [
         'buildingCode',
+        'buildingTypeParent',
         'buildingType'
     ],
     tableFields: [
         'buildingCode',
+        'buildingTypeParentName',
         'buildingTypeName',
         'startMileage',
         'endMileage',
@@ -27,6 +34,7 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'buildingCode',
+            'buildingTypeParent',
             'buildingType',
             'startMileage',
             'endMileage',
@@ -48,6 +56,7 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'buildingCode',
+            'buildingTypeParentName',
             'buildingTypeName',
             'startMileage',
             'endMileage',
@@ -71,14 +80,27 @@ var pageConfig = {
             type: 'input',
             isRequired: true
         },
+        buildingTypeParentName: {
+            name: '建(构)筑物类别'
+        },
+        buildingTypeParent: {
+            name: '建(构)筑物类别',
+            type: 'select',
+            domainName: 'building_type_parent_domain',
+            isRequired: true,
+            childSelect: ['buildingType'],
+            childUrl: ['/jasframework/sysdoman/getChildDoman.do?domainName=building_type_domain&parentCodeId='],
+        },
         buildingTypeName: {
             name: '建(构)筑物类型'
         },
         buildingType: {
             name: '建(构)筑物类型',
             type: 'select',
-            domainName: 'building_type_domain',
-            isRequired: true
+            isRequired: true,
+            requestParams: {
+            	parentCodeId: true
+            }
         },
         startMileage: {
             name: '起始里程（km）',
@@ -97,14 +119,14 @@ var pageConfig = {
             precision:3
         },
         horizontalDistance: {
-            name: '水平距离',
+            name: '水平距离（m）',
             type: 'number',
             max:999999.999,
             min: 0,
             precision:3
         },
         verticalDistance: {
-            name: '垂直距离',
+            name: '垂直距离（m）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -168,7 +190,9 @@ var pageConfig = {
     ],
     methods:{
         locateSettlement: function(item){
-            //top.showmap2d();
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
                 deep:2,
                 fieldName: 'OID'
