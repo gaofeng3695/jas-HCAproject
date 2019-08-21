@@ -14,7 +14,7 @@
                 try {
                     if (typeof (eval(key)) == "function") {
                         if (!window[key](obj[key], obj)) {
-                            falg = false;;
+                            falg = false;
                             return;
                         }
                     }
@@ -146,7 +146,7 @@ function fieldLength(param, obj) {
             }
         } else if (obj.fieldType == "timestamp" || obj.fieldType == "time") {
             if (param.length > 0) {
-                var reg = /^\d{1,9}$/
+                var reg = /^\d{1,9}$/;
                 if (!reg.test(param.trim())) {
                     window.top.Vue.prototype.$message({
                         message: '格式应该为:n',
@@ -179,7 +179,7 @@ function fieldLength(param, obj) {
             }
         } else if (obj.fieldType == "float" || obj.fieldType == "double" || obj.fieldType == "decimal") {
             if (param.length > 0) {
-                var reg = /^\d{1,3}[,，]+\d{1,3}$/
+                var reg = /^\d{1,3}[,，]+\d{1,3}$/;
                 if (!reg.test(param.trim())) {
                     window.top.Vue.prototype.$message({
                         message: '格式应该为:n,m。n表示整数，m表示小数位',
@@ -192,7 +192,7 @@ function fieldLength(param, obj) {
             }
         } else if (obj.fieldType == "timestamp" || obj.fieldType == "time" || obj.fieldType == "datetime") {
             if (param.length > 0) {
-                var reg = /^\d{1,9}$/
+                var reg = /^\d{1,9}$/;
                 if (!reg.test(param.trim())) {
                     window.top.Vue.prototype.$message({
                         message: '格式应该为:n',

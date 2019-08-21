@@ -111,7 +111,7 @@ Vue.component('table-cascader', {
                             if (item.value == id) {
                                 item.child = child;
                                 that.currentSelectTableName = item.label;
-                                return;
+                                
                             }
                         });
                     }

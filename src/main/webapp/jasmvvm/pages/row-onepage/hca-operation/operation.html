@@ -394,13 +394,13 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				var hospitalId = "pd_hospital";
 				var governmentId = "pd_government";
 				//this.jasMap.layerVisibleSwitch('pd_settlement', true);
-				this.jasMap.layerVisibleSwitch(gasStationId,true)
-				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
-				this.jasMap.layerVisibleSwitch(hospitalId,true)
-				this.jasMap.layerVisibleSwitch(governmentId,true)
-				this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
-				this.jasMap.layerVisibleSwitch('pd_arearank',false)
-				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
+				this.jasMap.layerVisibleSwitch(gasStationId,true);
+				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true);
+				this.jasMap.layerVisibleSwitch(hospitalId,true);
+				this.jasMap.layerVisibleSwitch(governmentId,true);
+				this.jasMap.layerVisibleSwitch('pd_arearankcell',false);
+				this.jasMap.layerVisibleSwitch('pd_arearank',false);
+				this.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
 				var radius=app.bufferValue;
 				var that = this;
 				this.jasMap.commonUtil.simpleAjaxLoader({
@@ -490,10 +490,10 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 				this.jasMap.layerVisibleSwitch('pd_arearankcell', false);
 				//this.jasMap.layerVisibleSwitch('pd_settlement', true);
 				this.jasMap.layerVisibleSwitch('hca_buildings', true);
-				this.jasMap.layerVisibleSwitch(gasStationId,true)
-				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
-				this.jasMap.layerVisibleSwitch(hospitalId,true)
-				this.jasMap.layerVisibleSwitch(governmentId,true)
+				this.jasMap.layerVisibleSwitch(gasStationId,true);
+				this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true);
+				this.jasMap.layerVisibleSwitch(hospitalId,true);
+				this.jasMap.layerVisibleSwitch(governmentId,true);
 				var that = this;
 				top.jasTools.selfDialog.close();
 				if(!this.isManage){
@@ -568,7 +568,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 								text: '合并要素单元......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
-							})
+							});
 							// app.loaddingLayer('合并要素单元......');
 							common.simpleAjaxLoader({
 								url: jasTools.base.rootPath + "/zone/settlement/random.do",
@@ -1036,7 +1036,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
 					text: info,
 					spinner: 'el-icon-loading',
 					background: 'rgba(0, 0, 0, 0.7)'
-				}
+				};
 				that.$loading(options) 
 			},
 			toggleBtn: function(){
@@ -1077,7 +1077,7 @@ var pipelineOid = "fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5";
             saveVersion: function(forBusiness, callback){
             	var that = this;
     			var title ="新增高后果区历史版信息";
-    			console.log(forBusiness)
+    			console.log(forBusiness);
     			var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hcaarea-version/add.html?forBusiness=' + forBusiness;
     			if(forBusiness=="0"){
     				title='新增地区等级历史版本信息';

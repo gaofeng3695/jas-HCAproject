@@ -8,6 +8,7 @@ import cn.jasgroup.gis.geometry.Geometry;
 import cn.jasgroup.gis.geometry.Polygon;
 import cn.jasgroup.gis.geometry.Polyline;
 import cn.jasgroup.gis.geometryservice.IGeometryService;
+import cn.jasgroup.gis.util.FeatureCollectionUtil;
 import cn.jasgroup.gis.util.GeometryUtil;
 import cn.jasgroup.gis.util.LoggerUtil;
 import cn.jasgroup.hcas.analysis.HcaAnalysisContext;
@@ -54,8 +55,12 @@ public class PipelineService {
         param.setWhere(HcaAnalysisContext.TableKeyName +"='"+ key + "'");
         param.setOutFields("*");
         FeatureCollection collection = geodataAccessService.query(param);
-        if(collection.getFeatures().size() > 0){
-            return  (Feature)collection.getFeatures().get(0);
+        if(collection == null){
+            throw new RuntimeException("没有查询到管线，" + HcaAnalysisContext.TableKeyName + "=" + key );
+        }
+        Feature[] features = FeatureCollectionUtil.toLowerCaseFeature(collection);
+        if(features.length > 0){
+            return features[0];
         }
         return null;
     }

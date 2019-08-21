@@ -2160,7 +2160,7 @@ var JasMap = null ,M = null;
                     }
                 };
                 deleteListener = _this.addLayerClickEventListener(targetLayer.get('id'),onClicked);
-                return;
+                
             };
             var initDragZoomState = function(outFlag){
                 var dragZoomInteracting = null;
@@ -3889,7 +3889,7 @@ var JasMap = null ,M = null;
                 if( typeof(v) ==="string"){
                     return "'" + v + "'";
                 } else if( !isNaN(v)){
-                    return new Number(v);
+                    return Number(v);
                 }
                 return v;
             };

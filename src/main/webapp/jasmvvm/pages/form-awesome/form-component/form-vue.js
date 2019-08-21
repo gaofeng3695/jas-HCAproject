@@ -899,7 +899,7 @@ Vue.component('search-tool', {
                     item.options.forEach(function (child) {
                         if (child.id == 'query') {
                             child.click();
-                            return;
+                            
                         }
                     });
                 }
@@ -1011,7 +1011,7 @@ Vue.component('search-tool-self', {
                     item.options.forEach(function (child) {
                         if (child.id == 'query') {
                             child.click();
-                            return;
+                            
                         }
                     });
                 }

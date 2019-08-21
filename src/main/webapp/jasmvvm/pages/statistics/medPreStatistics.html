@@ -145,8 +145,8 @@
         	 var index=new Date().getMonth()+1;
         	 result.monthlyGowth=result.monthlyGowth.slice(0,index);
         	 result.monthlyTotal=result.monthlyTotal.slice(0,index);
-         };
-          that.renderpipeLengthByMonth(result);//将获取到的数据 进行解析处理
+         }
+            that.renderpipeLengthByMonth(result);//将获取到的数据 进行解析处理
         });
       },
       renderpipeLengthByMonth: function (data) {
@@ -233,7 +233,7 @@
       requestPipeLengthByUnit: function (projectOid, date) {
         var that = this;
         that.pipelengthByUnit.projectOid = projectOid;
-        var month = (new Date(date).getMonth() + 1) > 9 ? (new Date(date).getMonth() + 1) : "0" + (new Date(date).getMonth() + 1)
+        var month = (new Date(date).getMonth() + 1) > 9 ? (new Date(date).getMonth() + 1) : "0" + (new Date(date).getMonth() + 1);
         that.pipelengthByUnit.date = new Date(date).getFullYear() + "-" + month;
          var url = jasTools.base.rootPath + "/daq/mesolow/getSingleMonthlyGroth.do";
          jasTools.ajax.post(url, {

@@ -103,6 +103,18 @@ define([
             e.graphic.setSymbol(null);
             this._holdHighlightSymbol(e.graphic);
         },
+        onGraphicAdd:function(e){
+            this.inherited(arguments);
+            if(this._domain  ){
+                for(var field  in this._domain  ){
+                    var domainName = this._domain[field];
+                    var code = e.attributes[field];
+                    var key = domainName + code ;
+                    var name = this._mapApi.domainMap[key];
+                    e.attributes[field.toUpperCase() + "_NAME"] = name;
+                }
+            }
+        },
         onUpdateEnd :function(e){
             this.inherited(arguments);
             this._flashFilterFunc && this._flashFilterFunc(e);
@@ -177,6 +189,7 @@ define([
         },
         _doFlash : null,
         _doShine : null,
+        _domain : null,
         _findGraphicByObjectIds : function(ids,fieldName){
             var bigField = fieldName || "OBJECTID";
             var littleField = bigField.toLowerCase();

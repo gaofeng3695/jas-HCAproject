@@ -4,10 +4,7 @@ import cn.jasgroup.gis.data.Feature;
 import cn.jasgroup.gis.geometry.Point;
 import cn.jasgroup.gis.util.GeometryUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author kongchao
@@ -17,17 +14,14 @@ import java.util.Map;
  * @since JDK 1.80
  */
 public class BuildingLocationMap {
-    /**
-     *
-     */
-    private Map<String,Point[]> map = new HashMap();
 
+    private Map<String,Feature[]> map = new HashMap<>();
     /**
      *
      * @param oid
      * @return
      */
-    public Point[] get(String oid){
+    public Feature[] get(String oid){
         if(contains(oid))
             return map.get(oid);
         return null;
@@ -38,10 +32,30 @@ public class BuildingLocationMap {
      * @param oid
      * @param points
      */
-    public void put(String oid,Point[] points){
+    public void put(String oid,Feature[] points){
         map.put(oid,points);
     }
 
+    /**
+     *
+     * @param to
+     * @param from
+     */
+    public void merge(String from,String to){
+        if(!contains(from)){
+            return;
+        }
+        if(!contains(to)){
+            put(to,new Feature[0]);
+        }
+        Feature[] features = map.get(from);
+        Feature[] features0 = map.get(to);
+        int size = features.length + features0 .length ;
+        Feature[] features1 = new Feature[size];
+        System.arraycopy(features0, 0, features1, 0, features0.length);
+        System.arraycopy(features, 0, features1, features0.length, features.length);
+        put(to,features1);
+    }
     /**
      *
      *
@@ -58,18 +72,22 @@ public class BuildingLocationMap {
      * @param buildings
      * @return
      */
-    public int putFeatures(String oid ,Feature[] buildings){
-        List<Point> points = new ArrayList<>();
-        for(int i = 0 ; i < buildings.length ; i++){
-            Point p = (Point) GeometryUtil.toGeometry(buildings[i].getGeometry());
-            if(p != null){
-                points.add(p);
-            }
+    public void putFeatures(String oid ,Feature[] buildings){
+        put(oid,buildings);
+    }
+
+    public int size(String oid){
+        if(map.containsKey(oid)){
+            return get(oid).length;
         }
-        if(points.size() > 0){
-            Point[] arr = points.toArray(new Point[0]);
-            put(oid ,arr);
-        }
-        return points.size();
+        return -1 ;
+    }
+
+    public Map<String, Feature[]> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Feature[]> map) {
+        this.map = map;
     }
 }

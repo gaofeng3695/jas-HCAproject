@@ -713,7 +713,7 @@
 					};
 				that.stationStatistics.setOption(option, true);
 				that.stationStatistics.on('click',function(obj){
-					  console.log(obj)
+					  console.log(obj);
 				    jasTools.selfDialog.show({
                         title: '站场列表',
                         src: './dialogs/detailStationList.html',
@@ -768,7 +768,7 @@
 				//alert(this.companyVal)
 			},
 			handleNodeClick:function(obj){
-				console.log(obj)
+				console.log(obj);
 			    if(obj.label == '长呼线'){
                    
                     jasMap.flashGraphic(1,"demo_pd_pipeline",{"fieldName":"gid"});
@@ -781,7 +781,7 @@
                         height: '200px',
                         // width: '800px',
                         width: '48%',
-                    })
+                    });
                     jasMap.flashGraphic([2,4],  'demo_pd_zhanchang' ,{
                         fieldName:'gid'
                     });
@@ -847,7 +847,7 @@
                  })
              },          
              openWhaterDetail: function(dataType){
-            	 console.log(1)
+            	 console.log(1);
                  jasTools.selfDialog.show({
                      title: '详情列表',
                      src: './dialogs/detailPageWhater.html',

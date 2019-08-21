@@ -3431,7 +3431,7 @@ var M = JasMap = null;
                     if (l) {
                         _this.map.addLayer(l);
                     }
-                    if (l && layerConfig.domain && _this.domainMap) {
+                    if(  layerConfig.domain  ){
                         l._domain = layerConfig.domain;
                     }
                     if(l && layerConfig.listener){

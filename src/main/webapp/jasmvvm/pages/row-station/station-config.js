@@ -2383,7 +2383,7 @@ var stationConfig = {
           value: "是"
         }],
         formatter: function (a, b, value, c) {
-          console.log("哈哈哈哈哈"+value)
+          console.log("哈哈哈哈哈"+value);
           if (value == 1) return '是';
           if (value == 0) return '否';
           return '';

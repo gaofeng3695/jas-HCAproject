@@ -667,7 +667,7 @@
           } else {
             return false;
           }
-        });
+      })
       },
       submitToServer: function () {
         var that = this;
@@ -686,7 +686,7 @@
           that.fileListStatus.forEach(function (item) {
             if (!item.oid) {
               isNotFile = false;
-              return;
+
             }
           });
           if (isNotFile) {
@@ -766,7 +766,7 @@
             type: 'info',
             message: '已取消删除'
           });
-        });
+      })
       },
       handleToServer: function (file) {
         var that = this;
@@ -803,7 +803,7 @@
         });
       },
       uploadOnChange: function (file, fileList) {
-        console.log("——————————change——————————")
+        console.log("——————————change——————————");
         console.log(file);
         if (file.status == 'ready') {
           this.pass = null;
@@ -824,7 +824,7 @@
         var options = {
           "url": jasTools.base.rootPath + "/attachment/download.do?oid=" + file.oid + "&token=" + localStorage.getItem("token"),
           "method": 'post'
-        }
+        };
         var config = $.extend(true, {
           method: 'get'
         }, options);
@@ -884,7 +884,7 @@
                 that.$set(that.formData, item.childField, "");
               }
             });
-            return;
+
           });
         }
       },
@@ -900,7 +900,7 @@
                     type: 'warning'
                   });
                 }
-                return;
+
               }
             })
           });
@@ -999,7 +999,7 @@
             type: 'info',
             message: '已取消删除'
           });
-        });
+      })
       },
       delRowToServer: function (row, index) {
         var that = this;
@@ -1042,7 +1042,7 @@
               type: 'info',
               message: '目前存在正在增加或者编辑的记录，请先去保存'
             });
-            return
+
           }
         });
         if (!isExist) {
@@ -1076,8 +1076,8 @@
               falg = that.verify1(that.tableData1[0][key], item);
             }
             if (!falg) {
-              isValid = false
-              return;
+              isValid = false;
+
             }
           });
         }
@@ -1106,7 +1106,7 @@
                   message: ruleItem.tip
                 });
                 valiError = false;
-                return;
+
               }
             }
           });

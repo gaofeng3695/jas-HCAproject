@@ -12,6 +12,10 @@ import cn.jasgroup.gis.util.LinearReferenceUtil;
  */
 public class HcaLinearParam {
 
+    private Double startMileage ;
+
+    private Double endMileage ;
+
     private String pipelineOid ;
 
     /**
@@ -38,7 +42,7 @@ public class HcaLinearParam {
     /**
      * 潜在影响区缓冲区几何对象
      */
-    private Polygon potentialInfluenceBuffer;
+    private Geometry potentialInfluenceBuffer;
     /**
      *
      */
@@ -73,14 +77,17 @@ public class HcaLinearParam {
         Geometry bufferArea = JtsUtil.buffer(linearReferenceUtil.getLinearPolyline().getPolyline(),buffer ,2);
         this.recognitionAreaBuffer = bufferArea;
     }
-    public Polygon getPotentialInfluenceBuffer() {
+    public Geometry getPotentialInfluenceBuffer() {
         return potentialInfluenceBuffer;
     }
 
-    public void setPotentialInfluenceBuffer(Polygon potentialInfluenceBuffer) {
+    public void setPotentialInfluenceBuffer(Geometry potentialInfluenceBuffer) {
         this.potentialInfluenceBuffer = potentialInfluenceBuffer;
     }
-
+    public void createPotentialInfluenceBuffer(double buffer) {
+        Geometry bufferArea = JtsUtil.buffer(linearReferenceUtil.getLinearPolyline().getPolyline(),buffer ,2);
+        this.potentialInfluenceBuffer = bufferArea;
+    }
     private void initLinearReference(){
         linearReferenceUtil = new LinearReferenceUtil(pipeline);
         linearReferenceUtil.resetMeasureByLocalLength();

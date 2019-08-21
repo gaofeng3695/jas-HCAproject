@@ -8574,7 +8574,7 @@ if (typeof PDFJS === 'undefined' || !PDFJS.compatibilityChecked) {
           return fn(msg);
         };
       }(console.warn);
-      return;
+
     }
   })();
   (function checkOnClickCompatibility() {
@@ -17769,8 +17769,7 @@ var _global_scope2 = _interopRequireDefault(_global_scope);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-;
-var OK_RESPONSE = 200;
+        var OK_RESPONSE = 200;
 var PARTIAL_CONTENT_RESPONSE = 206;
 function NetworkManager(url, args) {
   this.url = url;

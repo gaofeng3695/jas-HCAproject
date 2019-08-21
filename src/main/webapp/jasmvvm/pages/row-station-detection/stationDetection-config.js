@@ -494,4 +494,4 @@ var stationConfig = {
       });
     },
   }
-}
+};

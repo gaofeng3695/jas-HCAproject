@@ -117,7 +117,7 @@ Vue.component('jas-remote-select-form-item', {
                 title: '新增',
                 src: url,
                 cbForClose: function (form) {
-                    console.log(form)
+                    console.log(form);
                     // that.vlabel = form.ruleName;
                     if (form) {
                         that._value = form.oid;
@@ -329,7 +329,7 @@ Vue.component('jas-table-for-list', {
         }
     },
     created: function () {
-        var that = this
+        var that = this;
         var param = window.jasTools.base.getParamsInUrl(location.href);
         this.isApprove = param.isApprove;
         this._className = this.className || param.className;
@@ -363,7 +363,7 @@ Vue.component('jas-table-for-list', {
                     'bt_select': 'preview',
                     'bt_update': 'edit',
                     'bt_delete': 'deleteItem',
-                }
+                };
                 if (item.privilegeCode && fnMap[item.privilegeCode]) {
                     this[fnMap[item.privilegeCode]](row);
                 }
@@ -408,7 +408,7 @@ Vue.component('jas-table-for-list', {
                 return item[that.prop.oid];
             });
             if (oids.length === 0) {
-                return;
+                
             } else if (oids.length === 1) {
 
                 var src = jasTools.base.setParamsToUrl(this.detailUrl, {
@@ -567,7 +567,7 @@ Vue.component('jas-table-for-list', {
         },
         edit: function (row) {
             var that = this;
-            var url = jasTools.base.setParamsToUrl(this.addUrl, row)
+            var url = jasTools.base.setParamsToUrl(this.addUrl, row);
             top.jasTools.dialog.show({
                 width: this.dialogconfig.addWidth || '60%',
                 height: this.dialogconfig.addHeight || '80%',

@@ -137,7 +137,7 @@
 						} else {
 							item.children = null;
 						}
-					})
+					});
 					that.treeList = data;
 				});
 			},
@@ -156,7 +156,7 @@
 							} else {
 								item.children = undefined;
 							}
-						})
+						});
 						param.parentNode.children = data;
 						param.callback()
 					}, function () {

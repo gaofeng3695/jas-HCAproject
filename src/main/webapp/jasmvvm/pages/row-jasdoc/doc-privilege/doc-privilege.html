@@ -352,7 +352,7 @@
 							formatChildren(item.children);
 						}
 					})
-				}
+				};
 				var url = jasTools.base.rootPath + "/jasdoc/privilege/privilege/getUnitAndChildrenTree.do";
 				jasTools.ajax.postForm(url, {}, function (data) {
 					formatChildren(data);
@@ -509,7 +509,7 @@
 						}
 					});
 				};
-				getRoleArr(this.roleFolder)
+				getRoleArr(this.roleFolder);
 				// console.log(privilegeStr)
 				var url = jasTools.base.rootPath + "/jasdoc/privilege/privilege/saveRoleFolderPrivilege.do";
 				jasTools.ajax.postForm(url, {
@@ -544,7 +544,7 @@
 						}
 					});
 				};
-				getRoleArr(this.userFolder)
+				getRoleArr(this.userFolder);
 				// console.log(privilegeStr)
 				var url = jasTools.base.rootPath + "/jasdoc/privilege/privilege/saveUserFolderPrivilege.do";
 				jasTools.ajax.postForm(url, {

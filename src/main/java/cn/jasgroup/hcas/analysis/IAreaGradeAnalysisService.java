@@ -28,17 +28,17 @@ public interface IAreaGradeAnalysisService {
      * 划分识别单元
      * @param buildings
      * @param bo
-     * @return
+     * @return cellFeatures
      */
     Feature[] classifyAreaRankCellFeatures(Feature[] buildings ,HcaLinearParam bo);
 
     /**
      * 地区等级分类
-     * @param buildings
+     * @param cellFeatures
      * @param bo
      * @return
      */
-    Feature[] classifyAreaRankGradeFeatures(Feature[] buildings ,HcaLinearParam bo);
+    Feature[] classifyAreaRankGradeFeatures(Feature[] cellFeatures ,HcaLinearParam bo);
 
 
     /**

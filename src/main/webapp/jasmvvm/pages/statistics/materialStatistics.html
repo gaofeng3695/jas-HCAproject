@@ -307,7 +307,7 @@
       requestMaterialByDay: function (projectOids, date) {
         var that = this;
         that.materialByDay.projectOids = projectOids;
-        var month=(new Date(date).getMonth() + 1)>9?(new Date(date).getMonth() + 1):"0"+(new Date(date).getMonth() + 1)
+        var month=(new Date(date).getMonth() + 1)>9?(new Date(date).getMonth() + 1):"0"+(new Date(date).getMonth() + 1);
         that.materialByDay.date = new Date(date).getFullYear() + "-" + month;
         var url = jasTools.base.rootPath + "/daq/materialStatistics/getDailyStatistics.do";
         jasTools.ajax.post(url, {
@@ -348,7 +348,7 @@
               type: type,
               yAxisIndex: key == "grand_total" ? 1 : 0,
               data: z
-            }
+            };
             if (obj.type == "bar") {
               obj.stack = '总量';
               series.push(obj);	
@@ -644,11 +644,11 @@
           }],
           series: series,
           color: color
-        }
+        };
         that.materialByTendersChart.setOption(option, true);
       },
       bottomVal: function () {
-        var scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        var scrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         return scrollY
       }
     }

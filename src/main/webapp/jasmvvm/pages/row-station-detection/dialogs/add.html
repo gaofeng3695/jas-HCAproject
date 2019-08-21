@@ -88,7 +88,7 @@
 			this.updateUrl=stationConfig[this.pageCode].updateUrl;
 			this.detailUrl=stationConfig[this.pageCode].detailUrl;
 			this.fieldsConfig = stationConfig.fieldsConfig;
-			this.sonFormDefault=stationConfig[this.pageCode].sonFormDefault
+			this.sonFormDefault=stationConfig[this.pageCode].sonFormDefault;
 			this.fields = stationConfig.methods.formatFields(fields, stationConfig.fieldsConfig, this.pageCode);
 			this.subFields = stationConfig.methods.formatFields(subFields, stationConfig.fieldsConfig, this.pageCode);
 			this.form = stationConfig.methods.formatForm(fields,this.subListMap[this.pageCode]);
@@ -104,8 +104,8 @@
 				this.isEdit = true;
 				this.getDetailByObjectId();
 				this.$refs.upload.requestFile(this.oid);
-			};
-		},
+            }
+        },
 		methods: {
 			changevalue: function (msg) {
 				this.form.remarks = msg;

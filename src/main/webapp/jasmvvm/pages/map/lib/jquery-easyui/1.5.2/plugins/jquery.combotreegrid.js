@@ -51,8 +51,8 @@ _4.onClickRow.call(this,_e);
 _11(_2);
 _4.onCheckNode.call(this,_f,_10);
 }}));
-};
-function _11(_12){
+}
+    function _11(_12){
 var _13=$.data(_12,"combotreegrid");
 var _14=_13.options;
 var _15=_13.grid;
@@ -69,8 +69,8 @@ vv.push(row[_14.idField]);
 }
 vv=vv.concat(_14.unselectedValues);
 _16(_12,vv);
-};
-function _16(_17,_18){
+}
+    function _16(_17,_18){
 var _19=$.data(_17,"combotreegrid");
 var _1a=_19.options;
 var _1b=_19.grid;
@@ -130,12 +130,12 @@ $(_17).combo("setValues",vv);
 function _20(_21,a){
 var _22=$.easyui.getArrayItem(a,_1a.idField,_21);
 return _22?_1f(_22):undefined;
-};
-function _1f(row){
+}
+    function _1f(row){
 return row[_1a.textField||""]||row[_1a.treeField];
-};
-};
-function _23(_24,q){
+}
+}
+    function _23(_24,q){
 var _25=$.data(_24,"combotreegrid");
 var _26=_25.options;
 var _27=_25.grid;
@@ -182,11 +182,11 @@ _16(_24,vv);
 _25.remainText=false;
 }
 }
-};
-function _29(_2a){
+}
+    function _29(_2a){
 _11(_2a);
-};
-$.fn.combotreegrid=function(_2b,_2c){
+}
+    $.fn.combotreegrid=function(_2b,_2c){
 if(typeof _2b=="string"){
 var _2d=$.fn.combotreegrid.methods[_2b];
 if(_2d){

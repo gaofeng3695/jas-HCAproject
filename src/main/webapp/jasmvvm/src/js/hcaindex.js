@@ -24,7 +24,7 @@ var showInfo = function (e) {
 		var value=obj[key]||"";
 		name += "<div  class='map_item mapSpan'><span style='color:#666'> " + locationMap[layerId].fields[key] + "：" + value + "</span></div>";
 	}
-	name += "<div class='map_more' onclick='showWeldInfo(`" + src + "`,`" + title + "`)'>更多</div>"
+	name += "<div class='map_more' onclick='showWeldInfo(`" + src + "`,`" + title + "`)'>更多</div>";
 	app.jasMap.showInfoWindow(coor[0], coor[1], name, title);
 };
 
@@ -499,4 +499,4 @@ window.app = new Vue({
 			}
 		}
 	},
-})
+});

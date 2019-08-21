@@ -132,11 +132,11 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
   }
   function tokenComment(depth) {
     return function(stream, state) {
-      var m = stream.match(/^.*?(\/\*|\*\/)/)
-      if (!m) stream.skipToEnd()
-      else if (m[1] == "/*") state.tokenize = tokenComment(depth + 1)
-      else if (depth > 1) state.tokenize = tokenComment(depth - 1)
-      else state.tokenize = tokenBase
+      var m = stream.match(/^.*?(\/\*|\*\/)/);
+      if (!m) stream.skipToEnd();
+      else if (m[1] == "/*") state.tokenize = tokenComment(depth + 1);
+      else if (depth > 1) state.tokenize = tokenComment(depth - 1);
+      else state.tokenize = tokenBase;
       return "comment"
     }
   }
@@ -250,9 +250,8 @@ CodeMirror.defineMode("sql", function(config, parserConfig) {
       return "variable-2";
     }
     return null;
-  };
-
-  // short client keyword token
+  }
+    // short client keyword token
   function hookClient(stream) {
     // \N means NULL
     // ref: http://dev.mysql.com/doc/refman/5.5/en/null-values.html

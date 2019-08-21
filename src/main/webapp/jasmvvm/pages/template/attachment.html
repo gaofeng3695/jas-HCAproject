@@ -240,14 +240,14 @@
     },
     methods: {
       uploadOnProgress: function (e, file) { //开始上传
-        console.log(e.percent, file)
+        console.log(e.percent, file);
         this.progress = Math.floor(e.percent)
       },
       uploadOnChange: function (file) {
-        console.log("——————————change——————————")
+        console.log("——————————change——————————");
         // console.log(file)
         if (file.status == 'ready') {
-          console.log("ready")
+          console.log("ready");
           this.pass = null;
           this.progress = 0;
         } else if (file.status == 'fail') {
@@ -255,44 +255,44 @@
         }
       },
       uploadOnSuccess: function (e, file) { //上传附件
-        console.log("——————————success——————————")
+        console.log("——————————success——————————");
         this.pass = true;
-        this.$message.success("上传成功")
+        this.$message.success("上传成功");
         this.imagelist.push({
           url: file.url,
           name: '新增图片'
         })
       },
       uploadOnError: function (e, file) {
-        console.log("——————————error——————————")
-        console.log(e)
+        console.log("——————————error——————————");
+        console.log(e);
         this.pass = false;
       },
       handleFileEnlarge: function (_url) { //放大图片
-        console.log(_url)
+        console.log(_url);
         if (_url) {
           this.enlargeImage = _url;
           this.isEnlargeImage = !this.isEnlargeImage;
         }
       },
       handleFileName: function (file, i) { //修改名字
-        console.log(file, i)
+        console.log(file, i);
         let that = this;
         this.$prompt("请输入新文件名：", "提示：", {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         }).then(function(value){
-          console.log(value)
+          console.log(value);
           if (!value) {
             return false;
           }
           //可添加ajax
-          that.$message.success("操作成功")
+          that.$message.success("操作成功");
           that.imagelist[i].name = value
         }).catch(function() {})
       },
       handleFileRemove: function (file, i) { //删除图片
-        console.log(file, i)
+        console.log(file, i);
         if (!file.url) {
           return false;
         }
@@ -303,7 +303,7 @@
           type: 'warning'
         }).then(function() {
           //可添加ajax
-          this.$message.success("删除成功")
+          this.$message.success("删除成功");
           this.$message({
             type: 'success',
             message: '删除成功',

@@ -55,10 +55,10 @@
                   ).then(dataSource => {
                       viewer.dataSources.add(dataSource);
                       let entities = dataSource.entities.values;
-                  });
-              }
-          );
-          //点 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:canton_county_capital&outputFormat=application%2Fjson
+      })
+      }
+      )
+      //点 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:canton_county_capital&outputFormat=application%2Fjson
           //线 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:pd2_stationseries&outputFormat=application%2Fjson
           //面 /geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp:states&outputFormat=application%2Fjson
           //有问题面 /geoserver/project_anjian/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=project_anjian:canton_province_neimenggu&outputFormat=application%2Fjson
@@ -88,11 +88,11 @@
                       viewer.dataSources.add(dataSource);
                       let entities = dataSource.entities.values;
                       viewer.zoomTo(entities);
-                  });
-              }
-          );
+      })
+      }
+      )
 
-          //相机位置的获取和设置
+      //相机位置的获取和设置
           let test = document.querySelector('#test');
           let getCameraInfoButton = test.querySelector('button:nth-child(1)');
           let setCameraInfoButton = test.querySelector('button:nth-child(2)');
@@ -102,8 +102,8 @@
               console.info('获取相机位置:', cameraInfo);
               alert('相机信息已经打印在控制台,你可以移动视图换成其他相机位置,然后点恢复到获取位置测试.');
               setCameraInfoButton.removeAttribute('disabled');
-          });
-          setCameraInfoButton.addEventListener('click', () => {
+      })
+      setCameraInfoButton.addEventListener('click', () => {
               //显示指定相机位置
               console.info('显示指定相机位置:', cameraInfo);
               viewer.camera.setView({
@@ -120,8 +120,8 @@
                       roll: cameraInfo.orientation.roll                             // 倾斜, default value
                   }
               });
-          });
-      });
+      })
+      })
   </script>
 </head>
 <body>

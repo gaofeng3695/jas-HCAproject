@@ -636,7 +636,7 @@
 				var that = this;
 
 				var str = that.isAddPage ? "save" : "update";
-				var url = jasTools.base.rootPath + "/map/commonData/" + that.menuCode + "/" + str + ".do"
+				var url = jasTools.base.rootPath + "/map/commonData/" + that.menuCode + "/" + str + ".do";
 				/*属性里面是数组的进行转换成字符串*/
 				//console.log(that.formData);
 				var obj={};
@@ -791,7 +791,7 @@
 											type: 'warning'
 										});
 									}
-									return;
+
 								}
 							} else {
 								if (child.childField == item.id) {
@@ -801,7 +801,7 @@
 											type: 'warning'
 										});
 									}
-									return;
+
 								}
 							}
 						})
@@ -983,7 +983,7 @@
 					} else {
 						callback();
 					}
-					return
+
 				}
 			});
 		});

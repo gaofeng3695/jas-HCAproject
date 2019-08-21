@@ -376,7 +376,7 @@
             });
             return;
           }
-          var dataArr = []
+          var dataArr = [];
           data.data.typeName.forEach(function (item, index) {
             dataArr.push({
               value: data.data.count[index],
@@ -430,7 +430,7 @@
               value: data.data.count[index],
               name: item
             });
-          })
+          });
           that._renderWeldByTendersR(data.data.tendersNames, dataArr);
         });
       },
@@ -478,7 +478,7 @@
               value: data.data.count[index],
               name: item
             });
-          })
+          });
           that._renderWeldByUnitsR(data.data.tendersNames, dataArr);
         });
       },
