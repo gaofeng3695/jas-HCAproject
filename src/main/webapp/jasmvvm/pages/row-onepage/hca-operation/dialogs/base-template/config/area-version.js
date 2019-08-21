@@ -122,7 +122,6 @@ var pageConfig = {
         	}
             var that = this;
             var layerId = "";
-            //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
             if(that.forBusiness=="1"){
             	layerId = "hca_high_impact_area";
             }else{
@@ -132,6 +131,10 @@ var pageConfig = {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
+            var lineGraphic = top.hcaMapApp.getPipeline();
+            var x = lineGraphic.geometry.paths[0][0][0];
+            var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+            that.jasMap.zoomAt(15,x ,y );
         },
         previewFile : function(){
             window.jasTools.dialog.show({

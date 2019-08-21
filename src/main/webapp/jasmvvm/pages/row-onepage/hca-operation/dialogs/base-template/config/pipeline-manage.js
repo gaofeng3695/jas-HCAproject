@@ -139,10 +139,9 @@ var pageConfig = {
                 type: 'warning',
                 callback: function(action){
                     if (action === 'confirm') {
-                       /* if(!top.hcaMapApp){
-                            top.showmap2d();
-                            return;
-                        }*/
+                    	if(!top.app.panelShowed){
+                    		top.app._goMap();
+                    	}
                         top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
                             deep:2,
                             fieldName: 'OID'
@@ -151,6 +150,7 @@ var pageConfig = {
                             "show":true,
                             "where":"oid like'" + item.oid + "'"
                         });
+                        top.hcaMapApp.localPipelineName = item.pipelineName;
                         top.createBufferDialog(item.oid);
                     }
                 }
