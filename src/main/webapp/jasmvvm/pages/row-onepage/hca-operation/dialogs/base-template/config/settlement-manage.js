@@ -12,10 +12,12 @@ var pageConfig = {
     },
     searchFields: [
         'buildingCode',
+        'buildingTypeParent',
         'buildingType'
     ],
     tableFields: [
         'buildingCode',
+        'buildingTypeParentName',
         'buildingTypeName',
         'startMileage',
         'endMileage',
@@ -32,7 +34,7 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'buildingCode',
-            //'buildingTypeParent',
+            'buildingTypeParent',
             'buildingType',
             'startMileage',
             'endMileage',
@@ -54,6 +56,7 @@ var pageConfig = {
         title: '基本信息',
         fields: [
             'buildingCode',
+            'buildingTypeParentName',
             'buildingTypeName',
             'startMileage',
             'endMileage',
@@ -77,30 +80,27 @@ var pageConfig = {
             type: 'input',
             isRequired: true
         },
-      /*  buildingTypeParentName: {
+        buildingTypeParentName: {
             name: '建(构)筑物类别'
         },
         buildingTypeParent: {
             name: '建(构)筑物类别',
             type: 'select',
             domainName: 'building_type_parent_domain',
-            isRequired: true
-        },*/
+            isRequired: true,
+            childSelect: ['buildingType'],
+            childUrl: ['/jasframework/sysdoman/getChildDoman.do?domainName=building_type_domain&parentCodeId='],
+        },
         buildingTypeName: {
             name: '建(构)筑物类型'
         },
         buildingType: {
             name: '建(构)筑物类型',
             type: 'select',
-            domainName: 'building_type_domain',
-            isRequired: true
-           /* type: 'cascader',
-            disabled: true,
-            optionUrl: '/jdbc/commonData/hcabuildings/getBuildingTypeTree.do?domainName=building_type_parent_domain',
-            props:{
-                value:'id',
-                label:'text',
-            },*/
+            isRequired: true,
+            requestParams: {
+            	parentCodeId: true
+            }
         },
         startMileage: {
             name: '起始里程（km）',

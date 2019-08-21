@@ -52,18 +52,18 @@ var pageConfig = {
             name: '评价管线',
             optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
             isRequired: true,
-            disabled: true,
+//            disabled: true,
         },
         pipelineName: {
             name: '评价管线',
         },
         versionName: {
-            name: '地区等级评价名称',
+            name: '评价名称',
             type: 'input',
             isRequired: true
         },
         versionCode: {
-            name: '地区等级评价编号',
+            name: '评价编号',
             type: 'input',
             isRequired: true
         },
