@@ -190,7 +190,8 @@ var pageConfig = {
     ],
     methods:{
         locateSettlement: function(item){
-            top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+            //top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
+            top.jasMap.flashGraphic(item.oid, item.buildingType,{
                 deep:2,
                 fieldName: 'OID'
             });
