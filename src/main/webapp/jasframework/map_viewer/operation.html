@@ -206,9 +206,6 @@
             background: url(images/icon_view.png) no-repeat;
             margin: 26px 1px 0px;
         }
-        .panel-body.panel-body-noborder.window-body {
-            overflow-y: auto;
-        }
     </style>
 </head>
 
@@ -318,7 +315,6 @@
             top.jasMap = that.jasMap;
             parent.jasMap = that.jasMap;
             window.jasMap = that.jasMap;
-            that.jasMap.createBh = this.createBh;
             that.jasMap.showHistoryBtn = this.showHistoryBtn;
             that.jasMap.createHcaArea = this.createHcaArea;
             that.jasMap.drawSettlement = this.drawSettlement;
@@ -346,9 +342,7 @@
         methods: {
             drawSettlement: function(){
                 var that = this;
-
                 this.jasMap.drawPolygon({
-                    //drawLayerId: "hca_buildings",
                     layerId: "drawlayer_hca_buildings",
                     onDrawEnd:function(evt){
                         var feature = evt ;
@@ -450,65 +444,9 @@
             getPipeline: function(){
                 var layer = this.jasMap.getLayerById('hca_pipeline');
                 return layer.graphics[0];
-                // var source = layer.getSource();
-                // var feature = source.getFeatures()[0];
-                // return feature.getGeometry();
             },
             close: function(){
                 window.jasTools.dialog.close();
-            },
-            createBh: function(){
-                var that = this;
-                window.jasTools.selfDialog.close();
-                //this.closeBufferWindow();
-                $('.hca').hide();
-                $('.area').hide();
-                //显示图层
-                this.jasMap.zoomAt('110.56310713' ,'34.54671800' ,18);
-                var gasStationId = "pd_gas_station";
-                var entertainmentPlaceId = "pd_entertainment_place";
-                var hospitalId = "pd_hospital";
-                var governmentId = "pd_government";
-                this.jasMap.layerVisibleSwitch('pd_arearank', false);
-                this.jasMap.layerVisibleSwitch('pd_zonerankcell', false);
-                this.jasMap.layerVisibleSwitch('pd_arearankcell', false);
-                //this.jasMap.layerVisibleSwitch('pd_settlement', true);
-                this.jasMap.layerVisibleSwitch('hca_buildings', true);
-                this.jasMap.layerVisibleSwitch(gasStationId,true)
-                this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
-                this.jasMap.layerVisibleSwitch(hospitalId,true)
-                this.jasMap.layerVisibleSwitch(governmentId,true)
-                window.jasTools.selfDialog.close();
-                if(!this.isManage){
-                    top.showmap2d();
-                    window.jasTools.selfDialog.show({
-                        title: '',
-                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
-                        height: '485px',
-                        width: '388px',
-                        top:'155px',
-                        left:'8%'
-                    })
-                }else{
-                    window.jasTools.selfDialog.show({
-                        title: '',
-                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/hca-settlement/settlementListLeft.html?dataType=pipeline',
-                        height: '485px',
-                        width: '388px',
-                        top:'155px',
-                        left:'1%'
-                    })
-                }
-            },
-            draw: function(){
-                this.jasMap.drawPolygon({
-                    drawLayerId: _self.currentSource,
-                    onDrawEnd:function(evt){
-                        var feature = evt.feature ;
-                        var fId = feature.getId();
-                        _self.changedFeatures[fId] = feature;
-                    }
-                })
             },
             randomSettlementData: function(){
                 var that = this;
@@ -782,24 +720,16 @@
                 var that = this;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
-                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/select-area.html', "areaSelectIframe", "地区等级划分", 320,140);
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/select-area.html', "areaSelectIframe", "地区等级划分", 340,140);
             },
             showHistoryList: function(forBusiness){
                 var that = this;
                 window.jasTools.selfDialog.close(this.closeBufferWindow());
                 if(forBusiness == "0"){
-                    window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid, "areaVersionSelectIframe", "地区版本信息", 360,400);
+                    window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid, "areaVersionSelectIframe", "地区等级划分成果", 360,400);
                 }
                 if(forBusiness == "1"){
-                    window.jasTools.selfDialog.show({
-                        id: 'hcaAreaList',
-                        title: '高后果区版本信息',
-                        src: jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=1&pipelineOid='+that.pipelineOid,
-                        height: '485px',
-                        width: '330px',
-                        top: '60px',
-                        left: '3%'
-                    })
+                    window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=1&pipelineOid='+that.pipelineOid, "areaVersionSelectIframe", "高后果区识别成果", 360,400);
                 }
             },
             exitHca: function(){
@@ -816,9 +746,9 @@
             },
             saveVersion: function(forBusiness,versionOid){
                 var that = this;
-                var title ="新增高后果区历史版信息";
+                var title = "新增高后果区识别成果";
                 if(forBusiness=="0"){
-                    title='新增地区等级历史版本信息';
+                    title = "新增地区等级划分成果";
                 }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
             },
