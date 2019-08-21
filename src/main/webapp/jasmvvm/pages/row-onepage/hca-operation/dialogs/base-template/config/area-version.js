@@ -117,6 +117,9 @@ var pageConfig = {
             })
         },
         enableUse: function(row) {
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             var that = this;
             var layerId = "";
             //this.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
