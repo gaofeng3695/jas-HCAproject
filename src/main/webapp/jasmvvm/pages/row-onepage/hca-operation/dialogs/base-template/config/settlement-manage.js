@@ -190,6 +190,9 @@ var pageConfig = {
     ],
     methods:{
         locateSettlement: function(item){
+            if(!top.app.panelShowed){
+                top.app._goMap();
+            }
             //top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
             top.jasMap.flashGraphic(item.oid, item.buildingType,{
                 deep:2,
