@@ -105,6 +105,9 @@ var pageConfig = {
             })
         },*/
         enableUse: function(row) {
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             var that = this;
             that.jasMap.updateLayer("hca_high_impact_area", {
             	show: true,

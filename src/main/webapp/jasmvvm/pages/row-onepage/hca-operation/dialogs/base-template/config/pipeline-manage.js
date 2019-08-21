@@ -96,9 +96,10 @@ var pageConfig = {
         outsideDiameter: {
             name: '管道外管径(mm)',
             type: 'number',
-            max:999999999999999,
+            max:9999999,
             min: 0,
-            precision:0
+            precision:0,
+            isRequired: true
         },
         pressure: {
             name: '管线稳态运行时允许的最大压力(mpa)',
@@ -106,6 +107,7 @@ var pageConfig = {
             max:999999.999,
             min: 0,
             precision:3,
+            isRequired: true
         },
         remarks: {
             name: "备注",
@@ -165,6 +167,9 @@ var pageConfig = {
             })
         },
         locatePipeline: function(item){
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             top.jasMap.flashGraphic(item.oid, 'hca_pipeline', {
                 deep: 2,
                 fieldName: 'OID'

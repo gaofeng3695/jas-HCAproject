@@ -128,7 +128,9 @@ var pageConfig = {
     ],
     methods:{
         locate: function(item){
-            //top.showmap2d();
+        	if(!top.app.panelShowed){
+        		top.app._goMap();
+        	}
             top.jasMap.flashGraphic(item.oid, "hca_high_impact_area",{
                 deep:2,
                 fieldName: 'OID'
