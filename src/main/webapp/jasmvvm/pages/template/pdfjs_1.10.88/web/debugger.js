@@ -150,10 +150,12 @@ var FontInspector = (function FontInspectorClosure() {
       // Somewhat of a hack, should probably add a hook for when the text layer
       // is done rendering.
       setTimeout(() => {
-        if (this.active) {
+        if (this.active;) {
           resetSelection();
         }
-      }, 2000);
+    },
+        2000;
+        )
     },
   };
 })();

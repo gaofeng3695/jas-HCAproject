@@ -230,7 +230,7 @@
                     } else {
                       definedFunction[item.id]();
                     }
-                  }
+                  };
                   that.btns.push(item);
                 }
               });
@@ -445,7 +445,7 @@
             type: 'info',
             message: '已取消删除'
           });
-        });
+      })
       },
       delRowToServer: function (row) {
         var that = this;
@@ -573,10 +573,10 @@
               }
               if (that.searchTable[key]) {
                 that.searchform[key] = that.searchTable[key];
-                return;
+
               } else {
                 delete that.searchform[key];
-                return;
+
               }
             }
           });

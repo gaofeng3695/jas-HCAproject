@@ -1,4 +1,4 @@
-Vue.use(window.VueCodemirror)
+Vue.use(window.VueCodemirror);
 
 var vm = new Vue({
   el: '#app',

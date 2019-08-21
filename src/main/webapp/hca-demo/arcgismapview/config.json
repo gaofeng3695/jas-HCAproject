@@ -127,7 +127,8 @@
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1"
         },{
           "id":"pd_arearank","type":"feature","label":"地区等级","index":"21" ,"visible":false,"where":"1!=1","flash":true,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2","listener":{
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
+          "listener":{
             "onHover":{
               "responseType":"tip",
               "template":"编号：<label style='color:#f00'>{AREA_CODE}</label>,<br>地区等级：{REGION_LEVEL},<br>描述：{DESCRIPTION},<br>开始里程：{START_MILEAGE,#.###},<br>结束里程：{END_MILEAGE,#.###}"
@@ -135,7 +136,13 @@
           }
         },{
           "id":"pd_zonerankcell","type":"feature","label":"高后果区","index":"21" ,"visible":false,"where":"1!=1","flash":true,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3"
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3",
+          "listener": {
+            "onHover": {
+              "responseType": "tip",
+              "template": "编号：<label style='color:#f00'>{HIGH_IMPACT_AREA_CODE}</label>;<br>等级：{HIGH_IMPACT_LEVEL}<br>描述：{REMARKS}<br>开始里程：{START_MILEAGE,#.###}<br>结束里程：{END_MILEAGE,#.###}"
+            }
+          }
         },{
           "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"11"
         }
@@ -145,45 +152,25 @@
     "label":"特定场所",
     "layerSet":[
       {
-        "id":"pd_government",
+        "id":"pd_government","type":"graphic",
         "label":"政府机构",
-        "maxScale":100000,
-        "outFields":"","strategy":"bbox",
         "visible":false,
-        "renderer":{
-          "style":"government_style"
-        },
         "index":31
       }, {
-        "id":"pd_hospital",
-        "label":"医疗院所","strategy":"bbox",
-        "outFields":"",
+        "id":"pd_hospital","type":"graphic",
+        "label":"医疗院所",
         "visible":false,
-        "maxScale":100000,
-        "renderer":{
-          "style":"hospital_style"
-        },
         "index":31
       },{
-        "id":"pd_gas_station",
-        "index":31,"strategy":"bbox",
+        "id":"pd_gas_station","type":"graphic",
+        "index":31,
         "label":"加油站",
-        "maxScale":100000,
-        "outFields":"",
-        "visible":false,
-        "renderer":{
-          "style":"gas_station_style"
-        }
+        "visible":false
+
       },{
-        "id":"pd_entertainment_place",
-        "index":31,"strategy":"bbox",
+        "id":"pd_entertainment_place","index":31,"type":"graphic",
         "label":"娱乐场所",
-        "maxScale":100000,
-        "outFields":"",
-        "visible":false,
-        "renderer":{
-          "style":"entertainment_style"
-        }
+        "visible":false
       }
     ]
   }

@@ -95,6 +95,24 @@ public class HcaAnalysisController {
         return result;
     }
     /**
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "high")
+    @ResponseBody
+    public BaseResult doHcaAnalysis2(@RequestBody Map<String ,Object> params) throws Exception {
+        String areaVersionId = MapUtil.getString(params,"areaVersionId");
+        if(StringUtil.isBlank(areaVersionId)){
+            throw new IllegalArgumentException("缺少地区等级版本参数areaVersionId");
+        }
+        HcaAnalysisResult hcaAnalysisResult = highImpactAnalysisService.executeAnalysis(areaVersionId);
+        SimpleResult result = new SimpleResult();
+        result.setData(hcaAnalysisResult);
+        return result;
+    }
+    /**
      * 生成识别缓冲区
      * @param params
      * @return
@@ -111,7 +129,7 @@ public class HcaAnalysisController {
         LayerQueryParam layerQueryParam = new LayerQueryParam();
         layerQueryParam.setSrsname(pipelineSourceName);
         layerQueryParam.setWhere(pipelineKeyName + " like '" + pipelineOid +"'");
-        FeatureCollection<Feature> collection = geodataAccessService.query(layerQueryParam);
+        FeatureCollection collection = geodataAccessService.query(layerQueryParam);
         if(collection.getSize() < 0){
             baseResult.setStatus(0);
             baseResult.setMsg("没有查询到数据，table=" + pipelineSourceName + "," + pipelineKeyName + "=" + pipelineOid);

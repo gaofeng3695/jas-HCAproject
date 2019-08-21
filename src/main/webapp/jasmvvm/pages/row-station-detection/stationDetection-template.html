@@ -75,8 +75,8 @@
 			this.className = param.className;
 			this.addUrl = './pages/row-station-detection/dialogs/add.html?pageCode=' + this.pageCode;
 			this.detailUrl = './pages/row-station-detection/dialogs/detail.html?pageCode=' + this.pageCode;
-			this.searchPath = stationConfig[this.pageCode].getList;; //查询 page;
-			this.deletePath = stationConfig[this.pageCode].deleteUrl;
+            this.searchPath = stationConfig[this.pageCode].getList; //查询 page;
+            this.deletePath = stationConfig[this.pageCode].deleteUrl;
 			this.fieldsConfig = stationConfig.fieldsConfig;
 			this.fields = stationConfig.methods.formatFields(stationConfig[this.pageCode].searchFields, stationConfig.fieldsConfig,
 				this.pageCode);

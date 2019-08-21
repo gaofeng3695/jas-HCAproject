@@ -98,8 +98,8 @@ JasMap.require(function () {
                     idx = 2 ;break;
                 case '一般隐患':
                     idx = 3 ;break;
-				default:;
-			}
+                default:
+            }
             var style = new ol.style.Style({
                 image: new ol.style.Icon({
                     src:getBasePath("basepath:images/renderer/nmg/yh_"+ idx +".png"),
@@ -130,8 +130,8 @@ JasMap.require(function () {
                     idx = '50m' ;break;
                 case '100米工地':
                     idx = '100m' ;break;
-				default:;
-			}
+                default:
+            }
             var style = new ol.style.Style({
                 image: new ol.style.Icon({
                     src:getBasePath("basepath:images/renderer/nmg/gongdi_"+ idx +".png"),
@@ -161,8 +161,8 @@ JasMap.require(function () {
                     idx = 2 ;break;
                 case 'Ⅲ级风险':
                     idx = 3 ;break;
-				default:;
-			}
+                default:
+            }
             var style = new ol.style.Style({
                 image: new ol.style.Icon({
                     src:getBasePath("basepath:images/renderer/nmg/fengxian_"+ idx +".png"),
@@ -204,8 +204,8 @@ JasMap.require(function () {
 	                idx = 2 ;break;
 	            case '一般地灾':
 	                idx = 3 ;break;
-				default:;
-			}
+                default:
+            }
 			var radom = ['dz_huapo_','dz_bengta_','dz_dimiantaxian_','dz_shuituliushi_','dz_huapo_','dz_bengta_'];
 			
             var style = new ol.style.Style({
@@ -269,8 +269,8 @@ JasMap.require(function () {
                         })
 		            });
                     break;
-				default:;
-			}
+                default:
+            }
             
             //保存已经有的属性字段样式
             styleManager.demo_pd_gaohouguoqu_render_by_level[name] = style;
@@ -787,7 +787,7 @@ JasMap.require(function () {
 			})
 		});
 		return style;
-	}
+	};
 	//管沟开回填
 	mapStyleTemplates.layPipeTrenchBackfill = function (feature) {
 		var style = new ol.style.Style({
@@ -797,7 +797,7 @@ JasMap.require(function () {
 			})
 		});
 		return style;
-	}
+	};
 
 	//地貌恢复
 	mapStyleTemplates.layLandRestoration = function (feature) {
@@ -808,7 +808,7 @@ JasMap.require(function () {
 			})
 		});
 		return style;
-	}
+	};
 
 	//保温
 	mapStyleTemplates.layThermalInsulation = function (feature) {
@@ -819,7 +819,7 @@ JasMap.require(function () {
 			})
 		});
 		return style;
-	}
+	};
 
 	//中线桩连线
 	mapStyleTemplates.medianStakePolyline = function (feature) {
@@ -929,8 +929,8 @@ JasMap.require(function () {
                         })
 		            });
                     break;
-				default:;
-			}
+                default:
+            }
             
             //保存已经有的属性字段样式
             styleManager.demo_pd_neijiance_render_by_level[name] = style;

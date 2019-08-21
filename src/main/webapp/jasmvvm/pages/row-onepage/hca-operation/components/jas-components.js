@@ -235,7 +235,7 @@ Vue.component('jas-base-el-multi-select-box', { //
     methods: {
         clickselect: function (e) {
             var that = this;
-            this.$emit('click')
+            this.$emit('click');
             setTimeout(function () {
                 that.$children[0].$refs.popper.$el.style.display = 'none';
             }, 0)
@@ -1174,7 +1174,7 @@ Vue.component('jas-table-for-list', {
         }
     },
     created: function () {
-        var that = this
+        var that = this;
         var param = window.jasTools.base.getParamsInUrl(location.href);
         this.isApprove = param.isApprove;
         this._className = this.className || param.className;
@@ -1236,7 +1236,7 @@ Vue.component('jas-table-for-list', {
                 return item[that.prop.oid];
             });
             if (oids.length === 0) {
-                return;
+                
             } else if (oids.length === 1) {
 
                 var src = jasTools.base.setParamsToUrl(this.detailUrl, {
@@ -1287,7 +1287,7 @@ Vue.component('jas-table-for-list', {
             this.rows = val;
         },
         sortChange: function (param) {
-            console.log(param)
+            console.log(param);
             if (param.prop) {
                 var type = param.order == 'descending' ? 'desc' : 'asc';
                 this.form.orderBy = param.prop + ' ' + type;
@@ -1388,7 +1388,7 @@ Vue.component('jas-table-for-list', {
         },
         edit: function (row) {
             var that = this;
-            var url = jasTools.base.setParamsToUrl(this.addUrl, row)
+            var url = jasTools.base.setParamsToUrl(this.addUrl, row);
             window.jasTools.dialog.show({
                 width: this.dialogconfig.addWidth || '60%',
                 height: this.dialogconfig.addHeight || '80%',
@@ -1988,8 +1988,8 @@ Vue.component('jas-form-items-group', {
                 isInit = false;
             }
             var that = this;
-            console.log(that.$refs[fatherField][0])
-            that.$refs[fatherField][0].$forceUpdate()
+            console.log(that.$refs[fatherField][0]);
+            that.$refs[fatherField][0].$forceUpdate();
             var fieldConfig = this.fieldsConfig[fatherField];
             var form = this.form;
             var setChildOptionsAndValue = function (childField, options) { // 入参下拉选项
@@ -2065,7 +2065,7 @@ Vue.component('jas-form-items-group', {
 
     },
     mounted: function () {
-        console.log(this.form, 1111111111)
+        console.log(this.form, 1111111111);
         this.allFields = Array.prototype.concat.apply([], this.fieldsGroup);
         this.resetFieldsConfig(this.allFields, this.fieldsConfig);
     }
@@ -2300,7 +2300,7 @@ Vue.component('jas-approve-dialog', {
             }, function (data) {
                 setTimeout(function () {
                     that.loading.table = false;
-                }, 300)
+                }, 300);
                 that.tableData = data.rows;
                 that.total = data.total;
             });

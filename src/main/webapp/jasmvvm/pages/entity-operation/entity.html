@@ -125,7 +125,7 @@
 <script src="./../../common/components/jas-components.js"></script>
 <script src="./../../common/js/jas-tools.js"></script>
 <script>
-  Vue.use(window.VueCodemirror)
+  Vue.use(window.VueCodemirror);
 
   var vm = new Vue({
     el: '#app',
@@ -183,10 +183,10 @@
       },
       tableIndex: function (val) {
         if (val > this.value9.length || val < 0) {
-          return;
+
         } else {
           if (this.currentTable === this.value9[val]) {
-            return;
+
           } else {
             this.currentTable = this.value9[val];
           }

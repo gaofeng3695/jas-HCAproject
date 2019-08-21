@@ -175,7 +175,7 @@
 			return string.replace(/_([a-z])/g, function (all, letter) {
 				return letter.toUpperCase();
 			});
-		}
+		};
 
 		return {
 			rootPath: getRootPath(),
@@ -254,7 +254,7 @@
 						dialogs.length = dialogs.length - 1;
 						// console.log('关闭了一个dialogs')
 						// this.$destroy();
-						return;
+						
 					}
 				},
 				render: res.render,
@@ -270,7 +270,7 @@
 		var close = function (param) {
 			var index = dialogs.length - 1;
 			if (index < 0) {
-				alert('没有可以关闭的dialogs')
+				alert('没有可以关闭的dialogs');
 				return;
 			}
 			var inst = dialogs[index];
@@ -343,7 +343,7 @@
 						dialogs.length = dialogs.length - 1;
 						// console.log('关闭了一个dialogs')
 						// this.$destroy();
-						return;
+						
 					}
 				},
 				render: res.render,
@@ -359,7 +359,7 @@
 		var close = function (param) {
 			var index = dialogs.length - 1;
 			if (index < 0) {
-				alert('没有可以关闭的dialogs')
+				alert('没有可以关闭的dialogs');
 				return;
 			}
 			var inst = dialogs[index];
@@ -460,22 +460,22 @@
 					aMaskInst.length = aMaskInst.length - 1;
 				}, 300)
 			}
-		}
+		};
 
 
 		var showMask = function (obj) {
 			var mask = new Mask(obj);
 
-		}
+		};
 		var closeMask = function (param) {
 			var index = aMaskInst.length - 1;
 			if (index < 0) {
-				alert('没有可以关闭的dialogs')
+				alert('没有可以关闭的dialogs');
 				return;
 			}
 			var inst = aMaskInst[index];
 			inst.close(param);
-		}
+		};
 
 		return {
 			show: showMask,
@@ -567,7 +567,7 @@
 				}),
 				data: data || {},
 				method: type || data,
-			}
+			};
 			var $iframe = $('<iframe id="down-file-iframe" />');
 			var $form = $('<form  method="' + config.method + '" />');
 			$form.attr('action', config.url);
@@ -733,7 +733,7 @@
 						dialogs.length = dialogs.length - 1;
 						// console.log('关闭了一个dialogs')
 						// this.$destroy();
-						return;
+						
 					}
 				},
 				render: res.render,
@@ -824,7 +824,7 @@
 						dialogs.length = dialogs.length - 1;
 						// console.log('关闭了一个dialogs')
 						// this.$destroy();
-						return;
+						
 					}
 				},
 				render: res.render,
@@ -840,7 +840,7 @@
 		var close = function (param) {
 			var index = dialogs.length - 1;
 			if (index < 0) {
-				alert('没有可以关闭的dialogs')
+				alert('没有可以关闭的dialogs');
 				return;
 			}
 			var inst = dialogs[index];

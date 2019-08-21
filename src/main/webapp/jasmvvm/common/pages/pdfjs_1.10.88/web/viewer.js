@@ -3567,17 +3567,14 @@ exports.PDFFindController = PDFFindController;
 
 
 //var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
-;
-var pdfjsWebApp = void 0;
+        var pdfjsWebApp = void 0;
 {
   pdfjsWebApp = __webpack_require__(4);
 }
-;
-{
+        {
   __webpack_require__(29);
 }
-;
-{
+        {
   __webpack_require__(34);
 }
 function getViewerConfiguration() {
@@ -9128,8 +9125,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-;
-var GenericCom = {};
+        var GenericCom = {};
 
 var GenericPreferences = function (_BasePreferences) {
   _inherits(GenericPreferences, _BasePreferences);
@@ -9353,8 +9349,7 @@ var _pdfjsLib = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-;
-function _download(blobUrl, filename) {
+        function _download(blobUrl, filename) {
   var a = document.createElement('a');
   if (a.click) {
     a.href = blobUrl;
@@ -10198,7 +10193,7 @@ document.webL10n = function (window, document, undefined) {
     },
     ready: function ready(callback) {
       if (!callback) {
-        return;
+        
       } else if (gReadyState == 'complete' || gReadyState == 'interactive') {
         window.setTimeout(function () {
           callback();
@@ -10436,7 +10431,7 @@ window.addEventListener('keydown', function (event) {
     } else {
       event.stopPropagation();
     }
-    return;
+    
   }
 }, true);
 if (hasAttachEvent) {

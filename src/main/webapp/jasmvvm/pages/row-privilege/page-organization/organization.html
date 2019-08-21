@@ -217,7 +217,7 @@
 				}, function (data) {
 					setTimeout(function () {
 						that.loading.orgDetail = false;
-					}, 300)
+					}, 300);
 					that.detail = data;
 				});
 			},
@@ -231,7 +231,7 @@
 				}, function (data) {
 					setTimeout(function () {
 						that.loading.scopeTree = false;
-					}, 300)
+					}, 300);
 					that.scopeData.treeData = data.rows;
 					var expandedKeys = that.getNodekeysByGrade(that.scopeData.treeData, 1);
 					that.scopeData.expandedKeys = expandedKeys;
@@ -261,7 +261,7 @@
 				}, function (data) {
 					setTimeout(function () {
 						that.loading.allLoading = false;
-					}, 0)
+					}, 0);
 					that._requestScopeTree(that.currentNodeId);
 					top.Vue.prototype.$message({
 						type: 'success',

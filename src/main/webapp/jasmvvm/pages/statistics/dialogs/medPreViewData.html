@@ -110,13 +110,13 @@
                   var index = new Date().getMonth() + 1;
                   result.monthlyGowth = result.monthlyGowth.slice(0, index);
                   result.monthlyTotal = result.monthlyTotal.slice(0, index);
-                };
-                result.monthlyGowth.forEach(function (item, index) {
+                }
+                  result.monthlyGowth.forEach(function (item, index) {
                   var obj = {
                     year: that.searchObj.year + "年" + (index + 1) + "月",
                     lengthMonth: item,
                     totalLength: data.data.monthlyTotal[index]
-                  }
+                  };
                   that.progressData.push(obj);
                 });
                 break;

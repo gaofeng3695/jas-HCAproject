@@ -501,7 +501,7 @@ var LayerListTree = function (options) {
             case "reload":
                 _self.mapApi.refreshLayerById(layerId);
                 break;
-            default:;
+            default:
         }
     };
     _self.open = function (flg) {

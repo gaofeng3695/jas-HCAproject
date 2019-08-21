@@ -7,6 +7,7 @@ package cn.jasgroup.hcas.analysis;
  */
 public class HcaAnalysisContext {
 
+    public static final String BuildingDistributionDomain = "building_distribution_domain";
     /**
      *
      */
@@ -38,6 +39,7 @@ public class HcaAnalysisContext {
      *
      */
     public static String versionIdFieldName = "version_oid";
+    public static String versionNameFieldName = "version_name";
     /**
      *
      */
@@ -58,6 +60,8 @@ public class HcaAnalysisContext {
     public static String startYFieldName = "start_y";
 
     public static String buildingTypeFieldName = "building_distribution";
+
+    public static String areaRandRemarkFieldName = "description";
 
     public static String hcaRemarkFieldName = "remarks";
 
@@ -112,19 +116,19 @@ public class HcaAnalysisContext {
      */
     public static Integer ConfigAreaRankHouseholdsCondition2 = 15 ;
 
-    public final static Integer AreaGradeLevel_IV = 4 ;
+    public final static String AreaGradeLevel_IV = "region_level_004" ;
 
-    public final static Integer AreaGradeLevel_III = 3 ;
+    public final static String AreaGradeLevel_III =  "region_level_003" ;
 
-    public final static Integer AreaGradeLevel_II = 2 ;
+    public final static String AreaGradeLevel_II =  "region_level_002" ;
 
-    public final static Integer AreaGradeLevel_I = 1 ;
+    public final static String AreaGradeLevel_I =  "region_level_001" ;
 
-    public final static Integer HcaLevel_III = 3 ;
+    public final static String HcaLevel_III = "high_impact_level_003" ;
 
-    public final static Integer HcaLevel_II = 2 ;
+    public final static String HcaLevel_II = "high_impact_level_002"  ;
 
-    public final static Integer HcaLevel_I = 1 ;
+    public final static String HcaLevel_I = "high_impact_level_001" ;
 
     public final static String HighBuildingType = "四层及四层以上建筑为主";
 

@@ -927,7 +927,7 @@
 						// console.log(data)
 						data.forEach(function (item) {
 							item.children = [];
-						})
+						});
 						resolve(data);
 						that.$nextTick(function () {
 							if (!that.currentNodeId) {
@@ -953,8 +953,8 @@
 						// console.log(data)
 						resolve(data);
 					});
-				};
-				return resolve([]);
+                }
+                return resolve([]);
 			},
 			clicknode: function (node, b, c) {
 				this.currentNodeId = node.id;

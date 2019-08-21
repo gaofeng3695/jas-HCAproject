@@ -59,6 +59,7 @@
 			<mvc:exclude-mapping path="/**/jasgis/**/*.do"/>
 			<mvc:exclude-mapping path="/**/zone/**/*.do"/>
 			<mvc:exclude-mapping path="/**/analysis/**/*.do"/>
+			<mvc:exclude-mapping path="/**/datatools/**/*.do"/>
 			<bean class="cn.jasgroup.framework.script.interceptor.TokenInterceptor"/>
 	  	</mvc:interceptor>
 	</mvc:interceptors>

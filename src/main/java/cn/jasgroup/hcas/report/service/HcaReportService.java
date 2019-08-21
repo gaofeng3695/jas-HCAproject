@@ -327,7 +327,7 @@ public class HcaReportService extends CommonDataJdbcService {
 		}
 		NumberFormat numberFormat = NumberFormat.getInstance();
 		numberFormat.setMaximumFractionDigits(2);
-		String result = numberFormat.format((Double) (a / b) * 100) + "%";
+		String result = numberFormat.format(a / b * 100) + "%";
 		return result;
 	}
 }

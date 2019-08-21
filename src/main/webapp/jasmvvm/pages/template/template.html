@@ -221,7 +221,7 @@
 										} else {
 											definedFunction[item.id]();
 										}
-									}
+									};
 									that.btns.push(item);
 								}
 							});
@@ -587,10 +587,10 @@
 							}
 							if (that.searchTable[key]) {
 								that.searchform[key] = that.searchTable[key];
-								return;
+
 							} else {
 								delete that.searchform[key];
-								return;
+
 							}
 						}
 					});

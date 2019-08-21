@@ -15,7 +15,6 @@ import cn.jasgroup.gis.util.*;
 import cn.jasgroup.hcas.analysis.*;
 import cn.jasgroup.hcas.versionmaanage.service.HcaVersionService;
 import cn.jasgroup.jasframework.domain.utils.DomainUtil;
-import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +115,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         if(count == areaGradeFeatures.length ){
             logger.info( "地区等级计算结果保存成功" );
         }else{
-            logger.warn( "地区等级计算结果{0}条，实际保存{1}条" ,areaGradeFeatures.length ,count);
+            logger.warn( "地区等级计算结果{}条，实际保存{}条" ,areaGradeFeatures.length ,count);
         }
         return count;
     }
@@ -127,10 +126,12 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         Map<String,Object> fromProperties = from.getAttributes() ;
         Map<String,Object> toProperties = to.getAttributes() ;
-        toProperties.put(populationFieldName ,MapUtil.getInt(fromProperties,populationFieldName) + MapUtil.getInt(toProperties,populationFieldName));
+        toProperties.put(populationFieldName ,MapUtil.getDouble(fromProperties,populationFieldName) + MapUtil.getDouble(toProperties,populationFieldName));
         toProperties.put(endMileageFieldName ,MapUtil.getDouble(fromProperties,endMileageFieldName));
+
         String buildingType = MapUtil.getString(fromProperties ,buildingTypeFieldName);
-        String buildingTypeValue = DomainUtil.getValue("building_distribution_domain",buildingType);
+        String buildingTypeValue = DomainUtil.getValue(HcaAnalysisContext.BuildingDistributionDomain,buildingType);
+
         if(HcaAnalysisContext.HighBuildingType.equals(buildingTypeValue)){
             toProperties.put(buildingTypeFieldName,buildingTypeValue);
         }else{
@@ -145,12 +146,12 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      * @return
      */
     private Boolean isCoreCell(Feature cell){
-        Integer cellType = MapUtil.getInt(cell.getAttributes(),cellTypeFieldName);
+        Integer cellType = MapUtil.getInt(cell.getAttributes(),cellTypeFieldName,-1);
         if( cellType == 1 ){
             return true;
         }
-        Integer population = MapUtil.getInt(cell.getAttributes(),populationFieldName);
-        Integer households = MapUtil.getInt(cell.getAttributes(),householdsFieldName);
+        Double population = MapUtil.getDouble(cell.getAttributes(),populationFieldName,0d);
+        Integer households = MapUtil.getInt(cell.getAttributes(),householdsFieldName,0);
         return population >= HcaAnalysisContext.ConfigCoreCellPopulationCondition1 || households >= HcaAnalysisContext.ConfigCoreCellHouseholdsCondition1;
     }
 
@@ -219,7 +220,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         Feature feature = new Feature();
         Map<String,Object> attributes = new HashMap<>() ;
         Double startMileage = MapUtil.getDouble(properties ,startMileageFieldName) ;
-        //Double population = MapUtil.getDouble(properties ,populationFieldName);
+        Double population = MapUtil.getDouble(properties ,populationFieldName);
         //Double households = MapUtil.getDouble(properties ,householdsFieldName);
         Double endMileage = MapUtil.getDouble(properties ,endMileageFieldName)  ;
         Double middleMileage = ( startMileage + endMileage ) / 2;
@@ -228,7 +229,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         attributes.put(middleMileageFieldName,middleMileage);
         attributes.put(startMileageFieldName,startMileage);
         attributes.put(endMileageFieldName,endMileage);
-        //attributes.put(populationFieldName,population);
+        attributes.put(populationFieldName,population);
         //attributes.put(householdsFieldName,households);
         attributes.put(buildingTypeFieldName,buildingType);
         attributes.put("building_oid",MapUtil.getString(properties,"oid"));
@@ -251,7 +252,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             Map<String,Object> pros = building .getAttributes() ;
             double start = MapUtil.getDouble(pros ,startMileageFieldName) ;
             double end = MapUtil.getDouble(pros,endMileageFieldName) ;
-            int population = MapUtil.getInt(pros,populationFieldName) ;
+            Double population = MapUtil.getDouble(pros,populationFieldName) ;
             String buildingType = MapUtil.getString(pros,buildingTypeFieldName);
             if((start >= startMileage && start <= endMileage) || (end >= startMileage && end <= endMileage)){
                 if(start >= startMileage && end <= endMileage){
@@ -268,7 +269,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
 
             }
         }
-        f.getAttributes().put(populationFieldName ,cellPopulation);
+        f.getAttributes().put(populationFieldName , cellPopulation * 1.0);
         f.getAttributes().put(buildingTypeFieldName ,cellBuildingType);
     }
 
@@ -356,21 +357,20 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
     @Override
     public Feature[] prepareBuildingsFeatureData(HcaLinearParam bo) {
         Geometry bufferPg = bo.getRecognitionAreaBuffer();
-        String bufferPgJson = bufferPg.toGeoJSON();
         //空间查询
         String buildingsSource = HcaAnalysisContext.buildingsSourceName;
         LayerQueryParam param = new LayerQueryParam() ;
         param.setSrsname(buildingsSource);
-        param.setGeometryType(GeometryType.POLYGON.getType());
-        param.setGeometry(bufferPgJson);
+        param.setGeometryType( GeometryType.POLYGON.getType());
+        param.setGeometry( bufferPg);
         param.setOutFields("*");
         param.setWhere("1=1");// where ?
-        param.setInputSRID(bufferPg.getSpatialReference().getWkid());
-        param.setOutputSRID(bufferPg.getSpatialReference().getWkid());
+        param.setInputSRID( bufferPg.getSpatialReference().getWkid());
+        param.setOutputSRID( bufferPg.getSpatialReference().getWkid());
         param.setOrderBy("start_mileage");
         loggerUtil.time("查询识别区域内的居民地");
-        FeatureCollection<Feature>  queryResult = geodataAccessService.query(param) ;
-        Feature[] settlementData = queryResult.getFeatures().toArray(new Feature[0]);
+        FeatureCollection queryResult = geodataAccessService.query(param) ;
+        Feature[] settlementData = FeatureCollectionUtil.toLowerCaseFeature(queryResult);
         int totalSize = settlementData.length;
         loggerUtil.timeEnd("查询识别区域内的居民地","查询到" + totalSize + "处居民地");
         if(totalSize == 0){
@@ -419,7 +419,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             int idx = i * 2 ;
             Feature feature = subList.get(i) ;
             Map<String,Object> attributes = feature.getAttributes();
-            int population = MapUtil.getInt( attributes ,populationFieldName ,0);
+            Double population = MapUtil.getDouble( attributes ,populationFieldName ,0d);
             double originArea = areaAndLengths.get(idx).getArea();
             double subArea = areaAndLengths.get(idx+1).getArea();
             if(subArea - originArea > 0.0000001 ){
@@ -428,8 +428,8 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
                 logger.error( fsGeometries[idx + 1].toWKT());
                 logger.error( "--------------");
             }
-            int pop = (int)( population * subArea / originArea) ;
-            attributes.put( populationFieldName,pop );
+            Double pop = (int)( population * subArea / originArea) * 1.0  ;
+            attributes.put( populationFieldName,pop  );
             feature.setGeometry( fsGeometries[idx + 1]);
         }
         //重新计算里程值、垂直距离、水平距离等参数
@@ -439,7 +439,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             Feature feature = settlementData[i];
             Map<String,Object> attributes = feature.getAttributes();
             Polygon polygon = (Polygon) GeometryUtil.toGeometry(feature.getGeometry());
-            Point[] points = polygon.toCoordinates();//相交
+            Point[] points = polygon.toPoints();//相交
 
             double startFraction = 1 ;
             double endFraction = 0d;
@@ -497,10 +497,13 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             return hcaAnalysisResult;
         }
         Feature[] cellFeatures = classifyAreaRankCellFeatures(settlementFeatures ,analysisGeometryBO);
+
         Feature[] resultFeatures = classifyAreaRankGradeFeatures(cellFeatures,analysisGeometryBO);
 
         String versionOid = UUID.randomUUID().toString();
+
         prepareHcaAttributes( resultFeatures,versionOid ,pipelineOid);
+
         int count = saveFeaturesData(resultFeatures);
         int flg = hcaVersionService.initToSave(versionOid ,pipelineOid ,0);
         if(flg == 1){
@@ -687,40 +690,40 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         for(int i = 0 ; i < features.length ; i++) {
             Feature feature = features[i];
             Map<String, Object> attr = feature.getAttributes();
-            Integer population = MapUtil.getInt(attr, populationFieldName);
+            Double population = MapUtil.getDouble(attr, populationFieldName);
             Integer households = (int) (population / HcaAnalysisContext.ConfigHouseholdsPopulationRadio);
             String buildingType = MapUtil.getString( attr, buildingTypeFieldName);
             double startMileage = MapUtil.getDouble( attr, startMileageFieldName);
             double endMileage = MapUtil.getDouble( attr, endMileageFieldName);
             String description = "";
-            int rankValue  ;
+            String rankValue  ;
             if (households >= HcaAnalysisContext.ConfigAreaRankHouseholdsCondition1 && HcaAnalysisContext.HighBuildingType.equals(buildingType)) {
                 startMileage = startMileage - HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
                 endMileage = endMileage + HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
                 description = "识别单元人口户数为：" + households + ";建筑类型为：" + buildingType;
-                rankValue = 4;
+                rankValue = HcaAnalysisContext.AreaGradeLevel_IV;
                 count4++;
             } else if (households >= HcaAnalysisContext.ConfigAreaRankHouseholdsCondition1 && HcaAnalysisContext.LowBuildingType.equals(buildingType)) {
                 startMileage = startMileage - HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
                 endMileage = endMileage + HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
                 description = "识别单元人口户数为：" + households + ";建筑类型为：" + buildingType;
-                rankValue = 3;
+                rankValue = HcaAnalysisContext.AreaGradeLevel_III;
                 count3++;
             } else if (households >= HcaAnalysisContext.ConfigAreaRankHouseholdsCondition2 && households < HcaAnalysisContext. ConfigAreaRankHouseholdsCondition1) {
                 startMileage = startMileage - HcaAnalysisContext. ConfigAreaRankBorderBufferDistance;
                 endMileage = endMileage + HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
                 description = "识别单元人口户数为：" + households + " ,大于（包含）" + HcaAnalysisContext.ConfigAreaRankHouseholdsCondition2 + "户，小于" + HcaAnalysisContext.ConfigAreaRankHouseholdsCondition1 + "户";
-                rankValue = 2;
+                rankValue = HcaAnalysisContext.AreaGradeLevel_II;
                 count2++;
             } else {
                 description = "识别单元人口户数为：" + households + " ,小于" + HcaAnalysisContext.ConfigAreaRankHouseholdsCondition1 + "户";
-                rankValue = 1;
+                rankValue = HcaAnalysisContext.AreaGradeLevel_I;
                 count1++;
             }
             //feature.getAttributes().put(startMileage ,rankValue);
-            feature.getAttributes().put("region_level" ,rankValue);
+            feature.getAttributes().put(HcaAnalysisContext.areaRankFieldName ,rankValue);
             feature.getAttributes().put(buildingTypeFieldName ,rankValue);
-            feature.getAttributes().put("description" ,description);
+            feature.getAttributes().put(HcaAnalysisContext.areaRandRemarkFieldName ,description);
         }
         //2、生成几何对象
         int gcsSrid = bo.getPipeline().getSpatialReference().getWkid();

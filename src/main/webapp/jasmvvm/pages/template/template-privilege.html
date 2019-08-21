@@ -383,7 +383,7 @@
 					return item.oid;
 				});
 				if (oids.length === 0) {
-					return;
+
 				} else if (oids.length === 1) {
 					var src = './pages/template/dialogs/viewTemplate.html?menuCode=' + that.menuCode;
 					src += '&approveType=2&privilegeCode='+that.privilegeCode;
@@ -480,7 +480,7 @@
 										} else {
 											definedFunction[item.id]();
 										}
-									}
+									};
 									that.btns.push(item);
 								}
 							});
@@ -492,7 +492,7 @@
 			},
 			requestFieldsConfig: function () {
 				var that = this;
-				var url = jasTools.base.rootPath + "/functionConfiguration/getDetailByCode.do"
+				var url = jasTools.base.rootPath + "/functionConfiguration/getDetailByCode.do";
 				jasTools.ajax.get(url, {
 					functionCode: that.menuCode
 				}, function (data) {
@@ -667,7 +667,7 @@
 					success: function (data) {
 						setTimeout(function () {
 							that.loading = false;
-						}, 300)
+						}, 300);
 						if (data.status == 1) {
 							that.tableData = data.rows;
 							that.total = data.total;
@@ -708,7 +708,7 @@
 					success: function (data) {
 						setTimeout(function () {
 							that.loading = false;
-						}, 300)
+						}, 300);
 						if (data.status == 1) {
 							that.tableData = data.rows;
 							that.total = data.total;
@@ -1009,10 +1009,10 @@
 							}
 							if (that.searchTable[key]) {
 								that.searchform[key] = that.searchTable[key];
-								return;
+
 							} else {
 								delete that.searchform[key];
-								return;
+
 							}
 						}
 					});

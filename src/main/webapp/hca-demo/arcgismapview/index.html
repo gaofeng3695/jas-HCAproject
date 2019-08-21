@@ -26,16 +26,16 @@
 </head>
 <body class="claro">
     <div>
-        <input id="do_area_eva" type="button" value="计算地区等级"><label>计算结果版本：</label><input id="area_version_id" type="text"><input id="area_data_refresh" type="button" value="刷新图层">
+        <input id="do_area_eva" type="button" value="计算地区等级"><label>计算结果版本：</label><input id="area_version_id" type="text" value="b10616eb-9bb5-4382-8db8-cb6a6e744cd4"><input id="area_data_refresh" type="button" value="刷新图层">
     </div>
     <div>
-        <input id="do_high_eva" type="button" value="计算高后果区"><label>计算结果版本：</label><input id="high_version_id" type="text"><input id="high_data_refresh" type="button" value="刷新图层">
+        <input id="do_high_eva" type="button" value="计算高后果区"><label>计算结果版本：</label><input id="high_version_id" type="text" value="881a3c34-4b9f-4d32-9a45-b95b713a29ba"><input id="high_data_refresh" type="button" value="刷新图层">
     </div>
     <div id="jasMap"></div>
     <script>
         document.getElementById("do_area_eva").onclick = function(){
             $.ajax({
-                url:"http://localhost:8092/HCAProject/analysis/area/grade.do",
+                url:"../../../HCAProject/analysis/area/grade.do",
                 type:"post",
                 dataType:"json",
                 contentType:"application/json",
@@ -56,19 +56,15 @@
                 "where":"VERSION_OID like '" + vId + "'"
             })
         };
-
         document.getElementById("do_high_eva").onclick = function(){
-            var versionId = re.data.versionId;
+            var versionId = $("#area_version_id").val();
             $.ajax({
-                url:"http://localhost:8097/HCAProject/analysis/high/"+ versionId +"/doHcaAnalysis.do",
+                url:"../../../HCAProject/analysis/high.do",
                 type:"post",
                 dataType:"json",
                 contentType:"application/json",
                 data:JSON.stringify({
-                    "pipesegmentTableName":"pd_pipesegment",
-                    "pipesegmentKeyValue":"fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5",
-                    "pipesegmentKeyName":"eventid",
-                    "bufferDistance":200.0
+                    "areaVersionId":versionId
                 }),
                 success:function(re){
                     var versionId = re.data.versionId;
@@ -76,13 +72,13 @@
 
                 }
             });
-            document.getElementById("high_data_refresh").onclick = function(){
-                var vId = $("#high_version_id").val();
-                jasMap.updateLayer("pd_zonerankcell",{
-                    "show":true,
-                    "where":"VERSION_OID like '" + vId + "'"
-                })
-            };
+        };
+        document.getElementById("high_data_refresh").onclick = function(){
+            var vId = $("#high_version_id").val();
+            jasMap.updateLayer("pd_zonerankcell",{
+                "show":true,
+                "where":"VERSION_OID like '" + vId + "'"
+            })
         };
     </script>
 </body>

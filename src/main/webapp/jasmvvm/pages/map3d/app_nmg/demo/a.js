@@ -18,7 +18,7 @@ const X = {
       callback(json);
     }).catch(error => {
       console.error('获取矢量数据出错!');
-    });
+  })
   },
 
   /**

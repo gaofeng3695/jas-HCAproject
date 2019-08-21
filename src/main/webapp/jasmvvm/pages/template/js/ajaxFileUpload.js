@@ -69,7 +69,7 @@ $.extend({
         }
         var requestDone = false;
         // Create the request object
-        var xml = {}
+        var xml = {};
         if (s.global)
             $.event.trigger("ajaxSend", [xml, s]);
         // Wait for a response to come back
@@ -122,7 +122,7 @@ $.extend({
                     if (s.complete)
                         s.complete(xml, status);
 
-                    $(io).unbind()
+                    $(io).unbind();
 
                     setTimeout(function() {
                         try {
@@ -133,12 +133,12 @@ $.extend({
                             $.handleError(s, xml, null, e);
                         }
 
-                    }, 100)
+                    }, 100);
 
                     xml = null
 
                 }
-            }
+            };
             // Timeout checker
         if (s.timeout > 0) {
             setTimeout(function() {
@@ -202,4 +202,4 @@ $.extend({
             $("<div>").html(data).evalScripts();
         return data;
     }
-})
+});

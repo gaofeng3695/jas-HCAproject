@@ -5087,7 +5087,7 @@ var Lexer = function LexerClosure() {
           break;
         } else if (specialChars[ch] === 1) {
           ch = this.nextChar();
-          continue;
+
         } else {
           if (isFirstHex) {
             firstDigit = toHexDigit(ch);
@@ -18438,7 +18438,7 @@ var PartialEvaluator = function PartialEvaluatorClosure() {
         }
         if (charCode in encoding && widthsByGlyphName[encoding[charCode]]) {
           widths[charCode] = widthsByGlyphName[encoding[charCode]];
-          continue;
+
         }
       }
       return widths;
@@ -24945,8 +24945,7 @@ var WorkerTask = function WorkerTaskClosure() {
   };
   return WorkerTask;
 }();
-;
-var PDFWorkerStream = function PDFWorkerStreamClosure() {
+        var PDFWorkerStream = function PDFWorkerStreamClosure() {
   function PDFWorkerStream(msgHandler) {
     this._msgHandler = msgHandler;
     this._contentLength = null;
@@ -25954,7 +25953,7 @@ if (typeof PDFJS === 'undefined' || !PDFJS.compatibilityChecked) {
           return fn(msg);
         };
       }(console.warn);
-      return;
+
     }
   })();
   (function checkOnClickCompatibility() {
@@ -32295,7 +32294,7 @@ var PDFDocument = function PDFDocumentClosure() {
         if (!this.pdfFormatVersion) {
           this.pdfFormatVersion = version.substring(5);
         }
-        return;
+
       }
     },
     parseStartXRef: function PDFDocument_parseStartXRef() {
@@ -35865,7 +35864,7 @@ var CMapFactory = function CMapFactoryClosure() {
           throw ex;
         }
         (0, _util.warn)('Invalid cMap data: ' + ex);
-        continue;
+
       }
     }
     if (!useCMap && embededUseCMap) {

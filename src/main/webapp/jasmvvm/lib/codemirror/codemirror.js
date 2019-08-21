@@ -460,7 +460,7 @@ function lineAtHeight(chunk, h) {
       n += child.chunkSize();
     }
     return n
-  } while (!chunk.lines)
+  } while (!chunk.lines);
   var i = 0;
   for (; i < chunk.lines.length; ++i) {
     var line = chunk.lines[i], lh = line.height;
@@ -2908,7 +2908,7 @@ function coordsCharInner(cm, lineObj, lineNo$$1, x, y) {
         steps = Math.min(steps, Math.ceil(Math.abs(diff) / diff_change_per_step));
         dir = diff < 0 ? 1 : -1;
       }
-    } while (diff != 0 && (steps > 1 || ((dir < 0) != (diff < 0) && (Math.abs(diff) <= Math.abs(prevDiff)))))
+    } while (diff != 0 && (steps > 1 || ((dir < 0) != (diff < 0) && (Math.abs(diff) <= Math.abs(prevDiff)))));
     if (Math.abs(diff) > Math.abs(prevDiff)) {
       if ((diff < 0) == (prevDiff < 0)) { throw new Error("Broke out of infinite loop in coordsCharInner") }
       pos = prevPos;
@@ -5614,7 +5614,7 @@ BranchChunk.prototype = {
         me.parent.children.splice(myIndex + 1, 0, sibling);
       }
       sibling.parent = me.parent;
-    } while (me.children.length > 10)
+    } while (me.children.length > 10);
     me.parent.maybeSpill();
   },
 

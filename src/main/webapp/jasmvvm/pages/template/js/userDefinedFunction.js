@@ -11,4 +11,4 @@
         }
     };
     window.definedFunction = definedFunction;
-})(window)
+})(window);

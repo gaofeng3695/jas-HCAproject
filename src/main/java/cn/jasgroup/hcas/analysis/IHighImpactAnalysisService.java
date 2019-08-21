@@ -12,7 +12,7 @@ public interface IHighImpactAnalysisService {
      * 高后果区识别入口
      * @return
      */
-    public HcaAnalysisResult executeAnalysis(String versionCode);
+    HcaAnalysisResult executeAnalysis(String versionCode);
 
     /**
      * 高后果区分类
@@ -21,7 +21,7 @@ public interface IHighImpactAnalysisService {
      * @param versionId
      * @return
      */
-    public Feature[] classifyHighConsequenceArea(Feature[] areaData , HcaLinearParam bo , String versionId);
+    Feature[] classifyHighConsequenceArea(Feature[] areaData, HcaLinearParam bo, String versionId);
 
     /**
      * 计算潜在影响区缓冲区半径
@@ -29,7 +29,7 @@ public interface IHighImpactAnalysisService {
      * @param outerDimension
      * @return
      */
-    public double calculatePotentialInfluenceBufferDistance(double pressure ,double outerDimension) ;
+    double calculatePotentialInfluenceBufferDistance(double pressure, double outerDimension) ;
 
     /**
      * 特定场所判定
@@ -38,7 +38,7 @@ public interface IHighImpactAnalysisService {
      * @param bo
      * @return
      */
-    public BuildingLocationMap specialPlaceAnalysis(Feature[] areaFeature ,Feature[] hcaFeature , HcaLinearParam bo) ;
+    BuildingLocationMap specialPlaceAnalysis(Feature[] areaFeature, Feature[] hcaFeature, HcaLinearParam bo) ;
 
     /**
      * 易燃易爆场所判定
@@ -47,7 +47,7 @@ public interface IHighImpactAnalysisService {
      * @param bo
      * @return
      */
-    public BuildingLocationMap explosivePlaceAnalysis(Feature[] areaFeature , Feature[] hcaFeature, HcaLinearParam bo) ;
+    BuildingLocationMap explosivePlaceAnalysis(Feature[] areaFeature, Feature[] hcaFeature, HcaLinearParam bo) ;
 
     /**
      *
@@ -56,7 +56,7 @@ public interface IHighImpactAnalysisService {
      * @param specialLocationMap
      * @return
      */
-    public Feature[] mergeHcaFeatures(Feature[] hcaDataBeforeMerge ,BuildingLocationMap explosiveLocationMap , BuildingLocationMap specialLocationMap);
+    Feature[] mergeHcaFeatures(Feature[] hcaDataBeforeMerge, BuildingLocationMap explosiveLocationMap, BuildingLocationMap specialLocationMap);
 
     /**
      * 地区等级判定
@@ -65,7 +65,7 @@ public interface IHighImpactAnalysisService {
      * @param pipelineOid
      * @return
      */
-    public Feature[] areaGradeAnalysis(Feature[] feature ,String versionId,String pipelineOid) ;
+    Feature[] areaGradeAnalysis(Feature[] feature, String versionId, String pipelineOid) ;
 
     /**
      *
@@ -75,6 +75,6 @@ public interface IHighImpactAnalysisService {
      * @param pipelineOid
      * @return
      */
-    public int saveHcaResult(Feature[] result ,String areaVersionId ,String hcaVersionId ,String pipelineOid ) ;
+    int saveHcaResult(Feature[] result, String areaVersionId, String hcaVersionId, String pipelineOid) ;
 
 }

@@ -101,7 +101,7 @@
 					"title": "建筑分布", "field": "building_type"
 				},{
 					"title": "备注", "field": "description"
-				}]
+				}];
 	var app = new Vue({
 		el: "#app",
 		data: function () {
@@ -303,7 +303,7 @@
 								text: '处理居民数据中......',
 								spinner: 'el-icon-loading',
 								background: 'rgba(0, 0, 0, 0.7)'
-							})
+							});
 							common.simpleAjaxLoader({
 								url: "../../../../zone/settlement/save.do",
 								data: JSON.stringify(geomObj) ,
