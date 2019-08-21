@@ -121,24 +121,7 @@
       "layerSet":
       [
         {
-          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"32" ,"visible":false,"label2":{},
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
-          "listener": {
-            "onHover": {
-              "responseType": "tip",
-              "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE}<br>人口：{POPULATION}"
-            },
-            "onClick":{
-              "responseType":"dialog",
-              "title":"信息弹窗",
-              "iframe":true,
-              "width": "350px",
-              "height": "350px",
-              "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
-            }
-          }
-        },{
-          "id":"hca_pipeline","type":"feature","label":"管线","index":"29" ,
+          "id":"hca_pipeline","type":"feature","label":"管线","index":"29",
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
           "listener": {
             "onHover": {
@@ -146,6 +129,568 @@
               "template": "管线名称：{PIPELINE_NAME}<br>管线长度：{PIPELINE_LENGTH}KM<br>"
             }
           }
+        }, {
+          "id":"hca_buildings","type":"feature","label":"建（构）筑物","index":"32" ,"visible":false,
+          "layerSet":[
+            {
+              "id":"layerSet002","type":"feature","label":"特定场所",
+              "layerSet":[
+                {
+                  "id": "building_type_001","label": "医院","index": "41","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_001'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_002","label": "学校","index": "42","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_002'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_003","label": "托儿所","index": "43","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_003'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_004","label": "幼儿园","index": "44","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_004'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_005","label": "养老院","index": "45","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_005'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_006","label": "监狱","index": "46","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_006'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_007","label": "工厂","index": "47","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_007'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_008","label": "商场","index": "48","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_008'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_009","label": "集贸市场","index": "49","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_009'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_010","label": "寺庙","index": "50","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_010'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_011","label": "运动场","index": "51","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_011'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_012","label": "广场","index": "52","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_012'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_013","label": "娱乐休闲地","index": "53","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_013'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_014","label": "剧院","index": "54","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_014'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_015","label": "露营地","index": "55","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_015'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_025","label": "其他","index": "56","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_025'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                }
+              ]
+            },{
+              "id":"layerSet003",
+              "label":"非特定场所",
+              "layerSet":[
+                {
+                  "id": "building_type_019","label": "独立民居","index": "57","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_019'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_020","label": "居民区","index": "58","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_020'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_021","label": "商业区","index": "59","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_021'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_022","label": "工业区","index": "60","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_022'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_023","label": "规划区","index": "61","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_023'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_024","label": "市郊居民区","index": "62","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_024'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_027","label": "其他","index": "63","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_027'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                }
+              ]
+            },{
+              "id":"layerSet004",
+              "label":"易燃易爆场所",
+              "layerSet":[
+                {
+                  "id": "building_type_016","label": "加油站","index": "64","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_016'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_017", "label": "加气站","index": "65","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_017'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_018","label": "炸药库","index": "66","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_018'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                },{
+                  "id": "building_type_026","label": "其他","index": "67","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_026'",
+                  "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+                  "domain":{
+                    "BUILDING_TYPE":"BUILDING_TYPE_DOMAIN"
+                  },
+                  "listener": {
+                    "onHover": {
+                      "responseType": "tip",
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPEDOMAIN}<br>人口：{POPULATION}"
+                    },
+                    "onClick":{
+                      "responseType":"dialog",
+                      "title":"建(构)筑物信息",
+                      "iframe":true,
+                      "width": "350px",
+                      "height": "350px",
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         },{
           "id":"hca_area","type":"feature","label":"地区等级","index":"30" ,"visible":false,"where":"1!=1",
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
@@ -168,133 +713,7 @@
           "id":"drawlayer_area_buffer","type":"graphic","label":"缓冲区","index":"28"
         }
       ]
-  },{
-    "id":"layerSet002",
-    "label":"特定场所",
-    "layerSet":[
-      {
-        "id": "yiyuan",
-        "label": "医院",
-        "index": "41"
-      },{
-        "id": "xuexiao",
-        "label": "学校",
-        "index": "42"
-      },{
-        "id": "tuoersuo",
-        "label": "托儿所",
-        "index": "43"
-      },{
-        "id": "youeryuan",
-        "label": "幼儿园",
-        "index": "44"
-      },{
-        "id": "yanglaoyuan",
-        "label": "养老院",
-        "index": "45"
-      },{
-        "id": "jianyu",
-        "label": "监狱",
-        "index": "6"
-      },{
-        "id": "gongchang",
-        "label": "工厂",
-        "index": "47"
-      },{
-        "id": "shangchang",
-        "label": "商场",
-        "index": "48"
-      },{
-        "id": "jimaoshichang",
-        "label": "集贸市场",
-        "index": "49"
-      },{
-        "id": "simiao",
-        "label": "寺庙",
-        "index": "50"
-      },{
-        "id": "yundongchang",
-        "label": "运动场",
-        "index": "51"
-      },{
-        "id": "guangchang",
-        "label": "广场",
-        "index": "52"
-      },{
-        "id": "yule",
-        "label": "娱乐休闲地",
-        "index": "53"
-      },{
-        "id": "juyuan",
-        "label": "剧院",
-        "index": "54"
-      },{
-        "id": "luyingdi",
-        "label": "露营地",
-        "index": "55"
-      },{
-        "id": "qita1",
-        "label": "其他",
-        "index": "56"
-      }
-    ]
-  },{
-      "id":"layerSet003",
-      "label":"非特定场所",
-      "layerSet":[
-        {
-          "id": "dulijuming",
-          "label": "独立民居",
-          "index": "57"
-        },{
-          "id": "jumingqu",
-          "label": "居民区",
-          "index": "58"
-        },{
-          "id": "shangyequ",
-          "label": "商业区",
-          "index": "59"
-        },{
-          "id": "gongyequ",
-          "label": "工业区",
-          "index": "60"
-        },{
-          "id": "guihuaqu",
-          "label": "规划区",
-          "index": "61"
-        },{
-          "id": "shijiao",
-          "label": "市郊居民区",
-          "index": "62"
-        },{
-          "id": "qita2",
-          "label": "其他",
-          "index": "63"
-        }
-      ]
-    },{
-      "id":"layerSet004",
-      "label":"易燃易爆场所",
-      "layerSet":[
-        {
-          "id": "jiayouzhan",
-          "label": "加油站",
-          "index": "64"
-        },{
-          "id": "jiaqizhan",
-          "label": "加气站",
-          "index": "65"
-        },{
-          "id": "zhayaoku",
-          "label": "炸药库",
-          "index": "66"
-        },{
-          "id": "qita3",
-          "label": "其他",
-          "index": "67"
-        }
-      ]
-    }
+  }
   ]
 },
   "proxy":[],
@@ -407,13 +826,6 @@
       },
       {
         "type": "api",
-        "target": "func1",
-        "label":"全屏",
-        "icon":"../../jasframework/map_viewer/images/dock/draw.png",
-        "index": ""
-      },
-      {
-        "type": "api",
         "target": "drawSettlement",
         "label":"构（建）筑物标绘",
         "icon": "../../jasframework/map_viewer/images/dock/draw.png",
@@ -428,7 +840,7 @@
       "icon": "../../jasframework/map_viewer/images/dock/layers.png",
       "options":{
         "right":230,
-        "top":80
+        "top":50
       }
     },
     {
