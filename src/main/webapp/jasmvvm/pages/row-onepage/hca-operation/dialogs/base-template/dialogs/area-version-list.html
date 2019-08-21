@@ -24,8 +24,8 @@
 			height:50px;
 		}
 		.content-list{
-			margin-top:15px;
-			height: 280px;
+			margin-top:10px;
+			height: calc(100% - 100px);
 			overflow-x: hidden;
 			overflow-y: auto;
 		}
@@ -35,9 +35,6 @@
 		}
 		.el-pagination .btn-prev, .el-pagination .btn-next, .el-pagination button:disabled {
 			background: transparent;
-		}
-		.el-form-item__label, .el-pagination__total, .el-pagination__jump{
-			color:#fff;
 		}
 		.jas-dialog-self {
 			border: 1px solid #409EFF;
@@ -102,8 +99,7 @@
 	</style>
 </head>
 <body>
-<div id="app">
-	<div ref="mylist">
+	<div id="app">
 		<div class="filter-wrap">
 			<el-input prefix-icon="el-icon-search" size="small" placeholder="输入关键字进行过滤" v-model="filterText">
 			</el-input>
@@ -111,10 +107,10 @@
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
 				<ul class="data-ul" @click="locateAreaList(item,index)" :class="{active:showActive==index}">
-                    <li><span class="name-span">版本名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
-					<li><span class="name-span">版本编号：</span><span class="value-span">{{item.versionCode}}</span></li>
-					<li><span class="name-span">创建人：</span><span class="value-span">{{item.createUserName}} </span></li>
-					<li><span class="name-span">创建时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
+                    <li><span class="name-span">评价名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
+					<li><span class="name-span">评价编号：</span><span class="value-span">{{item.versionCode}}</span></li>
+					<li><span class="name-span">评价人：</span><span class="value-span">{{item.createUserName}} </span></li>
+					<li><span class="name-span">评价时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
 				</ul>
 			</div>
 		</div>
@@ -124,7 +120,6 @@
 			</el-pagination>
 		</div>
 	</div>
-</div>
 </body>
 <script src="../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="../../../../../../lib/vue/vue.js"></script>
@@ -235,12 +230,12 @@ var vm = new Vue({
 			var title = '地区等级列表';
 			var layerId = 'pd_arearank';
 			if(this.forBusiness == "0"){
-                top.jasMap.layerVisibleSwitch('pd_zonerankcell',false);
+                top.jasMap.layerVisibleSwitch('hca_area',false);
 			}
 			if(this.forBusiness == "1"){
 				title = '高后果区列表';
 				layerId = 'pd_zonerankcell';
-                top.jasMap.layerVisibleSwitch('pd_arearank',false);
+                top.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
 			}
             top.jasMap.updateLayer('hca_area',{
                 "show":true,

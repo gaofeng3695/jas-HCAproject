@@ -41,6 +41,7 @@ ol, dl, ul {
 	list-style:none;
 }
 .panel, .panel-header, .panel-body{
+	overflow-y:hidden;
 	border:0;
 	-webkit-border-radius:0;
     -moz-border-radius:0;

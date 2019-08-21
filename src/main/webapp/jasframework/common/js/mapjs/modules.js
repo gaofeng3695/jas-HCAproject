@@ -489,7 +489,7 @@ var LayerListTree = function(options){
     _self.state = "hide";//show
     _self.$tree = null;
     _self.template = "" +
-        "<div class='" + _self.moduleClass + " panel'>" +
+        "<div class='" + _self.moduleClass + " panel' style='overflow-y: auto'>" +
         "    <div class='tree'>" +
         "        <ul id='layerListTree'></ul>" +
         "    </div>" +
@@ -1425,7 +1425,7 @@ var DrawBox = function(options){
     };
     _self.moduleClass = 'Map-widget-DrawBox';
     _self.template =
-        '<div  class="'+ _self.moduleClass +'">' +
+        '<div  class="'+ _self.moduleClass +'" style="overflow-y: auto">' +
             '<ul>'+
                 '<li><img src="images/plot/delete.png" title="点击删除某个标绘" data-tool="DELETE" ></li>'+
                 '<li><img src="images/plot/point.png" title="点" data-tool="POINT" ></li>' +
@@ -1485,7 +1485,7 @@ var DrawAndEditPanel = function(options){
     };
     _self.moduleClass = 'Map-Widget-DrawPanel';
     _self.template =
-        '<div class="'+ _self.moduleClass +'">' +
+        '<div class="'+ _self.moduleClass +'" style="overflow-y: auto">' +
             '<div class="draw-section">' +
                 '<div class="title">' +
                      '<label>工具选择：</label>' +
