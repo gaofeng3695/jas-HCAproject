@@ -44,16 +44,6 @@
 
 <body>
 	<div class="login-wrap" >
-		<!-- <div class="applink" @click="centerDialogVisible = true">APP下载</div>
-		<el-dialog v-cloak title="APP下载" :visible.sync="centerDialogVisible" width="350px" center>
-			<div style="width:300px;height:300px;background: #00b7ff url(src/images/wecode.png) no-repeat center center">
-
-			</div>
-			<span slot="footer" class="dialog-footer">
-				<el-button size="small" @click="centerDialogVisible = false">取 消</el-button>
-				<el-button size="small" type="primary" @click="downloadApp">直接下载</el-button>
-			</span>
-		</el-dialog> -->
 		<div class="content">
 			<div class="content-bg">
 				<!-- <div class="start">
@@ -64,10 +54,8 @@
 				<div class="ms-login">
 					<!-- <div class="logo">
 					</div> -->
-					<el-tabs v-model="activeName" @tab-click="handleClick">
-						<el-tab-pane label="企业" name="zzq">企业</el-tab-pane>
-						<!-- <el-tab-pane label="盟市" name="hs">盟市</el-tab-pane>
-						<el-tab-pane label="企业" name="qy">企业</el-tab-pane> -->
+					<el-tabs v-model="activeName">
+						<el-tab-pane label="企业" name="zzq">用户</el-tab-pane>
 					</el-tabs>
 					<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" v-if="!logined" class="form">
 						<el-form-item prop="userid">
@@ -122,10 +110,10 @@
 				logined: 0,
 				isPersonal: false,
 				ruleForm: {
-					userid: 'zzq',
+					userid: '',
 					pass: '',
 					logintype: 0,
-					radio: "1"
+					radio: "0"
 				},
 				rules: {
 					username: [{
@@ -137,7 +125,7 @@
 						message: '请输入密码'
 					}]
 				},
-				activeName: 'zzq'
+				activeName: ''
 			};
 		},
 		watched: {
@@ -195,7 +183,6 @@
 			},
 			downloadApp: function () {
 				this.centerDialogVisible = false;
-				jasTools.ajax.downloadByIframe('get', 'http://download.zyax.cn/jasdaq.apk');
 			},
 			handleClick: function() {
 				this.ruleForm.userid = this.activeName
