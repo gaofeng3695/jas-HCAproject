@@ -255,6 +255,7 @@
                 isEdit:false,
                 fId:'',
                 layerId:"",
+                localAddress:""
             }
         },
         created: function(){
@@ -267,6 +268,8 @@
             var param = window.jasTools.base.getParamsInUrl(location.href);
             that.fId = param.fId;
             that.layerId = param.layerId;
+            that.localAddress = decodeURI(param.localAddress);
+            that.tableFormData.address = that.localAddress;
             if (param.oid) {
                 this.isEdit = true;
                 this.oid = param.oid;
