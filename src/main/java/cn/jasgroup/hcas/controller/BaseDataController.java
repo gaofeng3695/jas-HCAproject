@@ -51,11 +51,26 @@ public class BaseDataController {
      */
     @PostMapping(value = "domain/all")
     @ResponseBody
-    public BaseResult getAllDomainData() throws Exception {
+    public BaseResult getAllDomainData(@RequestBody Map<String ,Object> params) throws Exception {
         String sql = "select OID,DOMAIN_NAME as DOMAINNAME,CODE_ID as CODEID,CODE_NAME as CODENAME from sys_domain where active = 1";
         List<Map<String,Object>> data = jdbcTemplate.queryForList(sql);
         SimpleResult result = new SimpleResult<>();
         result.setData(data);
+        return result;
+    }
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "unique/check")
+    @ResponseBody
+    public BaseResult checkUniqueValue(@RequestBody UniqueCheckBO bo) throws Exception {
+        String sql = "select count(1) from " + bo.getTableName() + " where " + bo.getFieldName() + "= ? ";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{ bo.getFieldValue() },Integer.class);
+        SimpleResult result = new SimpleResult<>();
+        result.setData(count);
         return result;
     }
 

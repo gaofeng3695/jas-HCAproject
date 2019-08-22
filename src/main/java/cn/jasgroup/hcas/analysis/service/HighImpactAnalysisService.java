@@ -99,10 +99,10 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         Feature[] hcaData = classifyHighConsequenceArea(areaData ,bo,hcaVersionId);
 
         //重新生成高后果区单元,补充描述信息
-        preparedFeatureData(hcaData ,bo ,pipelineOid ,buffer);
+        Feature[] features = preparedFeatureData(hcaData ,bo ,pipelineOid ,buffer);
 
         //5、保存数据
-        int saveCount = saveHcaResult(hcaData,areaVersionOid, hcaVersionId ,pipelineOid);
+        int saveCount = saveHcaResult(features,areaVersionOid, hcaVersionId ,pipelineOid);
 
         hcaAnalysisResult.setTotal( saveCount);
         //hcaAnalysisResult.setFeatures( hcaData );
@@ -112,6 +112,12 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
 
         return hcaAnalysisResult;
     }
+
+    /**
+     *
+     * @param level
+     * @return
+     */
     protected String parseHcaLevel(int level){
         switch (level){
             case 1 :
@@ -124,10 +130,12 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
                 return "";
         }
     }
-    protected void preparedFeatureData(Feature[] hcaData,HcaLinearParam bo ,String pipelineOid,Double buffer){
+    protected Feature[] preparedFeatureData(Feature[] hcaData,HcaLinearParam bo ,String pipelineOid,Double buffer){
         //合并后重新计算单元几何坐标
         loggerUtil.time("重新生成高后果区单元");
         LinearReferenceUtil linearReferenceUtil = bo.getLinearReferenceUtil();
+
+        List<Feature> result = new ArrayList<>();
         for(int i = 0 ; i < hcaData.length ; i++){
             Map<String,Object> attrs = hcaData[i] .getAttributes();
             Double startMileage = MapUtil.getDouble(attrs,HcaAnalysisContext.startMileageFieldName );
@@ -147,12 +155,13 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             Geometry po =  GeometryUtil.buffer(p,buffer ,2);
             Geometry geom = GeometryUtil.gaussToBL(po);
             hcaData[i].setGeometry(geom);
-            //
-//            int level = MapUtil.getInt(attrs ,HcaAnalysisContext.hcaRankFieldName);
-//            String highLevel = parseHcaLevel(level);
-//            attrs.put( HcaAnalysisContext.hcaRankFieldName ,highLevel );
+            String rank = MapUtil.getString(attrs,HcaAnalysisContext.hcaRankFieldName);
+            if(StringUtil.isNotBlank(rank)){
+                result.add(hcaData[i]);
+            }
         }
         loggerUtil.timeEnd("重新生成高后果区单元");
+        return result.toArray(new Feature[0]) ;
     }
     /**
      * 划分高后果区
@@ -607,7 +616,10 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         loggerUtil.time("保存高后果区分析结果");
         //1、保存要素
         String source = HcaAnalysisContext.hcaSourceName;
+
+
         int[] result = geodataAccessService.addFeatures(source,features) ;
+
         int count = MathUtil.sum( result ) ;
         if(count == 0 ){
             throw new RuntimeException("高后果区分析结果保存失败！");
