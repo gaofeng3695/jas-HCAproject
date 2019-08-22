@@ -315,14 +315,15 @@
             save: function () {
                 var that = this;
                 var msg = "";
+                that.but_disabled = true;
                 if (!this.isEdit) {
                     msg = "增加成功";
-                    url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
+                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
                 } else {
                     msg = "修改成功";
-                    url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
+                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
                 }
-                that.but_disabled = true;
+                url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
                     top.Vue.prototype.$message({
                         type: 'success',

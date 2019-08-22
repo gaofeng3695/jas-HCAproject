@@ -311,6 +311,7 @@
         data: function () {
             return {
                 ismax: false,
+                baiduKey:"",
                 jasMap:null,
                 mapConfig:"config2.json",
                 layerId:"hca_pipeline",//空间表layerId (表名)
@@ -333,6 +334,9 @@
 
             that.jasMap = new JasMap({
                 appConfig:that.mapConfig,
+                onConfigLoaded:function(config){
+                    that.baiduKey = config.context["baidu-key"];
+                },
                 onOptionalLayersLoaded:function(){
                     that.jasMap.updateLayer('hca_pipeline',{
                         "show":true
@@ -384,7 +388,7 @@
                         //changedFeatures[fId] = feature;
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
-                        var key = "E9sBTCcBTuZBm9Gh56nIGkk5";
+                        var key = that.baiduKey;
                         var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=top.hcaMapApp.callback1&location="+location;
                         $.getScript(url);
                     }
