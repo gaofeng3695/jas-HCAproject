@@ -25,17 +25,19 @@
 <div id="app" v-cloak style="font-size: 13px;overflow-y:auto" >
 	<div style="margin: 0px 20px 20px 20px">
         <template>
+            <span>
             <jas-base-group-title name="基本信息"></jas-base-group-title>
             <jas-detail-table :titles="fields" :detail="detail"></jas-detail-table>
             <jas-base-group-title name="其他信息"></jas-base-group-title>
             <jas-detail-table :titles="fields2" :detail="detail"></jas-detail-table>
         </template>
+    </div>
     <div slot="footer" style="margin-bottom:10px;margin-top:10px;text-align:center">
         <!--<el-button size="small" type="primary" @click="drawSettlement()">绘制</el-button>-->
         <el-button size="small" type="primary" @click="editSettlement()">编辑</el-button>
         <el-button size="small" type="primary" @click="deleteSettlement()">删除</el-button>
     </div>
-
+</div>
 </body>
 <script src="../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="../../../../../../lib/vue/vue.js"></script>

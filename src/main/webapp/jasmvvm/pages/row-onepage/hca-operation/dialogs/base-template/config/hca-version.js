@@ -113,6 +113,10 @@ var pageConfig = {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
+            var lineGraphic = top.hcaMapApp.getPipeline();
+            var x = lineGraphic.geometry.paths[0][0][0];
+            var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+            that.jasMap.zoomAt(15,x ,y );
         },
         previewFile : function(row){
         	var that = this;
