@@ -12,13 +12,16 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.jasgroup.framework.data.result.BaseResult;
+import cn.jasgroup.framework.data.result.SimpleResult;
+import cn.jasgroup.hcas.elementunit.dao.entity.HcaBuildings;
+import cn.jasgroup.hcas.elementunit.service.HcaBuildingService;
 import cn.jasgroup.jasframework.domain.service.SysDomainService;
 import cn.jasgroup.jasframework.domain.service.bo.SysDomainBo;
 import cn.jasgroup.jasframework.security.service.bo.UnitBo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cn.jasgroup.hcas.elementunit.query.HcaBuildingsQuery;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
@@ -44,6 +47,8 @@ public class HcaBuildingsController extends BaseController {
 	private CommonDataJdbcService commonDataJdbcService;
     @Autowired
     private SysDomainService sysDomainService;
+
+    private HcaBuildingService hcaBuildingService = new HcaBuildingService();
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
 	 * <p> 张毅 </p>	
@@ -105,4 +110,20 @@ public class HcaBuildingsController extends BaseController {
 				propertyDesList, request, response, typeArr);
 		return null;
 	}
+
+	/**
+	 *<p>保存构筑物信息。</p>
+	 *<p>kongchao</p>
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping(value = "save")
+	@ResponseBody
+	public BaseResult save(@RequestBody HcaBuildings hcaBuildings) throws Exception {
+		int data = hcaBuildingService.save(hcaBuildings);
+		SimpleResult result = new SimpleResult<>();
+		result.setData(data);
+		return result;
+	}
+
 }

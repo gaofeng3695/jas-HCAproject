@@ -216,7 +216,7 @@ var M = JasMap = null;
             appName: "",
             appConfig:"config.json",
             defaultZoomLevel: 3,
-            featureLayerMode:6,//FeatureLayer.MODE_AUTO,
+            featureLayerMode:1,//6,//FeatureLayer.MODE_AUTO,FeatureLayer.MODE_ONDEMAND
             defaultSymbolColor: [255, 0, 0, 255],
             defaultSymbolFillColor: [115, 76, 45, 100],
             defaultHighlightColor: [0, 0, 255, 255],
