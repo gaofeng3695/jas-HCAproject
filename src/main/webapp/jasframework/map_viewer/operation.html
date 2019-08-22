@@ -132,12 +132,13 @@
         .title-div {
             position: absolute;
             left: 50%;
-            top: 40px;
+            top: 85px;
             transform: translateX(-50%);
             z-index: 10;
-            color:#409eff;
+            color:rgb(184, 222, 255);
         }
         .el-tag {
+            color:rgb(184, 222, 255) !important;
             border-color: #409EFF;
             padding: 0 5px !important;
         }
@@ -213,13 +214,6 @@
     <jas-onepage-wrapper :ismax="ismax">
         <template slot="center" >
             <div class="center">
-		    	<div class="title-div" hidden>
-			 		<label>当前识别管线：</label>
-			 		<el-tag>  </el-tag>
-			 		<el-tooltip effect="dark" content="退出识别" placement="right">
-			 			<el-button style="padding: 8px 8px" type="primary" icon="el-icon-circle-close-outline" @click="exitHca"></el-button>
-			 		</el-tooltip>
-			 	</div>
                 <!--左侧流程操作按钮-->
                 <div class="operate-left-div">
                     <div class="area-btn" @click="showHistoryBtn" v-show="isManage" title="地区等级划分"></div>
@@ -239,7 +233,6 @@
 <script src="../../jasmvvm/common/js/jas-tools.js"></script>
 <script src="../../jasmvvm/pages/row-onepage/hca-operation/components/onepage-components.js"></script>
 <script type="text/javascript" src="../../jasframework/common/js/common.js"></script>
-
 
 <script>
     //在引入init.js文件之前，定义dojoConfig全局变量，设置arcgis 模块命名空间
@@ -303,6 +296,7 @@
                 activeName:'',
                 pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
                 localAreaVersionOid:'',
+                localAddress:''
             }
         },
         computed: {},
@@ -346,6 +340,12 @@
             },
         },
         methods: {
+            callback1:function(e){
+                this.localAddress = e.result.formatted_address;
+                var fId = new Date().getTime();
+                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
+                window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
+            }  ,
             drawSettlement: function(){
                 var that = this;
                 this.jasMap.drawPolygon({
@@ -355,28 +355,38 @@
                         var fId = new Date().getTime();
                         feature.attributes = { id :fId};
                         //changedFeatures[fId] = feature;
-
-                        var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings"
-                        window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320,350);
+                        var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
+                        var location = locationCenter.y +","+ locationCenter.x;
+                        var key = "E9sBTCcBTuZBm9Gh56nIGkk5";
+                        var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=top.hcaMapApp.callback1&location="+location;
+                        $.getScript(url);
                     }
                 })
             },
-            createBufferDialog: function(pipelineOid){	// 调用识别区窗口
-            	var that = this;
+            createBufferDialog: function(pipelineOid){
                 this.pipelineOid = pipelineOid;
                 this.closeBufferWindow();
-                $("span[class=el-tag]").html(that.localPipelineName);
-				$('.title-div').toggle();
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
             closeBufferWindow: function(){
                 $('span.jas-dialog-close').trigger('click');
             },
-            createBuffer: function(){	// 调用识别区生成方法
+            createBuffer: function(){
                 var that = this;
                 var radius = app.bufferValue;
                 that.isManage = app.isManage;
                 window.jasTools.selfDialog.close();
+                var gasStationId = "pd_gas_station";
+                var entertainmentPlaceId = "pd_entertainment_place";
+                var hospitalId = "pd_hospital";
+                var governmentId = "pd_government";
+                this.jasMap.layerVisibleSwitch(gasStationId,true)
+                this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
+                this.jasMap.layerVisibleSwitch(hospitalId,true)
+                this.jasMap.layerVisibleSwitch(governmentId,true)
+                this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
+                this.jasMap.layerVisibleSwitch('pd_arearank',false)
+                this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
                 this.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({
@@ -391,14 +401,11 @@
                     onSuccess:function(result){
                         var json = JSON.parse(result);
                         var rings = json.data .rings;
-                        //clear
                         that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
                         this.jasMap.addPolygonGraphic(rings,{
                             layerId:'drawlayer_area_buffer',
                             color:[255,255,255,100],
                             outlineColor:[255,0,0,255],
-                            //fillColor:[42,42,42,1],
-                            //borderColor:[186,218,37,1],
                         });
                         var lineGraphic = that.getPipeline();
                         var x = lineGraphic.geometry.paths[0][0][0];
@@ -450,20 +457,25 @@
                 var that = this;
                 var common = this.jasMap.commonUtil;
                 var msg = "确认重新生成地区等级？";
-                var settlementLayerId = "hca_buidings";
+                var settlementLayerId = "pd_settlement";
                 that.$confirm(msg , "提示", {
                     type: 'warning',
                     callback: function (action) {
                         if (action === 'confirm') {
-                            that.jasMap.layerVisibleSwitch( "hca_high_impact_area" ,false);
-                            //that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-
+                            that.jasMap.layerVisibleSwitch( "hca_area" ,false);
+                            that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
                             const loading = that.$loading({
                                 lock: true,
                                 text: '合并要素单元......',
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
-                            })
+                            });
+                            /*setTimeout(function(){
+                                loading.text='处理识别单元......';
+                            }, 2000);*/
+                            setTimeout(function(){
+                                loading.text='地区等级划分......';
+                            }, 2000);
                             common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
@@ -477,10 +489,13 @@
                                     var result = JSON.parse(res) ;
                                     that.jasMap.updateLayer(settlementLayerId);
                                     that.createRankCellData(loading);
-                                    /*that.jasMap.updateLayer('hca_area',{
+                                    loading.close();
+                                    that.saveVersion('0',result.data.versionId);
+                                    that.jasMap.updateLayer('hca_area',{
                                         "show":true,
-                                        "where":"version_oid like'" + result+ "'"
-                                    })*/
+                                        "where":"version_oid like'" + result.data.versionId + "'"
+                                    });
+                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
@@ -503,17 +518,6 @@
                     deleteFlag: true,
                     geomName: "geom"
                 };
-                loading.text='空间相交计算......';
-                setTimeout(function(){
-                    loading.close();
-                    that.jasMap.layerVisibleSwitch("pd_arearank" ,true);
-                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
-                    //that.saveVersion('0',result.versionOid);
-                    that.saveVersion('0','');
-                    /*that.saveVersion('0', function(){
-                        that.showAreaDialogCreate('0', '地区等级列表', '150px');
-                    });*/
-                }, 1000);
             },
             loadAreaRankData: function(data){	// 加载已有地区等级信息
                 that.showAreaDialogCreate('0', '地区等级列表', '150px');
@@ -608,13 +612,19 @@
                     callback: function(action){
                         if (action === 'confirm') {
                             that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
-                            that.jasMap.layerVisibleSwitch( "pd_zonerankcell" ,true);
+                            that.jasMap.layerVisibleSwitch( "hca_high_impact_area" ,true);
                             var loading = that.$loading({
                                 lock: true,
                                 text: '计算影响区域......',
                                 spinner: 'el-icon-loading',
                                 background: 'rgba(0, 0, 0, 0.7)'
                             });
+                            /*setTimeout(function(){
+                                loading.text='处理要素信息......';
+                            }, 2000);*/
+                            setTimeout(function(){
+                                loading.text='高后果区识别......';
+                            }, 2000);
                             common.simpleAjaxLoader({
                                 url:jasTools.base.rootPath + "/analysis/high/"+localAreaVersionOid+"/doHcaAnalysis.do",
                                 data: JSON.stringify({
@@ -622,20 +632,14 @@
                                 async: true,
                                 onSuccess: function(res){
                                     var result = JSON.parse(res) ;
-                                    that.jasMap.updateLayer(settlementLayerId);
-                                    loading.text='高后果区计算......';
-                                    setTimeout(function(){
-                                        loading.close();
-                                    }, 1000);
-                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
-                                    //that.saveVersion('1',result.versionOid);
-                                      that.saveVersion('1','');
-                                      that.loadZoneCell();
-
-                                    /*that.jasMap.updateLayer('hca_high_impact_area',{
+                                    loading.close();
+                                    that.saveVersion('1',result.data.versionId);
+                                    that.jasMap.updateLayer('hca_high_impact_area',{
                                         "show":true,
-                                        "where":"version_oid like'" + result+ "'"
-                                    })*/
+                                        "where":"version_oid like'" + result.data.versionId + "'"
+                                    });
+                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
+                                    that.loadZoneCell();
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
@@ -714,7 +718,7 @@
                     strategy:"all"
                 });
             },
-            showHistoryBtn: function(){	// 打开地区等级选择窗口
+            showHistoryBtn: function(){
                 var that = this;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
@@ -732,7 +736,7 @@
             },
             exitHca: function(){
                 var that = this;
-                top.app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
+                app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
