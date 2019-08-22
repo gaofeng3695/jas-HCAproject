@@ -59,4 +59,19 @@ public class BaseDataController {
         return result;
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "unique/check")
+    @ResponseBody
+    public BaseResult checkUniqueValue(@RequestBody UniqueCheckBO bo) throws Exception {
+        String sql = "select count(1) from " + bo.getTableName() + " where " + bo.getFieldName() + "= ? ";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{ bo.getFieldValue() },Integer.class);
+        SimpleResult result = new SimpleResult<>();
+        result.setData(count);
+        return result;
+    }
+
 }

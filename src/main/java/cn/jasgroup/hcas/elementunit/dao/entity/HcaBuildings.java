@@ -7,6 +7,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import cn.jasgroup.framework.spatial.support.enumeration.CalculateType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import cn.jasgroup.framework.spatial.annotation.Surface;
@@ -34,7 +35,11 @@ import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 @CommonSaveConfig(scene="/hcabuildings/save")
 @CommonUpdateConfig(scene="/hcabuildings/update")
 @CommonDeleteConfig(scene="/hcabuildings/delete")
-@Surface(geometryColumnName = "shape")
+@Surface(
+		geometryColumnName = "shape",
+		calculateType = CalculateType.Coordinates
+)
+
 @JdbcEntity(name = "hca_buildings")
 public class HcaBuildings extends ArcGisSpatialObject {
 
@@ -43,10 +48,10 @@ public class HcaBuildings extends ArcGisSpatialObject {
 	 * 构筑物编号 
 	 */
 	private String buildingCode;
-	/**
-	 *
-	 */
-	private String geometry;
+//	/**
+//	 *
+//	 */
+    private String geometry;
 
 	/**
 	 * 起始里程 
@@ -233,14 +238,6 @@ public class HcaBuildings extends ArcGisSpatialObject {
 		super.setField("population");
 	}
 
-	@Column(name="shape")
-	public String getGeometry() {
-		return geometry;
-	}
-
-	public void setGeometry(String geometry) {
-		this.geometry = geometry;
-	}
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 

@@ -1,6 +1,7 @@
 package cn.jasgroup.hcas.elementunit.service; 
 
 import cn.jasgroup.hcas.elementunit.dao.entity.HcaBuildings;
+import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildings2;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After; 
@@ -14,7 +15,8 @@ import org.junit.After;
 */ 
 public class HcaBuildingServiceTest { 
 
-    HcaBuildingService hcaBuildingService = new HcaBuildingService();
+HcaBuildingService hcaBuildingService = new HcaBuildingService();
+
 @Before
 public void before() throws Exception { 
 } 
@@ -40,8 +42,8 @@ public void testSave() throws Exception {
 */ 
 @Test
 public void testUpdate() throws Exception { 
-//TODO: Test goes here...
-    HcaBuildings hcaBuildings = new HcaBuildings();
+    //TODO: Test goes here...
+    HcaBuildings2 hcaBuildings = new HcaBuildings2();
     hcaBuildings.setOid("adc");
     hcaBuildings.setObjectId(1);
     hcaBuildings.setGeometry("(113 34.324 45,113.34 34.324 45,113.54 34.524 45,113 34.324 45),(112 34.324 45,113.34 34.324 45,113.54 34.524 45,112 34.324 45)");
@@ -57,7 +59,7 @@ public void testUpdate() throws Exception {
 @Test
 public void testAdd() throws Exception { 
 //TODO: Test goes here...
-    HcaBuildings hcaBuildings = new HcaBuildings();
+    HcaBuildings2 hcaBuildings = new HcaBuildings2();
     hcaBuildings.setGeometry("(113 34.324 45,113.34 34.324 45,113.54 34.524 45,113 34.324 45),(112 34.324 45,113.34 34.324 45,113.54 34.524 45,112 34.324 45)");
     hcaBuildingService.add(hcaBuildings);
 } 
