@@ -59,7 +59,7 @@ public class HcaDataToolsController {
         SimpleResult result = new SimpleResult();
         Integer max = MapUtil.getInt(params,"max");
         String srs = MapUtil.getString(params,"sourceName","hca_buildings");
-        String where = MapUtil.getString(params,"where"," SHAPE is not null ");
+        String where = MapUtil.getString(params,"where"," SHAPE is not null and " + HcaAnalysisContext.buildingTypeFieldName + " like '" + HcaAnalysisContext.buildingTypeValue_Settlement + "'" );
         String outFields = MapUtil.getString(params,"outFields","OID,POPULATION,OBJECTID");
         LayerQueryParam layerQueryParam = new LayerQueryParam();
         layerQueryParam.setSrsname(srs);

@@ -59,11 +59,15 @@ public class HcaAnalysisContext {
 
     public static String startYFieldName = "start_y";
 
-    public static String buildingTypeFieldName = "building_distribution";
+    public static String buildingTypeFieldName = "building_type";
 
-    public static String areaRandRemarkFieldName = "description";
+    public static String buildingTypeValue_Settlement= "building_type_020";
 
-    public static String hcaRemarkFieldName = "remarks";
+    public static String buildingDistributionTypeFieldName = "building_distribution";
+
+    public static String areaRandRemarkFieldName = "description";//
+
+    public static String hcaRemarkFieldName = "description";//描述
 
     public static String areaRankFieldName = "region_level";
 
@@ -130,9 +134,9 @@ public class HcaAnalysisContext {
 
     public final static String HcaLevel_I = "high_impact_level_001" ;
 
-    public final static String HighBuildingType = "四层及四层以上建筑为主";
+    public final static String HighBuildingDistributionType = "四层及四层以上建筑为主";
 
-    public final static String LowBuildingType = "四层以下建筑为主";
+    public final static String LowBuildingDistributionType = "四层以下建筑为主";
 
     private static String explosivePlaceExpress = null ;
 

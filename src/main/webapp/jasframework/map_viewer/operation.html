@@ -312,7 +312,8 @@
                 activeName:'',
                 pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
                 localAreaVersionOid:'',
-                localAddress:''
+ 				localAddress:'',
+                domainData:[]
             }
         },
         computed: {},
@@ -320,6 +321,7 @@
         },
         created: function () {
             var that = this;
+
             that.jasMap = new JasMap({
                 appConfig:that.mapConfig,
                 onOptionalLayersLoaded:function(){
@@ -770,6 +772,26 @@
                 }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
             },
+            loadDomainData:function(){
+                var _this = this ;
+                if(_this.domainData.length > 0){
+                    return top.domainData;
+                }
+                $.ajax({
+                    url:getRootPath() + "basedata/domain/all.do",
+                    dataType:"json",
+                    async:false,
+                    type:"post",
+                    success:function(re){
+                        _this.domainData = re.data;
+                        console.info("成功获取"+ re.data.length +"条阈值数据" )
+                    },
+                    error:function(e){
+                        console.error(e);
+                    }
+                });
+                return _this.domainData;
+            }
         }
     })
 </script>

@@ -28,3 +28,24 @@ var dojoConfig = {
     "baseUrl":"../../jasframework/common/lib/esri/3.18/dojo"
 };
 
+var projectTools = {} ;
+
+var projectDomainData = [];
+var getProjectDomainData  = function(){
+    if(projectDomainData && projectDomainData.length !== 0){
+        return projectDomainData;
+    }
+    $.ajax({
+        url:getRootPath() + "basedata/domain/all.do",
+        dataType:"json",
+        async:false,
+        type:"post",
+        success:function(re){
+            projectDomainData = re.data;
+        },
+        error:function(e){
+            console.error(e);
+        }
+    });
+};
+

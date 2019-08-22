@@ -103,23 +103,28 @@ define([
             e.graphic.setSymbol(null);
             this._holdHighlightSymbol(e.graphic);
         },
-        onGraphicAdd:function(e){
-            this.inherited(arguments);
-            if(this._domain  ){
-                for(var field  in this._domain  ){
+        _parseDomainData:function(e){
+            for(var i = 0 ; i < this.graphics.length ; i++) {
+                var attr = this.graphics[i].attributes ;
+                for (var field  in this._domain) {
                     var domainName = this._domain[field];
-                    var code = e.attributes[field];
-                    var key = domainName + code ;
+                    var code = attr[field];
+                    var key = domainName + code;
                     var name = this._mapApi.domainMap[key];
-                    e.attributes[field.toUpperCase() + "_NAME"] = name;
+                    attr[field.toUpperCase() + "_NAME"] = name;
                 }
             }
+            this.inherited(arguments);
+        },
+        onUpdateStart :function(e) {
+            this.inherited(arguments);
         },
         onUpdateEnd :function(e){
             this.inherited(arguments);
             this._flashFilterFunc && this._flashFilterFunc(e);
             //this._highlightFilterFunc && this._highlightFilterFunc(e);
             this._options && this._options.tips && this._mapApi.setLayerTips(this.id,this._options.tips);//设置图层提示
+            this._domain && this._parseDomainData();
         },
         _holdHighlightSymbol:function(e){
             if(!this.hightlightGraphicIdsObject){

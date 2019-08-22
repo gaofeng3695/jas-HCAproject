@@ -706,6 +706,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         return list.get(0);
     }
 
+
     /**
      *
      * @return
@@ -713,7 +714,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
     private String getExplosiveQueryExpress(){
         String exp = HcaAnalysisContext.getExplosivePlaceExpress();
         if(StringUtil.isBlank(exp)){
-            String domains = hcaCommonService.getCodeIdsByParentCodeId("building_type_parent_001");
+            String domains = hcaCommonService.getCodeIdsByParentCodeId("building_type_parent_002");
             exp = "building_type in(" + domains + ")" ;
             HcaAnalysisContext.setExplosivePlaceExpress(exp);
         }
@@ -723,7 +724,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
     private String getSpecialQueryExpress(){
         String exp = HcaAnalysisContext.getSpecialPlaceExpress();
         if(StringUtil.isBlank(exp)){
-            String domains = hcaCommonService.getCodeIdsByParentCodeId("building_type_parent_002");
+            String domains = hcaCommonService.getCodeIdsByParentCodeId("building_type_parent_001");
             exp = "building_type in(" + domains + ")" ;
             HcaAnalysisContext.setSpecialPlaceExpress(exp);
         }

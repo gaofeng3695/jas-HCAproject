@@ -43,6 +43,10 @@ public class HcaBuildings extends ArcGisSpatialObject {
 	 * 构筑物编号 
 	 */
 	private String buildingCode;
+	/**
+	 *
+	 */
+	private String geometry;
 
 	/**
 	 * 起始里程 
@@ -229,7 +233,17 @@ public class HcaBuildings extends ArcGisSpatialObject {
 		super.setField("population");
 	}
 
+	@Column(name="shape")
+	public String getGeometry() {
+		return geometry;
+	}
+
+	public void setGeometry(String geometry) {
+		this.geometry = geometry;
+	}
+
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+
 	@Temporal(TemporalType.DATE)
 	public Date getCollectDate() {
 		return collectDate;
