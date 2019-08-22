@@ -132,13 +132,12 @@
         .title-div {
             position: absolute;
             left: 50%;
-            top: 85px;
+            top: 40px;
             transform: translateX(-50%);
             z-index: 10;
-            color:rgb(184, 222, 255);
+            color:#409eff;
         }
         .el-tag {
-            color:rgb(184, 222, 255) !important;
             border-color: #409EFF;
             padding: 0 5px !important;
         }
@@ -214,6 +213,13 @@
     <jas-onepage-wrapper :ismax="ismax">
         <template slot="center" >
             <div class="center">
+                <div class="title-div" hidden>
+                    <label>当前识别管线：</label>
+                    <el-tag>  </el-tag>
+                    <el-tooltip effect="dark" content="退出识别" placement="right">
+                        <el-button style="padding: 8px 8px" type="primary" icon="el-icon-circle-close-outline" @click="exitHca"></el-button>
+                    </el-tooltip>
+                </div>
                 <!--左侧流程操作按钮-->
                 <div class="operate-left-div">
                     <div class="area-btn" @click="showHistoryBtn" v-show="isManage" title="地区等级划分"></div>
@@ -363,30 +369,22 @@
                     }
                 })
             },
-            createBufferDialog: function(pipelineOid){
+            createBufferDialog: function(pipelineOid){	// 调用识别区窗口
+                var that = this;
                 this.pipelineOid = pipelineOid;
                 this.closeBufferWindow();
+                $("span[class=el-tag]").html(that.localPipelineName);
+                $('.title-div').toggle();
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
             closeBufferWindow: function(){
                 $('span.jas-dialog-close').trigger('click');
             },
-            createBuffer: function(){
+            createBuffer: function(){	// 调用识别区生成方法
                 var that = this;
                 var radius = app.bufferValue;
                 that.isManage = app.isManage;
                 window.jasTools.selfDialog.close();
-                var gasStationId = "pd_gas_station";
-                var entertainmentPlaceId = "pd_entertainment_place";
-                var hospitalId = "pd_hospital";
-                var governmentId = "pd_government";
-                this.jasMap.layerVisibleSwitch(gasStationId,true)
-                this.jasMap.layerVisibleSwitch(entertainmentPlaceId,true)
-                this.jasMap.layerVisibleSwitch(hospitalId,true)
-                this.jasMap.layerVisibleSwitch(governmentId,true)
-                this.jasMap.layerVisibleSwitch('pd_arearankcell',false)
-                this.jasMap.layerVisibleSwitch('pd_arearank',false)
-                this.jasMap.layerVisibleSwitch('pd_zonerankcell',false)
                 this.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({
@@ -457,13 +455,13 @@
                 var that = this;
                 var common = this.jasMap.commonUtil;
                 var msg = "确认重新生成地区等级？";
-                var settlementLayerId = "pd_settlement";
+                var settlementLayerId = "hca_buidings";
                 that.$confirm(msg , "提示", {
                     type: 'warning',
                     callback: function (action) {
                         if (action === 'confirm') {
-                            that.jasMap.layerVisibleSwitch( "hca_area" ,false);
-                            that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
+                            that.jasMap.layerVisibleSwitch( "hca_high_impact_area" ,false);
+                            //that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
                             const loading = that.$loading({
                                 lock: true,
                                 text: '合并要素单元......',
@@ -495,7 +493,11 @@
                                         "show":true,
                                         "where":"version_oid like'" + result.data.versionId + "'"
                                     });
-                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
+                                    //that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
+                                    var lineGraphic = that.getPipeline();
+                                    var x = lineGraphic.geometry.paths[0][0][0];
+                                    var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+                                    that.jasMap.zoomAt(15,x ,y );
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
@@ -638,8 +640,12 @@
                                         "show":true,
                                         "where":"version_oid like'" + result.data.versionId + "'"
                                     });
-                                    that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
-                                    that.loadZoneCell();
+                                    //that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695');
+                                    //that.loadZoneCell();
+                                    var lineGraphic = that.getPipeline();
+                                    var x = lineGraphic.geometry.paths[0][0][0];
+                                    var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+                                    that.jasMap.zoomAt(15,x ,y );
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示')
@@ -718,7 +724,7 @@
                     strategy:"all"
                 });
             },
-            showHistoryBtn: function(){
+            showHistoryBtn: function(){	// 打开地区等级选择窗口
                 var that = this;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
@@ -736,7 +742,7 @@
             },
             exitHca: function(){
                 var that = this;
-                app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
+                top.app.$confirm('是否退出识别？（未保存识别信息将丢失）',  "提示",  {
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
