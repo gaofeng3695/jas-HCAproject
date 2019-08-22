@@ -464,8 +464,6 @@
                                 async: true,
                                 onSuccess: function(res){
                                     var result = JSON.parse(res) ;
-                                    that.jasMap.updateLayer(settlementLayerId);
-                                    that.createRankCellData(loading);
                                     loading.close();
                                     that.saveVersion('0',result.data.versionId);
                                     that.jasMap.updateLayer('hca_area',{
