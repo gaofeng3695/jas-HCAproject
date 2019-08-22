@@ -3,6 +3,7 @@ package cn.jasgroup.hcas.versionmaanage.query;
 import org.apache.commons.lang.StringUtils;
 
 import cn.jasgroup.hcas.versionmaanage.query.bo.HcaVersionBo;
+import cn.jasgroup.jasframework.base.annotation.Process;
 import cn.jasgroup.jasframework.base.annotation.QueryConfig;
 import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
 
@@ -14,7 +15,13 @@ import cn.jasgroup.jasframework.base.data.BaseJavaQuery;
  * @since JDK 1.80
  */
 
-@QueryConfig(scene = "/hcaversion/getPage", resultClass = HcaVersionBo.class)
+@QueryConfig(scene = "/hcaversion/getPage", resultClass = HcaVersionBo.class
+	/*,
+	queryBeforeProcess={
+			@Process(service="hcaInjectService",method="injectDataAuthoritySql(dataAuthoritySql)"),	
+			// {@link cn.jasgroup.jasframework.privilege.service.HcaInjectService#injectDataAuthoritySql}
+	}*/
+)
 public class HcaVersionQuery extends BaseJavaQuery{
 	/**
 	 * oid
@@ -66,6 +73,7 @@ public class HcaVersionQuery extends BaseJavaQuery{
 				sql += " and t.for_business = :forBusiness ";
 			}
 		}
+		//sql += this.dataAuthoritySql;
 		sql+= " order by t.create_datetime desc";
 		return sql;
 	}

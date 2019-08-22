@@ -21,7 +21,7 @@ import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 
 @UniqueConstraints(
     strategys ={
-        @UniqueConstraintStrategy(columnNames={"pipelineName"},name="管线名称"),
+//        @UniqueConstraintStrategy(columnNames={"pipelineName"},name="管线名称"),
         @UniqueConstraintStrategy(columnNames={"pipelineCode"},name="管线编号"),
     }
 )

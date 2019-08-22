@@ -835,7 +835,7 @@
       {
         "type": "api",
         "target": "drawSettlement",
-        "label":"构（建）筑物标绘",
+        "label":"建（构）筑物标绘",
         "icon": "../../jasframework/map_viewer/images/dock/draw.png",
         "index": ""
       }
