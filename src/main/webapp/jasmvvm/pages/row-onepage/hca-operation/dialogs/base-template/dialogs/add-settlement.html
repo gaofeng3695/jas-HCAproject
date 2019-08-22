@@ -279,7 +279,9 @@
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
             });
-
+            this.getDomainSelect('building_type_domain',function (arr) {
+                that.domain.buildingType = arr;
+            });
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
             });
@@ -296,6 +298,7 @@
             parentDomainChange: function(codeId){
                 var that = this;
                 this.changeParentCodeId = codeId;
+                this.tableFormData.buildingType = "";
                 this.getChildDomainSelect('building_type_domain',function (arr) {
                     that.domain.buildingType = arr;
                 });

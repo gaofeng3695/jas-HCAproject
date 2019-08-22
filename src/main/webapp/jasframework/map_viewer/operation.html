@@ -112,7 +112,7 @@
         .el-loading-spinner .el-loading-text {
             color: #409EFF;
             margin: 3px 0;
-            font-size: 33px;
+            font-size: 50px;
         }
         .el-button--primary.is-plain, .el-button--default, .el-button--primary {
             color:#b5ddff;
@@ -189,21 +189,40 @@
         }
         .area-btn{
             cursor: pointer;
-            height: 40px;
+            height: 29px;
             line-height: 49px;
             text-align: center;
-            width: 40px;
-            background: url(images/lan_s1.png) no-repeat;
+            width: 20px;
+            background: url(images/huafen.png) no-repeat;
             margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #3588d8;
+            border: 1px solid #409EFF;
+            background-position-x: center;
+            background-position-y: center;
         }
         .hca-btn{
             cursor: pointer;
-            height: 40px;
+            height: 29px;
             line-height: 49px;
             text-align: center;
-            width: 40px;
-            background: url(images/icon_view.png) no-repeat;
-            margin: 26px 1px 0px;
+            width: 20px;
+            background: url(images/shibie.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #3588d8;
+            border: 1px solid #409EFF;
+            background-position-x: center;
+            background-position-y: center;
+        }
+        .el-loading-spinner {
+            top: 41%!important;
+        }
+        .el-loading-spinner.i {
+            font-size: 25px !important;
+        }
+        .el-loading-spinner .el-loading-text {
+            font-size: 25px !important;
         }
     </style>
 </head>
@@ -458,17 +477,18 @@
                 var common = this.jasMap.commonUtil;
                 var msg = "确认重新生成地区等级？";
                 var settlementLayerId = "hca_buidings";
-                that.$confirm(msg , "提示", {
+                top.Vue.prototype.$confirm(msg , "提示", {
                     type: 'warning',
                     callback: function (action) {
                         if (action === 'confirm') {
                             that.jasMap.layerVisibleSwitch( "hca_high_impact_area" ,false);
                             //that.jasMap.zoomAt('110.3530585' ,'34.540260695' ,15);
-                            const loading = that.$loading({
+                            const loading = top.Vue.prototype.$loading({
                                 lock: true,
                                 text: '合并要素单元......',
                                 spinner: 'el-icon-loading',
-                                background: 'rgba(0, 0, 0, 0.7)'
+                                background: 'rgba(0, 0, 0, 0.7)',
+                                height: "50px"
                             });
                             /*setTimeout(function(){
                                 loading.text='处理识别单元......';
@@ -502,7 +522,7 @@
                                     that.jasMap.zoomAt(15,x ,y );
                                 },
                                 onError: function(){
-                                    that.$alert('数据处理出错', '提示')
+                                    top.Vue.prototype.$alert('数据处理出错', '提示')
                                 }
                             });
                         }
@@ -592,7 +612,8 @@
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
                 if(!this.jasMap.getLayerVisible('hca_area')){
-                    that.$alert('请先进行地区等级划分', '提示', {
+                    top.Vue.prototype.$alert('请先进行地区等级划分', '提示', {
+                        type: 'warning',
                         callback: function(){
                         }
                     });
@@ -611,13 +632,13 @@
                     }
                 };
                 var common = this.jasMap.commonUtil;
-                that.$confirm('生成新的高后果区？',  "提示",  {
+                top.Vue.prototype.$confirm('生成新的高后果区？',  "提示",  {
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
                             that.jasMap.zoomAt(15,'110.3530585' ,'34.540260695' );
                             that.jasMap.layerVisibleSwitch( "hca_high_impact_area" ,true);
-                            var loading = that.$loading({
+                            var loading = top.Vue.prototype.$loading({
                                 lock: true,
                                 text: '计算影响区域......',
                                 spinner: 'el-icon-loading',
@@ -650,7 +671,7 @@
                                     that.jasMap.zoomAt(15,x ,y );
                                 },
                                 onError: function(){
-                                    that.$alert('数据处理出错', '提示')
+                                    top.Vue.prototype.$alert('数据处理出错', '提示')
                                 }
                             });
                         }

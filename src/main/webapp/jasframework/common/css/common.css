@@ -41,7 +41,6 @@ ol, dl, ul {
 	list-style:none;
 }
 .panel, .panel-header, .panel-body{
-	overflow-y:hidden;
 	border:0;
 	-webkit-border-radius:0;
     -moz-border-radius:0;
@@ -361,6 +360,7 @@ html {
 }
 
 .window .window-body {
+    overflow-y:hidden;
     border: 0px;
     background:#f1f1f1;
     padding:10px;
