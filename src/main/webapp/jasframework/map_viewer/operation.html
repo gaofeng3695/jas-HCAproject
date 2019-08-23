@@ -371,7 +371,8 @@
             }  ,
             drawSettlement: function(){
                 var that = this;
-                this.jasMap.drawPolygon({
+                //this.jasMap.drawPolygon({
+                this.jasMap.startDrawAndEditMode("POLYGON",{
                     layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;

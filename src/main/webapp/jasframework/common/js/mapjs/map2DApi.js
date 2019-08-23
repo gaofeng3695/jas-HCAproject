@@ -2052,11 +2052,12 @@ var M = JasMap = null;
                     target:"drawPolygonAndGetArea"
                 });
             };
-            _this.editGraphic = function(){
+            _this.editGraphic = function(graphic,layerId){
 
             };
             _this.startDrawAndEditMode = function (tool, options) {
                 mapManager.drawToolActivate(tool ,options);
+                //mapManager.editToolActivate(options);
             };
             _this.clearAllGraphics = function () {
                 _this.clearMapGraphics();
@@ -3816,7 +3817,8 @@ var M = JasMap = null;
                     var drawType = tool.toLowerCase();
                     var defaults = {
                         layerId:"",
-                        onDrawEnd:null
+                        onDrawEnd:null,
+                        edit:true
                     };
                     var params = lang.mixin({},defaults,options);
                     var drawLayer = _this.getLayerById(params.layerId);
@@ -3830,7 +3832,21 @@ var M = JasMap = null;
                     }else{
                         drawLayer = _this.map.graphics
                     }
-
+                    if(params.edit){
+                        if(editActiveListener || editDeactiveListener){
+                            _this.removeEventListener(editActiveListener);
+                            _this.removeEventListener(editDeactiveListener);
+                            editActiveListener = null;
+                            editDeactiveListener = null;
+                        }
+                        editActiveListener =  drawLayer.on("click",function(evt){
+                            Event.stop(evt);
+                            activateEditTool(evt.graphic);
+                        });
+                        editDeactiveListener = _this.map.on("click",function(evt){
+                            editor.deactivate();
+                        });
+                    }
                     //绘制完成
                     switch(drawType){
                         case 'delete':
@@ -3847,6 +3863,25 @@ var M = JasMap = null;
                             _this.drawGraphic(tool.toLowerCase(),params);
                     }
                 };
+
+                _class.editToolActivate = function(options){
+                    var defaults = {
+                        layerId:""
+                    };
+                    var params = lang.mixin(defaults ,options);
+                };
+                var editActiveListener = null ;
+                var editDeactiveListener = null ;
+                var activateEditTool = function(graphic){
+                    var options = {
+                        allowAddVertices: true,
+                        allowDeleteVertices: true,
+                        uniformScaling: true
+                    };
+                    editor.activate(15, graphic, options);
+                };
+
+
                 var remoteDeleteListener = function(){
                     if(_class.onDrawLayerDeleteClick){
                         _class.onDrawLayerDeleteClick = eventManager.destroyEventHandler(_class.onDrawLayerDeleteClick);
