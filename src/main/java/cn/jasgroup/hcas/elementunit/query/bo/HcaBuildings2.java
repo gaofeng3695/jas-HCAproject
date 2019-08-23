@@ -20,7 +20,8 @@ import java.util.Date;
 public class HcaBuildings2 extends ArcGisSpatialObject {
 
 
-	/**
+	public Long objectId ;
+ 	/**
 	 * 构筑物编号 
 	 */
 	private String buildingCode;
@@ -118,6 +119,20 @@ public class HcaBuildings2 extends ArcGisSpatialObject {
 	 * 备注 
 	 */
 	private String remarks;
+
+	/**
+	 *
+	 */
+	private String pipelineOid;
+
+
+	public String getPipelineOid() {
+		return pipelineOid;
+	}
+
+	public void setPipelineOid(String pipelineOid) {
+		this.pipelineOid = pipelineOid;
+	}
 
 	@Column(name="shape")
 	public String getGeometry() {
@@ -325,5 +340,6 @@ public class HcaBuildings2 extends ArcGisSpatialObject {
 		super.setField("pressurePipeline");
 		this.pressurePipeline = pressurePipeline;
 	}
+
 
 }

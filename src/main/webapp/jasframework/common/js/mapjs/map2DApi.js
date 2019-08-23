@@ -3950,7 +3950,7 @@ var M = JasMap = null;
                         "showLabels": true
                     };
                     var params = lang.mixin({}, options, mapOptions);
-                    if (params.extent) {
+                    if(params.extent) {
                         params.extent = new Extent(params.extent);
                     }
                     if(params.maxExtent){
