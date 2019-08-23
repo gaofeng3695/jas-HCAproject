@@ -310,7 +310,11 @@
                 pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
                 localAreaVersionOid:'',
  				localAddress:'',
-                domainData:[]
+                domainData:[],
+                hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
+                hcaBuildingsDrawGraphicId:"",
+                currentDrawBuildingGraphic:null
+
             }
         },
         computed: {},
@@ -367,12 +371,14 @@
             drawSettlement: function(){
                 var that = this;
                 this.jasMap.drawPolygon({
-                    layerId: "drawlayer_hca_buildings",
+                    layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;
-                        var fId = new Date().getTime();
-                        feature.attributes = { id :fId};
+                        //var fId = new Date().getTime();
+                        //var gra = feature.attr("id",fId);
                         //changedFeatures[fId] = feature;
+                        //that.hcaBuildingsDrawGraphicId = fId;
+                        that.currentDrawBuildingGraphic = feature;
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
                         var key = that.baiduKey;

@@ -193,8 +193,9 @@ var pageConfig = {
             if(!top.app.panelShowed){
                 top.app._goMap();
             }
+            var layerId = "hca_buildings#" + item.buildingType;
             //top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
-            top.jasMap.flashGraphic(item.oid, item.buildingType,{
+            top.jasMap.flashGraphic(item.oid,layerId,{
                 deep:2,
                 fieldName: 'OID'
             });

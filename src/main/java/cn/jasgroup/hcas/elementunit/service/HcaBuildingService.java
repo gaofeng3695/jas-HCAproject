@@ -51,10 +51,12 @@ public class HcaBuildingService {
      * @return
      */
     public int save( HcaBuildings2 hcaBuildings){
+        int result = 0 ;
         if(StringUtil.hasText(hcaBuildings.getOid() ) && hcaBuildings.getObjectId() >0){
-            return update(hcaBuildings);
+            result = update(hcaBuildings);
         }
-        return add(hcaBuildings);
+        result = add(hcaBuildings);
+        return result ;
     }
 
     /**
@@ -66,10 +68,12 @@ public class HcaBuildingService {
         Map<String,Object> attributes = InvokeSupportUtils.getTableValueMap(hcaBuildings);
         String sourceName = InvokeSupportUtils.getTableName(HcaBuildings2.class);
         String geoText = MapUtil.getString(attributes,geomFieldName);
-        Geometry geometry = GeometryUtil.createPolygon(geoText);
         Feature feature = new Feature();
         feature.setAttributes(attributes);
-        feature.setGeometry(geometry);
+        if(StringUtil.hasText(geoText)){
+            Geometry geometry = GeometryUtil.createPolygon(geoText);
+            feature.setGeometry(geometry);
+        }
         return geodataAccessService.updateFeature(sourceName,feature);
     }
 
@@ -82,15 +86,18 @@ public class HcaBuildingService {
         hcaBuildings.setActive(1);
 
         String geoText = hcaBuildings.getGeometry();
+        if(!StringUtil.hasText(geoText)){
+            throw new IllegalArgumentException("构筑物新建必须包含坐标数据！");
+        }
         Polygon geometry = GeometryUtil.createPolygon(geoText);
         prepareBuildingsData(geometry,hcaBuildings);
 
         Map<String,Object> attributes = InvokeSupportUtils.getTableValueMap(hcaBuildings);
         String sourceName = InvokeSupportUtils.getTableName(HcaBuildings2.class);
-
         Feature feature = new Feature();
         feature.setAttributes(attributes);
         feature.setGeometry(geometry);
+
         return geodataAccessService.addFeature(sourceName,feature);
     }
 

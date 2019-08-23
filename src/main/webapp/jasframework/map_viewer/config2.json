@@ -138,7 +138,7 @@
               "id":"layerSet002","type":"feature","label":"特定场所",
               "layerSet":[
                 {
-                  "id": "building_type_001","label": "医院","index": "41","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_001'",
+                  "id": "hca_buildings#building_type_001","label": "医院","index": "41","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_001'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -158,7 +158,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_002","label": "学校","index": "42","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_002'",
+                  "id": "hca_buildings#building_type_002","label": "学校","index": "42","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_002'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -178,7 +178,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_003","label": "托儿所","index": "43","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_003'",
+                  "id": "hca_buildings#building_type_003","label": "托儿所","index": "43","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_003'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -198,7 +198,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_004","label": "幼儿园","index": "44","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_004'",
+                  "id": "hca_buildings#building_type_004","label": "幼儿园","index": "44","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_004'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -218,7 +218,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_005","label": "养老院","index": "45","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_005'",
+                  "id": "hca_buildings#building_type_005","label": "养老院","index": "45","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_005'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -238,7 +238,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_006","label": "监狱","index": "46","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_006'",
+                  "id": "hca_buildings#building_type_006","label": "监狱","index": "46","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_006'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -258,7 +258,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_007","label": "工厂","index": "47","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_007'",
+                  "id": "hca_buildings#building_type_007","label": "工厂","index": "47","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_007'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -278,7 +278,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_008","label": "商场","index": "48","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_008'",
+                  "id": "hca_buildings#building_type_008","label": "商场","index": "48","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_008'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -298,7 +298,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_009","label": "集贸市场","index": "49","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_009'",
+                  "id": "hca_buildings#building_type_009","label": "集贸市场","index": "49","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_009'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -318,7 +318,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_010","label": "寺庙","index": "50","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_010'",
+                  "id": "hca_buildings#building_type_010","label": "寺庙","index": "50","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_010'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -338,7 +338,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_011","label": "运动场","index": "51","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_011'",
+                  "id": "hca_buildings#building_type_011","label": "运动场","index": "51","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_011'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -358,7 +358,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_012","label": "广场","index": "52","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_012'",
+                  "id": "hca_buildings#building_type_012","label": "广场","index": "52","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_012'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -378,7 +378,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_013","label": "娱乐休闲地","index": "53","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_013'",
+                  "id": "hca_buildings#building_type_013","label": "娱乐休闲地","index": "53","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_013'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -398,7 +398,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_014","label": "剧院","index": "54","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_014'",
+                  "id": "hca_buildings#building_type_014","label": "剧院","index": "54","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_014'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -418,7 +418,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_015","label": "露营地","index": "55","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_015'",
+                  "id": "hca_buildings#building_type_015","label": "露营地","index": "55","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_015'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -438,7 +438,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_025","label": "其他","index": "56","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_025'",
+                  "id": "hca_buildings#building_type_025","label": "其他","index": "56","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_025'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -464,7 +464,7 @@
               "label":"非特定场所",
               "layerSet":[
                 {
-                  "id": "building_type_019","label": "独立民居","index": "57","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_019'",
+                  "id": "hca_buildings#building_type_019","label": "独立民居","index": "57","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_019'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -484,7 +484,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_020","label": "居民区","index": "58","type":"feature","visible":true,"where":"BUILDING_TYPE='building_type_020'",
+                  "id": "hca_buildings#building_type_020","label": "居民区","index": "58","type":"feature","visible":true,"where":"BUILDING_TYPE='building_type_020'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -504,7 +504,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_021","label": "商业区","index": "59","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_021'",
+                  "id": "hca_buildings#building_type_021","label": "商业区","index": "59","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_021'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -524,7 +524,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_022","label": "工业区","index": "60","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_022'",
+                  "id": "hca_buildings#building_type_022","label": "工业区","index": "60","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_022'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -544,7 +544,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_023","label": "规划区","index": "61","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_023'",
+                  "id": "hca_buildings#building_type_023","label": "规划区","index": "61","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_023'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -564,7 +564,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_024","label": "市郊居民区","index": "62","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_024'",
+                  "id": "hca_buildings#building_type_024","label": "市郊居民区","index": "62","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_024'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -584,7 +584,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_027","label": "其他","index": "63","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_027'",
+                  "id": "hca_buildings#building_type_027","label": "其他","index": "63","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_027'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -610,7 +610,7 @@
               "label":"易燃易爆场所",
               "layerSet":[
                 {
-                  "id": "building_type_016","label": "加油站","index": "64","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_016'",
+                  "id": "hca_buildings#building_type_016","label": "加油站","index": "64","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_016'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -630,7 +630,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_017", "label": "加气站","index": "65","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_017'",
+                  "id": "hca_buildings#building_type_017", "label": "加气站","index": "65","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_017'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -650,7 +650,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_018","label": "炸药库","index": "66","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_018'",
+                  "id": "hca_buildings#building_type_018","label": "炸药库","index": "66","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_018'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"
@@ -670,7 +670,7 @@
                     }
                   }
                 },{
-                  "id": "building_type_026","label": "其他","index": "67","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_026'",
+                  "id": "hca_buildings#building_type_026","label": "其他","index": "67","type":"feature","visible":false,"where":"BUILDING_TYPE='building_type_026'",
                   "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
                   "domain":{
                     "BUILDING_TYPE":"building_type_domain"

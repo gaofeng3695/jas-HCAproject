@@ -244,6 +244,10 @@
 					'verticalDistance':'',
                     'pointx':'',
                     'pointy':'',*/
+				    'centerx':'',
+				    'centery':'',
+				    'pipelineOid':'',
+				    'geometry':'',
                     'buildingDistribution':'',
                     'households':'',
                     'population':'',
@@ -338,13 +342,34 @@
                     msg = "修改成功";
                     //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
                 }
+                var graphic = top.hcaMapApp.currentDrawBuildingGraphic;
+                var center = graphic.geometry.getExtent().getCenter();
+                that.tableFormData.centerx = center.x;
+                that.tableFormData.centery = center.y;
+                that.tableFormData.geometry = top.hcaMapApp.jasMap.geometryToText(graphic.geometry);
+                that.tableFormData.pipelineOid = top.hcaMapApp.pipelineOid;
+
                 url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
-                    top.Vue.prototype.$message({
-                        type: 'success',
-                        message: msg
-                    });
-                    that.cancel(1);
+                    if(data.data === 0 ){
+                        top.Vue.prototype.$message({
+                            type: 'error',
+                            message: "操作失败！"
+                        });
+					}else{
+                        top.Vue.prototype.$message({
+                            type: 'success',
+                            message: msg
+                        });
+                        //config.json中以表名和类型名作为图层的layerId
+                        var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
+                        top.hcaMapApp.jasMap.updateLayer(layerId,{
+                            show:true
+                        });
+                        var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                        top.hcaMapApp.jasMap.removeGraphic(gra);
+                        that.cancel(1);
+					}
                 });
             },
             requestDomainFromBizTable: function (url, obj, cb) {
