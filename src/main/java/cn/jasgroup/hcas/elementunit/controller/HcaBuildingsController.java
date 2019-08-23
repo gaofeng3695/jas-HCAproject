@@ -122,6 +122,11 @@ public class HcaBuildingsController extends BaseController {
 		int data = hcaBuildingService.save(hcaBuildings);
 		SimpleResult result = new SimpleResult<>();
 		result.setData(data);
+		if(data == 0 ){
+			result.setMsg("保存失败！");
+		}else{
+			result.setMsg("保存成功");
+		}
 		return result;
 	}
 
