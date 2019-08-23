@@ -379,6 +379,15 @@
                         var key = that.baiduKey;
                         var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=top.hcaMapApp.callback1&location="+location;
                         $.getScript(url);
+                        /*that.$confirm("绘图完毕，确定保存构建筑物基本信息？" , "提示", {
+                            type: 'warning',
+                            callback: function (action) {
+                                if (action === 'confirm') {
+                                    var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(that.localAddress)
+                                    window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
+                                }
+                            }
+                        });*/
                     }
                 })
             },

@@ -6,7 +6,7 @@ var pageConfig = {
     //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
     importConfig: {
-    	'functionName': "建构筑物",
+    	'functionName': "hcabuildingsinfo",
         'tableName': "hca_buildings",
         'exportUrl': "/hcabuildings/exportToExcelAction.do",
     },
@@ -193,8 +193,8 @@ var pageConfig = {
             if(!top.app.panelShowed){
                 top.app._goMap();
             }
-            //top.jasMap.flashGraphic(item.oid, 'hca_buildings',{
-            top.jasMap.flashGraphic(item.oid, item.buildingType,{
+            var layId = 'hca_buildings#'+item.buildingType;
+            top.jasMap.flashGraphic(item.oid, layId,{
                 deep:2,
                 fieldName: 'OID'
             });

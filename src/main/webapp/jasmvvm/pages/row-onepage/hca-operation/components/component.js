@@ -669,16 +669,18 @@ Vue.component('jas-hca-import-export-btns', {
             var that = this;
             var src = jasTools.base.rootPath + '/jasframework/components/excel/importExcelData.htm?tableName=' + this.importConfig.tableName;
             src += "&functionName=" + this.importConfig.functionName;
-            /*top.jasTools.dialog.show({
-                title: '导入',
-                width: '700px',
-                height: '600px',
+        	/*top.getDlg(src, "importiframe","导入", 700, 500);*/
+            top.jasTools.dialog.show({
                 src: src,
-                cbForClose: function () {
+                width: '700px',
+                height: '500px',
+                bottom:'20%',
+                left:'45%',
+                title: '导入',
+                cbForClose: function (param) {
                     that.$emit('refreshtable');
                 }
-            });*/
-        	top.getDlg(src, "importiframe","导入", 700, 500);
+            })
 
         },
         bt_export: function (obj) {

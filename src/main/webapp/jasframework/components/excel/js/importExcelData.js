@@ -243,8 +243,9 @@ function closeSave() {
 	if(!isNull(fileNameWithId)){
 		deleteErrorFile();
 	}else{
-		top.closeDlg('importiframe');
-	}
+		//top.closeDlg('importiframe');
+        window.parent.jasTools.dialog.close();
+    }
 }
 
 function handleStyle(){
@@ -272,8 +273,9 @@ function deleteErrorFile(){
 		success: function(result){
 			if(result.resultBoolean == true){
 				console.log(true);
-				top.closeDlg('importiframe');
-			}
+				//top.closeDlg('importiframe');
+                window.parent.jasTools.dialog.close();
+            }
 		}
 	});
 }
