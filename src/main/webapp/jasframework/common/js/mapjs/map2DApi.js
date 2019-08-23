@@ -261,7 +261,7 @@ var M = JasMap = null;
             'dojo/_base/lang', 'dojo/_base/array', 'dojo/Deferred', 'dojo/promise/all', "dojo/_base/event", "dojo/dom-construct", "dojo/topic",
             "esri/units","esri/urlUtils", "esri/tasks/GeometryService",
             "esri/tasks/LengthsParameters", "esri/tasks/AreasAndLengthsParameters","esri/tasks/BufferParameters","esri/tasks/DistanceParameters",
-            "esri/basemaps", "esri/map", "esri/SpatialReference","esri/geometry/Extent", "esri/geometry/Point", "esri/geometry/Circle","esri/geometry/Polyline",
+            "esri/basemaps", "esri/map", "esri/SpatialReference","esri/geometry/Extent", "esri/geometry/Point", "esri/geometry/Circle","esri/geometry/Polyline","esri/geometry/Polygon",
             "esri/InfoTemplate", "esri/graphic", "esri/graphicsUtils", "esri/geometry/Geometry" ,"esri/geometry/ScreenPoint",
             "esri/geometry/screenUtils", "esri/geometry/webMercatorUtils",
             "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/VectorTileLayer",
@@ -274,7 +274,7 @@ var M = JasMap = null;
             "dojo/domReady!"
         ], function (lang, array, Deferred, all, Event, domConstruct, topic, units ,urlUtils,
                      GeometryService, LengthsParameters, AreasAndLengthsParameters, BufferParameters,DistanceParameters,
-                     esriBasemaps, Map, SpatialReference,Extent, Point, Circle, Polyline,
+                     esriBasemaps, Map, SpatialReference,Extent, Point, Circle, Polyline,Polygon,
                      InfoTemplate, Graphic, graphicsUtils, Geometry , ScreenPoint, screenUtils, webMercatorUtils,
                      ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, VectorTileLayer,
                      Symbol,SimpleRenderer, SimpleMarkerSymbol, SimpleLineSymbol, PictureMarkerSymbol, SimpleFillSymbol, TextSymbol, Font, Color,
@@ -516,6 +516,10 @@ var M = JasMap = null;
                     layer.remove(targetGraphics[j]);
                 }
                 mapManager.refreshLayerTipDom();
+            };
+            _this.removeGraphic = function(graphic){
+                var layer = graphic.getLayer();
+                layer.remove(graphic);
             };
             _this.removeGraphicById = function(id ,layerId){
                 var params = {
@@ -1713,7 +1717,6 @@ var M = JasMap = null;
                     mapManager.deactivate(MapManager.DRAW);
                     _this.map.showZoomSlider();
                     _this.map.setMapCursor("default");
-                    eventManager.fireEventHandler(params.onDrawEnd, e);
                     if (params.drawOnMap) {
                         var symbol = null ;
                         if(params.symbol ){
@@ -1732,8 +1735,10 @@ var M = JasMap = null;
                             symbol:symbol.toJson(),
                             attributes:params.attributes
                         };
-
-                        _this.addGraphics(params.layerId ,[graphicObjects]);
+                        var gra =  _this.addGraphics(params.layerId ,[graphicObjects])[0];
+                        eventManager.fireEventHandler(params.onDrawEnd, gra);
+                    }else{
+                        eventManager.fireEventHandler(params.onDrawEnd, null);
                     }
                 };
                 mapManager.activate(MapManager.DRAW, [drawType]);
@@ -2859,6 +2864,67 @@ var M = JasMap = null;
             };
             _this.ajax = function(options){
                 return commonUtil.simpleAjaxLoader(options);
+            };
+            _this.geometryToText = function(geom){
+                var text= "";
+                if(geom instanceof Point){
+                    text = geom.x + " " + geom.y;
+                }else if(geom instanceof Polyline){
+                    var len =  geom.paths .length;
+                    if(len ===1){
+                        for(var i = 0 ; i < len ; i++){
+                            var path = geom.paths[i];
+                            for(var j = 0 ; j < path.length - 1 ;j++){
+                                var coor = path[j].join(" ");
+                                text += coor + ",";
+                            }
+                            text += path[ path.length - 1].join(" ");
+                        }
+                    }else{
+                        for(var i = 0 ; i < len ; i++){
+                            text += "(";
+                            var path = geom.paths[i];
+                            for(var j = 0 ; j < path.length - 1 ;j++){
+                                var coor = path[j].join(" ");
+                                text += coor + ",";
+                            }
+                            text += path[ path.length - 1].join(" ");
+                            text += ")";
+                            if(i < len - 1){
+                                text += ",";
+                            }
+                        }
+                    }
+                }else if(geom instanceof Polygon){
+                    var len =  geom.rings .length;
+                    if(len ===1){
+                        for(var i = 0 ; i < len ; i++){
+                            var ring = geom.rings[i];
+                            for(var j = 0 ; j < ring.length - 1 ;j++){
+                                var coor = ring[j].join(" ");
+                                text += coor + ",";
+                            }
+                            text += ring[ ring.length - 1].join(" ");
+                        }
+                    }else{
+                        for(var i = 0 ; i < len ; i++){
+                            text += "(";
+                            var ring = geom.rings[i];
+                            for(var j = 0 ; j < ring.length - 1 ;j++){
+                                var coor = ring[j].join(" ");
+                                text += coor + ",";
+                            }
+                            text += ring[ ring.length - 1].join(" ");
+                            text += ")";
+                            if(i < len - 1){
+                                text += ",";
+                            }
+                        }
+                    }
+                }else{
+                    eventManager.publishError("几何类型暂不支持！");
+                }
+                return text ;
             };
             /**
              * @param pointOutLine
