@@ -156,7 +156,6 @@
 			<el-button size="small" type="primary" @click="save()">确 定</el-button>
 		</div>
 	</jas-dialog-wrapper>
-
 </div>
 </body>
 <script src="./../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
@@ -170,12 +169,28 @@
         el: "#app",
         data: function () {
             var that = this;
+            let validateCodeUni = (rule, value, callback) => {
+                var url = jasTools.base.rootPath + "/basedata/unique/check.do";
+                jasTools.ajax.post(url, {
+                    tableName: "hca_buildings",
+                    fieldName: "building_code",
+                    fieldValue: value
+                }, function (result) {
+                    if(result.data == 1){
+                        callback('建(构)筑物编号已存在')
+                    }
+                });
+            }
+
             return {
                 but_disabled:false,
                 rules: {
                     buildingCode: [{
                         required: true,
                         message: '请输入建(构)筑物编号',
+                        trigger: 'blur'
+                    }, {
+                        validator:validateCodeUni,
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{

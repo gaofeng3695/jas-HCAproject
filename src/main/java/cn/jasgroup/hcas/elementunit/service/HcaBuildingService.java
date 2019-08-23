@@ -1,11 +1,19 @@
 package cn.jasgroup.hcas.elementunit.service;
 
 import cn.jasgroup.gis.data.Feature;
+import cn.jasgroup.gis.data.FeatureCollection;
 import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
+import cn.jasgroup.gis.dataaccess.LayerQueryParam;
 import cn.jasgroup.gis.dataaccess.arcgis.GeodataAccessService;
 import cn.jasgroup.gis.geometry.Geometry;
+import cn.jasgroup.gis.geometry.Point;
+import cn.jasgroup.gis.geometry.Polygon;
+import cn.jasgroup.gis.geometry.Polyline;
+import cn.jasgroup.gis.util.CoordinateSystemUtil;
 import cn.jasgroup.gis.util.GeometryUtil;
+import cn.jasgroup.gis.util.LinearReferenceUtil;
 import cn.jasgroup.gis.util.MapUtil;
+import cn.jasgroup.hcas.analysis.HcaAnalysisContext;
 import cn.jasgroup.hcas.elementunit.dao.entity.HcaBuildings;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildings2;
 import cn.jasgroup.jasframework.utils.InvokeSupportUtils;
@@ -16,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.faces.view.facelets.FaceletException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,7 +51,7 @@ public class HcaBuildingService {
      * @return
      */
     public int save( HcaBuildings2 hcaBuildings){
-        if(StringUtil.hasText(hcaBuildings.getOid() ) && hcaBuildings.getObjectId() > -1){
+        if(StringUtil.hasText(hcaBuildings.getOid() ) && hcaBuildings.getObjectId() >0){
             return update(hcaBuildings);
         }
         return add(hcaBuildings);
@@ -70,16 +79,63 @@ public class HcaBuildingService {
      * @return
      */
     public int add(HcaBuildings2 hcaBuildings){
-        String oid = UUID.randomUUID().toString();
-        hcaBuildings.setOid(oid);
-        Map<String,Object> attributes = InvokeSupportUtils.getTableValueMap(HcaBuildings2.class);
+        hcaBuildings.setActive(1);
+
+        String geoText = hcaBuildings.getGeometry();
+        Polygon geometry = GeometryUtil.createPolygon(geoText);
+        prepareBuildingsData(geometry,hcaBuildings);
+
+        Map<String,Object> attributes = InvokeSupportUtils.getTableValueMap(hcaBuildings);
         String sourceName = InvokeSupportUtils.getTableName(HcaBuildings2.class);
-        String geoText = MapUtil.getString(attributes,geomFieldName);
-        Geometry geometry = GeometryUtil.createPolygon(geoText);
+
         Feature feature = new Feature();
         feature.setAttributes(attributes);
         feature.setGeometry(geometry);
         return geodataAccessService.addFeature(sourceName,feature);
+    }
+
+    /**
+     *
+     * @param area
+     * @param hcaBuildings
+     */
+    protected void prepareBuildingsData(Geometry area,HcaBuildings2 hcaBuildings){
+        String pipelineOid = hcaBuildings.getPipelineOid() ;
+        //$、查询管线
+        LayerQueryParam param = new LayerQueryParam();
+        param.setSrsname(HcaAnalysisContext.pipelineSourceName);
+        param.setWhere(HcaAnalysisContext.TableKeyName + " like '" + pipelineOid + "'");
+        FeatureCollection collection = geodataAccessService.query(param);
+        if(collection == null || collection.getSize() == 0) {
+            throw new RuntimeException("没有查询到管线数据，table="+HcaAnalysisContext.pipelineSourceName+",oid=" + pipelineOid);
+        }
+        Feature f = collection.getFeatures().get(0);
+        Polyline pipeline = (Polyline) f.getGeometry();
+        //$、创建线性参考
+        LinearReferenceUtil linearReferenceUtil = new LinearReferenceUtil(pipeline);
+        linearReferenceUtil.resetMeasureByLocalLength();//
+        //$、计算前后里程值
+        Polygon projected = (Polygon) GeometryUtil.blToGuass(area);
+        Point[] points = projected.toPoints();
+        double startMileage = linearReferenceUtil.getLinearPolyline().getTotalLength() ;
+        double endMileage = 0d ;
+        Polyline linearLine = (Polyline) linearReferenceUtil.getLinearPolyline().getPolyline();
+        double verticalDistance = Double.MAX_VALUE ;
+        for(int i = 0 ; i < points .length ; i++){
+            Point point = points[i];
+            double mileage = linearReferenceUtil.interpolatePoint(point);
+            startMileage = Math.min(startMileage ,mileage);
+            endMileage = Math.max(endMileage ,mileage);
+            double distance = GeometryUtil.distance(point,linearLine);
+            verticalDistance = Math.min(verticalDistance,distance);
+        }
+        double start = Double.valueOf( String.format("%.3f",startMileage / 1000));
+        double end = Double.valueOf( String.format("%.3f",endMileage / 1000));
+        hcaBuildings.setStartMileage(start);
+        hcaBuildings.setEndMileage(end);
+        hcaBuildings.setHorizontalDistance(1000 *( end - start));
+        hcaBuildings.setVerticalDistance(verticalDistance);
+
     }
 
     public Logger getLogger() {
