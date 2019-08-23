@@ -6,7 +6,7 @@ var pageConfig = {
     savePath: '/jdbc/commonData/hcahighimpactarea/save.do',
     updatePath: '/jdbc/commonData/hcahighimpactarea/update.do',
     importConfig: {
-    	'functionName': "高后果区识别信息",
+    	'functionName': "hcahighinfo",
         'tableName': "hca_high_impact_area",
         'exportUrl': "/hcahighimpactarea/exportToExcelAction.do",
     },

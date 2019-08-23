@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import cn.jasgroup.framework.spatial.support.enumeration.CalculateType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -82,11 +81,6 @@ public class HcaBuildings extends ArcGisSpatialObject {
 	 * 起始坐标Y 
 	 */
 	private Double pointy;
-	
-	/**
-	 * 构筑物类别（特定场所、非特定场所、易燃易爆场所）
-	 */
-	private String buildingCategory;
 
 	/**
 	 * 构筑物类型 
@@ -240,7 +234,6 @@ public class HcaBuildings extends ArcGisSpatialObject {
 
 
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-
 	@Temporal(TemporalType.DATE)
 	public Date getCollectDate() {
 		return collectDate;

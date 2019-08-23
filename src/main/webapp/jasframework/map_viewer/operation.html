@@ -240,11 +240,12 @@
 <!-- import Vue before Element -->
 <script src="../../jasmvvm/lib/vue/vue.js"></script>
 <script src="../../jasmvvm/lib/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="../../jasframework/common/lib/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../jasframework/common/js/common.js"></script>
 <script src="../../jasmvvm/lib/element-ui/v2.4.1/index.min.js"></script>
 <script src="../../jasmvvm/common/components/jas-components.js"></script>
 <script src="../../jasmvvm/common/js/jas-tools.js"></script>
 <script src="../../jasmvvm/pages/row-onepage/hca-operation/components/onepage-components.js"></script>
-<script type="text/javascript" src="../../jasframework/common/js/common.js"></script>
 
 <script>
     //在引入init.js文件之前，定义dojoConfig全局变量，设置arcgis 模块命名空间
@@ -384,6 +385,15 @@
                         var key = that.baiduKey;
                         var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=top.hcaMapApp.callback1&location="+location;
                         $.getScript(url);
+                        /*that.$confirm("绘图完毕，确定保存构建筑物基本信息？" , "提示", {
+                            type: 'warning',
+                            callback: function (action) {
+                                if (action === 'confirm') {
+                                    var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(that.localAddress)
+                                    window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
+                                }
+                            }
+                        });*/
                     }
                 })
             },

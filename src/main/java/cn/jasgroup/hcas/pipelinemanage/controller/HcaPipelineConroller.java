@@ -89,7 +89,7 @@ public class HcaPipelineConroller extends BaseController {
 		// 调用导出工具类导出数据
 		String[] typeArr = { "管线信息", "管线信息" }; // {标题名,sheet名}
 		// 第一个参数表名为非空字符串,则进行模板查询,若有模板利用模板导出,没有则自动生成Excel导出;参数为空,则自动生成Excel导出
-		new ExcelExportUtil().exportWithTemplate("hca_pipeline", "管线信息", "管线信息.xls", map, propertyList, propertyDesList,
+		new ExcelExportUtil().exportWithTemplate("hca_pipeline", "pipelineinfo", "管线信息.xls", map, propertyList, propertyDesList,
 				request, response, typeArr);
 		return null;
 	}

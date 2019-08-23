@@ -20,8 +20,8 @@ import cn.jasgroup.jasframework.engine.jdbc.entity.CommonJdbcEntity;
 
 @UniqueConstraints(
     strategys ={
-        @UniqueConstraintStrategy(columnNames={"versionName"},name="版本名称"),
-        @UniqueConstraintStrategy(columnNames={"versionCode"},name="版本编号")
+        @UniqueConstraintStrategy(columnNames={"pipelineOid","forBusiness","versionName"},name="版本名称"),
+        @UniqueConstraintStrategy(columnNames={"pipelineOid","forBusiness","versionCode"},name="版本编号")
     }
 )
 @CommonSaveConfig(scene="/hcaversion/save")
