@@ -146,7 +146,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -166,7 +166,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -186,7 +186,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -206,7 +206,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -226,7 +226,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -246,7 +246,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -266,7 +266,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -286,7 +286,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -306,7 +306,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -326,7 +326,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -346,7 +346,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -366,7 +366,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -386,7 +386,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -406,7 +406,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -426,7 +426,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -446,7 +446,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -472,7 +472,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -492,7 +492,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -512,7 +512,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -532,7 +532,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -552,7 +552,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -572,7 +572,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -592,7 +592,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：非特定场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -618,7 +618,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：易燃易爆场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -638,7 +638,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：易燃易爆场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -658,7 +658,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：易燃易爆场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",
@@ -678,7 +678,7 @@
                   "listener": {
                     "onHover": {
                       "responseType": "tip",
-                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
+                      "template": "编号：{BUILDING_CODE}<br>建（构）筑物类别：易燃易爆场所<br>建（构）筑物类型：{BUILDING_TYPE_NAME}<br>人口：{POPULATION}"
                     },
                     "onClick":{
                       "responseType":"dialog",

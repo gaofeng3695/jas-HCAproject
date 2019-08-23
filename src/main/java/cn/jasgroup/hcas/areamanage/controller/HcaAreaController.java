@@ -37,6 +37,7 @@ public class HcaAreaController extends BaseController {
 
 	@Autowired
 	private HcaAreaService hcaAreaService;
+	
 
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
@@ -65,39 +66,52 @@ public class HcaAreaController extends BaseController {
 			propertyDesList = Arrays.asList(propertyDes.split(","));
 		}
 		List<HcaAreaBo> list = (List<HcaAreaBo>) this.hcaAreaService.getList(query);
+		List<Map<String, String>> geometryList = this.hcaAreaService.queryGeometryList(query);
 		// format导出数据的格式，确保数据的导出的正确性
 		List<Map<String, String>> map = new ArrayList<Map<String, String>>();
-		for (HcaAreaBo bo : list) {
-			Map<String, Object> ms = bo.getValueMap();
-			Set<String> key = ms.keySet();
-			Map<String, String> mss = new HashMap<>();
-			for (Iterator it = key.iterator(); it.hasNext();) {
-				String s = (String) it.next();
-				Object valueObject = null;
-				switch (s) {
-				case "pipelineOid":
-					valueObject = ms.get("pipelineName");
-					break;
-				case "versionOid":
-					valueObject = ms.get("versionName");
-					break;
-				case "regionLevel":
-					valueObject = ms.get("regionLevelName");
-					break;
-				default:
-					valueObject = ms.get(s);
-					break;
+		if(null != list && list.size() > 0 ){
+			int listSize = list.size();
+			for (int i=0; i<listSize; i++) {
+				HcaAreaBo bo = list.get(i);
+				String shapeText = "";
+				if(geometryList.size()>0){
+					shapeText = geometryList.get(i).get("shape");
 				}
-				String valueString = "";
-				// 如果为日期
-				if (valueObject instanceof Date) {
-					valueString = DateTimeUtil.getFormatDate((Date) valueObject, DateTimeUtil.DATE_FORMAT);
-				} else if (valueObject != null) {
-					valueString = String.valueOf(valueObject);
+				Map<String, Object> ms = bo.getValueMap();
+				ms.put("shape", "");
+				Set<String> key = ms.keySet();
+				Map<String, String> mss = new HashMap<>();
+				for (Iterator it = key.iterator(); it.hasNext();) {
+					String s = (String) it.next();
+					Object valueObject = null;
+					switch (s) {
+					case "pipelineOid":
+						valueObject = ms.get("pipelineName");
+						break;
+					case "versionOid":
+						valueObject = ms.get("versionName");
+						break;
+					case "regionLevel":
+						valueObject = ms.get("regionLevelName");
+						break;
+					default:
+						valueObject = ms.get(s);
+						break;
+					}
+					String valueString = "";
+					// 如果为日期
+					if (valueObject instanceof Date) {
+						valueString = DateTimeUtil.getFormatDate((Date) valueObject, DateTimeUtil.DATE_FORMAT);
+					} else if (valueObject != null) {
+						valueString = String.valueOf(valueObject);
+					}
+					if("shape".equals(s)){
+						valueString = shapeText;
+					}
+					mss.put(s, valueString);
 				}
-				mss.put(s, valueString);
+				map.add(mss);
 			}
-			map.add(mss);
 		}
 		// 调用导出工具类导出数据
 		String[] typeArr = { "地区等级划分信息", "地区等级划分信息" }; // {标题名,sheet名}
