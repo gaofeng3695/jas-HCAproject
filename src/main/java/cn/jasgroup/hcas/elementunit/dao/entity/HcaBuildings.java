@@ -29,7 +29,7 @@ import cn.jasgroup.jasframework.base.annotation.UniqueConstraints;
 
 @UniqueConstraints(
     strategys ={
-        @UniqueConstraintStrategy(columnNames={"buildingCode"},name="建（构）筑物编号")
+        @UniqueConstraintStrategy(columnNames={"active","buildingCode"},name="建（构）筑物编号")
     }
 )
 @CommonSaveConfig(scene="/hcabuildings/save")
