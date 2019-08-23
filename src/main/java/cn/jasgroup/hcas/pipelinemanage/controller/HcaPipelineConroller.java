@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.jasgroup.hcas.pipelinemanage.query.HcaPipelineQuery;
 import cn.jasgroup.hcas.pipelinemanage.query.bo.HcaPipelineBo;
+import cn.jasgroup.hcas.pipelinemanage.service.HcaPipelineService;
 import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.excel.util.ExcelExportUtil;
@@ -37,6 +38,9 @@ public class HcaPipelineConroller extends BaseController {
 
 	@Autowired
 	private CommonDataJdbcService commonDataJdbcService;
+	
+	@Autowired
+	private HcaPipelineService hcaPipelineService;
 
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
@@ -65,26 +69,39 @@ public class HcaPipelineConroller extends BaseController {
 			propertyDesList = Arrays.asList(propertyDes.split(","));
 		}
 		List<HcaPipelineBo> list = (List<HcaPipelineBo>) this.commonDataJdbcService.getList(query);
+		List<Map<String, String>> geometryList = this.hcaPipelineService.queryGeometryList(query);
 		// format导出数据的格式，确保数据的导出的正确性
 		List<Map<String, String>> map = new ArrayList<Map<String, String>>();
-		for (HcaPipelineBo bo : list) {
-			Map<String, Object> ms = bo.getValueMap();
-			Set<String> key = ms.keySet();
-			Map<String, String> mss = new HashMap<>();
-			for (Iterator it = key.iterator(); it.hasNext();) {
-				String s = (String) it.next();
-				Object valueObject = ms.get(s);
-				String valueString = "";
-				// 如果为日期
-				if (valueObject instanceof Date) {
-					valueString = DateTimeUtil.getFormatDate((Date) valueObject, DateTimeUtil.DATE_FORMAT);
-				} else if (valueObject != null) {
-					valueString = String.valueOf(valueObject);
+		if(null != list && list.size() > 0 ){
+			int listSize = list.size();
+			for (int i=0; i<listSize; i++) {
+				String shapeText = "";
+				if(geometryList.size()>0){
+					shapeText = geometryList.get(i).get("shape");
 				}
-				// 转换值域
-				mss.put(s, valueString);
+				HcaPipelineBo bo = list.get(i);
+				Map<String, Object> ms = bo.getValueMap();
+				ms.put("shape", "");
+				Set<String> key = ms.keySet();
+				Map<String, String> mss = new HashMap<>();
+				for (Iterator it = key.iterator(); it.hasNext();) {
+					String s = (String) it.next();
+					Object valueObject = ms.get(s);
+					String valueString = "";
+					// 如果为日期
+					if (valueObject instanceof Date) {
+						valueString = DateTimeUtil.getFormatDate((Date) valueObject, DateTimeUtil.DATE_FORMAT);
+					} else if (valueObject != null) {
+						valueString = String.valueOf(valueObject);
+					}
+					if("shape".equals(s)){
+						valueString = shapeText;
+					}
+					mss.put(s, valueString);
+				}
+				map.add(mss);
+				
 			}
-			map.add(mss);
 		}
 		// 调用导出工具类导出数据
 		String[] typeArr = { "管线信息", "管线信息" }; // {标题名,sheet名}
