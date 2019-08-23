@@ -15,7 +15,7 @@ import cn.jasgroup.jasframework.excel.util.ImportAutoCheck;
  * @since JDK 1.80
  */
 
-@CheckExcelData(functionName = "高后果区识别信息", tableName = "hca_high_impact_area")
+@CheckExcelData(functionName = "hcahighinfo", tableName = "hca_high_impact_area")
 public class CheckHcaExcel implements ImportAutoCheck {
 
 	/**

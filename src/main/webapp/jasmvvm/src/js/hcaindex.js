@@ -1,44 +1,5 @@
 Vue.component('loading-bar', LoadingBar);
 
-var locationMap = {
-	v_daq_mv_across_info: {
-		fields: {
-			project_name: "项目名称",
-			pipe_section_code: "管段编号",
-			unit_name: "采集单位",
-			collection_date: "采集日期"
-		},
-		title: "穿越信息",
-		src: './pages/row-mv/dialogs/detail.html?pageCode=mvAcrossInfo&oid='
-	},
-};
-var showInfo = function (e) {
-	var layerId = e.layerId;
-	var coor = e.coordinate;
-	var obj = e.attributes;
-	var oid = obj.oid;
-	var title = locationMap[layerId].title;
-	var src = locationMap[layerId].src + oid;
-	var name = "";
-	for (var key in locationMap[layerId].fields) {
-		var value=obj[key]||"";
-		name += "<div  class='map_item mapSpan'><span style='color:#666'> " + locationMap[layerId].fields[key] + "：" + value + "</span></div>";
-	}
-	name += "<div class='map_more' onclick='showWeldInfo(`" + src + "`,`" + title + "`)'>更多</div>";
-	app.jasMap.showInfoWindow(coor[0], coor[1], name, title);
-};
-
-function showWeldInfo (src, title) {
-	top.jasTools.dialog.show({
-		width: '60%',
-		height: '80%',
-		title: title,
-		src: src,
-		cbForClose: function () {
-
-		}
-	});
-}
 window.app = new Vue({
 	el: '#app',
 	data: function () {
@@ -82,7 +43,6 @@ window.app = new Vue({
 	created: function () {
 		var that = this;
 		// this.initJasMap();
-		this.tirggerTime();//是否触发定时器，间隔多长时间进行接口触发
 //		if (!that.isMapInited) {
 //			that.isMapInited = true;
 //			setTimeout(function () {
@@ -266,7 +226,7 @@ window.app = new Vue({
 			});
 		},
 		_goPage: function () {
-			location.href = './pages/row-onepage/total/total.html';
+			//location.href = './pages/row-onepage/total/total.html';
 		},
 		_createTabsArr: function (aIndex, aMenu) {
 			var that = this;
@@ -415,16 +375,6 @@ window.app = new Vue({
 			});*/
 		},
 
-		addMapListener: function () {
-			var jasMap = this.jasMap;
-			var paramsArray = [];
-			paramsArray.push({
-				layerId: 'daq_median_stake'
-			});
-			jasMap.queryFeatures(paramsArray, function (features) {
-
-			});
-		},
 		locate: function (id, tableCode) {
 			var that = this;
 			if (!this.$refs.resizer.panelShowed) {
@@ -459,30 +409,6 @@ window.app = new Vue({
 					that.userImg = jasTools.base.rootPath + '/attachment/app/getImageBySize.do?oid=' + data.rows[0].oid + "&token=" + localStorage.getItem("token");
 				}
 			});
-		},
-		tirggerTime: function () {
-			var that = this;
-			var isShowNumber = localStorage.getItem("isShowNumber");
-			if (isShowNumber=="true") {
-				that.isTigger = true;
-				that.requestNumber();
-				setInterval(function () {
-					that.requestNumber("refresh");
-				},900000);//毫秒为单位 1000
-			}
-		},
-		requestNumber: function (isRefresh) {
-			var that = this;
-			//此处进行请求获取
-			that.menuNumber=[];
-			var url = jasTools.base.rootPath + '/daq/dataApprove/queryUnauditedInfo.do';
-			jasTools.ajax.post(url, {}, function (data) {
-				that.menuNumber= data.rows;
-				if (isRefresh) {
-					that.items = that._formatMenus(that.aMenu);//首次组装 是否需要去调用请求数据接口
-				}
-			});
-
 		},
 		_goMap:function(){//打开地图展示
 			var that=this;

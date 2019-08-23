@@ -6,7 +6,7 @@ var pageConfig = {
     savePath: '/jdbc/commonData/hcapipeline/save.do',
     updatePath: '/jdbc/commonData/hcapipeline/update.do',
     importConfig: {
-    	'functionName': "管线信息",
+    	'functionName': "pipelineinfo",
         'tableName': "hca_pipeline",
         'exportUrl': "/hcapipeline/exportToExcelAction.do",
     },

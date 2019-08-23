@@ -15,7 +15,7 @@ import cn.jasgroup.jasframework.excel.util.ImportAutoCheck;
  * @since JDK 1.80
  */
 
-@CheckExcelData(functionName = "管线信息", tableName = "hca_pipeline")
+@CheckExcelData(functionName = "pipelineinfo", tableName = "hca_pipeline")
 public class CheckPipelineExcel implements ImportAutoCheck{
 
 	 
