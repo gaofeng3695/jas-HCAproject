@@ -6,7 +6,7 @@ var pageConfig = {
     //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
     importConfig: {
-    	'functionName': "建构筑物",
+    	'functionName': "hcabuildingsinfo",
         'tableName': "hca_buildings",
         'exportUrl': "/hcabuildings/exportToExcelAction.do",
     },
