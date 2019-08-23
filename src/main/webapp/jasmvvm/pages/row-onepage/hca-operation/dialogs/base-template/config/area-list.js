@@ -6,7 +6,7 @@ var pageConfig = {
     savePath: '/jdbc/commonData/hcaarea/save.do',
     updatePath: '/jdbc/commonData/hcaarea/update.do',
     importConfig: {
-    	'functionName': "地区等级划分信息",
+    	'functionName': "areainfo",
         'tableName': "hca_area",
         'exportUrl': "/hcaarea/exportToExcelAction.do",
     },

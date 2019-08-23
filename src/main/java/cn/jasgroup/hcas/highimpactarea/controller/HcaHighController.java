@@ -103,7 +103,7 @@ public class HcaHighController extends BaseController {
 		// 调用导出工具类导出数据
 		String[] typeArr = { "高后果区识别信息", "高后果区识别信息" }; // {标题名,sheet名}
 		// 第一个参数表名为非空字符串,则进行模板查询,若有模板利用模板导出,没有则自动生成Excel导出;参数为空,则自动生成Excel导出
-		new ExcelExportUtil().exportWithTemplate("hca_high_impact_area", "高后果区识别信息", "高后果区识别信息.xls", map, propertyList,
+		new ExcelExportUtil().exportWithTemplate("hca_high_impact_area", "hcahighinfo", "高后果区识别信息.xls", map, propertyList,
 				propertyDesList, request, response, typeArr);
 		return null;
 	}
