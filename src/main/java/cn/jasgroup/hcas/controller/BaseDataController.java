@@ -2,23 +2,9 @@ package cn.jasgroup.hcas.controller;
 
 import cn.jasgroup.framework.data.result.BaseResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
-import cn.jasgroup.gis.data.Feature;
-import cn.jasgroup.gis.data.FeatureCollection;
-import cn.jasgroup.gis.dataaccess.IGeodataAccessService;
-import cn.jasgroup.gis.dataaccess.LayerQueryParam;
-import cn.jasgroup.gis.geometry.Geometry;
-import cn.jasgroup.gis.geometryservice.AreaAndLength;
-import cn.jasgroup.gis.geometryservice.IGeometryService;
-import cn.jasgroup.gis.util.FeatureCollectionUtil;
-import cn.jasgroup.gis.util.MapUtil;
-import cn.jasgroup.gis.util.MathUtil;
-import cn.jasgroup.hcas.analysis.HcaAnalysisContext;
-import cn.jasgroup.hcas.analysis.IAreaGradeAnalysisService;
-import cn.jasgroup.hcas.analysis.IHighImpactAnalysisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +24,7 @@ public class BaseDataController {
 
     @Resource
     JdbcTemplate jdbcTemplate;
+
     /**
      *
      */

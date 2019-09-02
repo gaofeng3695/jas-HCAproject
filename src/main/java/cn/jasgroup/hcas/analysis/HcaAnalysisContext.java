@@ -7,6 +7,9 @@ package cn.jasgroup.hcas.analysis;
  */
 public class HcaAnalysisContext {
 
+    /**
+     *
+     */
     public static final String BuildingDistributionDomain = "building_distribution_domain";
     /**
      *
@@ -39,6 +42,7 @@ public class HcaAnalysisContext {
      *
      */
     public static String versionIdFieldName = "version_oid";
+
     public static String versionNameFieldName = "version_name";
     /**
      *
@@ -60,6 +64,8 @@ public class HcaAnalysisContext {
     public static String startYFieldName = "start_y";
 
     public static String buildingTypeFieldName = "building_type";
+
+    public static String buildingCodeFieldName = "building_code";
 
     public static String buildingTypeValue_Settlement= "building_type_020";
 

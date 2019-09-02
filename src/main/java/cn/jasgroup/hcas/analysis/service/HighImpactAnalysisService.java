@@ -8,7 +8,6 @@ import cn.jasgroup.gis.geometry.Geometry;
 import cn.jasgroup.gis.geometry.Point;
 import cn.jasgroup.gis.geometry.Polygon;
 import cn.jasgroup.gis.geometry.Polyline;
-import cn.jasgroup.gis.geometryservice.IGeometryService;
 import cn.jasgroup.gis.util.*;
 import cn.jasgroup.hcas.analysis.*;
 import cn.jasgroup.hcas.common.service.HcaCommonService;
@@ -340,6 +339,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         double pad = HcaAnalysisContext.ConfigAreaRankBorderBufferDistance;
         return new double[]{ ( min - pad) / 1000 ,( max + pad) / 1000 };
     }
+
     /**
      *
      * @param hcaFeatures
@@ -410,11 +410,13 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         double toValue = MapUtil.getDouble(to.getAttributes(),fieldName,0d);
         to.getAttributes().put(fieldName, toValue + fromValue ) ;
     }
+
     protected void appendFeatureStringValue(Feature from ,Feature to,String fieldName){
         String fromValue = MapUtil.getString(from.getAttributes(),fieldName);
         String toValue = MapUtil.getString(to.getAttributes(),fieldName);
         to.getAttributes().put(fieldName,toValue + fromValue) ;
     }
+
     protected Boolean isUpperLevel(String pre ,String last){
         if(StringUtil.isBlank(last)){
             return true ;
@@ -717,7 +719,6 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         List<HcaVersion> list = commonDataJdbcDao.getList(query,HcaVersion.class);
         return list.get(0);
     }
-
 
     /**
      *

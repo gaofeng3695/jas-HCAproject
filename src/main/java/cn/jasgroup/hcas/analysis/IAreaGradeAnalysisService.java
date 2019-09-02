@@ -22,8 +22,6 @@ public interface IAreaGradeAnalysisService {
      */
     Feature[] prepareBuildingsFeatureData(HcaLinearParam bo);
 
-
-
     /**
      * 划分识别单元
      * @param buildings
@@ -40,12 +38,10 @@ public interface IAreaGradeAnalysisService {
      */
     Feature[] classifyAreaRankGradeFeatures(Feature[] cellFeatures ,HcaLinearParam bo);
 
-
     /**
      * 地区等级划分
      * @return
      */
     HcaAnalysisResult executeAnalysis(String pipelineOid, Double buffer);
-
 
 }

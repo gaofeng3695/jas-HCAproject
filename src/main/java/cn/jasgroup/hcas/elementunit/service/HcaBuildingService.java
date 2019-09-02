@@ -16,6 +16,7 @@ import cn.jasgroup.gis.util.MapUtil;
 import cn.jasgroup.hcas.analysis.HcaAnalysisContext;
 import cn.jasgroup.hcas.elementunit.dao.entity.HcaBuildings;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildings2;
+import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.utils.InvokeSupportUtils;
 import cn.jasgroup.jasframework.utils.StringUtil;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ import java.util.UUID;
  * @since JDK 1.80
  */
 @Service
-public class HcaBuildingService {
+public class HcaBuildingService extends CommonDataJdbcService {
 
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,7 +45,7 @@ public class HcaBuildingService {
     private static String geomFieldName = "shape";
 
     @Autowired
-    private IGeodataAccessService geodataAccessService = new GeodataAccessService();
+    private IGeodataAccessService geodataAccessService    ;
     /**
      *
      * @param hcaBuildings
