@@ -134,6 +134,7 @@
                 fields2: [],
                 detail: {},
                 oid:"",
+                buildingType:"",
                 layerId:"hca_buildings"
             }
         },
@@ -149,12 +150,11 @@
             getDetailByOid: function (oid) {
                 var that = this;
                 var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
-                var oidArr=[];
-                oidArr.push(oid);
                 jasTools.ajax.post(url, {
-                    oids: oidArr,
+                    oid: oid
                 }, function (data) {
                     that.detail = data.rows[0];
+                    that.buildingType = data.rows[0].buildingType;
                 });
             },
            /* drawSettlement: function(){
@@ -183,10 +183,11 @@
                         type: 'success',
                         message: '删除成功'
                     });
-                    that.jasMap.updateLayer('hca_area',{
-                        "show":true,
-                        "where":"version_oid like'" + result+ "'"
-                    })
+                    var layerId = "hca_buildings" + "#" + that.buildingType;
+                    top.hcaMapApp.jasMap.updateLayer(layerId,{
+                        show:true
+                    });
+                    window.parent.closeDlg("editSettlementIframe");
                 };
                 window.top.Vue.prototype.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
                     type: 'warning',
