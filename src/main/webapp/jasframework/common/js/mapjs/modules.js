@@ -358,11 +358,46 @@ var BaseMapToolsBar = function(options){
                     }else {
                         module.open(false);
                     }
+                }else{
+                    _self.mapApi.publishWarn("module不存在" + target );
                 }
             }else if(type === "api"){
-                _self.mapApi[target]();
+                if(_self.mapApi[target]){
+                    _self.mapApi[target]();
+                }else{
+                    _self.mapApi.publishWarn("api不存在" + target );
+                }
             }
         } );
+
+        //hover
+        $("img", _self.dom).hover(function (e) {
+            selectIcon(e.currentTarget);
+        },function(e){
+            unselectIcon(e.currentTarget);
+        });
+    };
+    var selectIcon = function(target){
+        var src = $(target).attr("src");
+        var lastDotIndex = src.lastIndexOf(".");
+        var str1 = src.substring(0,lastDotIndex);
+        if(str1.length  > 2){
+            var endWith_h =  ( "_h" === str1.substring(str1.length - 2));
+            if(endWith_h){
+                return
+            }
+        }
+        var str2 = src.substring(lastDotIndex,src.length);
+        src = str1 + "_h" + str2;
+        $(target).attr("src",src);
+    };
+    var unselectIcon = function(target){
+        if($(target).parent().hasClass("selected")){
+            return ;
+        }
+        var src = $(target).attr("src");
+        src = src.replace("_h.",".");
+        $(target).attr("src",src);
     };
     _self.setCenter = function(){
         var barWidth = $(_self.dom).width();
@@ -371,16 +406,21 @@ var BaseMapToolsBar = function(options){
     _self.iconSelectedChanged = function($dom ,selected){
         var flg = true ;
         if(selected !== undefined){
-            if(!selected)
+            if(!selected){
                 $dom.removeClass("selected");
-            else
+                unselectIcon($("img",$dom));
+            }else{
                 $dom.addClass("selected");
+                selectIcon($("img",$dom));
+            }
         }else{
             if($dom.hasClass("selected")){
                 $dom.removeClass("selected");
+                unselectIcon($("img",$dom));
                 flg = false ;
             }else {
                 $dom.addClass("selected");
+                selectIcon($("img",$dom));
                 flg = true ;
             }
         }

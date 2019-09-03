@@ -269,7 +269,7 @@ var M = JasMap = null;
             "esri/symbols/PictureMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/TextSymbol", "esri/symbols/Font", "esri/Color",
             "esri/geometry/jsonUtils", "esri/toolbars/navigation", "esri/toolbars/draw", "esri/toolbars/edit", "esri/geometry/geometryEngine",
             "esri/tasks/PrintTask", "esri/tasks/PrintParameters", "esri/dijit/Scalebar", "esri/dijit/Popup","esri/tasks/query","esri/tasks/QueryTask",
-            "jasgroup/layers/FlashFeatureLayer", "jasgroup/layers/DrawLayer", "jasgroup/layers/TiandituLayer", "jasgroup/layers/PipelineLayer",
+            "jasgroup/layers/FlashFeatureLayer", "jasgroup/layers/TiandituLayer", "jasgroup/layers/PipelineLayer",
             "jasgroup/layers/GaodeLayer","jasgroup/layers/BaiduLayer","jasgroup/layers/EsriTiledLayer",
             "dojo/domReady!"
         ], function (lang, array, Deferred, all, Event, domConstruct, topic, units ,urlUtils,
@@ -280,7 +280,7 @@ var M = JasMap = null;
                      Symbol,SimpleRenderer, SimpleMarkerSymbol, SimpleLineSymbol, PictureMarkerSymbol, SimpleFillSymbol, TextSymbol, Font, Color,
                      jsonUtils, Navigation, Draw, Edit, geometryEngine,
                      PrintTask, PrintParameters, Scalebar, Popup, Query ,QueryTask ,
-                     FlashLayer, DrawLayer, TiandituLayer, PipelineLayer,GaodeLayer,BaiduLayer,EsriTiledLayer) {
+                     FlashLayer, TiandituLayer, PipelineLayer,GaodeLayer,BaiduLayer,EsriTiledLayer) {
 
             apiDefaults = lang.mixin({}, apiDefaults, options);
 
@@ -310,6 +310,9 @@ var M = JasMap = null;
             };
             _this.getLayerManager = function(){
                 return layerManager;
+            };
+            _this.getStyleManager = function(){
+                return styleManager;
             };
             //------------私有方法和属性------------
             var startup = function () {
@@ -341,14 +344,6 @@ var M = JasMap = null;
             //------------------地图操作类----------------------
             _this.startPanMode = function () {
                 mapManager.activate(MapManager.NAVIGATOR, [Navigation.PAN]);
-                _this.map.setMapCursor("default");
-                _this.hideZoomSlider(false);
-                //地图状态改变
-                var state = {
-                    type: MapManager.NAVIGATOR,
-                    target:"startPanMode"
-                };
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,state);
             };
             _this.panLeft = function(){
                 return _this.map.panLeft();
@@ -403,24 +398,15 @@ var M = JasMap = null;
                 return _this.map.setLevel(--level);
             };
             _this.zoomIn = function () {
-                _this.map.setMapCursor("crosshair");
                 mapManager.activate(MapManager.NAVIGATOR, [Navigation.ZOOM_IN]);
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,{
-                    type: MapManager.NAVIGATOR,
-                    target:"zoomIn"
-                });
             };
             _this.zoomHome = function(){
                 var ext = configManager.getMapOption("extent");
                 _this.zoomExtent(ext.xmin ,ext.ymin ,ext.xmax ,ext.ymax);
             };
             _this.zoomOut = function () {
-                _this.map.setMapCursor("crosshair");
                 mapManager.activate(MapManager.NAVIGATOR, [Navigation.ZOOM_OUT]);
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,{
-                    type: MapManager.NAVIGATOR,
-                    target:"zoomOut"
-                });
+
             };
             _this.zoomAt = function (level, x, y) {
                 x = parseFloat(x);
@@ -820,7 +806,9 @@ var M = JasMap = null;
                 if( !layer) return ;
                 if (!layer.tipsOnMouseOverEventHandler) {
                     layer.tipsOnMouseOverEventHandler = layer.on("mouse-over", function (e) {
-                        mapManager.showGraphicTip(true, e.graphic ,template ,params);
+                        var x = e.layerX + 10 ;
+                        var y = e.layerY + 10 ;
+                        mapManager.showGraphicTip(true, e.graphic ,template ,x, y ,params);
                     });
                 }
                 if (!layer.tipsOnMouseOutEventHandler) {
@@ -1697,7 +1685,7 @@ var M = JasMap = null;
                 });
                 return deferred.promise;
             };
-            _this.drawGraphic = function (drawType, options) {
+            _this.drawGraphic = function (drawType, options ,target) {
                 var defaults = {
                     "drawOnMap": true,
                     "layerId": "drawLayerId",
@@ -1714,9 +1702,10 @@ var M = JasMap = null;
                 mapManager.onDrawStart = function(e,params){
                 };
                 mapManager.onDrawEnd = function (e) {
+
                     mapManager.deactivate(MapManager.DRAW);
-                    _this.map.showZoomSlider();
-                    _this.map.setMapCursor("default");
+                    mapManager.setDefaultState();
+
                     if (params.drawOnMap) {
                         var symbol = null ;
                         if(params.symbol ){
@@ -1741,40 +1730,20 @@ var M = JasMap = null;
                         eventManager.fireEventHandler(params.onDrawEnd, null);
                     }
                 };
-                mapManager.activate(MapManager.DRAW, [drawType]);
-                _this.map.hideZoomSlider();
-                _this.map.setMapCursor("crosshair");
+                mapManager.activate(MapManager.DRAW, [drawType] ,target);
+
             };
             _this.drawCircle = function (options) {
-                _this.drawGraphic(Draw.CIRCLE, options);
-                var op = {
-                    type: MapManager.DRAW,
-                    target:"drawCircle"
-                };
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+                _this.drawGraphic(Draw.CIRCLE, options ,"drawCircle");
             };
             _this.drawLine = function (options) {
-                _this.drawGraphic(Draw.LINE, options);
-                var op = {
-                    type: MapManager.DRAW,
-                    target:"drawLine"
-                };
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+                _this.drawGraphic(Draw.LINE, options,"drawLine");
             };
             _this.drawPolygon = function (options) {
-                _this.drawGraphic(Draw.POLYGON, options);
-                var op = {
-                    type: MapManager.DRAW,
-                    target:"drawPolygon"
-                };
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+                _this.drawGraphic(Draw.POLYGON, options ,"drawPolygon");
             };
             _this.drawPolyline = function (options) {
-                _this.drawGraphic(Draw.POLYLINE, options);
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,{
-                    type: MapManager.DRAW,
-                    target:"drawPolyline"
-                });
+                _this.drawGraphic(Draw.POLYLINE, options ,"drawPolyline");
             };
             _this.drawPictureGraphic = function(options) {
                 var defaults = {
@@ -1783,8 +1752,7 @@ var M = JasMap = null;
                     onDrawEnd:null
                 };
                 var params = lang.mixin(defaults ,options);
-
-                _this.drawGraphic(Draw.POINT, params );
+                _this.drawGraphic(Draw.POINT, params ,"drawPictureGraphic");
             };
             _this.drawTextGraphic = function(options) {
                 var defaults = {
@@ -1792,7 +1760,7 @@ var M = JasMap = null;
                     symbolObject:null
                 };
                 var defs = lang.mixin(defaults ,options) ;
-                _this.drawGraphic(Draw.POINT,defs);
+                _this.drawGraphic(Draw.POINT,defs,"drawTextGraphic");
             };
             _this.drawLineAndGetLength = function ( options) {
                 var defaults = {
@@ -1966,11 +1934,7 @@ var M = JasMap = null;
                     },
                     "symbol":params.symbol,
                     onDrawEnd: onDrawEnd
-                });
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,{
-                    type: MapManager.DRAW,
-                    target:"drawLineAndGetLength"
-                });
+                } ,"drawLineAndGetLength");
             };
             _this.drawPolygonAndGetArea = function (options) {
                 var defaults = {
@@ -2046,18 +2010,13 @@ var M = JasMap = null;
                         "MEASUREID":measureId
                     },
                     "onDrawEnd": onDrawEnd
-                });
-                eventManager.publishEvent(_this.Events.MapStateChangedEvent,{
-                    type: MapManager.DRAW,
-                    target:"drawPolygonAndGetArea"
-                });
+                },"drawPolygonAndGetArea");
             };
             _this.editGraphic = function(graphic,layerId){
 
             };
             _this.startDrawAndEditMode = function (tool, options) {
-                mapManager.drawToolActivate(tool ,options);
-                //mapManager.editToolActivate(options);
+                mapManager.startDrawAndEditMode(tool ,options);
             };
             _this.clearAllGraphics = function () {
                 _this.clearMapGraphics();
@@ -3711,7 +3670,14 @@ var M = JasMap = null;
                             var hasAdded = layer._tip;
                             if(!hasAdded){
                                 _this.addLayerTips(layer, response.template);
-                                mapManager.showGraphicTip(true, graphic ,response.template);
+                                var point = null;
+                                if (graphic.geometry.type !== "point") {
+                                    point = graphic.geometry.getExtent().getCenter();
+                                } else {
+                                    point = graphic.geometry;
+                                }
+                                var scrPt = _this.map.toScreen(point);
+                                mapManager.showGraphicTip(true, graphic ,response.template,scrPt.x + 10 ,scrPt.y + 10);
                             }
                         }
                     }catch (e){
@@ -3781,12 +3747,17 @@ var M = JasMap = null;
                     _this.subscribe( _this.Events .MapStateChangedEvent ,onMapStateChangedEvent);
                     _this.subscribe( _this.Events .MapGraphicsClearEvent ,onMapGraphicsClearEvent);
                 };
-                _class.activate = function ( code, params, exclusive) {
-                    if (exclusive === undefined || exclusive === true) {
-                        _class.deactivate();
-                    }
+                _class.activate = function ( code, params, target) {
+                    _class.deactivate();
                     var obj = _getStatusObject(code);
                     obj.activate.apply(obj, params);
+                    //
+                    var op = {
+                        type: code,
+                        target:target ? target : params[0]
+                    };
+                    eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+
                     return obj;
                 };
                 _class.deactivate = function ( code) {
@@ -3799,6 +3770,11 @@ var M = JasMap = null;
                         editor.deactivate();
                     }
                 };
+                _class.setDefaultState = function(){
+                    _this.map.showZoomSlider();
+                    _this.map.setMapCursor("default");
+                };
+
                 _class.onDrawEnd = function ( e) {
 
                 };
@@ -3813,24 +3789,25 @@ var M = JasMap = null;
                         _class.tipsDom = dom;
                     }
                 };
-                _class.drawToolActivate = function(tool, options){
+
+                _class.startDrawAndEditMode = function(tool, options){
                     var drawType = tool.toLowerCase();
                     var defaults = {
                         layerId:"",
                         onDrawEnd:null,
                         edit:true
                     };
-                    var params = lang.mixin({},defaults,options);
+                    var params = lang.mixin(defaults , options);
                     var drawLayer = _this.getLayerById(params.layerId);
                     if( params.layerId && !drawLayer){
                         drawLayer = layerManager.createLayer({
                             id:params.layerId,
-                            type:"draw",
+                            type:"graphic",
                             index:100
                         });
                         _this.map.addLayer(drawLayer);
-                    }else{
-                        drawLayer = _this.map.graphics
+                    }else if(!params.layerId ){
+                        drawLayer = _this.map.graphics;
                     }
                     if(params.edit){
                         if(editActiveListener || editDeactiveListener){
@@ -3839,14 +3816,26 @@ var M = JasMap = null;
                             editActiveListener = null;
                             editDeactiveListener = null;
                         }
-                        editActiveListener =  drawLayer.on("click",function(evt){
-                            Event.stop(evt);
-                            activateEditTool(evt.graphic);
-                        });
-                        editDeactiveListener = _this.map.on("click",function(evt){
-                            editor.deactivate();
-                        });
+
                     }
+                    var onDrawEnd = function(){
+                        if(options.onDrawEnd){
+                            options.onDrawEnd(arguments[0]);
+                        }
+                        if(params.edit){
+                            editActiveListener =  drawLayer.on("click",function(evt){
+                                Event.stop(evt);
+                                activateEditTool(evt.graphic);
+                            });
+                            editDeactiveListener = _this.map.on("click",function(evt){
+                                if(!evt.graphic){
+                                    editor.deactivate();
+                                }
+
+                            });
+                        }
+                    } ;
+                    params.onDrawEnd = onDrawEnd ;
                     //绘制完成
                     switch(drawType){
                         case 'delete':
@@ -3864,12 +3853,6 @@ var M = JasMap = null;
                     }
                 };
 
-                _class.editToolActivate = function(options){
-                    var defaults = {
-                        layerId:""
-                    };
-                    var params = lang.mixin(defaults ,options);
-                };
                 var editActiveListener = null ;
                 var editDeactiveListener = null ;
                 var activateEditTool = function(graphic){
@@ -3878,10 +3861,8 @@ var M = JasMap = null;
                         allowDeleteVertices: true,
                         uniformScaling: true
                     };
-                    editor.activate(15, graphic, options);
+                    _class.activate(MapManager.EDITOR,[15, graphic, options],"editor");
                 };
-
-
                 var remoteDeleteListener = function(){
                     if(_class.onDrawLayerDeleteClick){
                         _class.onDrawLayerDeleteClick = eventManager.destroyEventHandler(_class.onDrawLayerDeleteClick);
@@ -3889,6 +3870,7 @@ var M = JasMap = null;
                 };
                 var activateDeleteTool = function(targetLayer){
                     _class.onDrawEnd = null;
+                    _class.deactivate();
                     if(_class.onDrawLayerDeleteClick  == null){
                         _class.onDrawLayerDeleteClick = targetLayer.on('click', function (e) {
                             targetLayer.remove(e.graphic);
@@ -4105,8 +4087,22 @@ var M = JasMap = null;
                 };
                 var currentMapStateTarget = "";
                 var onMapStateChangedEvent = function(e){
-                    _class.currentMapState = e.type ;
+                    var state = _class.currentMapState = e.type ;
                     var target = e.target ;
+                    if(state === MapManager.NAVIGATOR){
+                        if(target === "zoomin" || target === "zoomiut"){
+                            _this.map.setMapCursor("crosshair");
+                        }else{
+                            _this.map.setMapCursor("default");
+                            _this.hideZoomSlider(false);
+                        }
+                    }else if(state === MapManager.DRAW){
+                        _this.map.setMapCursor("crosshair");
+                        _this.hideZoomSlider(true);
+                    }else if(state === MapManager.EDITOR){
+
+                    }
+
                     if(target ===currentMapStateTarget) return;
                     var flg1 = currentMapStateTarget === "drawLineAndGetLength" || currentMapStateTarget === "drawPolygonAndGetArea";
                     var flg2 = target === "drawLineAndGetLength" || target === "drawPolygonAndGetArea";
@@ -4594,7 +4590,7 @@ var M = JasMap = null;
                         }
                     }
                 };
-                _class.showGraphicTip = function(flag ,graphic,template ,options){
+                _class.showGraphicTip = function(flag ,graphic,template ,screenX,screenY,options){
                     var defaults = {
                         "position": "absolute",
                         "z-index": 99999999,
@@ -4612,17 +4608,13 @@ var M = JasMap = null;
 
                     _class.refreshLayerTipDom();
                     if( !flag || !graphic){
-                        _this.map.setMapCursor("default");
+                        _this.map.setMapCursor(_this.map._lastCursor ? _this.map._lastCursor :"default");
                         return ;
                     }
                     var layer = graphic._layer ;
-                    var point = null;
-                    if (graphic.geometry.type !== "point") {
-                        point = graphic.geometry.getExtent().getCenter();
-                    } else {
-                        point = graphic.geometry;
-                    }
+                    _this.map._lastCursor = _this.map.cursor ;
                     _this.map.setMapCursor("pointer");
+
                     if (layer._domain && graphic.attributes) {
                         var attr = graphic.attributes;
                         var domain = layer._domain;
@@ -4637,11 +4629,11 @@ var M = JasMap = null;
                         }
                         graphic.setAttributes(attr);
                     }
-                    var scrPt = _this.map.toScreen(point);
+
                     var textDiv = domConstruct.create("div");
                     dojo.attr(textDiv, { "id": "text"});
-                    params.left = scrPt.x + 10 + "px";
-                    params.top = scrPt.y + 10 + "px";
+                    params.left = screenX  + "px";
+                    params.top = screenY  + "px";
                     dojo.style(textDiv, params);
 
                     var attrs = graphic.attributes;
@@ -5181,6 +5173,12 @@ var M = JasMap = null;
                         return;
                     }
                     return symbol;
+                };
+                _class.getDefaultHighlightColor = function(){
+                    return apiDefaults.defaultHighlightColor ;
+                };
+                _class.getDefaultHighlightFillColor = function(){
+                    return apiDefaults.defaultHighlightFillColor;
                 };
                 _class.getDefaultHighlightSymbol = function (graphic, layerId ,options) {
                     var defaultHighlightColor = options .defaultHighlightColor ? options .defaultHighlightColor :apiDefaults.defaultHighlightColor;
