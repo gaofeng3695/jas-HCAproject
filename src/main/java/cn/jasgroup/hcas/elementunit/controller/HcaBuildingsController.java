@@ -63,13 +63,13 @@ public class HcaBuildingsController extends BaseController {
 	@RequestMapping(value = "/exportToExcelAction")
 	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaBuildingsQuery query) {
 		// 列属性名称
-		String propertyName = "buildingCode,buildingType,buildingDistribution,households,population,address,collectDate,remarks";
+		String propertyName = "buildingCode,buildingTypeParent,buildingType,buildingDistribution,households,population,address,pressurePipeline,collectDate,remarks";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyList = Arrays.asList(propertyName.split(","));
 		}
 		// 列属性描述
-		String propertyDes = "建（构）筑物编号,建（构）筑物类型,建筑分布,户数,人口,地址,采集时间,备注";
+		String propertyDes = "建（构）筑物编号,建（构）筑物类别,建（构）筑物类型,建筑分布,户数,人口,地址,是否占压,采集时间,备注";
 		List<String> propertyDesList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyDesList = Arrays.asList(propertyDes.split(","));
@@ -84,11 +84,24 @@ public class HcaBuildingsController extends BaseController {
 			for (Iterator it = key.iterator(); it.hasNext();) {
 				String s = (String) it.next();
 				Object valueObject = ms.get(s);
+				if("buildingTypeParent".equals(s)){
+					valueObject = ms.get("buildingTypeParentName");
+				}
 				if("buildingType".equals(s)){
 					valueObject = ms.get("buildingTypeName");
 				}
 				if("buildingDistribution".equals(s)){
 					valueObject = ms.get("buildingDistributionName");
+				}
+				if("pressurePipeline".equals(s)){
+					valueObject = ms.get("pressurePipeline");
+					if(null == valueObject){
+						valueObject = "";
+					}else if("0".equals(valueObject.toString())){
+						valueObject = "否";
+					}else{
+						valueObject = "是";
+					}
 				}
 				String valueString = "";
 				// 如果为日期

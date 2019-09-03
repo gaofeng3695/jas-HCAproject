@@ -114,9 +114,12 @@ public class HcaReportService extends CommonDataJdbcService {
 		HcaHighImpactAreaQuery hcaAreaQuery = new HcaHighImpactAreaQuery();
 		hcaAreaQuery.setVersionOid(versionOid);
 		List<?> hcaAreaList = super.getList(hcaAreaQuery);
+		int hcaListSize = hcaAreaList.size();
+		if(hcaListSize == 0){
+			return "eror-00";
+		}
 		docData.setResultDesc(getHcaResultDesc(versionOid));
 		List<HcaSegment> hcaSegments = new ArrayList<HcaSegment>();
-		int hcaListSize = hcaAreaList.size();
 		for (int i = 0; i < hcaListSize; i++) {
 			HcaSegment s = new HcaSegment();
 			HcaHighImpactAreaBo bo = (HcaHighImpactAreaBo) hcaAreaList.get(i);
