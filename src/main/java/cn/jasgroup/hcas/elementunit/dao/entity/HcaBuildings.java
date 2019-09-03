@@ -47,10 +47,10 @@ public class HcaBuildings extends ArcGisSpatialObject {
 	 * 构筑物编号 
 	 */
 	private String buildingCode;
-//	/**
-//	 *
-//	 */
-    private String geometry;
+	/**
+	 * 建构筑物类别
+	 */
+    private String buildingTypeParent;
 
 	/**
 	 * 起始里程 
@@ -334,4 +334,15 @@ public class HcaBuildings extends ArcGisSpatialObject {
 		this.pressurePipeline = pressurePipeline;
 	}
 
+	@Column(name="building_type_parent")
+	public String getBuildingTypeParent() {
+		return buildingTypeParent;
+	}
+
+	public void setBuildingTypeParent(String buildingTypeParent) {
+		super.setField("buildingTypeParent");
+		this.buildingTypeParent = buildingTypeParent;
+	}
+
+	
 }
