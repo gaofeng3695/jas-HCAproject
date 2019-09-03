@@ -120,11 +120,23 @@
       "label":"业务图层",
       "layerSet":[
         {
-          "id":"hca_buildings","type":"feature","label":"构（建）筑物","index":"31" ,"visible":false,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0"
+          "id":"hca_buildings","type":"feature","label":"构（建）筑物","index":"31" ,"visible":false,"outFields":"*",
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/0",
+          "listener":{
+            "onHover":{
+              "responseType":"tip",
+              "template":"名称：<label style='color:#f00'>{BUILDING_TYPE}</label>"
+            }
+          }
         },{
           "id":"hca_pipeline","type":"feature","label":"管线","index":"41" ,
-          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1"
+          "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
+          "listener":{
+            "onHover":{
+              "responseType":"tip",
+              "template":"名称：<label style='color:#f00'>{PIPELINE_NAME}</label>"
+            }
+          }
         },{
           "id":"pd_arearank","type":"feature","label":"地区等级","index":"21" ,"visible":false,"where":"1!=1","flash":true,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
@@ -330,7 +342,7 @@
       "class": "DrawAndEditPanel",
       "icon": "../../jasframework/map_viewer/images/dock/draw.png",
       "options":{
-        "height":300
+
       }
     },
     {

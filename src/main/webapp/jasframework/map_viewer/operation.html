@@ -325,6 +325,7 @@
             var that = this;
 
             that.jasMap = new JasMap({
+                defaultHighlightColor:[255, 211, 81, 255],
                 appConfig:that.mapConfig,
                 onConfigLoaded:function(config){
                     that.baiduKey = config.context["baidu-key"];

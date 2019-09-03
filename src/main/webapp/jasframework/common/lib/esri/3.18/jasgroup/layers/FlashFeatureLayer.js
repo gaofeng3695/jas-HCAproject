@@ -28,8 +28,8 @@ define([
             this._highlightFilterFunc = null;
             this._hightlightSymbol = null;
             this.hightlightGraphicIdsObject = null;
-            this._highlightLineColor = [ 255,0,255,255 ] ;
-            this._highlightFillColor = [ 115,76,45,100 ];
+            this._highlightLineColor = api.getStyleManager().getDefaultHighlightColor() ;
+            this._highlightFillColor = api.getStyleManager().getDefaultHighlightFillColor();
             this._hightlightSymbols = {
                 "simpleMarkerSymbol":{
                     "color": this._highlightLineColor,

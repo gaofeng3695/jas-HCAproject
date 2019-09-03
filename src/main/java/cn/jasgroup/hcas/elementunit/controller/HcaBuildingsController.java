@@ -46,7 +46,7 @@ public class HcaBuildingsController extends BaseController {
     private SysDomainService sysDomainService;
 
     @Resource
-    private HcaBuildingService hcaBuildingService = new HcaBuildingService();
+    private HcaBuildingService hcaBuildingService ;
 
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>

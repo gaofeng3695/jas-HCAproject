@@ -123,7 +123,7 @@
       "layerSet":
       [
         {
-          "id":"hca_pipeline","type":"feature","label":"管线","index":"29",
+          "id":"hca_pipeline","type":"feature","label":"管线","index":"29","flash":true,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
           "listener": {
             "onHover": {
@@ -827,12 +827,6 @@
         "toggle": true
       },
       {
-        "type": "module",
-        "target": "mapPrint",
-        "index": "",
-        "toggle": true
-      },
-      {
         "type": "api",
         "target": "drawSettlement",
         "label":"建（构）筑物标绘",
@@ -922,12 +916,6 @@
       "id": "overViewMap",
       "label": "鹰眼图",
       "class": "OverViewMap"
-    },
-    {
-      "id": "mapPrint",
-      "label": "地图打印",
-      "class": "MapPrint",
-      "icon": "../../jasframework/map_viewer/images/dock/print.png"
     },
     {
       "id": "mapExport",

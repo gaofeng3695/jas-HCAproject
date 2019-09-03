@@ -46,7 +46,8 @@ public void after() throws Exception {
 */ 
 @Test
 public void testGet() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    StringUtil.print(String.format("%06d",23));
 } 
 
 /** 
