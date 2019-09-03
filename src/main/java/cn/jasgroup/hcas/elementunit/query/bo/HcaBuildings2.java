@@ -63,7 +63,7 @@ public class HcaBuildings2 extends ArcGisSpatialObject {
 	/**
 	 * 构筑物类别（特定场所、非特定场所、易燃易爆场所）
 	 */
-	private String buildingCategory;
+	private String buildingTypeParent;
 
 	/**
 	 * 构筑物类型 
@@ -341,5 +341,14 @@ public class HcaBuildings2 extends ArcGisSpatialObject {
 		this.pressurePipeline = pressurePipeline;
 	}
 
+	@Column(name="building_type_parent")
+	public String getBuildingTypeParent() {
+		return buildingTypeParent;
+	}
+
+	public void setBuildingTypeParent(String buildingTypeParent) {
+		super.setField("buildingTypeParent");
+		this.buildingTypeParent = buildingTypeParent;
+	}
 
 }
