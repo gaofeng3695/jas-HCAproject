@@ -58,16 +58,20 @@ public class HcaReportController extends BaseController {
 			String pipelineOid = (String) paramMap.get("pipelineOid");
 			String versionOid = (String) paramMap.get("versionOid");
 			if (StringUtils.isBlank(pipelineOid) || StringUtils.isBlank(versionOid)) {
-				return new SimpleResult<Boolean>(-1, "400", "error");
+				return new SimpleResult<Boolean>(-1, "400", "报告生成失败！");
 			}
 			String fileId = this.hcaReportService.createHcaReport(pipelineOid, versionOid);
 			if(StringUtils.isBlank(fileId)){
-				return new SimpleResult<Boolean>(-1, "500", "error");
+				return new SimpleResult<Boolean>(-1, "500", "报告生成失败！");
 			}
+			if("eror-00".equals(fileId)){
+				return new SimpleResult<Boolean>(-1, "400", "高后果区识别数据为空！");
+			}
+			
 			result = new SimpleResult<String>(fileId);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result = new SimpleResult<Boolean>(-1, "500", "error");
+			result = new SimpleResult<Boolean>(-1, "500", "报告生成失败！");
 		}
 		return result;
 	}
