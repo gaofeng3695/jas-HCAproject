@@ -57,19 +57,14 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 				+ "t.horizontal_distance,t.vertical_distance,t.pointx,t.pointy,t.building_type,t.building_distribution,\n"
 				+ "d01.code_name as building_type_name, "
 				+ "d02.code_name as building_distribution_name,"
-				+ "d01.parent_code_name as building_type_parent_name,"
-				+ "d01.parent_code_id as building_type_parent,"
+				+ "d00.code_name as building_type_parent_name,"
+				+ "t.building_type_parent,"
 				+ "t.households,t.population,to_char(t.collect_date, 'yyyy-MM-dd') as collect_date,t.collect_person,t.remarks,t.pressure_pipeline,\n"
 				+ "t.create_datetime,t.create_user_id,t.create_user_name,t.modify_datetime,t.modify_user_id,t.modify_user_name\n"
 				+ " from hca_buildings t\n"
-//				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_type_domain') d01\n"
-				+ " LEFT JOIN ("
-				+"select b.parent_code_name,a.parent_code_id,a.code_id, a.code_name from sys_domain a\n" +
-				"inner JOIN\n" +
-				"(select code_id, code_name as parent_code_name from sys_domain where active=1 and domain_name='building_type_parent_domain') b\n" +
-				"on a.parent_code_id=b.code_id\n" +
-				"where a.active=1 and a.domain_name='building_type_domain'"
-				+ ") d01\n"
+				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_type_parent_domain') d00\n"
+				+ " on d00.code_id=t.building_type_parent\n"
+				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_type_domain') d01\n"
 				+ " on d01.code_id=t.building_type\n"
 				+ " LEFT JOIN (select code_id, code_name from sys_domain where active=1 and domain_name='building_distribution_domain') d02\n"
 				+ " on d02.code_id=t.building_distribution\n"
@@ -86,7 +81,7 @@ public class HcaBuildingsQuery extends BaseJavaQuery {
 				if (StringUtils.isNotBlank(buildingType)) {
 					sql += " and t.building_type = :buildingType ";
 				}else if (StringUtils.isNotBlank(buildingTypeParent)) {
-					sql += " and d01.parent_code_id = :buildingTypeParent ";
+					sql += " and t.building_type_parent = :buildingTypeParent ";
 				}
 				if (startMileage != 0) {
 					sql += " and t.start_mileage = :startMileage ";
