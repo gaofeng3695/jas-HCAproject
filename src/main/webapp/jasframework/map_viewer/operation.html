@@ -48,12 +48,13 @@
         }
         .operate-left-div {
             position: absolute;
-            top: 110px;
-            left: 0;
+            top: 70px;
             display: inline-block;
             box-sizing: border-box;
             line-height: 34px;
             z-index: 10;
+            left:1%;
+            border-color: #409EFF;
         }
         .area-div {
             position: absolute;
@@ -137,10 +138,6 @@
             border-color: #409EFF;
             padding: 0 5px !important;
         }
-        .operate-left-div{
-            left:1%;
-            border-color: #409EFF;
-        }
         .el-tabs--card>.el-tabs__header {
             border-bottom: 1px solid #409EFF;
         }
@@ -189,11 +186,25 @@
             line-height: 49px;
             text-align: center;
             width: 20px;
-            background: url(images/huafen.png) no-repeat;
+            background: url(images/huafen1.png) no-repeat;
             margin: 26px 1px 0px 6px;
             padding: 0px 5px 0px 5px !important;
-            background-color: #3588d8;
-            border: 1px solid #409EFF;
+            background-color: #f5faff;
+            border: 1px solid #e0ecff;
+            background-position-x: center;
+            background-position-y: center;
+        }
+        .area-btn:hover {
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/huafen1_h.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #013e89;
+            border: 1px solid #013e89;
             background-position-x: center;
             background-position-y: center;
         }
@@ -203,14 +214,29 @@
             line-height: 49px;
             text-align: center;
             width: 20px;
-            background: url(images/shibie.png) no-repeat;
+            background: url(images/shibie2_h.png) no-repeat;
             margin: 26px 1px 0px 6px;
             padding: 0px 5px 0px 5px !important;
-            background-color: #3588d8;
-            border: 1px solid #409EFF;
+            background-color: #f5faff;
+            border: 1px solid #e0ecff;
             background-position-x: center;
             background-position-y: center;
         }
+        .hca-btn:hover {
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/shibie2.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #013e89;
+            border: 1px solid #013e89;
+            background-position-x: center;
+            background-position-y: center;
+        }
+
     </style>
 </head>
 
@@ -406,6 +432,11 @@
                 this.closeBufferWindow();
                 $("span[class=el-tag]").html(that.localPipelineName);
                 $('.title-div').show();
+                var fra = window.$("iframe");
+                for ( var i = 0; i < fra.length; i++) {
+                    fra[i].contentWindow.close();
+                    //fra[i].remove();
+                }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
             closeBufferWindow: function(){

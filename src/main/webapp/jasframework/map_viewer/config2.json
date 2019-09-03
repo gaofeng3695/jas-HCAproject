@@ -129,6 +129,16 @@
             "onHover": {
               "responseType": "tip",
               "template": "管线名称：{PIPELINE_NAME}<br>管线长度：{PIPELINE_LENGTH}KM<br>"
+            },
+            "onClick":{
+              "responseType":"dialog",
+              "title":"管线信息",
+              "iframe":true,
+              "left":10,
+              "top":80,
+              "width": "270px",
+              "height": "180px",
+              "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-pipeline.html?oid={OID}&pipelineName={PIPELINE_NAME}"
             }
           }
         }, {
@@ -154,7 +164,9 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "right":10,
+                      "top":80,
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -174,7 +186,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -194,7 +206,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -214,7 +226,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -234,7 +246,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -254,7 +266,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -274,7 +286,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -294,7 +306,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -314,7 +326,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -334,7 +346,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -354,7 +366,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -374,7 +386,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -394,7 +406,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -414,7 +426,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -434,7 +446,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -454,7 +466,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 }
@@ -480,7 +492,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -500,7 +512,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -520,7 +532,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -540,7 +552,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -560,7 +572,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -580,7 +592,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -600,7 +612,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 }
@@ -626,7 +638,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -646,7 +658,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -666,7 +678,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 },{
@@ -686,7 +698,7 @@
                       "iframe":true,
                       "width": "350px",
                       "height": "350px",
-                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/operate-settlement.html?oid={OID}"
+                      "href": "../../jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/edit-settlement.html?oid={OID}"
                     }
                   }
                 }
@@ -843,8 +855,8 @@
       "class": "LayerListTree",
       "icon": "../../jasframework/map_viewer/images/dock/layers.png",
       "options":{
-        "right":230,
-        "top":50
+        "right":10,
+        "top":80
       }
     },
     {
@@ -853,7 +865,9 @@
       "class": "DrawAndEditPanel",
       "icon": "../../jasframework/map_viewer/images/dock/draw.png",
       "options":{
-        "height":300
+        "height":300,
+        "right":10,
+        "top":80
       }
     },
     {
