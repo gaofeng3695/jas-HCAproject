@@ -74,6 +74,7 @@ var Constants = {
         "requireJqueryJS": "需要引入jquery依赖",
         "hasNoJqueryEasyUILib": "需要引入jquery easyUI依赖",
         "hasNoConfigDataError":"配置不存在",
+        "hasNoHtml2CanvasJS":"需要html2canvas.js依赖",
         "callbackConfigNeeded":"需要配置callback参数",
         "exportResourceNeeded":"地图导出功能需要引入FileSaver.js",
         "mapRealExtent":"地图实际范围",
@@ -96,6 +97,7 @@ var Constants = {
         "unsupportedEventType":"事件类型不支持！",
         "requireMoreCoordinates":"坐标数量太少！",
         "routeParamOrDataError":"轨迹回放参数错误或数据错误！",
+
         "rendererFunctionError":"rendererFunction方法必须返回几何对象所要绘制的参数对象，参数结构参考addPictureGraphic、addPointGraphic、addPolylineGraphic、addPolygonGraphic等接口的options参数！"
     }
 };
@@ -2729,7 +2731,7 @@ var M = JasMap = null;
 
             };
             _this.dialog = function ( options ) {
-                if(!$ ){
+                if(!$){
                     eventManager.publishError(_this.Strings.hasNoJqueryEasyUILib);
                 }
                 var defaults = {
@@ -2763,10 +2765,10 @@ var M = JasMap = null;
                 if($dom){
                     return $dom.dialog(params);
                 }
-                if(mapManager.$mapDialog){
-                    mapManager.$mapDialog.remove();
-                    mapManager.$mapDialog = null ;
+                if(mapManager.$mapDialog && mapManager.$mapDialog.dialog.methods["destroy"]){
+                    mapManager.$mapDialog.dialog('destroy');
                 }
+                mapManager.$mapDialog = null ;
 
                 var inline = options.inline;
                 var $dialog = null;
@@ -2886,45 +2888,47 @@ var M = JasMap = null;
                 }
                 return text ;
             };
-            /**
-             * @param pointOutLine
-             * @param line
-             * @param callbackfunc
-            _this.getLineNearPoint = function (pointOutLine,line,callbackfunc){
-                var param = new DistanceParameters();
-                param.distancePara = 9001;
-                param.geodesic = false;//欧式距离   如果为true的话是球面距离
-                param.geometry1 =  jsonUtils.fromJson(pointOutLine);
-                param.geometry2 =  jsonUtils.fromJson(line);
-
-                var onError = function(e){
-                    eventManager.publishError(_this.Strings.queryNearestPointError,e);
-                    callbackfunc(null);
-                };
-                //获取最小距离后的回调
-                var afterGetDistance = function(distance){
-                    //根据最小距离获取线外点
-                    _this.queryBufferGraphic(pointOutLine,distance,{draw:false,callback:afterGetBuffer});
-                };
-                var afterGetBuffer = function(geometryArry){
-                    mapManager.geometryService.intersect(geometryArry,para.geometry2,afterintersect,onError);
-                };
-                var afterintersect = function(geometryArry){
-                    if(geometryArry.length > 0){
-                        //对结果进行评估，如果结果是线，则取一个点
-                        if(geometryArry[0].type == "polyline"){
-                            callbackfunc( geometryArry[0].getPoint(0,0));
-                        }else{
-                            callbackfunc( geometryArry[0]);
-                        }
-                    }else{//防止误差导致相交分析没有结果
-                        _this.queryBufferGraphic(pointOutLine,distance+0.001,{draw:false,callback:afterGetBuffer});
-                    }
-                };
-                //获取点到线的最小距离
-                mapManager.geometryService.distance(param,afterGetDistance,onError)
+            _this.exportMapToImage = function(startX , startY ,width ,height ,callback){
+                if(!html2canvas){
+                    eventManager.publishError(_this.Strings.hasNoHtml2CanvasJS);
+                }
+                var contextId = _this.map.id + "_layers";
+                html2canvas(document.getElementById(contextId),{
+                    useCORS:true,
+                    x:startX,
+                    y:startY,
+                    width:width,
+                    height:height
+                }).then(function(canvas) {
+                    //document.body.appendChild(canvas);
+                    var data = canvas.toDataURL();
+                    callback(data);
+                });
             };
-             */
+            _this.exportGraphicToImage = function(graphics,callback ,options){
+                var defaults = {
+                    expand:2
+                };
+                var params = lang.mixin(defaults ,options) ;
+                var extent = null ;
+                if( Array.isArray(graphics)){
+                    extent = graphicsUtils.graphicsExtent(graphics);
+                }else{
+                    extent = graphicsUtils.graphicsExtent([ graphics ]);
+                }
+                extent = extent.expand(params.expand) ;
+
+                var mapExtent = _this.map.extent ;
+                var mapWidth = _this.map.width ;
+                var mapHeight = _this.map.height ;
+                var screenExtent = screenUtils.toScreenGeometry(mapExtent,mapWidth ,mapHeight ,extent);
+                var startX = screenExtent.xmin;
+                var startY = screenExtent.ymax;
+                var width = screenExtent.xmax - screenExtent.xmin;
+                var height = screenExtent.ymin - screenExtent.ymax;
+                _this.exportMapToImage(startX ,startY ,width ,height ,callback);
+            };
+
             function EventManager() {
                 var _class = this;
                 _class.log = function (msg) {
@@ -3661,7 +3665,7 @@ var M = JasMap = null;
                             var functionName = response.callback;
                             if (functionName) {
                                 var func = eval(functionName);
-                                func(attributes);
+                                func(attributes ,e);
                             } else {
                                 throw (_this.Strings.callbackConfigNeeded);
                             }
@@ -4655,6 +4659,7 @@ var M = JasMap = null;
                     params.map = _this.map;
                     _class.printTask.execute(params, onSuccess, onFailed);
                 };
+
             }
             function ModuleManager() {
                 var _class = this;
