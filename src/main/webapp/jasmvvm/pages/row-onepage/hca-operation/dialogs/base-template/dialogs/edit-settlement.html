@@ -205,7 +205,7 @@
                 layerId:"",
                 tableName:"",
                 localAddress:"",
-                currentGraphic:null
+                //currentGraphic:null
             }
         },
         created: function(){
@@ -238,7 +238,7 @@
             });
 
             top.jasMap.cancelGraphicEdit();
-            that.currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+             currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
 
          },
         methods: {
@@ -273,7 +273,7 @@
                 var msg = "";
                 that.but_disabled = true;
                 msg = "修改成功";
-                var graphic = that.currentGraphic;
+                var graphic =  currentGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -296,7 +296,7 @@
                         top.hcaMapApp.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = that.currentGraphic;
+                        var gra =  currentGraphic;
                         top.jasMap.removeGraphic(gra);
                         top.jasMap.cancelGraphicEdit();
                         that.requestDetail(that.oid);
@@ -353,9 +353,8 @@
             editSettlement : function() {
                 var that = this;
                 var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
-
                 if(gra){
-                    that.currentGraphic = top.jasMap.editGraphic(gra ,that.layerId);
+                    currentGraphic = top.jasMap.editGraphic(gra ,that.layerId);
                 }
                 that.isCanEdit = true;
             },
@@ -404,6 +403,7 @@
             this.cancel();
         }
     });
+    var currentGraphic = null  ;
 </script>
 
 </html>
