@@ -26,7 +26,9 @@ var Constants = {
         "ModuleStartupEvent": "ModuleStartupEvent",
         "MapResizedEvent": "MapResizedEvent",
         "MapStateChangedEvent": "MapStateChangedEvent",
-        "MapGraphicsClearEvent": "MapGraphicsClearEvent"
+        "MapGraphicsClearEvent": "MapGraphicsClearEvent",
+        "GraphicStartEditEvent": "GraphicStartEditEvent",
+        "GraphicEndEditEvent": "GraphicEndEditEvent"
     },
     "strings":{
         "dependenceLoading":"加载地图相关依赖资源",
@@ -924,6 +926,21 @@ var M = JasMap = null;
                     return _this.map.graphics;
                 var layerId = id && id.toUpperCase();
                 return _this.map.getLayer(layerId);
+            };
+            _this.getGraphicByObjectId = function(objectIdValue,layerId){
+                var layer = layerId ? _this.getLayerById(layerId) : _this.map.graphics;
+                var objectId = parseInt(objectIdValue);
+                if(layer){
+                    var gras = layer.graphics ;
+                    for(var i = 0 ; i < gras.length ; i++){
+                        var gra = gras[i];
+                        var attr = gra.attributes;
+                        if(objectId === attr["OBJECTID"] || objectId === attr["objectid"]){
+                            return gra ;
+                        }
+                    }
+                }
+                return null ;
             };
             _this.getLayerByName = function(name){
 
@@ -2015,7 +2032,35 @@ var M = JasMap = null;
                 },"drawPolygonAndGetArea");
             };
             _this.editGraphic = function(graphic,layerId){
+                var featureLayer = _this.getLayerById(layerId);
+                if(!featureLayer ){
+                    eventManager.publishError(_this.Strings.layerNotLoaded);
+                }
 
+                _this.cancelGraphicEdit();
+
+                //1、get symbol
+                if(!graphic.symbol){
+                    var renderer = featureLayer.renderer ;
+                    var symbol = renderer.getSymbol(graphic) ;
+                    graphic.setSymbol(symbol);
+                }
+                var topLayer = _this.map.graphics;
+                //2、draw to top layer
+                var json = graphic.toJson();
+                var clone = new Graphic(json);
+                var re = topLayer.add(clone);
+                topLayer.redraw();
+                //3、set feature layer opacity
+                featureLayer.setVisibility(false);
+
+                mapManager.activateGraphicEditState(re,layerId);
+
+                return re;
+            };
+            _this.cancelGraphicEdit = function(){
+                eventManager.publishEvent(_this.Events.GraphicEndEditEvent);
+                mapManager.deactivate(MapManager.EDITOR);
             };
             _this.startDrawAndEditMode = function (tool, options) {
                 mapManager.startDrawAndEditMode(tool ,options);
@@ -2550,9 +2595,7 @@ var M = JasMap = null;
                 }
                 _this.Events[type] = name;
             };
-            _this.getEventManager = function () {
-                return eventManager;
-            };
+
             _this.layerSetVisibleSwitch = function ( layerSetId, visible) {
                 var targetLayerSets = [];
                 array.forEach(layerManager.optionallayers, function (v, i) {
@@ -3750,6 +3793,8 @@ var M = JasMap = null;
                     _this.subscribe( _this.Events .MapLoadedEvent ,onMapLoaded);
                     _this.subscribe( _this.Events .MapStateChangedEvent ,onMapStateChangedEvent);
                     _this.subscribe( _this.Events .MapGraphicsClearEvent ,onMapGraphicsClearEvent);
+                    _this.subscribe( _this.Events .GraphicStartEditEvent ,onGraphicStartEditEvent);
+                    _this.subscribe( _this.Events .GraphicEndEditEvent ,onGraphicEndEditEvent);
                 };
                 _class.activate = function ( code, params, target) {
                     _class.deactivate();
@@ -3761,6 +3806,7 @@ var M = JasMap = null;
                         target:target ? target : params[0]
                     };
                     eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+                    eventManager.publishEvent(_this.Events.GraphicEndEditEvent);
 
                     return obj;
                 };
@@ -3829,7 +3875,7 @@ var M = JasMap = null;
                         if(params.edit){
                             editActiveListener =  drawLayer.on("click",function(evt){
                                 Event.stop(evt);
-                                activateEditTool(evt.graphic);
+                                _class.activateGraphicEditState(evt.graphic);
                             });
                             editDeactiveListener = _this.map.on("click",function(evt){
                                 if(!evt.graphic){
@@ -3859,14 +3905,46 @@ var M = JasMap = null;
 
                 var editActiveListener = null ;
                 var editDeactiveListener = null ;
-                var activateEditTool = function(graphic){
+
+                _class .lastEditGraphic = null ;
+                _class .lastEditLayerId = null ;
+
+                var onGraphicEndEditEvent = function(){
+                    if(_class .lastEditLayerId ){
+                        var layer = _this.getLayerById(_class .lastEditLayerId) ;
+                        layer.setVisibility(true);
+                    }
+                    if(_class .lastEditGraphic){
+                        _this.removeGraphic(_class .lastEditGraphic);
+                    }
+                };
+                var onGraphicStartEditEvent = function(e){
+                    var layerId = e.layerId ;
+                    var graphic = e.graphic;
+                    if(_class .lastEditGraphic){
+                        _this.removeGraphic(_class .lastEditGraphic);
+                    }
+                    _class .lastEditGraphic = graphic ;
+                    _class .lastEditLayerId = layerId ;
+                };
+
+                _class. activateGraphicEditState = function(graphic,layerId){
                     var options = {
                         allowAddVertices: true,
                         allowDeleteVertices: true,
                         uniformScaling: true
                     };
                     _class.activate(MapManager.EDITOR,[15, graphic, options],"editor");
+                    //
+                    if(layerId){
+                        eventManager.publishEvent(_this.Events.GraphicStartEditEvent ,{
+                            layerId:layerId,
+                            graphic:graphic
+                        });
+                    }
                 };
+
+
                 var remoteDeleteListener = function(){
                     if(_class.onDrawLayerDeleteClick){
                         _class.onDrawLayerDeleteClick = eventManager.destroyEventHandler(_class.onDrawLayerDeleteClick);

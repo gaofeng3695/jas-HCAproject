@@ -59,16 +59,22 @@ public class HcaAnalysisController {
      */
     @PostMapping(value = "area/grade")
     @ResponseBody
-    public BaseResult doAreaGradeAnalysis(@RequestBody Map<String ,Object> params) throws Exception {
+    public BaseResult doAreaGradeAnalysis(@RequestBody Map<String ,Object> params) {
         SimpleResult result = new SimpleResult();
         String pipelineOid = MapUtil.getString(params,"pipesegmentKeyValue");
         Double buffer = MapUtil.getDouble(params,"bufferDistance",200d);
         if(StringUtil.isBlank(pipelineOid) ) {
             result.setStatus(0);
             result.setMsg("参数错误，需要管线id！");
-        }else{
+            return result;
+        }
+        try {
             HcaAnalysisResult hcaAnalysisResult = areaGradeAnalysisService.executeAnalysis(pipelineOid,buffer);
             result.setData(hcaAnalysisResult);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setStatus(0);
+            result.setMsg(e.getMessage());
         }
         return result;
     }
@@ -96,10 +102,21 @@ public class HcaAnalysisController {
      */
     @PostMapping(value = "/high/{areaVersionId}/doHcaAnalysis")
     @ResponseBody
-    public BaseResult doHcaAnalysis(@PathVariable String areaVersionId) throws Exception {
-        HcaAnalysisResult hcaAnalysisResult = highImpactAnalysisService.executeAnalysis(areaVersionId);
+    public BaseResult doHcaAnalysis(@PathVariable String areaVersionId) {
         SimpleResult result = new SimpleResult();
-        result.setData(hcaAnalysisResult);
+        if(StringUtil.isBlank(areaVersionId)){
+            result.setMsg("缺少地区等级版本参数areaVersionId");
+            result.setStatus(0);
+            return result;
+        }
+        try {
+            HcaAnalysisResult hcaAnalysisResult = highImpactAnalysisService.executeAnalysis(areaVersionId);
+            result.setData(hcaAnalysisResult);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setStatus(0);
+            result.setMsg(e.getMessage());
+        }
         return result;
     }
 
@@ -111,15 +128,9 @@ public class HcaAnalysisController {
      */
     @PostMapping(value = "high")
     @ResponseBody
-    public BaseResult doHcaAnalysis2(@RequestBody Map<String ,Object> params) throws Exception {
+    public BaseResult doHcaAnalysis2(@RequestBody Map<String ,Object> params) {
         String areaVersionId = MapUtil.getString(params,"areaVersionId");
-        if(StringUtil.isBlank(areaVersionId)){
-            throw new IllegalArgumentException("缺少地区等级版本参数areaVersionId");
-        }
-        HcaAnalysisResult hcaAnalysisResult = highImpactAnalysisService.executeAnalysis(areaVersionId);
-        SimpleResult result = new SimpleResult();
-        result.setData(hcaAnalysisResult);
-        return result;
+        return doHcaAnalysis(areaVersionId);
     }
 
     /**
@@ -145,10 +156,15 @@ public class HcaAnalysisController {
             baseResult.setMsg("没有查询到数据，table=" + pipelineSourceName + "," + pipelineKeyName + "=" + pipelineOid);
             return baseResult;
         }
-        Polyline polyline = (Polyline) collection.getFeatures().get(0).getGeometry();
-        Geometry area = geometryService.buffer(polyline,bufferDistance);
-        baseResult.setData(JSONObject.parse(area.toGeoJSON()));
-        baseResult.setStatus(1);
+        try {
+            Polyline polyline = (Polyline) collection.getFeatures().get(0).getGeometry();
+            Geometry area = geometryService.buffer(polyline, bufferDistance);
+            baseResult.setData(JSONObject.parse(area.toGeoJSON()));
+        }catch (Exception e){
+            e.printStackTrace();
+            baseResult.setData(e.getMessage());
+            baseResult.setStatus(0);
+        }
         return baseResult ;
     }
 
@@ -163,16 +179,17 @@ public class HcaAnalysisController {
         String folderPath = MapUtil.getString(params ,"folderPath","E:\\mapdata\\hca\\pipe-wv2") ;
         String tableName = MapUtil.getString(params,"tableName","hca_buildings")  ;
         int count  = 0;
+        SimpleResult simpleResult = new SimpleResult() ;
         try {
             StringUtil.time("读取shape数据并导入");
             count = groundFeatureRecognizedService.importToDB(folderPath ,tableName);
             StringUtil.timeEnd("读取shape数据并导入");
-
+            simpleResult.setData(count);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            simpleResult.setStatus(0);
+            simpleResult.setMsg(e.getMessage());
         }
-        SimpleResult simpleResult = new SimpleResult() ;
-        simpleResult.setData(count);
         return simpleResult;
     }
 
@@ -189,9 +206,15 @@ public class HcaAnalysisController {
         if(StringUtil.isBlank(pipelineOid)){
             simpleResult.setMsg("参数缺少管线OID");
             simpleResult.setStatus(0);
-        }else{
+            return  simpleResult;
+        }
+        try{
             int result = groundFeatureRecognizedService.attachPipelineData(pipelineOid);
             simpleResult.setData( result);
+        }catch (Exception e){
+            e.printStackTrace();
+            simpleResult.setMsg(e.getMessage());
+            simpleResult.setStatus(0);
         }
         return simpleResult;
     }
@@ -203,8 +226,14 @@ public class HcaAnalysisController {
     @ResponseBody
     public BaseResult syncBuildingsData(){
         SimpleResult simpleResult = new SimpleResult() ;
-        int result = groundFeatureRecognizedService.syncBuildingsData();
-        simpleResult.setData( result);
+        try {
+            int result = groundFeatureRecognizedService.syncBuildingsData();
+            simpleResult.setData(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            simpleResult.setMsg(e.getMessage());
+            simpleResult.setStatus(0);
+        }
         return simpleResult;
     }
 
