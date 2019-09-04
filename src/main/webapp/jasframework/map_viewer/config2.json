@@ -818,18 +818,6 @@
       },
       {
         "type": "module",
-        "target": "queryByPolygon",
-        "index": "",
-        "toggle": true
-      },
-      {
-        "type": "module",
-        "target": "queryByCircle",
-        "index": "",
-        "toggle": true
-      },
-      {
-        "type": "module",
         "target": "layerListTree",
         "index": "",
         "toggle": true
@@ -875,53 +863,6 @@
       "label": "坐标定位",
       "class": "Locate",
       "icon": "../../jasframework/map_viewer/images/dock/locate.png"
-    },
-    {
-      "id": "queryByCircle",
-      "label": "圆查询",
-      "class": "QueryByGeometry",
-      "icon": "../../jasframework/map_viewer/images/dock/queryByCircle.png",
-      "options":{
-        "title":"圆查询",
-        "queryType":"circle",
-        "layers":[{
-          "id":"group01",
-          "text":"未命名分组01",
-          "children":[{
-            "id":"sco_base_stake",
-            "text":"桩",
-            "outFields":"*",
-            "where":"active=1"
-          }]
-        },{
-          "id":"dfdsfd",
-          "text":"焊口",
-          "outFields":"*",
-          "where":"active=1"
-        }],
-        "columns":{
-          "sco_base_stake":[
-            {"field":"OID","title":"编号","width":100,"align":"center"},
-            {"field":"STAKE_NUM","title":"桩号","width":100,"align":"center"},
-            {"field":"MILEAGE","title":"里程","width":100,"align":"center"}
-          ],
-          "dfdsfd":[
-            {"field":"OID","title":"编号","width":100,"align":"center"},
-            {"field":"WELD_NUM","title":"焊口编号","width":100,"align":"center"}
-          ]
-        }
-      }
-    },
-    {
-      "id": "queryByPolygon",
-      "label": "面查询",
-      "class": "QueryByGeometry",
-      "icon": "../../jasframework/map_viewer/images/dock/queryByPolygon.png",
-      "options":{
-        "title":"面查询",
-        "queryType":"polygon",
-        "mode":"tool"
-      }
     },
     {
       "id": "baseMapsGallary",
