@@ -247,6 +247,7 @@
                 this.tableFormData.buildingType = "";
                 this.getChildDomainSelect('building_type_domain',function (arr) {
                     that.domain.buildingType = arr;
+                    that.tableFormData.buildingType = arr[0].key;
                 });
             },
             requestDetail: function (oid) {

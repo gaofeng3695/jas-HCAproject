@@ -297,13 +297,15 @@
             };
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
-                that.tableFormData.buildingTypeParent = arr[0].value;
+                that.tableFormData.buildingTypeParent = arr[0].key;
+                that.parentDomainChange(arr[0].key);
             });
-            this.getDomainSelect('building_type_domain',function (arr) {
+            /*this.getDomainSelect('building_type_domain',function (arr) {
                 that.domain.buildingType = arr;
-            });
+            });*/
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
+                that.tableFormData.buildingDistribution = arr[0].key;
             });
         },
         methods: {
@@ -321,7 +323,7 @@
                 this.tableFormData.buildingType = "";
                 this.getChildDomainSelect('building_type_domain',function (arr) {
                     that.domain.buildingType = arr;
-                    that.tableFormData.buildingType = arr[0].value;
+                    that.tableFormData.buildingType = arr[0].key;
                 });
             },
             requestDetail: function (oid) {
@@ -370,7 +372,7 @@
                         });
                         var gra = top.hcaMapApp.currentDrawBuildingGraphic;
                         top.hcaMapApp.jasMap.removeGraphic(gra);
-                        that.cancel(1);
+                        window.parent.closeDlg("editSettlementIframe");
 					}
                 });
             },
@@ -417,10 +419,18 @@
                 });
             },
             cancel: function (param) {
+                var that = this;
                 if(!param){
                     top.jasMap.refreshLayerById("hca_buildings");
                 }
-                window.parent.closeDlg("editSettlementIframe");
+                top.Vue.prototype.$confirm('是否退出绘制？未保存信息将丢失！',  "提示",  {
+                    type: 'warning',
+                    callback: function(action){
+                        if (action === 'confirm') {
+                            window.parent.closeDlg("editSettlementIframe");
+                        }
+                    }
+                });
             },
         },
     });
