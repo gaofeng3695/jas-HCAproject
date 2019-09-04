@@ -13,6 +13,7 @@
     <script src="../../jasframework/common/lib/jquery.min.js"></script>
     <script src="../../jasframework/common/lib/easyui/jquery.easyui.min.js"></script>
     <script src="../../jasframework/common/js/mapjs/modules.js"></script>
+    <script src="../../jasframework/common/lib/html2canvas.min.js"></script>
 
     <!--项目-->
     <script src="index.js"></script>
@@ -24,14 +25,18 @@
     </script>
 
 </head>
-<body class="claro">
-    <div>
+<body class="claro" style="overflow: scroll;">
+    <div style="display: none;">
         <input id="do_area_eva" type="button" value="计算地区等级"><label>计算结果版本：</label><input id="area_version_id" type="text" value="9b1d1f9b-83c5-4ea8-b71d-5305178b743f"><input id="area_data_refresh" type="button" value="刷新图层">
-    </div>
-    <div>
+        <br>
         <input id="do_high_eva" type="button" value="计算高后果区"><label>计算结果版本：</label><input id="high_version_id" type="text" value="e9948765-99a1-4524-ae81-12d890477a9c"><input id="high_data_refresh" type="button" value="刷新图层">
+        <br>
+        <input id="exportImage" type="button" value="截图">
     </div>
     <div id="jasMap"></div>
+    <div>
+        <img id="previewMapImage" src="" >
+    </div>
     <script>
         document.getElementById("do_area_eva").onclick = function(){
             $.ajax({
@@ -80,6 +85,16 @@
                 "where":"VERSION_OID like '" + vId + "'"
             })
         };
+        document.getElementById("exportImage").onclick = function(){
+            jasMap.exportMapToImage(300,300,300,200,function(data){
+                document.getElementById("previewMapImage").setAttribute("src",data);
+            });
+        };
+        function exportMapPng (attrs ,event){
+            jasMap.exportGraphicToImage(event.graphic,function(data){
+                document.getElementById("previewMapImage").setAttribute("src",data);
+            });
+        }
     </script>
 </body>
 </html>

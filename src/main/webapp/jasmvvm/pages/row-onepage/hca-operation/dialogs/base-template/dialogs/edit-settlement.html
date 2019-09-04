@@ -180,7 +180,8 @@
                     'population':'',
                     'address':'',
                     'reamrks':'',
-                    'pressurePipeline': 0
+                    'pressurePipeline': 0,
+                    'objectId': 0
                 },
                 domain: {
                     buildingType: [],
@@ -202,7 +203,9 @@
                 oid:'',
                 fId:'',
                 layerId:"",
-                localAddress:""
+                tableName:"",
+                localAddress:"",
+                currentGraphic:null
             }
         },
         created: function(){
@@ -214,9 +217,11 @@
             var that = this;
             var param = window.jasTools.base.getParamsInUrl(location.href);
             that.fId = param.fId;
-            that.layerId = param.layerId;
+            that.tableName = param.tableName  ? param.tableName :"hca_buildings"  ;
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
+            that.tableFormData.objectId =  parseInt(param.objectid); ;
+
             if (param.oid) {
                 this.oid = param.oid;
                 this.tableFormData.oid = this.oid;
@@ -231,7 +236,11 @@
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
             });
-        },
+
+            top.jasMap.cancelGraphicEdit();
+            that.currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+
+         },
         methods: {
             submit: function (formName) {
                 var that = this;
@@ -256,7 +265,8 @@
                 jasTools.ajax.post(url, {
                     oid: oid
                 }, function (data) {
-                    that.tableFormData = data.rows[0];
+                    $.extend(that.tableFormData  ,data.rows[0]);
+                    that.layerId = that.tableName + "#" + that.tableFormData.buildingType;
                 });
             },
             save: function () {
@@ -264,7 +274,7 @@
                 var msg = "";
                 that.but_disabled = true;
                 msg = "修改成功";
-                var graphic = top.hcaMapApp.currentDrawBuildingGraphic;
+                var graphic = that.currentGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -283,12 +293,13 @@
                             message: msg
                         });
                         //config.json中以表名和类型名作为图层的layerId
-                        var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
+                        var layerId = that.layerId;
                         top.hcaMapApp.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = top.hcaMapApp.currentDrawBuildingGraphic;
-                        top.hcaMapApp.jasMap.removeGraphic(gra);
+                        var gra = that.currentGraphic;
+                        top.jasMap.removeGraphic(gra);
+                        top.jasMap.cancelGraphicEdit();
                         that.requestDetail(that.oid);
                         that.cancel(1);
                     }
@@ -338,10 +349,15 @@
             },
             cancel: function (param) {
                 this.isCanEdit = false;
+                top.jasMap.cancelGraphicEdit();
             },
             editSettlement : function() {
                 var that = this;
-                top.jasMap.editGraphic(that.layerId);
+                var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
+
+                if(gra){
+                    that.currentGraphic = top.jasMap.editGraphic(gra ,that.layerId);
+                }
                 that.isCanEdit = true;
             },
             deleteSettlement: function () {
@@ -351,7 +367,7 @@
                         type: 'success',
                         message: '删除成功'
                     });
-                    var layerId = "hca_buildings" + "#" + that.buildingType;
+                    var layerId = that.layerId;
                     top.hcaMapApp.jasMap.updateLayer(layerId,{
                         show:true
                     });
@@ -385,6 +401,9 @@
                 })
             }
         },
+        destroyed:function(){
+            this.cancel();
+        }
     });
 </script>
 

@@ -126,6 +126,10 @@
             "onHover":{
               "responseType":"tip",
               "template":"名称：<label style='color:#f00'>{BUILDING_TYPE}</label>"
+            },
+            "onClick": {
+              "responseType": "function",
+              "callback": "exportMapPng"
             }
           }
         },{

@@ -26,7 +26,9 @@ var Constants = {
         "ModuleStartupEvent": "ModuleStartupEvent",
         "MapResizedEvent": "MapResizedEvent",
         "MapStateChangedEvent": "MapStateChangedEvent",
-        "MapGraphicsClearEvent": "MapGraphicsClearEvent"
+        "MapGraphicsClearEvent": "MapGraphicsClearEvent",
+        "GraphicStartEditEvent": "GraphicStartEditEvent",
+        "GraphicEndEditEvent": "GraphicEndEditEvent"
     },
     "strings":{
         "dependenceLoading":"加载地图相关依赖资源",
@@ -74,6 +76,7 @@ var Constants = {
         "requireJqueryJS": "需要引入jquery依赖",
         "hasNoJqueryEasyUILib": "需要引入jquery easyUI依赖",
         "hasNoConfigDataError":"配置不存在",
+        "hasNoHtml2CanvasJS":"需要html2canvas.js依赖",
         "callbackConfigNeeded":"需要配置callback参数",
         "exportResourceNeeded":"地图导出功能需要引入FileSaver.js",
         "mapRealExtent":"地图实际范围",
@@ -96,6 +99,7 @@ var Constants = {
         "unsupportedEventType":"事件类型不支持！",
         "requireMoreCoordinates":"坐标数量太少！",
         "routeParamOrDataError":"轨迹回放参数错误或数据错误！",
+
         "rendererFunctionError":"rendererFunction方法必须返回几何对象所要绘制的参数对象，参数结构参考addPictureGraphic、addPointGraphic、addPolylineGraphic、addPolygonGraphic等接口的options参数！"
     }
 };
@@ -922,6 +926,21 @@ var M = JasMap = null;
                     return _this.map.graphics;
                 var layerId = id && id.toUpperCase();
                 return _this.map.getLayer(layerId);
+            };
+            _this.getGraphicByObjectId = function(objectIdValue,layerId){
+                var layer = layerId ? _this.getLayerById(layerId) : _this.map.graphics;
+                var objectId = parseInt(objectIdValue);
+                if(layer){
+                    var gras = layer.graphics ;
+                    for(var i = 0 ; i < gras.length ; i++){
+                        var gra = gras[i];
+                        var attr = gra.attributes;
+                        if(objectId === attr["OBJECTID"] || objectId === attr["objectid"]){
+                            return gra ;
+                        }
+                    }
+                }
+                return null ;
             };
             _this.getLayerByName = function(name){
 
@@ -2013,7 +2032,35 @@ var M = JasMap = null;
                 },"drawPolygonAndGetArea");
             };
             _this.editGraphic = function(graphic,layerId){
+                var featureLayer = _this.getLayerById(layerId);
+                if(!featureLayer ){
+                    eventManager.publishError(_this.Strings.layerNotLoaded);
+                }
 
+                _this.cancelGraphicEdit();
+
+                //1、get symbol
+                if(!graphic.symbol){
+                    var renderer = featureLayer.renderer ;
+                    var symbol = renderer.getSymbol(graphic) ;
+                    graphic.setSymbol(symbol);
+                }
+                var topLayer = _this.map.graphics;
+                //2、draw to top layer
+                var json = graphic.toJson();
+                var clone = new Graphic(json);
+                var re = topLayer.add(clone);
+                topLayer.redraw();
+                //3、set feature layer opacity
+                featureLayer.setVisibility(false);
+
+                mapManager.activateGraphicEditState(re,layerId);
+
+                return re;
+            };
+            _this.cancelGraphicEdit = function(){
+                eventManager.publishEvent(_this.Events.GraphicEndEditEvent);
+                mapManager.deactivate(MapManager.EDITOR);
             };
             _this.startDrawAndEditMode = function (tool, options) {
                 mapManager.startDrawAndEditMode(tool ,options);
@@ -2548,9 +2595,7 @@ var M = JasMap = null;
                 }
                 _this.Events[type] = name;
             };
-            _this.getEventManager = function () {
-                return eventManager;
-            };
+
             _this.layerSetVisibleSwitch = function ( layerSetId, visible) {
                 var targetLayerSets = [];
                 array.forEach(layerManager.optionallayers, function (v, i) {
@@ -2729,7 +2774,7 @@ var M = JasMap = null;
 
             };
             _this.dialog = function ( options ) {
-                if(!$ ){
+                if(!$){
                     eventManager.publishError(_this.Strings.hasNoJqueryEasyUILib);
                 }
                 var defaults = {
@@ -2763,10 +2808,10 @@ var M = JasMap = null;
                 if($dom){
                     return $dom.dialog(params);
                 }
-                if(mapManager.$mapDialog){
-                    mapManager.$mapDialog.remove();
-                    mapManager.$mapDialog = null ;
+                if(mapManager.$mapDialog && mapManager.$mapDialog.dialog.methods["destroy"]){
+                    mapManager.$mapDialog.dialog('destroy');
                 }
+                mapManager.$mapDialog = null ;
 
                 var inline = options.inline;
                 var $dialog = null;
@@ -2886,45 +2931,47 @@ var M = JasMap = null;
                 }
                 return text ;
             };
-            /**
-             * @param pointOutLine
-             * @param line
-             * @param callbackfunc
-            _this.getLineNearPoint = function (pointOutLine,line,callbackfunc){
-                var param = new DistanceParameters();
-                param.distancePara = 9001;
-                param.geodesic = false;//欧式距离   如果为true的话是球面距离
-                param.geometry1 =  jsonUtils.fromJson(pointOutLine);
-                param.geometry2 =  jsonUtils.fromJson(line);
-
-                var onError = function(e){
-                    eventManager.publishError(_this.Strings.queryNearestPointError,e);
-                    callbackfunc(null);
-                };
-                //获取最小距离后的回调
-                var afterGetDistance = function(distance){
-                    //根据最小距离获取线外点
-                    _this.queryBufferGraphic(pointOutLine,distance,{draw:false,callback:afterGetBuffer});
-                };
-                var afterGetBuffer = function(geometryArry){
-                    mapManager.geometryService.intersect(geometryArry,para.geometry2,afterintersect,onError);
-                };
-                var afterintersect = function(geometryArry){
-                    if(geometryArry.length > 0){
-                        //对结果进行评估，如果结果是线，则取一个点
-                        if(geometryArry[0].type == "polyline"){
-                            callbackfunc( geometryArry[0].getPoint(0,0));
-                        }else{
-                            callbackfunc( geometryArry[0]);
-                        }
-                    }else{//防止误差导致相交分析没有结果
-                        _this.queryBufferGraphic(pointOutLine,distance+0.001,{draw:false,callback:afterGetBuffer});
-                    }
-                };
-                //获取点到线的最小距离
-                mapManager.geometryService.distance(param,afterGetDistance,onError)
+            _this.exportMapToImage = function(startX , startY ,width ,height ,callback){
+                if(!html2canvas){
+                    eventManager.publishError(_this.Strings.hasNoHtml2CanvasJS);
+                }
+                var contextId = _this.map.id + "_layers";
+                html2canvas(document.getElementById(contextId),{
+                    useCORS:true,
+                    x:startX,
+                    y:startY,
+                    width:width,
+                    height:height
+                }).then(function(canvas) {
+                    //document.body.appendChild(canvas);
+                    var data = canvas.toDataURL();
+                    callback(data);
+                });
             };
-             */
+            _this.exportGraphicToImage = function(graphics,callback ,options){
+                var defaults = {
+                    expand:2
+                };
+                var params = lang.mixin(defaults ,options) ;
+                var extent = null ;
+                if( Array.isArray(graphics)){
+                    extent = graphicsUtils.graphicsExtent(graphics);
+                }else{
+                    extent = graphicsUtils.graphicsExtent([ graphics ]);
+                }
+                extent = extent.expand(params.expand) ;
+
+                var mapExtent = _this.map.extent ;
+                var mapWidth = _this.map.width ;
+                var mapHeight = _this.map.height ;
+                var screenExtent = screenUtils.toScreenGeometry(mapExtent,mapWidth ,mapHeight ,extent);
+                var startX = screenExtent.xmin;
+                var startY = screenExtent.ymax;
+                var width = screenExtent.xmax - screenExtent.xmin;
+                var height = screenExtent.ymin - screenExtent.ymax;
+                _this.exportMapToImage(startX ,startY ,width ,height ,callback);
+            };
+
             function EventManager() {
                 var _class = this;
                 _class.log = function (msg) {
@@ -3661,7 +3708,7 @@ var M = JasMap = null;
                             var functionName = response.callback;
                             if (functionName) {
                                 var func = eval(functionName);
-                                func(attributes);
+                                func(attributes ,e);
                             } else {
                                 throw (_this.Strings.callbackConfigNeeded);
                             }
@@ -3746,6 +3793,8 @@ var M = JasMap = null;
                     _this.subscribe( _this.Events .MapLoadedEvent ,onMapLoaded);
                     _this.subscribe( _this.Events .MapStateChangedEvent ,onMapStateChangedEvent);
                     _this.subscribe( _this.Events .MapGraphicsClearEvent ,onMapGraphicsClearEvent);
+                    _this.subscribe( _this.Events .GraphicStartEditEvent ,onGraphicStartEditEvent);
+                    _this.subscribe( _this.Events .GraphicEndEditEvent ,onGraphicEndEditEvent);
                 };
                 _class.activate = function ( code, params, target) {
                     _class.deactivate();
@@ -3757,6 +3806,7 @@ var M = JasMap = null;
                         target:target ? target : params[0]
                     };
                     eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+                    eventManager.publishEvent(_this.Events.GraphicEndEditEvent);
 
                     return obj;
                 };
@@ -3825,7 +3875,7 @@ var M = JasMap = null;
                         if(params.edit){
                             editActiveListener =  drawLayer.on("click",function(evt){
                                 Event.stop(evt);
-                                activateEditTool(evt.graphic);
+                                _class.activateGraphicEditState(evt.graphic);
                             });
                             editDeactiveListener = _this.map.on("click",function(evt){
                                 if(!evt.graphic){
@@ -3855,14 +3905,46 @@ var M = JasMap = null;
 
                 var editActiveListener = null ;
                 var editDeactiveListener = null ;
-                var activateEditTool = function(graphic){
+
+                _class .lastEditGraphic = null ;
+                _class .lastEditLayerId = null ;
+
+                var onGraphicEndEditEvent = function(){
+                    if(_class .lastEditLayerId ){
+                        var layer = _this.getLayerById(_class .lastEditLayerId) ;
+                        layer.setVisibility(true);
+                    }
+                    if(_class .lastEditGraphic){
+                        _this.removeGraphic(_class .lastEditGraphic);
+                    }
+                };
+                var onGraphicStartEditEvent = function(e){
+                    var layerId = e.layerId ;
+                    var graphic = e.graphic;
+                    if(_class .lastEditGraphic){
+                        _this.removeGraphic(_class .lastEditGraphic);
+                    }
+                    _class .lastEditGraphic = graphic ;
+                    _class .lastEditLayerId = layerId ;
+                };
+
+                _class. activateGraphicEditState = function(graphic,layerId){
                     var options = {
                         allowAddVertices: true,
                         allowDeleteVertices: true,
                         uniformScaling: true
                     };
                     _class.activate(MapManager.EDITOR,[15, graphic, options],"editor");
+                    //
+                    if(layerId){
+                        eventManager.publishEvent(_this.Events.GraphicStartEditEvent ,{
+                            layerId:layerId,
+                            graphic:graphic
+                        });
+                    }
                 };
+
+
                 var remoteDeleteListener = function(){
                     if(_class.onDrawLayerDeleteClick){
                         _class.onDrawLayerDeleteClick = eventManager.destroyEventHandler(_class.onDrawLayerDeleteClick);
@@ -4655,6 +4737,7 @@ var M = JasMap = null;
                     params.map = _this.map;
                     _class.printTask.execute(params, onSuccess, onFailed);
                 };
+
             }
             function ModuleManager() {
                 var _class = this;

@@ -131,15 +131,23 @@ public class HcaBuildingsController extends BaseController {
 	 */
 	@PostMapping(value = "save")
 	@ResponseBody
-	public BaseResult save(@RequestBody HcaBuildings2 hcaBuildings) throws Exception {
-		int data = hcaBuildingService.save(hcaBuildings);
+	public BaseResult save(@RequestBody HcaBuildings2 hcaBuildings) {
+
 		SimpleResult result = new SimpleResult<>();
-		result.setData(data);
-		if(data == 0 ){
-			result.setMsg("保存失败！");
-		}else{
-			result.setMsg("保存成功");
+		try {
+			int data = hcaBuildingService.save(hcaBuildings);
+			result.setData(data);
+			if(data == 0 ){
+				result.setStatus(0);
+				result.setMsg("保存失败！");
+			}else{
+				result.setMsg("保存成功");
+			}
+		}catch (Exception e){
+			result.setStatus(0);
+			result.setMsg(e.getMessage());
 		}
+
 		return result;
 	}
 

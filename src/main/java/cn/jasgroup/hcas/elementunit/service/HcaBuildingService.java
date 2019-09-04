@@ -55,8 +55,9 @@ public class HcaBuildingService extends CommonDataJdbcService {
         int result = 0 ;
         if(StringUtil.hasText(hcaBuildings.getOid() ) && hcaBuildings.getObjectId() >0){
             result = update(hcaBuildings);
+        }else{
+            result = add(hcaBuildings);
         }
-        result = add(hcaBuildings);
         return result ;
     }
 

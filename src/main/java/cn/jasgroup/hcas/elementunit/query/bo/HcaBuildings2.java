@@ -19,8 +19,6 @@ import java.util.Date;
 @JdbcEntity(name = "hca_buildings")
 public class HcaBuildings2 extends ArcGisSpatialObject {
 
-
-	public Long objectId ;
  	/**
 	 * 构筑物编号 
 	 */
