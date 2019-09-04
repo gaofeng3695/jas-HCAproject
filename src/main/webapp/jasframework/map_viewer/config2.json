@@ -19,9 +19,9 @@
     "domainData":"top.hcaMapApp.loadDomainData"
   },
   "resources": [
+
   ],
   "map":{
-    "id":"mapDivId",
     "mapOptions":{
       "extent":{
         "xmin": 107.046640,
@@ -706,7 +706,8 @@
             }
           ]
         },{
-          "id":"hca_area","type":"feature","label":"地区等级","index":"30" ,"visible":false,"where":"1!=1",
+          "id":"hca_area","type":"feature","label":"地区等级",
+         "index":"30" ,"visible":false,"where":"1!=1","flash":true,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/2",
           "domain":{
             "REGION_LEVEL":"region_level_domain"
@@ -718,7 +719,8 @@
             }
           }
         },{
-          "id":"hca_high_impact_area","type":"feature","label":"高后果区","index":"31" ,"visible":false,"where":"1!=1",
+          "id":"hca_high_impact_area","type":"feature","label":"高后果区",
+        "index":"31" ,"visible":false,"where":"1!=1","flash":true,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/3",
           "domain":{
             "HIGH_IMPACT_LEVEL":"high_impact_level_domain"
