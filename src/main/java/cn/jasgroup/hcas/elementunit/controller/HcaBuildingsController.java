@@ -1,5 +1,7 @@
 package cn.jasgroup.hcas.elementunit.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,19 +16,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.jasgroup.framework.data.result.BaseResult;
+import cn.jasgroup.framework.data.result.ListResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildings2;
 import cn.jasgroup.hcas.elementunit.service.HcaBuildingService;
 import cn.jasgroup.jasframework.domain.service.SysDomainService;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import cn.jasgroup.hcas.elementunit.query.HcaBuildingsQuery;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
+import cn.jasgroup.jasframework.attachment.dao.entity.SysAttachment;
+import cn.jasgroup.jasframework.attachment.dao.entity.SysAttachmentBusinessRelation;
+import cn.jasgroup.jasframework.attachment.service.AttachmentService;
 import cn.jasgroup.jasframework.base.controller.BaseController;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.excel.util.ExcelExportUtil;
 import cn.jasgroup.jasframework.utils.DateTimeUtil;
+import cn.jasgroup.jasframework.utils.ReadConfigUtil;
+import cn.jasgroup.jasframework.utils.StringUtil;
 
 /**
  * @description 建构筑物
@@ -47,6 +59,9 @@ public class HcaBuildingsController extends BaseController {
 
     @Resource
     private HcaBuildingService hcaBuildingService ;
+    
+	@Autowired
+	private AttachmentService attachmentService;
 
 	/**
 	 *<p>功能描述：导出网格选中的全部数据为excel格式文件。</p>
@@ -151,4 +166,82 @@ public class HcaBuildingsController extends BaseController {
 		return result;
 	}
 
+	 
+	 /**
+	  *<p>功能描述：保存base64的图片接口。</p>
+	  * <p> 张毅 </p>	
+	  * @param request
+	  * @param businessId	业务Id
+	  * @param businessType	业务类型（业务含义）, 默认值为"attachment"
+	  * @param fileType	文件类型file/pic, 默认值为"attachment"
+	  * @param moduleCode	所属模块（kass系统使用）
+	  * @param folderId	文件Id
+	  * @param fileData	base64字符串
+	  * @return
+	  * @since JDK1.8。
+	  * <p>创建日期:2019年9月4日 下午7:33:45。</p>
+	  * <p>更新日期:[日期YYYY-MM-DD][更改人姓名][变更描述]。</p>
+	  */
+	@RequestMapping(value = "/uploadImage")
+	@ResponseBody
+	public BaseResult uploadImage(HttpServletRequest request, @RequestParam("businessId") String businessId,
+			@RequestParam(value = "businessType", required = false, defaultValue = "attachment") String businessType,
+			@RequestParam(value = "fileType", required = false, defaultValue = "attachment") String fileType,
+			@RequestParam(value = "moduleCode", defaultValue = "default", required = false) String moduleCode,
+			@RequestParam(value = "folderId", defaultValue = "8b0d4463-af4e-4e83-8004-659833162ee9", required = false) String folderId,
+			@RequestBody String fileData) {
+
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		// 內存限制，文件大小超过该限制将被保存成临时文件
+		String memorySizeThreshold = ReadConfigUtil.getPlatformConfig("fileUpload.memorySizeThreshold");
+		if (StringUtil.hasText(memorySizeThreshold)) {
+			factory.setSizeThreshold(Integer.parseInt(memorySizeThreshold));
+		}
+
+		// 单个文件大小限制
+		String singleFileMaxsize = ReadConfigUtil.getPlatformConfig("fileUpload.singleFileMaxsize");
+		long maxsize =99999999L;
+		if(StringUtil.hasText(fileData)){
+			maxsize = Long.valueOf(singleFileMaxsize);
+		}
+		List<String> fileIdList = new ArrayList<String>();
+		try {
+			// 二进制文件数组
+			byte[] b = Base64.decodeBase64(fileData);
+			long fileSize = fileData.length();
+			if(fileSize == 0 || fileSize > maxsize){
+				return new BaseResult(400,"-1","图片过大");
+			}
+			SysAttachment sysAttachment = new SysAttachment();
+			sysAttachment.setFileName("地图截图.png");
+			InputStream inputStream = new ByteArrayInputStream(b);
+			sysAttachment.setContentInputStream(inputStream);
+			sysAttachment.setFileSize(fileSize);
+			String fileId = attachmentService.saveAttachment(sysAttachment, moduleCode, folderId);
+
+			//附件ID为空, 上传失败
+			if(!StringUtil.hasText(fileId)) {
+				return new BaseResult(400,"-1","文件上传出错");
+			}
+
+			fileIdList.add(fileId);
+			
+			/* 保存业务对象与附件关系 */
+			for (String attachId : fileIdList) {
+				SysAttachmentBusinessRelation businessRelation = new SysAttachmentBusinessRelation();
+				businessRelation.setAttachmentId(attachId);
+				businessRelation.setBusinessDataId(businessId);
+				businessRelation.setBusinessType(businessType);
+				businessRelation.setFileType(fileType);
+				attachmentService.saveAttachmentBusinessRelation(businessRelation);
+			}
+
+		} catch (Exception e) {
+			log.error("[文件上传出错]:{}", e);
+			e.printStackTrace();
+			return new BaseResult(400,"-1","文件上传出错");
+		}
+		return new ListResult<>(fileIdList);
+		
+	}
 }
