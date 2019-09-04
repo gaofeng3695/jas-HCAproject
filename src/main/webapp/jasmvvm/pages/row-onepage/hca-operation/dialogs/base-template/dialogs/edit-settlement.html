@@ -110,11 +110,15 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+   			<jas-base-group-title v-show="!isCanEdit" name="附件信息"></jas-base-group-title>
+			<!-- <jas-file-upload   ref="upload" @success="uploadSuccess"></jas-file-upload> -->
+			<jas-file-list v-show="!isCanEdit" :biz-id="oid"></jas-file-list>
+           	<!-- <img v-show="isCanEdit" id="showImage" width="140px" height="158px" name="file" src=""/> -->
         </el-form>
         <div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="editSettlement()" v-show="!isCanEdit">编辑</el-button>
-            <el-button size="small" type="primary" @click="drawSettlement()" v-show="!isCanEdit">绘制</el-button>
             <el-button size="small" type="primary" @click="deleteSettlement()" v-show="!isCanEdit">删除</el-button>
+            <el-button size="small" type="primary" @click="getImage()" v-show="isCanEdit">截图</el-button>
             <el-button size="small" type="primary" @click="save()" v-show="isCanEdit">确 定</el-button>
             <el-button size="small" @click="cancel()" v-show="isCanEdit">取 消</el-button>
         </div>
@@ -128,6 +132,7 @@
 <script src="./../../../../../../common/js/jas-tools.js"></script>
 
 <script>
+var currentGraphic = null  ;
     var app = new Vue({
         el: "#app",
         data: function () {
@@ -210,10 +215,6 @@
         },
         created: function(){
             this.jasMap = parent.app.jasMap;
-        },
-        computed: {
-        },
-        mounted: function () {
             var that = this;
             var param = window.jasTools.base.getParamsInUrl(location.href);
             that.fId = param.fId;
@@ -238,7 +239,11 @@
             });
 
             top.jasMap.cancelGraphicEdit();
-             currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+            currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+        },
+        computed: {
+        },
+        mounted: function () {
 
          },
         methods: {
@@ -288,6 +293,7 @@
                             message: "操作失败！"
                         });
                     }else{
+                    	that.uploadSuccess();
                         top.Vue.prototype.$message({
                             type: 'success',
                             message: msg
@@ -386,9 +392,9 @@
                     }
                 });
             },
-            drawSettlement: function(){
+            getImage: function(){
                 var that = this;
-                this.jasMap.drawPolygon({
+                /* this.jasMap.drawPolygon({
                     layerId: "drawlayer_hca_buildings",
                     onDrawEnd:function(evt){
                         var feature = evt ;
@@ -397,14 +403,37 @@
                         var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&lyaerId=drawlayer_hca_buildings"
                         window.parent.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 300,350);
                     }
-                })
+                }) */
+                top.jasMap.cancelGraphicEdit();
+                var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
+                if(gra){
+                    top.jasMap.exportGraphicToImage(gra, function(data){
+            			$('#showImage').attr('src', data);
+                    });
+                }                
             }
         },
         destroyed:function(){
             this.cancel();
-        }
+        },
+        uploadImage: function () {
+        	var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?token=" + localStorage.getItem("token") +
+	            "&businessId=" + that.oid + "&businessType=pic";
+	       	jasTools.ajax.post(uploadurl, JSON.stringify({fileData: data}), function (data) {
+	           	console.log("success");
+	           }, function(data){
+	           	console.log('error');
+	           });
+			this.cancel(1);
+		},
+		uploadSuccess: function () {
+			window.parent.Vue.prototype.$message({
+				type: 'success',
+				message: !this.isEdit ? '保存成功' : '修改成功'
+			});
+			this.cancel(1);
+		},
     });
-    var currentGraphic = null  ;
 </script>
 
 </html>
