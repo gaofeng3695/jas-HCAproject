@@ -590,7 +590,7 @@ Vue.component('jas-file-list', {
                 width: '80%',
                 height: '90%',
                 title: '预览模板',
-                src: jasTools.base.rootPath + '/jasmvvm/pages/module-pdf-viewer/web/viewer.html?oid=' + oid,
+                src: jasTools.base.rootPath + '/jasmvvm/pages/template/pdfjs_1.10.88/web/viewer.html?oid=' + oid,
             });
         },
 
