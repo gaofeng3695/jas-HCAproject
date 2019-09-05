@@ -298,10 +298,16 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             feature.getAttributes().put("pipeline_oid",pipelineOid);
             feature.getAttributes().put("version_oid",versionOid);
             feature.getAttributes().put("area_code","area-" + i );
+
             double startMileage = MapUtil.getDouble(feature.getAttributes(),startMileageFieldName,0d) / 1000;
             double endMileage = MapUtil.getDouble(feature.getAttributes(),endMileageFieldName,0d) / 1000;
+
+            startMileage = Double.valueOf(String.format("%.3f", startMileage)) ;
+            endMileage = Double.valueOf(String.format("%.3f", endMileage));
+
             feature.getAttributes().put(startMileageFieldName,startMileage);
             feature.getAttributes().put(endMileageFieldName,endMileage);
+            feature.getAttributes().put(HcaAnalysisContext.areaLengthFieldName,endMileage -startMileage );
         }
     }
 
@@ -497,6 +503,10 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      */
     @Override
     public HcaAnalysisResult executeAnalysis(String pipelineOid, Double buffer) {
+
+        String versionOid = UUID.randomUUID().toString();
+        loggerUtil.time("地区等级划分开始，OID=" + versionOid);
+
         HcaAnalysisResult hcaAnalysisResult = new HcaAnalysisResult();
         HcaLinearParam analysisGeometryBO = preparePipelineData(pipelineOid ,buffer) ;
         Feature[] settlementFeatures = prepareBuildingsFeatureData(analysisGeometryBO);
@@ -509,7 +519,6 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
 
         Feature[] resultFeatures = classifyAreaRankGradeFeatures(cellFeatures,analysisGeometryBO);
 
-        String versionOid = UUID.randomUUID().toString();
 
         prepareHcaAttributes( resultFeatures,versionOid ,pipelineOid);
 
@@ -524,6 +533,8 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         hcaAnalysisResult.setTotal( count);
         //暂时不返回要素结果，前端通过更新图层获取计算结果数据
         //hcaAnalysisResult.setFeatures( resultFeatures);
+        loggerUtil.timeEnd("地区等级划分开始，OID=" + versionOid);
+
         return hcaAnalysisResult;
     }
 
