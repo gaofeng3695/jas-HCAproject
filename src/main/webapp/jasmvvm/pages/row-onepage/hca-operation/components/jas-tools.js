@@ -198,7 +198,19 @@
                 return letter.toUpperCase();
             });
         };
-
+        var viewImg = function (src) {
+            if (!window.Image || !window.Viewer) {
+                return alert('缺少必要的资源包');
+            }
+            var image = new Image();
+            image.src = src;
+            var viewer = new Viewer(image, {
+                hidden: function () {
+                    viewer.destroy();
+                },
+            });
+            viewer.show();
+        }
         return {
             rootPath: getRootPath(),
             createuuid: createuuid,
@@ -208,6 +220,7 @@
             setParamsToUrl: setParamsToUrl,
             getIdArrFromTree: getIdArrFromTree,
             switchToCamelCase: switchToCamelCase,
+            viewImg:viewImg,
         };
     })();
 
