@@ -28,6 +28,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import cn.jasgroup.hcas.elementunit.query.HcaBuildingsQuery;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
 import cn.jasgroup.jasframework.attachment.dao.entity.SysAttachment;
@@ -189,7 +192,7 @@ public class HcaBuildingsController extends BaseController {
 			@RequestParam(value = "fileType", required = false, defaultValue = "attachment") String fileType,
 			@RequestParam(value = "moduleCode", defaultValue = "default", required = false) String moduleCode,
 			@RequestParam(value = "folderId", defaultValue = "8b0d4463-af4e-4e83-8004-659833162ee9", required = false) String folderId,
-			@RequestBody String fileData) {
+			@RequestBody Map<String, String> fileDataMap) {
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// 內存限制，文件大小超过该限制将被保存成临时文件
@@ -197,18 +200,23 @@ public class HcaBuildingsController extends BaseController {
 		if (StringUtil.hasText(memorySizeThreshold)) {
 			factory.setSizeThreshold(Integer.parseInt(memorySizeThreshold));
 		}
-
+		if(null == fileDataMap){
+			return new BaseResult(400,"-1","截图为空");
+		}
 		// 单个文件大小限制
 		String singleFileMaxsize = ReadConfigUtil.getPlatformConfig("fileUpload.singleFileMaxsize");
 		long maxsize =99999999L;
-		if(StringUtil.hasText(fileData)){
+		
+		if(StringUtil.hasText(singleFileMaxsize)){
 			maxsize = Long.valueOf(singleFileMaxsize);
 		}
 		List<String> fileIdList = new ArrayList<String>();
 		try {
+			String fileData =  fileDataMap.get("fileData");
 			// 二进制文件数组
-			byte[] b = Base64.decodeBase64(fileData);
-			long fileSize = fileData.length();
+//			String fileData01 = fileData.replaceAll(" ", "+");
+			byte[] b = Base64.decodeBase64(fileData.replace("data:image/png;base64,", ""));
+			long fileSize = b.length;
 			if(fileSize == 0 || fileSize > maxsize){
 				return new BaseResult(400,"-1","图片过大");
 			}
@@ -221,7 +229,7 @@ public class HcaBuildingsController extends BaseController {
 
 			//附件ID为空, 上传失败
 			if(!StringUtil.hasText(fileId)) {
-				return new BaseResult(400,"-1","文件上传出错");
+				return new BaseResult(400,"-1","截图保存出错");
 			}
 
 			fileIdList.add(fileId);
@@ -237,9 +245,9 @@ public class HcaBuildingsController extends BaseController {
 			}
 
 		} catch (Exception e) {
-			log.error("[文件上传出错]:{}", e);
+			log.error("[截图保存出错]:{}", e);
 			e.printStackTrace();
-			return new BaseResult(400,"-1","文件上传出错");
+			return new BaseResult(400,"-1","截图保存出错");
 		}
 		return new ListResult<>(fileIdList);
 		
