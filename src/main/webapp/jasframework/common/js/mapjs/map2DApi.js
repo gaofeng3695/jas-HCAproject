@@ -2044,6 +2044,7 @@ var M = JasMap = null;
                     var renderer = featureLayer.renderer ;
                     var symbol = renderer.getSymbol(graphic) ;
                     graphic.setSymbol(symbol);
+                    styleManager
                 }
                 var topLayer = _this.map.graphics;
                 //2、draw to top layer
@@ -3717,12 +3718,7 @@ var M = JasMap = null;
                             var hasAdded = layer._tip;
                             if(!hasAdded){
                                 _this.addLayerTips(layer, response.template);
-                                var point = null;
-                                if (graphic.geometry.type !== "point") {
-                                    point = graphic.geometry.getExtent().getCenter();
-                                } else {
-                                    point = graphic.geometry;
-                                }
+                                var point = e.mapPoint ;
                                 var scrPt = _this.map.toScreen(point);
                                 mapManager.showGraphicTip(true, graphic ,response.template,scrPt.x + 10 ,scrPt.y + 10);
                             }
@@ -3913,9 +3909,11 @@ var M = JasMap = null;
                     if(_class .lastEditLayerId ){
                         var layer = _this.getLayerById(_class .lastEditLayerId) ;
                         layer.setVisibility(true);
+                        _class .lastEditLayerId = null ;
                     }
                     if(_class .lastEditGraphic){
                         _this.removeGraphic(_class .lastEditGraphic);
+                        _class .lastEditGraphic = null ;
                     }
                 };
                 var onGraphicStartEditEvent = function(e){
