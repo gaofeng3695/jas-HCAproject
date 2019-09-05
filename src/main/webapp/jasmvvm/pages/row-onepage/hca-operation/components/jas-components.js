@@ -577,7 +577,7 @@ Vue.component('jas-file-list', {
             var that = this;
             var url = jasTools.base.rootPath + "/attachment/getInfo.do";
             jasTools.ajax.get(url, {
-                businessType: 'file',
+                businessType: 'pic',
                 businessId: oid
             }, function (data) {
                 that.fileList = data.rows;
@@ -585,13 +585,15 @@ Vue.component('jas-file-list', {
             });
         },
         preview: function (oid) {
-            var that = this;
+            var url = jasTools.base.rootPath + "/attachment/download.do?oid="+oid;
+            top.jasTools.base.viewImg(url);
+            /*var that = this;
             top.jasTools.dialog.show({
                 width: '80%',
                 height: '90%',
                 title: '预览模板',
                 src: jasTools.base.rootPath + '/jasmvvm/pages/template/pdfjs_1.10.88/web/viewer.html?oid=' + oid,
-            });
+            });*/
         },
 
     },
@@ -615,6 +617,8 @@ Vue.component('jas-file-upload', {
         return {
             fileList: [],
             uploadurl: '',
+            dialogImageUrl: '',
+            dialogVisible: false,
         }
     },
     computed: {
@@ -623,19 +627,24 @@ Vue.component('jas-file-upload', {
         }
     },
     template: [
+        '<div>',
         '<el-upload ref="upload" :accept="accept" :limit="limit" :auto-upload="false" :file-list="fileList" ',
-        ':on-change="changeFiles" :on-success="fileUploaded" :on-remove="removeFile" ',
+        ':on-change="changeFiles" :on-success="fileUploaded" :on-remove="removeFile"  :on-preview="handlePictureCardPreview" ',
         ':on-exceed="uploaodNumberlimit" :action="uploadurl" style="padding-bottom:10px;">',
         '	<el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>',
         '	<span style="padding-left: 10px;" class="el-upload__tip" slot="tip">{{"最多上传"+ limit +"个附件"}}</span>',
         '</el-upload>',
+        '<el-dialog :visible.sync="dialogVisible">',
+        '<img width="100%" :src="dialogImageUrl" alt="">',
+        '</el-dialog>',
+        '</div>',
     ].join(''),
     methods: {
         requestFile: function (bizId) {
             var that = this;
             var url = jasTools.base.rootPath + "/attachment/getInfo.do";
             jasTools.ajax.get(url, {
-                businessType: 'file',
+                businessType: 'pic',
                 businessId: bizId
             }, function (data) {
                 data.rows.forEach(function (item) {
@@ -664,6 +673,10 @@ Vue.component('jas-file-upload', {
                     this.filesToBeDelete = [file.oid];
                 }
             }
+        },
+        handlePictureCardPreview: function(file) {
+            // this.dialogImageUrl = file.url;
+            top.jasTools.base.viewImg(file.url)
         },
         uploadFile: function (oid) {
             var that = this;

@@ -20,7 +20,8 @@ window.app = new Vue({
 			aMenu: [],//初始化的菜单数组
 			isMapInited: false, //地图未初始化
 			isTigger: false,
-			menuNumber: []//表示菜单后面的树
+			menuNumber: [],//表示菜单后面的树
+            mapSrc:'',
 		}
 	},
 	computed: {
@@ -50,7 +51,8 @@ window.app = new Vue({
 //			}, 300);
 //		}
 		that.statuschanged(!that.isMapInited);
-		
+        this.mapSrc = jasTools.base.rootPath +  "/jasframework/map_viewer/operation.html"
+
 	},
 	mounted: function () {
 		// this.$refs.resizer.panelShowed = false;

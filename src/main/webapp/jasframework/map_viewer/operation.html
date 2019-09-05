@@ -341,8 +341,8 @@
                 domainData:[],
                 hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
                 hcaBuildingsDrawGraphicId:"",
-                currentDrawBuildingGraphic:null
-
+                currentDrawBuildingGraphic:null,
+                builedingImg:''
             }
         },
         computed: {},
@@ -394,7 +394,7 @@
             callback1:function(e){
                 this.localAddress = e.result.formatted_address;
                 var fId = new Date().getTime();
-                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
+                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?builedingImg=' + this.builedingImg + '&fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
                 window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
             }  ,
             drawSettlement: function(){
@@ -404,6 +404,7 @@
                     layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;
+                        that.builedingImg = feature;
                         //var fId = new Date().getTime();
                         //var gra = feature.attr("id",fId);
                         //changedFeatures[fId] = feature;

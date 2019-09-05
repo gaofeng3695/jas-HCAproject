@@ -123,7 +123,7 @@
       "layerSet":
       [
         {
-          "id":"hca_pipeline","type":"feature","label":"管线","index":"29","flash":true,
+          "id":"hca_pipeline","type":"feature","label":"管线","visible":false,"index":"29","flash":true,
           "url":"http://192.168.100.130:6080/arcgis/rest/services/hca/features/FeatureServer/1",
           "listener": {
             "onHover": {

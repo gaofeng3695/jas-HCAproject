@@ -15,6 +15,10 @@
 		<el-form ref="formData" :model="form" label-width="150px">
 			<jas-form-items-group ref="mainForm" :form="form" :fields-config="fieldsConfig" :names-group="namesGroup"  :fields-group="fieldsGroup"></jas-form-items-group>
 		</el-form>
+		<div v-show="isshowfile">
+			<jas-base-group-title name="附件信息"></jas-base-group-title>
+			<jas-file-upload ref="upload" @success="uploadSuccess"></jas-file-upload>
+		</div>
 		<div slot="footer">
 			<el-button size="small" @click="cancel()">取 消</el-button>
 			<el-button size="small" type="primary" @click="submit('formData')">确 定</el-button>
@@ -49,7 +53,8 @@
                 form: {},
                 options: [],
                 oid:'',
-                forBusiness:''
+                forBusiness:'',
+                isshowfile: false,
             }
         },
         created: function () {
@@ -74,12 +79,14 @@
             if(param.versionOid){
                 this.versionOid = param.versionOid;
             }
-
             if (param.oid) {
                 this.oid = param.oid;
                 this.form.oid = this.oid;
                 this.isEdit = true;
                 this.getDetailByObjectId();
+            }
+            if(param.pageCode == 'settlement-manage'){
+                that.isshowfile = true;
             }
         },
         mounted: function () {
@@ -156,6 +163,13 @@
                     that.form = data.rows[0];
                     that.$refs['mainForm'].triggerFatherSelectsChange();
                 });
+            },
+            uploadSuccess: function () {
+                top.Vue.prototype.$message({
+                    type: 'success',
+                    message: !this.isEdit ? '保存成功' : '修改成功'
+                });
+                this.cancel(1);
             },
         },
     };
