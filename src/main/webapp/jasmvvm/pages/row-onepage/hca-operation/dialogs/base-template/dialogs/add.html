@@ -152,6 +152,8 @@
                     that.$nextTick(function () {
                         that.cancel(1);
                     })
+                }, function(data){
+                	that.loading = false;
                 });
             },
             getDetailByObjectId: function () {
