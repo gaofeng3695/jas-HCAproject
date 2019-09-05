@@ -20,16 +20,11 @@ import cn.jasgroup.framework.data.result.ListResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildings2;
 import cn.jasgroup.hcas.elementunit.service.HcaBuildingService;
-import cn.jasgroup.jasframework.domain.service.SysDomainService;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 import cn.jasgroup.hcas.elementunit.query.HcaBuildingsQuery;
 import cn.jasgroup.hcas.elementunit.query.bo.HcaBuildingsBo;
@@ -57,8 +52,6 @@ public class HcaBuildingsController extends BaseController {
 
 	@Autowired
 	private CommonDataJdbcService commonDataJdbcService;
-    @Autowired
-    private SysDomainService sysDomainService;
 
     @Resource
     private HcaBuildingService hcaBuildingService ;
@@ -121,14 +114,18 @@ public class HcaBuildingsController extends BaseController {
 						valueObject = "是";
 					}
 				}
+				
 				String valueString = "";
 				// 如果为日期
 				if (valueObject instanceof Date) {
 					valueString = DateTimeUtil.getFormatDate((Date) valueObject, DateTimeUtil.DATE_FORMAT);
 				} else if (valueObject != null) {
 					valueString = String.valueOf(valueObject);
+					if("households".equals(s) || "population".equals(s)){
+						String[]  arr = valueString.split("\\.");
+						valueString = arr[0];
+					}
 				}
-				// 转换值域
 				mss.put(s, valueString);
 			}
 			map.add(mss);
@@ -147,6 +144,7 @@ public class HcaBuildingsController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@PostMapping(value = "save")
 	@ResponseBody
 	public BaseResult save(@RequestBody HcaBuildings2 hcaBuildings) {
@@ -179,7 +177,7 @@ public class HcaBuildingsController extends BaseController {
 	  * @param fileType	文件类型file/pic, 默认值为"attachment"
 	  * @param moduleCode	所属模块（kass系统使用）
 	  * @param folderId	文件Id
-	  * @param fileData	base64字符串
+	  * @param fileDataMap	{"fileData": base64字符串}
 	  * @return
 	  * @since JDK1.8。
 	  * <p>创建日期:2019年9月4日 下午7:33:45。</p>
