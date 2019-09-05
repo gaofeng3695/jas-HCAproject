@@ -14,6 +14,7 @@ import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
@@ -221,7 +222,7 @@ public class DocTest {
 	public void testCreateSegment(){
 		DocUtil datas = new DocUtil();
 		
-		String path = "E://hcaReport.docx";
+		String path = "E://hcaReportTemplate//hcaReport.docx";
 		
 		/************** 管线数据 ******************/
 		HcaPipeline pipeline = new HcaPipeline();
@@ -248,13 +249,24 @@ public class DocTest {
 		 
 		 SegmentDataDoc s1 = new SegmentDataDoc();
 		 
-		 s1.setHighImpactAreaCode("s1");
+		 s1.setHighImpactAreaCode("s1"); 
+		 // 图片子文档
+		 List<PictureSegmentData> PictureSegmentDatas = new ArrayList<PictureSegmentData>(); 
+		 PictureSegmentData PictureSegmentData = new PictureSegmentData();
+		 PictureSegmentData.setGispictures(new PictureRenderData(450, 450, "d:/docfile/jasdocs\\attachment\\建（构）筑物\\地图截图-20190905161115.png"));
+		 PictureSegmentDatas.add(PictureSegmentData);
+		 PictureSegmentData PictureSegmentData0 = new PictureSegmentData();
+		 PictureSegmentData0.setGispictures(new PictureRenderData(450, 450, "d:/docfile/jasdocs\\attachment\\建（构）筑物\\地图截图-20190905161115.png"));
+		 PictureSegmentDatas.add(PictureSegmentData0);
+		 DocxRenderData pictureSegment = new DocxRenderData(new File("E://hcaReportTemplate//hcaPictureSegment.docx"), PictureSegmentDatas );
+		 
+		 s1.setPictureSegment(pictureSegment);
 		 segments.add(s1);
 		 SegmentDataDoc s2 = new SegmentDataDoc();
 		 
 		 s2.setHighImpactAreaCode("s2");
 		 segments.add(s2);
-		 DocxRenderData segment = new DocxRenderData(new File("E://hcaReportSegment.docx"), segments );
+		 DocxRenderData segment = new DocxRenderData(new File("E://hcaReportTemplate//hcaReportSegment.docx"), segments );
 		 datas.setSegment(segment);
 		 /************** 识别区数据 ******************/
 		 

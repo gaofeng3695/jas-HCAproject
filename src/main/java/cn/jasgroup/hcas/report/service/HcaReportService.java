@@ -7,8 +7,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.data.DocxRenderData;
 import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.PictureRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
 
@@ -25,7 +28,9 @@ import cn.jasgroup.hcas.highimpactarea.query.HcaHighImpactAreaQuery;
 import cn.jasgroup.hcas.highimpactarea.query.bo.HcaHighImpactAreaBo;
 import cn.jasgroup.hcas.pipelinemanage.query.HcaPipelineQuery;
 import cn.jasgroup.hcas.pipelinemanage.query.bo.HcaPipelineBo;
+import cn.jasgroup.hcas.report.dao.HcaReportDao;
 import cn.jasgroup.hcas.report.data.HcaDocData;
+import cn.jasgroup.hcas.report.data.HcaPictureSegment;
 import cn.jasgroup.hcas.report.data.HcaSegment;
 import cn.jasgroup.jasframework.engine.jdbc.service.CommonDataJdbcService;
 import cn.jasgroup.jasframework.utils.ReadConfigUtil;
@@ -41,6 +46,9 @@ import cn.jasgroup.jasframework.utils.ReadConfigUtil;
 @Service
 @Transactional
 public class HcaReportService extends CommonDataJdbcService {
+	
+	@Autowired
+	private HcaReportDao hcaReportDao;
 
 	public String createAreaReport() {
 		/**
@@ -72,13 +80,17 @@ public class HcaReportService extends CommonDataJdbcService {
 	public String createHcaReport(String pipelineOid, String versionOid) {
 		String templatePath = "";
 		String segmentPath = "";
+		String pictureSegmentPath = "";
 		Resource templateResource = new ClassPathResource("/hca-template/hcaReport.docx");
 		Resource segmentResource = new ClassPathResource("/hca-template/hcaReportSegment.docx");
+		Resource pictureSegmentResource = new ClassPathResource("/hca-template/hcaPictureSegment.docx");
 		templatePath = templateResource.toString();
 		segmentPath = segmentResource.toString();
+		pictureSegmentPath = pictureSegmentResource.toString();
 		try {
 			templatePath = templateResource.getFile().getAbsolutePath();
 			segmentPath = segmentResource.getFile().getAbsolutePath();
+			pictureSegmentPath = pictureSegmentResource.getFile().getAbsolutePath();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			return null;
@@ -123,6 +135,7 @@ public class HcaReportService extends CommonDataJdbcService {
 		for (int i = 0; i < hcaListSize; i++) {
 			HcaSegment s = new HcaSegment();
 			HcaHighImpactAreaBo bo = (HcaHighImpactAreaBo) hcaAreaList.get(i);
+			
 			s.setHighImpactAreaCode(bo.getHighImpactAreaCode());
 			Double length = bo.getHcaLength();
 			s.setHcaLength(length == null ? "" : String.valueOf(length));
@@ -132,6 +145,25 @@ public class HcaReportService extends CommonDataJdbcService {
 			s.setEndMileage(endMileage == null ? "" : String.valueOf(endMileage));
 			s.setHighImpactLevel(bo.getHighImpactLevelName());
 			s.setDescription(bo.getDescription());
+			List<HcaPictureSegment> pictureSegmentDatas = new ArrayList<HcaPictureSegment>();
+			List<Map<String,String>> pathList = hcaReportDao.getFilePathList(bo.getOid());
+			if(null != pathList && pathList.size() >0){
+				int pathListSize = pathList.size();
+				for(int j = 0; j < pathListSize; j++){
+					String path = pathList.get(0).get("fileUrl").replace("\\", "\\");
+					HcaPictureSegment picture = new HcaPictureSegment();
+					picture.setGispictures(new PictureRenderData(450, 450, path));
+					pictureSegmentDatas.add(picture);
+				}
+			}else{
+				HcaPictureSegment picture = new HcaPictureSegment();
+				PictureRenderData pictureRenderData = new PictureRenderData(450, 450, "");
+				pictureRenderData.setAltMeta("无");
+				picture.setGispictures(pictureRenderData);
+				pictureSegmentDatas.add(picture);
+			}
+			DocxRenderData pictureSegment = new DocxRenderData(new File(pictureSegmentPath), pictureSegmentDatas);
+			s.setPictureSegment(pictureSegment);
 			hcaSegments.add(s);
 		}
 
