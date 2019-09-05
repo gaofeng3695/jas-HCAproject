@@ -752,7 +752,7 @@
         "target": "fullscreen",
         "label": "地图全屏",
         "index": "",
-        "icon": "../../jasframework/map_viewer/images/dock/reset.png"
+        "icon": "../../jasframework/map_viewer/images/dock/fullscreen.png"
       },
       {
         "type": "api",
@@ -832,7 +832,7 @@
         "type": "api",
         "target": "drawSettlement",
         "label":"建（构）筑物标绘",
-        "icon": "../../jasframework/map_viewer/images/dock/draw.png",
+        "icon": "../../jasframework/map_viewer/images/dock/buildings.png",
         "index": ""
       }
     ]
