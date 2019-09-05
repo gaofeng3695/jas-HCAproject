@@ -24,6 +24,10 @@
 				<jas-detail-table :titles="formatFields(item.fields, fieldsConfig)" :detail="detail">
 				</jas-detail-table>
 			</template>
+            <div v-show="isshowfile">
+                <jas-base-group-title name="附件信息"></jas-base-group-title>
+                <jas-file-list :biz-id="oid"></jas-file-list>
+            </div>
 		</div>
 	</jas-approve-dialog>
 </div>
@@ -51,6 +55,7 @@
                 detailPath: '',
                 columnNum: 2,
                 oid: '',
+                isshowfile: false,
             }
         },
         created: function () {
@@ -65,6 +70,9 @@
                 this.oid = param.oid;
                 this.params = param;
                 this.getDetailByObjectId();
+            }
+            if(param.pageCode == 'settlement-manage'){
+                that.isshowfile = true;
             }
         },
         methods: {

@@ -110,17 +110,16 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-   			<jas-base-group-title v-show="!isCanEdit" name="附件信息"></jas-base-group-title>
-			<!-- <jas-file-upload   ref="upload" @success="uploadSuccess"></jas-file-upload> -->
+   			<jas-base-group-title name="附件信息"></jas-base-group-title>
+            <jas-file-upload  v-show="isCanEdit"  ref="upload" @success="uploadSuccess"></jas-file-upload>
 			<jas-file-list v-show="!isCanEdit" :biz-id="oid"></jas-file-list>
-           	<!-- <img v-show="isCanEdit" id="showImage" width="140px" height="158px" name="file" src=""/> -->
         </el-form>
         <div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="editSettlement()" v-show="!isCanEdit">编辑</el-button>
             <el-button size="small" type="primary" @click="deleteSettlement()" v-show="!isCanEdit">删除</el-button>
             <el-button size="small" type="primary" @click="getImage()" v-show="isCanEdit">截图</el-button>
-            <el-button size="small" type="primary" @click="save()" v-show="isCanEdit">确 定</el-button>
-            <el-button size="small" @click="cancel()" v-show="isCanEdit">取 消</el-button>
+            <el-button size="small" type="primary" @click="save()" v-show="isCanEdit">确定</el-button>
+            <el-button size="small" @click="cancel()" v-show="isCanEdit">取消</el-button>
         </div>
     </jas-dialog-wrapper>
 </div>
@@ -128,8 +127,8 @@
 <script src="./../../../../../../lib/jquery/jquery-1.12.4.min.js"></script>
 <script src="./../../../../../../lib/vue/vue.js"></script>
 <script src="./../../../../../../lib/element-ui/v2.4.1/index.min.js"></script>
-<script src="./../../../../../../common/components/jas-components.js"></script>
-<script src="./../../../../../../common/js/jas-tools.js"></script>
+<script src="../../../components/jas-components.js "></script>
+<script src="../../../components/jas-tools.js"></script>
 
 <script>
 var currentGraphic = null  ;
@@ -210,6 +209,7 @@ var currentGraphic = null  ;
                 layerId:"",
                 tableName:"",
                 localAddress:"",
+                imageinfo:'',
                 //currentGraphic:null
             }
         },
@@ -255,11 +255,11 @@ var currentGraphic = null  ;
                     }
                 });
             },
-            parentDomainChange: function(codeId){
+            parentDomainChange: function (codeId) {
                 var that = this;
                 this.changeParentCodeId = codeId;
                 this.tableFormData.buildingType = "";
-                this.getChildDomainSelect('building_type_domain',function (arr) {
+                this.getChildDomainSelect('building_type_domain', function (arr) {
                     that.domain.buildingType = arr;
                     that.tableFormData.buildingType = arr[0].key;
                 });
@@ -270,7 +270,7 @@ var currentGraphic = null  ;
                 jasTools.ajax.post(url, {
                     oid: oid
                 }, function (data) {
-                    $.extend(that.tableFormData  ,data.rows[0]);
+                    $.extend(that.tableFormData, data.rows[0]);
                     that.layerId = that.tableName + "#" + that.tableFormData.buildingType;
                 });
             },
@@ -279,7 +279,7 @@ var currentGraphic = null  ;
                 var msg = "";
                 that.but_disabled = true;
                 msg = "修改成功";
-                var graphic =  currentGraphic;
+                var graphic = currentGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -287,23 +287,27 @@ var currentGraphic = null  ;
                 that.tableFormData.pipelineOid = top.hcaMapApp.pipelineOid;
                 url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
-                    if(data.data === 0 ){
+                    if (data.data === 0) {
                         top.Vue.prototype.$message({
                             type: 'error',
                             message: "操作失败！"
                         });
-                    }else{
-                    	that.uploadSuccess();
+                    } else {
+                        if(that.imageinfo){
+                            that.uploadImage();
+                        }
+                        //that.uploadSuccess();
+                        that.$refs.upload.uploadFile(that.oid);
                         top.Vue.prototype.$message({
                             type: 'success',
                             message: msg
                         });
                         //config.json中以表名和类型名作为图层的layerId
                         var layerId = that.layerId;
-                        top.hcaMapApp.jasMap.updateLayer(layerId,{
-                            show:true
+                        top.hcaMapApp.jasMap.updateLayer(layerId, {
+                            show: true
                         });
-                        var gra =  currentGraphic;
+                        var gra = currentGraphic;
                         top.jasMap.removeGraphic(gra);
                         top.jasMap.cancelGraphicEdit();
                         that.requestDetail(that.oid);
@@ -320,7 +324,7 @@ var currentGraphic = null  ;
                     cb && cb([]);
                 });
             },
-            getDomainSelect: function(domainName, cb){
+            getDomainSelect: function (domainName, cb) {
                 var that = this;
                 var url = jasTools.base.rootPath +
                     "/jasframework/sysdoman/getDoman.do";
@@ -336,7 +340,7 @@ var currentGraphic = null  ;
                     cb && cb(aDomain);
                 });
             },
-            getChildDomainSelect: function(domainName, cb){
+            getChildDomainSelect: function (domainName, cb) {
                 var that = this;
                 var url = jasTools.base.rootPath +
                     "/jasframework/sysdoman/getChildDoman.do";
@@ -357,11 +361,12 @@ var currentGraphic = null  ;
                 this.isCanEdit = false;
                 top.jasMap.cancelGraphicEdit();
             },
-            editSettlement : function() {
+            editSettlement: function () {
                 var that = this;
-                var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
-                if(gra){
-                    currentGraphic = top.jasMap.editGraphic(gra ,that.layerId);
+                this.$refs.upload.requestFile(this.oid);
+                var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId, that.layerId);
+                if (gra) {
+                    currentGraphic = top.jasMap.editGraphic(gra, that.layerId);
                 }
                 that.isCanEdit = true;
             },
@@ -373,8 +378,8 @@ var currentGraphic = null  ;
                         message: '删除成功'
                     });
                     var layerId = that.layerId;
-                    top.hcaMapApp.jasMap.updateLayer(layerId,{
-                        show:true
+                    top.hcaMapApp.jasMap.updateLayer(layerId, {
+                        show: true
                     });
                     window.parent.closeDlg("editSettlementIframe");
                 };
@@ -384,7 +389,7 @@ var currentGraphic = null  ;
                         if (action === 'confirm') {
                             var url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/delete.do";
                             jasTools.ajax.post(url, {
-                                oid:that.oid
+                                oid: that.oid
                             }, function (data) {
                                 afterDelete();
                             });
@@ -392,47 +397,39 @@ var currentGraphic = null  ;
                     }
                 });
             },
-            getImage: function(){
+            getImage: function () {
                 var that = this;
-                /* this.jasMap.drawPolygon({
-                    layerId: "drawlayer_hca_buildings",
-                    onDrawEnd:function(evt){
-                        var feature = evt ;
-                        var fId = new Date().getTime();
-                        feature.attributes = { id :fId};
-                        var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&lyaerId=drawlayer_hca_buildings"
-                        window.parent.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 300,350);
-                    }
-                }) */
                 top.jasMap.cancelGraphicEdit();
                 var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
-            			$('#showImage').attr('src', data);
+                        that.imageinfo = data;
+                        var file = {name:that.tableFormData.buildingCode,url:data,status:'ready'}
+                        that.$refs.upload.fileList.push(file);
                     });
-                }                
-            }
-        },
-        destroyed:function(){
-            this.cancel();
-        },
-        uploadImage: function () {
-        	var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?token=" + localStorage.getItem("token") +
-	            "&businessId=" + that.oid + "&businessType=pic";
-	       	jasTools.ajax.post(uploadurl, JSON.stringify({fileData: data}), function (data) {
-	           	console.log("success");
-	           }, function(data){
-	           	console.log('error');
-	           });
-			this.cancel(1);
-		},
-		uploadSuccess: function () {
-			window.parent.Vue.prototype.$message({
-				type: 'success',
-				message: !this.isEdit ? '保存成功' : '修改成功'
-			});
-			this.cancel(1);
-		},
+                }
+            },
+            destroyed: function () {
+                this.cancel();
+            },
+            uploadImage: function () {
+                var that = this;
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=pic";
+                jasTools.ajax.post(uploadurl,{
+                    fileData: that.imageinfo
+                },function (data) {
+                    console.log("success");
+                });
+                this.cancel(1);
+            },
+            uploadSuccess: function () {
+                window.parent.Vue.prototype.$message({
+                    type: 'success',
+                    message: !this.isEdit ? '保存成功' : '修改成功'
+                });
+                this.cancel(1);
+            },
+        }
     });
 </script>
 
