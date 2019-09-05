@@ -19,6 +19,7 @@ import cn.jasgroup.jasframework.engine.jdbc.dao.CommonDataJdbcDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -61,6 +62,9 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
     private BaseJdbcDao baseJdbcDao;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate ;
+
+    @Autowired
     private HcaVersionService hcaVersionService;
 
 
@@ -76,7 +80,8 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
 
         HcaAnalysisResult hcaAnalysisResult = new HcaAnalysisResult();
 
-        loggerUtil.time("执行高后果区分析");
+        String hcaVersionId = UUID.randomUUID().toString() ;
+        loggerUtil.time("执行高后果区分析,OID=" + hcaVersionId);
         //1、查询版本数据
         HcaVersion version = queryHcaVersion(areaVersionCode) ;
         String areaVersionOid = version.getOid();
@@ -94,7 +99,6 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         //3、查询地区等级数据
         Feature[] areaData = queryHcaAreaByVersionId(areaVersionOid);
         //4、执行分类
-        String hcaVersionId = UUID.randomUUID().toString() ;
         Feature[] hcaData = classifyHighConsequenceArea(areaData ,bo,hcaVersionId);
 
         //重新生成高后果区单元,补充描述信息
@@ -107,7 +111,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         //hcaAnalysisResult.setFeatures( hcaData );
         hcaAnalysisResult.setVersionId(hcaVersionId);
 
-        loggerUtil.timeEnd("执行高后果区分析");
+        loggerUtil.timeEnd("执行高后果区分析,OID=" + hcaVersionId);
 
         return hcaAnalysisResult;
     }
@@ -140,17 +144,26 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             Double startMileage = MapUtil.getDouble(attrs,HcaAnalysisContext.startMileageFieldName );
             Double endMileage = MapUtil.getDouble(attrs,HcaAnalysisContext.endMileageFieldName );
 
-            startMileage = Double.valueOf(String.format("%.3f", startMileage));
+            startMileage = Double.valueOf(String.format("%.3f", startMileage)) ;
             endMileage = Double.valueOf(String.format("%.3f", endMileage));
 
             attrs.put(HcaAnalysisContext.startMileageFieldName,startMileage);
             attrs.put(HcaAnalysisContext.endMileageFieldName,endMileage);
+            attrs.put(HcaAnalysisContext.hcaLengthFieldName,endMileage - startMileage);
+
+            //线性参考计算的单位为m
+            startMileage *= 1000;
+            endMileage *= 1000 ;
+
             // 不为空字段
             attrs.put(HcaAnalysisContext.pipelineOidFieldName,pipelineOid);
             attrs.put(HcaAnalysisContext.versionNameFieldName,"");
             attrs.put("active",1);
-
-            Polyline p = linearReferenceUtil.locateBetween(startMileage * 1000,endMileage * 1000,0d);
+            if(startMileage < 0 || endMileage < 0 || endMileage > linearReferenceUtil.getLinearPolyline().getTotalMeasure()){
+                logger.error("识别单元{}起止里程值[{},{}]计算错误！",MapUtil.getString( attrs ,"oid" ),startMileage ,endMileage);
+                continue;
+            }
+            Polyline p = linearReferenceUtil.locateBetween(startMileage ,endMileage ,0d);
             Geometry po =  GeometryUtil.buffer(p,buffer ,2);
             Geometry geom = GeometryUtil.gaussToBL(po);
             hcaData[i].setGeometry(geom);
@@ -227,38 +240,46 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         for(int i = 0 ; i < hcaFeatures.length ; i++){
 
             Map<String,Object> props = hcaFeatures[i].getAttributes();
+            String oid = MapUtil.getString(props , HcaAnalysisContext.TableKeyName);
             //
-            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName)  ;
-            Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName)   ;
-            Polyline polyline = linearReferenceUtil.locateBetween( startMileage,endMileage,0d);
+            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) * 1000;
+            Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) * 1000;
+            Polyline polyline = linearReferenceUtil.locateBetween( startMileage ,endMileage,0d);
             Geometry bufferArea = GeometryUtil.buffer( polyline,buffer,2) ;
-            Geometry polygon = GeometryUtil.gaussToBL(bufferArea);
+            //Geometry polygon = GeometryUtil.gaussToBL(bufferArea);
 
             String rank = MapUtil.getString( props ,rankFieldName );
+            int outSrid = linearReferenceUtil.getLinearPolyline().getPolyline().getSpatialReference().getWkid();
 
             LayerQueryParam queryParam = new LayerQueryParam();
             queryParam.setSrsname(HcaAnalysisContext.buildingsSourceName);
-            queryParam.setGeometry(polygon);
+            queryParam.setGeometry(bufferArea);
             queryParam.setGeometryType(GeometryType.POLYGON.getType());
             queryParam.setOutputFormat(null);
+            queryParam.setOutFields("*");
             queryParam.setWhere( getSpecialQueryExpress());
+            queryParam.setInputSRID(outSrid);
+            queryParam.setOutputSRID(outSrid);
             FeatureCollection featureCollection = geodataAccessService.query(queryParam) ;
 
             if(featureCollection == null ){
-                throw new RuntimeException("查询特定场所出错！");
+                throw new RuntimeException("查询特定场所出错！" );
             }
             Feature[] features = FeatureCollectionUtil.toLowerCaseFeature(featureCollection);
             if(features == null || features .length == 0) {
+                //logger.info("{}区块没有查询到特定场所数据" , MapUtil.getString(props ,"oid"));
                 continue;
             }
-            String oid = MapUtil.getString(props,oidFieldName);
 
             logger.info("高后果区单元{}潜在影响区内查询到{}处特定场所。",oid ,features.length);
 
             //String des = "潜在影响区内含有" + features.length + "处特定场所";
             result.putFeatures(oid,features);
-
+            //
             double[] mileages = locateBetweenPoints(linearReferenceUtil,features);
+            if(mileages[0] < 0 || mileages[1] < 0){
+                logger.error("识别区{}特定场所前后里程值[{} ,{}]计算出错 ！",oid,mileages[0] ,mileages[1]);
+            }
             if(startMileage > mileages[0]){
                 props.put(HcaAnalysisContext.startMileageFieldName,mileages[0]);
             }
@@ -305,8 +326,8 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         queryParam.setSrsname( HcaAnalysisContext.buildingsSourceName ) ;
         queryParam.setGeometry(cell);
         queryParam.setGeometryType(GeometryType.POLYGON.getType());
-        queryParam.setWhere(null);
         queryParam.setOutputFormat(null);
+        queryParam.setOutFields("*");
         queryParam.setInputSRID(cell.getSpatialReference().getWkid());
         queryParam.setOutputSRID(outSrid);
         queryParam.setWhere( getExplosiveQueryExpress());// ?
@@ -512,6 +533,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             }
 
         }
+
         for(int i = 0 ; i < result.size() ; i++){
             Feature current = result.get(i) ;
             Map<String,Object> props = current.getAttributes();
@@ -521,18 +543,60 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
                 String desc =  MapUtil.getString(props,HcaAnalysisContext.hcaRemarkFieldName);
                 desc += "识别区内含有" + explosiveLocationMap.size(oid) + "处易燃易爆场所;";
                 props.put(HcaAnalysisContext.hcaRemarkFieldName,desc);
+                //插入高后果区-构筑物关联数据
+                List<String> buildingOids = getBuildingOids(explosiveLocationMap.get(oid));
+                insertHcaBuildingRefData(oid ,buildingOids);
+
             }
             if(specialLocationMap.size(oid) > 0){
                 String desc =  MapUtil.getString(props,HcaAnalysisContext.hcaRemarkFieldName);
                 desc += "潜在影响区内含有" + specialLocationMap.size(oid) + "处特定场所;";
                 props.put(HcaAnalysisContext.hcaRemarkFieldName,desc);
+                //插入高后果区-构筑物关联数据
+                List<String> buildingOids = getBuildingOids(specialLocationMap.get(oid));
+                insertHcaBuildingRefData(oid ,buildingOids);
             }
         }
+
         logger.info("边界重叠处理结束，处理{}处边界重叠单元",count0);
 
         Feature[] hcaDataAfterMerge = result.toArray(new Feature[0]);
         return hcaDataAfterMerge;
     }
+
+    protected List<String> getBuildingOids(Feature[] features ){
+        List<String> oids = new ArrayList<>();
+        for(int i = 0 ; i < features.length ; i++){
+            Map<String,Object> attr = features[i].getAttributes();
+            if(attr != null && attr.containsKey(HcaAnalysisContext.TableKeyName)){
+                oids.add(attr.get(HcaAnalysisContext.TableKeyName).toString());
+            }
+        }
+        return oids ;
+    }
+    /**
+     *
+     * @param hcaOid
+     * @param buildingOids
+     * @return
+     */
+    protected int insertHcaBuildingRefData(String hcaOid ,List<String> buildingOids ){
+        int size = buildingOids.size() ;
+        List<Object[]> args = new ArrayList<>(size);
+        for(int i = 0 ; i < size ; i++){
+            String uuid = UUID.randomUUID().toString();
+            String buildingOid = buildingOids.get(i);
+            args.add( new Object[]{  uuid,  buildingOid ,hcaOid });
+        }
+        String sql = "insert into " + HcaAnalysisContext.highImpactAreaBuildingsRefSourceName + "(OID , BUILDING_OID ,HCA_HIGH_IMPACT_AREA_OID,ACTIVE) values(?,?,?,1)";
+        int[] re = jdbcTemplate.batchUpdate(sql ,args );
+        int sum =  MathUtil.sum(re) ;
+        if(sum == size){
+            logger.info("高后果区{}成功关联{}处构筑物数据",hcaOid ,sum);
+        }
+        return sum;
+    }
+
 
     /**
      *
