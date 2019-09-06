@@ -131,7 +131,7 @@
 <script src="../../../components/jas-tools.js"></script>
 
 <script>
-var currentGraphic = null  ;
+    var currentGraphic = null  ;
     var app = new Vue({
         el: "#app",
         data: function () {
@@ -237,7 +237,7 @@ var currentGraphic = null  ;
             });
 
             top.jasMap.cancelGraphicEdit();
-            currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+            currentGraphic = top.currentDrawBuildingGraphic;
         },
         computed: {
         },
