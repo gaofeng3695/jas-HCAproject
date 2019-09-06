@@ -1,5 +1,10 @@
 package cn.jasgroup.hcas.report.data;
 
+import java.util.List;
+
+import com.deepoove.poi.data.DocxRenderData;
+import com.deepoove.poi.data.PictureRenderData;
+
 /**
  * @description 高后果区子文档
  * @author zhangyi
@@ -10,12 +15,35 @@ package cn.jasgroup.hcas.report.data;
 
 public class HcaSegment {
 
+	/**
+	 * 高后果区编号
+	 */
 	private String highImpactAreaCode;
+	/**
+	 * 起始里程
+	 */	
 	private String startMileage;
+	/**
+	 * 终止里程
+	 */	
 	private String endMileage;
+	/**
+	 * 长度
+	 */		
 	private String hcaLength;
+	/**
+	 * 等级
+	 */	
 	private String highImpactLevel;
+	/**
+	 * 描述
+	 */	
 	private String description;
+	/**
+	 * 图片子文档
+	 */	
+	private DocxRenderData pictureSegment;
+	
 	public String getHighImpactAreaCode() {
 		return highImpactAreaCode;
 	}
@@ -52,6 +80,11 @@ public class HcaSegment {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+	public DocxRenderData getPictureSegment() {
+		return pictureSegment;
+	}
+	public void setPictureSegment(DocxRenderData pictureSegment) {
+		this.pictureSegment = pictureSegment;
+	}
+
 }

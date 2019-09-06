@@ -32,6 +32,11 @@ public class HcaAnalysisContext {
     /**
      *
      */
+    public static String highImpactAreaBuildingsRefSourceName = "hca_high_impact_area_ref" ;
+
+    /**
+     *
+     */
     public static String areaGradeSourceName = "hca_area" ;
     /**
      *
@@ -54,6 +59,12 @@ public class HcaAnalysisContext {
     public static String startMileageFieldName = "start_mileage";
 
     public static String endMileageFieldName = "end_mileage";
+
+    public static String hcaLengthFieldName = "hca_length";
+
+    public static String areaLengthFieldName = "area_length";
+
+
 
     public static String horizontalDistanceFieldName = "horizontal_distance";
 

@@ -459,19 +459,24 @@
                     contentType:"application/json;charset=utf-8",
                     method:"post",
                     async:false,
-                    onSuccess:function(result){
-                        var json = JSON.parse(result);
-                        var rings = json.data .rings;
-                        that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
-                        this.jasMap.addPolygonGraphic(rings,{
-                            layerId:'drawlayer_area_buffer',
-                            color:[255,255,255,100],
-                            outlineColor:[255,0,0,255],
-                        });
-                        var lineGraphic = that.getPipeline();
-                        var x = lineGraphic.geometry.paths[0][0][0];
-                        var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-                        this.jasMap.zoomAt(15,x ,y );
+                    onSuccess:function(res){
+                        var json = JSON.parse(res);
+                        if(json.status ){
+                            var rings = json.data .rings;
+                            that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
+                            this.jasMap.addPolygonGraphic(rings,{
+                                layerId:'drawlayer_area_buffer',
+                                color:[255,255,255,100],
+                                outlineColor:[255,0,0,255],
+                            });
+                            var lineGraphic = that.getPipeline();
+                            var x = lineGraphic.geometry.paths[0][0][0];
+                            var y = lineGraphic.geometry.paths[0][0][1] ;
+                            this.jasMap.zoomAt(15,x ,y );
+                        }else{
+                            that.$alert(json.msg ,"提示");
+                        }
+
                     }
                 });
             },
@@ -516,15 +521,21 @@
                                 onSuccess: function(res){
                                     var result = JSON.parse(res) ;
                                     loading.close();
-                                    that.saveVersion('0',result.data.versionId);
-                                    that.jasMap.updateLayer('hca_area',{
-                                        "show":true,
-                                        "where":"version_oid like'" + result.data.versionId + "'"
-                                    });
-                                    var lineGraphic = that.getPipeline();
-                                    var x = lineGraphic.geometry.paths[0][0][0];
-                                    var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-                                    that.jasMap.zoomAt(15,x ,y );
+
+                                    if(result.status){
+                                        that.saveVersion('0',result.data.versionId);
+                                        app.localAreaVersionOid = result.data.versionId;
+                                        that.jasMap.updateLayer('hca_area',{
+                                            "show":true,
+                                            "where":"version_oid like'" + result.data.versionId + "'"
+                                        });
+                                        var lineGraphic = that.getPipeline();
+                                        var x = lineGraphic.geometry.paths[0][0][0];
+                                        var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+                                        that.jasMap.zoomAt(15,x ,y );
+                                    }else{
+                                        that.$alert(result.msg, '提示');
+                                    }
                                 },
                                 onError: function(){
                                     that.$alert('数据处理出错', '提示');
@@ -616,18 +627,23 @@
                                 onSuccess: function(res){
                                     var result = JSON.parse(res) ;
                                     loading.close();
-                                    that.saveVersion('1',result.data.versionId);
-                                    that.jasMap.updateLayer('hca_high_impact_area',{
-                                        "show":true,
-                                        "where":"version_oid like'" + result.data.versionId + "'"
-                                    });
-                                    var lineGraphic = that.getPipeline();
-                                    var x = lineGraphic.geometry.paths[0][0][0];
-                                    var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-                                    that.jasMap.zoomAt(15,x ,y );
+                                    if(result.status !== 0){
+                                        that.saveVersion('1',result.data.versionId);
+                                        that.localAreaVersionOid = result.data.versionId;
+                                        that.jasMap.updateLayer('hca_high_impact_area',{
+                                            "show":true,
+                                            "where":"version_oid like'" + result.data.versionId + "'"
+                                        });
+                                        var lineGraphic = that.getPipeline();
+                                        var x = lineGraphic.geometry.paths[0][0][0];
+                                        var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
+                                        that.jasMap.zoomAt(15,x ,y );
+                                    }else{
+                                        that.$alert(result.msg, '提示');
+                                    }
                                 },
                                 onError: function(){
-                                    that.$alert('数据处理出错', '提示')
+                                    that.$alert('数据处理出错', '提示');
                                     //top.Vue.prototype.$alert('数据处理出错', '提示')
                                     loading.close();
                                 }
