@@ -53,7 +53,7 @@ public class HcaLinearParam {
     }
 
     public void setTotalMileage(Double totalMileage) {
-        this.totalMileage = Double.valueOf(String.format("%.3f",totalMileage));
+        this.totalMileage = totalMileage;
     }
 
     public Polyline getPipeline() {

@@ -372,6 +372,7 @@ var currentGraphic = null  ;
                     top.hcaMapApp.jasMap.updateLayer(layerId, {
                         show: true
                     });
+                    top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
                     window.parent.closeDlg("editSettlementIframe");
                 };
                 window.top.Vue.prototype.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
