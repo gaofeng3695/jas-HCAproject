@@ -230,18 +230,18 @@ var vm = new Vue({
 			var title = '地区等级列表';
 			var layerId = 'pd_arearank';
 			if(this.forBusiness == "0"){
-                top.jasMap.layerVisibleSwitch('hca_area',false);
+                top.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
+				top.hcaMapApp.localAreaVersionOid = item.oid;
 			}
 			if(this.forBusiness == "1"){
 				title = '高后果区列表';
 				layerId = 'pd_zonerankcell';
-                top.jasMap.layerVisibleSwitch('hca_high_impact_area',false);
+                top.jasMap.layerVisibleSwitch('hca_area',false);
 			}
             top.jasMap.updateLayer('hca_area',{
                 "show":true,
                 "where":"version_oid like'" + item.oid + "'"
             });
-			parent.app.localAreaVersionOid = item.oid;
             window.parent.closeDlg("areaVersionSelectIframe");
             //top.showAreaDialogRight(this.forBusiness,title,item.oid);
 		},
