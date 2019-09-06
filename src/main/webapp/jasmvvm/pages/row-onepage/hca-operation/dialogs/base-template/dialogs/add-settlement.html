@@ -152,12 +152,11 @@
 			</el-row>
             <jas-base-group-title name="附件信息"></jas-base-group-title>
             <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>
-            <jas-file-list :biz-id="oid"></jas-file-list>
 		</el-form>
 		<div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="getImage()">截图</el-button>
-            <el-button size="small" type="primary" @click="save()">确 定</el-button>
-            <el-button size="small" @click="cancel()">取 消</el-button>
+            <el-button size="small" type="primary" @click="save()">确定</el-button>
+            <el-button size="small" @click="cancel()">取消</el-button>
         </div>
 	</jas-dialog-wrapper>
 </div>
@@ -342,6 +341,19 @@
                     that.tableFormData = data.rows[0];
                 });
             },
+            uploadImage: function (cb) {
+                var that = this;
+                if(!that.imageinfo){
+                    return  cb&&cb();
+                }
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
+                jasTools.ajax.post(uploadurl,{
+                    buildingCode:that.tableFormData.buildingCode,
+                    fileData: that.imageinfo
+                },function (data) {
+                    cb&&cb();
+                });
+            },
             getImage: function () {
                 var that = this;
                 top.jasMap.cancelGraphicEdit();
@@ -350,20 +362,23 @@
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode,url:data,status:'ready'}
+                        var file = {name:that.tableFormData.buildingCode,url:data,status:'success'}
                         that.$refs.upload.fileList.push(file);
                     });
                 }
             },
-            uploadImage: function () {
+            uploadImage: function (cb) {
                 var that = this;
-                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=pic";
+                if(!that.imageinfo){
+                    return  cb&&cb();
+                }
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
                 jasTools.ajax.post(uploadurl,{
                     fileData: that.imageinfo
                 },function (data) {
                     console.log("success");
+                    cb&&cb();
                 });
-                this.cancel(1);
             },
             save: function () {
                 var that = this;
@@ -464,6 +479,16 @@
                             window.parent.closeDlg("editSettlementIframe");
                         }
                     }
+                });
+            },
+            uploadSuccess: function () {
+                var that = this;
+                that.uploadImage(function(){
+                    window.parent.Vue.prototype.$message({
+                        type: 'success',
+                        message: !this.isEdit ? '保存成功' : '修改成功'
+                    });
+                    that.cancel(1);
                 });
             },
         },
