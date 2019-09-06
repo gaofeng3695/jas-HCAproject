@@ -111,7 +111,7 @@
                 </el-col>
             </el-row>
    			<jas-base-group-title name="附件信息"></jas-base-group-title>
-            <jas-file-upload  v-show="isCanEdit"  ref="upload" @success="uploadSuccess"></jas-file-upload>
+            <jas-file-upload  v-show="isCanEdit"  ref="upload" @success="uploadSuccess" ></jas-file-upload>
 			<jas-file-list v-show="!isCanEdit" :biz-id="oid"></jas-file-list>
         </el-form>
         <div slot="footer" style="margin-bottom:10px;">
@@ -210,7 +210,6 @@ var currentGraphic = null  ;
                 tableName:"",
                 localAddress:"",
                 imageinfo:'',
-                //currentGraphic:null
             }
         },
         created: function(){
@@ -293,25 +292,7 @@ var currentGraphic = null  ;
                             message: "操作失败！"
                         });
                     } else {
-                        if(that.imageinfo){
-                            that.uploadImage();
-                        }
-                        //that.uploadSuccess();
                         that.$refs.upload.uploadFile(that.oid);
-                        top.Vue.prototype.$message({
-                            type: 'success',
-                            message: msg
-                        });
-                        //config.json中以表名和类型名作为图层的layerId
-                        var layerId = that.layerId;
-                        top.hcaMapApp.jasMap.updateLayer(layerId, {
-                            show: true
-                        });
-                        var gra = currentGraphic;
-                        top.jasMap.removeGraphic(gra);
-                        top.jasMap.cancelGraphicEdit();
-                        that.requestDetail(that.oid);
-                        that.cancel(1);
                     }
                 });
             },
@@ -358,17 +339,27 @@ var currentGraphic = null  ;
                 });
             },
             cancel: function (param) {
-                this.isCanEdit = false;
+                var that = this;
+                //config.json中以表名和类型名作为图层的layerId
+                var layerId = that.layerId;
+                top.hcaMapApp.jasMap.updateLayer(layerId, {
+                    show: true
+                });
+                var gra = currentGraphic;
+                top.jasMap.removeGraphic(gra);
                 top.jasMap.cancelGraphicEdit();
+                location.reload();
             },
             editSettlement: function () {
                 var that = this;
-                this.$refs.upload.requestFile(this.oid);
-                var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId, that.layerId);
-                if (gra) {
-                    currentGraphic = top.jasMap.editGraphic(gra, that.layerId);
-                }
                 that.isCanEdit = true;
+                setTimeout(function(){
+                    that.$refs.upload.requestFile(that.oid);
+                    var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId, that.layerId);
+                    if (gra) {
+                        currentGraphic = top.jasMap.editGraphic(gra, that.layerId);
+                    }
+                });
             },
             deleteSettlement: function () {
                 var that = this;
@@ -404,7 +395,7 @@ var currentGraphic = null  ;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode,url:data,status:'ready'}
+                        var file = {name:that.tableFormData.buildingCode,url:data,status:'success'}
                         that.$refs.upload.fileList.push(file);
                     });
                 }
@@ -412,22 +403,28 @@ var currentGraphic = null  ;
             destroyed: function () {
                 this.cancel();
             },
-            uploadImage: function () {
+            uploadImage: function (cb) {
                 var that = this;
-                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=pic";
+                if(!that.imageinfo){
+                    return  cb&&cb();
+                }
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
                 jasTools.ajax.post(uploadurl,{
+                    buildingCode:that.tableFormData.buildingCode,
                     fileData: that.imageinfo
                 },function (data) {
-                    console.log("success");
+                    cb&&cb();
                 });
-                this.cancel(1);
             },
             uploadSuccess: function () {
-                window.parent.Vue.prototype.$message({
-                    type: 'success',
-                    message: !this.isEdit ? '保存成功' : '修改成功'
+                var that = this;
+                that.uploadImage(function(){
+                    window.parent.Vue.prototype.$message({
+                        type: 'success',
+                        message: !this.isEdit ? '保存成功' : '修改成功'
+                    });
+                    that.cancel(1);
                 });
-                this.cancel(1);
             },
         }
     });
