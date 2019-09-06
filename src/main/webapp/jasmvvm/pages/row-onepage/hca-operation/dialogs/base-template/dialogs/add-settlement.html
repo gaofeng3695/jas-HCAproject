@@ -348,7 +348,7 @@
                 }
                 var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
                 jasTools.ajax.post(uploadurl,{
-                    buildingCode:that.tableFormData.buildingCode,
+                    buildingCode:that.tableFormData.buildingCode || "未命名截图",
                     fileData: that.imageinfo
                 },function (data) {
                     cb&&cb();
@@ -361,22 +361,10 @@
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:'jietu',url:data,status:''}
-                        that.$refs.upload.$refs.upload.$children[1].files.push(file);                    });
+                        var file = {name:that.tableFormData.buildingCode || "未命名截图",url:data,status:''}
+                        that.$refs.upload.$refs.upload.$children[1].files.push(file);
+                    });
                 }
-            },
-            uploadImage: function (cb) {
-                var that = this;
-                if(!that.imageinfo){
-                    return  cb&&cb();
-                }
-                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
-                jasTools.ajax.post(uploadurl,{
-                    fileData: that.imageinfo
-                },function (data) {
-                    console.log("success");
-                    cb&&cb();
-                });
             },
             save: function () {
                 var that = this;
