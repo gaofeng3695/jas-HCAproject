@@ -11,6 +11,7 @@ public class UniqueCheckBO {
     private String tableName ;
     private String fieldName;
     private Object fieldValue ;
+    private String oid;
 
     public String getTableName() {
         return tableName;
@@ -35,4 +36,13 @@ public class UniqueCheckBO {
     public void setFieldValue(Object fieldValue) {
         this.fieldValue = fieldValue;
     }
+
+	public String getOid() {
+		return oid;
+	}
+
+	public void setOid(String oid) {
+		this.oid = oid;
+	}
+    
 }
