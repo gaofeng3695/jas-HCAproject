@@ -682,8 +682,11 @@ Vue.component('jas-file-upload', {
                 that.uploadurl = jasTools.base.rootPath + "/attachment/upload.do?token=" + localStorage.getItem("token") +
                     "&businessId=" + oid + "&businessType=file";
                 that.$nextTick(function () {
-                    var afileToSubmit = that.$refs.upload.uploadFiles.filter(function (item) {
+                    var afileToSubmit0 = that.$refs.upload.uploadFiles.filter(function (item) {
                         return !item.oid
+                    });
+                    var afileToSubmit = afileToSubmit0.filter(function (item) {
+                        return item.status
                     });
                     that.lengthOfFileToSubmit = afileToSubmit.length;
                     that.indexOfFileToSubmit = 0;

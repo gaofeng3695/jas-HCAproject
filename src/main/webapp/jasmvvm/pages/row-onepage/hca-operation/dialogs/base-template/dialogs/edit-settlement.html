@@ -395,8 +395,8 @@ var currentGraphic = null  ;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode,url:data,status:'success'}
-                        that.$refs.upload.fileList.push(file);
+                        var file = {name:that.tableFormData.buildingCode,url:data,status:''}
+                        that.$refs.upload.$refs.upload.$children[1].files.push(file);
                     });
                 }
             },
