@@ -359,6 +359,7 @@ var currentGraphic = null  ;
             },
             cancel: function (param) {
                 this.isCanEdit = false;
+                that.$refs.upload.clearFiles();
                 top.jasMap.cancelGraphicEdit();
             },
             editSettlement: function () {
