@@ -574,6 +574,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         }
         return oids ;
     }
+
     /**
      *
      * @param hcaOid
@@ -596,7 +597,6 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         }
         return sum;
     }
-
 
     /**
      *
@@ -801,7 +801,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
     private String getSpecialQueryExpress(){
         String exp = HcaAnalysisContext.getSpecialPlaceExpress();
         if(StringUtil.isBlank(exp)){
-            String domains = hcaCommonService.getCodeIdsByParentCodeId("building_type_parent_001");
+            String domains = hcaCommonService.getCodeIdsByParentCodeId(HcaAnalysisContext.buildingTypeValue_SpecialPlace);
             exp = "building_type in(" + domains + ")" ;
             HcaAnalysisContext.setSpecialPlaceExpress(exp);
         }
