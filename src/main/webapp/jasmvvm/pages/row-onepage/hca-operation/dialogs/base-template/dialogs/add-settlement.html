@@ -294,7 +294,7 @@
             that.layerId = param.layerId;
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
-            that.builedingImg = param.builedingImg;
+            that.builedingImg = top.hcaMapApp.builedingImg;
             if (param.oid) {
                 this.isEdit = true;
                 this.oid = param.oid;
@@ -308,7 +308,7 @@
             });
             /*this.getDomainSelect('building_type_domain',function (arr) {
                 that.domain.buildingType = arr;
-            });*/
+        });*/
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
                 that.tableFormData.buildingDistribution = arr[0].key;
@@ -357,14 +357,12 @@
             getImage: function () {
                 var that = this;
                 top.jasMap.cancelGraphicEdit();
-                var gra = that.builedingImg; //top.jasMap.getGraphicByObjectId(that.tableFormData.objectId ,that.layerId) ;
-                alert(gra)
+                var gra = that.builedingImg;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode,url:data,status:'success'}
-                        that.$refs.upload.fileList.push(file);
-                    });
+                        var file = {name:'jietu',url:data,status:''}
+                        that.$refs.upload.$refs.upload.$children[1].files.push(file);                    });
                 }
             },
             uploadImage: function (cb) {
@@ -406,13 +404,6 @@
                             message: "操作失败！"
                         });
 					}else{
-                        if(that.imageinfo){
-                            that.uploadImage();
-                        }
-                        top.Vue.prototype.$message({
-                            type: 'success',
-                            message: msg
-                        });
                         //config.json中以表名和类型名作为图层的layerId
                         var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
                         that.oid = data.data;

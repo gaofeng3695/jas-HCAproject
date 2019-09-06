@@ -335,7 +335,7 @@
                 isShowPipeline:false,
                 localPipelineName:'',
                 activeName:'',
-                pipelineOid:'fa692d8c-6dfe-41d6-a8e1-6303a5ebfae5',
+                pipelineOid:'',
                 localAreaVersionOid:'',
  				localAddress:'',
                 domainData:[],
@@ -394,7 +394,7 @@
             callback1:function(e){
                 this.localAddress = e.result.formatted_address;
                 var fId = new Date().getTime();
-                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?builedingImg=' + this.builedingImg + '&fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
+                var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
                 window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
             }  ,
             drawSettlement: function(){
