@@ -155,7 +155,7 @@
 		</el-form>
 		<div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="getImage()">截图</el-button>
-            <el-button size="small" type="primary" @click="save()">确定</el-button>
+            <el-button size="small" type="primary" @click="validateCodeUni()">确定</el-button>
             <el-button size="small" @click="cancel()">取消</el-button>
         </div>
 	</jas-dialog-wrapper>
@@ -172,7 +172,7 @@
         el: "#app",
         data: function () {
             var that = this;
-            let validateCodeUni = (rule, value, callback) => {
+            /* let validateCodeUni = (rule, value, callback) => {
                 var url = jasTools.base.rootPath + "/basedata/unique/check.do";
                 jasTools.ajax.post(url, {
                     tableName: "hca_buildings",
@@ -183,16 +183,13 @@
                         callback('建(构)筑物编号已存在')
                     }
                 });
-            }
+            } */
 
             return {
                 rules: {
                     buildingCode: [{
                         required: true,
                         message: '请输入建(构)筑物编号',
-                        trigger: 'blur'
-                    }, {
-                        validator:validateCodeUni,
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{
@@ -205,6 +202,11 @@
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
+                    buildingDistribution: [{
+                        required: true,
+                        message: '请选择建(构)筑物分布',
+                        trigger: 'blur'
+                    }],                    
                     /*startMileage: [{
                         //required: true,
                         message: '请输入起始里程',
@@ -339,7 +341,7 @@
                 }
                 var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
                 jasTools.ajax.post(uploadurl,{
-                    buildingCode:that.tableFormData.buildingCode || "未命名截图",
+                    buildingCode:that.tableFormData.buildingCode || "建构筑物截图",
                     fileData: that.imageinfo
                 },function (data) {
                     cb&&cb();
@@ -352,7 +354,7 @@
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode || "未命名截图",url:data,status:''}
+                        var file = {name:that.tableFormData.buildingCode || "建构筑物截图",url:data,status:''}
                         that.$refs.upload.$refs.upload.$children[1].files.push(file);
                     });
                 }
@@ -374,13 +376,6 @@
                 var that = this;
                 var msg = "";
                 that.but_disabled = true;
-                if (!this.isEdit) {
-                    msg = "增加成功";
-                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
-                } else {
-                    msg = "修改成功";
-                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
-                }
                 var graphic = top.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
@@ -474,6 +469,24 @@
                     window.parent.closeDlg("editSettlementIframe");
                 });
             },
+            validateCodeUni: function(){
+            	var that = this;
+            	var url = jasTools.base.rootPath + "/basedata/unique/check.do";
+                jasTools.ajax.post(url, {
+                    tableName: "hca_buildings",
+                    fieldName: "building_code",
+                    fieldValue: that.tableFormData.buildingCode
+                }, function (result) {
+                    if(result.data == 1){
+                    	top.Vue.prototype.$message({
+                            type: 'error',
+                            message:  '建(构)筑物编号已存在！'
+                        });
+                    }else{
+                    	that.save();
+                    }
+                });
+            }
         },
     });
 </script>
