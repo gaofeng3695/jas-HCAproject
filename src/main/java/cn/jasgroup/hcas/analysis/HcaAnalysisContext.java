@@ -78,7 +78,19 @@ public class HcaAnalysisContext {
 
     public static String buildingCodeFieldName = "building_code";
 
+    /**
+     *
+     */
     public static String buildingTypeValue_Settlement= "building_type_020";
+    /**
+     *
+     */
+    public static String buildingTypeValue_SpecialPlace= "building_type_parent_001";
+    /**
+     *
+     */
+    public static String buildingTypeValue_UnSpecialPlace= "building_type_parent_003";
+
 
     public static String buildingDistributionTypeFieldName = "building_distribution";
 

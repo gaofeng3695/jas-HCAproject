@@ -68,7 +68,7 @@ public class BuildingsMileageScope {
         while (true){
             int index = check(start ,end);
             if(index == -1){
-                return start;
+                return start > 0 ? start : 0 ;
             }else{
                 MileageScope scope = mileageScopes.get(index) ;
                 end = scope.getStartMileage();

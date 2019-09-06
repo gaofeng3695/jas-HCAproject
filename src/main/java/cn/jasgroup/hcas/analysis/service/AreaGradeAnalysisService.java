@@ -13,6 +13,7 @@ import cn.jasgroup.gis.geometryservice.AreaAndLength;
 import cn.jasgroup.gis.geometryservice.IGeometryService;
 import cn.jasgroup.gis.util.*;
 import cn.jasgroup.hcas.analysis.*;
+import cn.jasgroup.hcas.common.service.HcaCommonService;
 import cn.jasgroup.hcas.versionmaanage.service.HcaVersionService;
 import cn.jasgroup.jasframework.domain.utils.DomainUtil;
 import org.slf4j.Logger;
@@ -48,6 +49,10 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
 
     @Autowired
     private PipelineService pipelineService ;
+
+    @Autowired
+    private HcaCommonService hcaCommonService;
+
 
     public static String middleMileageFieldName = "middle_mileage";
     public static String cellTypeFieldName = "region_level";
@@ -196,7 +201,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      *
      * @param start
      * @param end
-     * @param type
+     * @param type 1:核心识别单元，2：标准识别单元，3：独立识别单元
      * @return
      */
     private Feature createSingleCell(double start ,double end,int type){
@@ -362,7 +367,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         param.setGeometryType( GeometryType.POLYGON.getType());
         param.setGeometry( bufferPg);
         param.setOutFields("*");
-        param.setWhere( HcaAnalysisContext.buildingTypeFieldName + " like '" + HcaAnalysisContext.buildingTypeValue_Settlement + "'");// where ?
+        param.setWhere( getUnSpecialQueryExpress());
         param.setInputSRID( bufferPg.getSpatialReference().getWkid());
         param.setOutputSRID( bufferPg.getSpatialReference().getWkid());
         param.setOrderBy(HcaAnalysisContext.startMileageFieldName);
@@ -505,7 +510,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
     public HcaAnalysisResult executeAnalysis(String pipelineOid, Double buffer) {
 
         String versionOid = UUID.randomUUID().toString();
-        loggerUtil.time("地区等级划分开始，OID=" + versionOid);
+        loggerUtil.time("地区等级划分，OID=" + versionOid);
 
         HcaAnalysisResult hcaAnalysisResult = new HcaAnalysisResult();
         HcaLinearParam analysisGeometryBO = preparePipelineData(pipelineOid ,buffer) ;
@@ -533,7 +538,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         hcaAnalysisResult.setTotal( count);
         //暂时不返回要素结果，前端通过更新图层获取计算结果数据
         //hcaAnalysisResult.setFeatures( resultFeatures);
-        loggerUtil.timeEnd("地区等级划分开始，OID=" + versionOid);
+        loggerUtil.timeEnd("地区等级划分，OID=" + versionOid);
 
         return hcaAnalysisResult;
     }
@@ -653,7 +658,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             Double subMileage = startMileage - currentStartMileage;
             if( subMileage > 0 ){
                 List<Feature> subList = createStandardCells( currentStartMileage,startMileage );
-                logger.info("里程值" + subMileage + "创建识别单元" + subList.size() + "个");
+                logger.info("里程值" + String.format("%.3f",subMileage ) + "创建识别单元" + subList.size() + "个");
                 cellsList.addAll( subList ) ;
             }
             currentStartMileage = endMileage;
@@ -742,19 +747,34 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             }
             //feature.getAttributes().put(startMileage ,rankValue);
             feature.getAttributes().put(HcaAnalysisContext.areaRankFieldName ,rankValue);
-            feature.getAttributes().put(buildingDistributionTypeFieldName ,rankValue);
+            //feature.getAttributes().put(buildingDistributionTypeFieldName ,rankValue);
             feature.getAttributes().put(HcaAnalysisContext.areaRandRemarkFieldName ,description);
         }
+        //
+        double totalLength = bo.getTotalMileage();
+        Feature last = features[features.length - 1] ;
+        double lastMileage = Double.valueOf(String.format("%.3f", MapUtil.getDouble(last.getAttributes() ,endMileageFieldName)));
+        if( lastMileage < totalLength){
+            Feature f = createSingleCell(lastMileage , totalLength, 3 );
+            f.getAttributes().put(HcaAnalysisContext.areaRankFieldName ,HcaAnalysisContext.AreaGradeLevel_I);
+            count1++;
+            List<Feature> featureList = new ArrayList<>( Arrays.asList(features));
+            featureList.add(f);
+            features = featureList.toArray(new Feature[0]);
+        }
         //2、生成几何对象
-        int gcsSrid = bo.getPipeline().getSpatialReference().getWkid();
-        int pcsSrid = bo.getRecognitionAreaBuffer().getSpatialReference().getWkid();
         for(int i = 0 ; i < features.length ;++i){
             Feature feature = features[i] ;
             double startMileage = MapUtil.getDouble(feature.getAttributes() ,startMileageFieldName) ;
             double endMileage = MapUtil.getDouble(feature.getAttributes(),endMileageFieldName) ;
+            String oid = MapUtil.getString(feature.getAttributes(),"building_oid") ;
+
             if(startMileage > endMileage){
-                String oid = MapUtil.getString(feature.getAttributes(),"building_oid") ;
                 logger.error( "识别单元" + oid + "起始的测量值" + startMileage + "不能大于结束测量值" + endMileage);
+            }
+            if(startMileage < 0 || endMileage < 0){
+                logger.error( "识别单元" + oid + "起止里程值【{},{}】计算错误，" ,startMileage,endMileage);
+
             }
             Polyline po =  bo.getLinearReferenceUtil().locateBetween(startMileage,endMileage,0d);
             Geometry buffer = JtsUtil.buffer(po, HcaAnalysisContext.ConfigRankAreaBufferDistance,2); //直角的buffer
@@ -764,6 +784,20 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         }
         logger.info("地区等级划分结束，四级地区" + count4 + "处，三级地区"+ count3 + "处，二级地区" + count2 + "处 ，一级地区"+ count1 + "处。");
         return  features;
+    }
+
+    /**
+     * 获取非特定场所
+     * @return
+     */
+    private String getUnSpecialQueryExpress(){
+        String exp = HcaAnalysisContext.getSpecialPlaceExpress();
+        if(StringUtil.isBlank(exp)){
+            String domains = hcaCommonService.getCodeIdsByParentCodeId(HcaAnalysisContext.buildingTypeValue_UnSpecialPlace);
+            exp = "building_type in(" + domains + ")" ;
+            HcaAnalysisContext.setSpecialPlaceExpress(exp);
+        }
+        return exp;
     }
 
 }
