@@ -150,8 +150,8 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-            <jas-base-group-title name="附件信息"></jas-base-group-title>
-            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>
+            <!--<jas-base-group-title name="附件信息"></jas-base-group-title>
+            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>-->
 		</el-form>
 		<div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="getImage()">截图</el-button>
@@ -186,7 +186,6 @@
             }
 
             return {
-                but_disabled:false,
                 rules: {
                     buildingCode: [{
                         required: true,
@@ -249,7 +248,6 @@
                     'pointy':'',*/
 				    'centerx':'',
 				    'centery':'',
-				    'pipelineOid':'',
 				    'geometry':'',
                     'buildingDistribution':'',
                     'households':'',
@@ -274,18 +272,16 @@
                     ]
                 },
                 changeParentCodeId:'',
-                isEdit:false,
                 fId:'',
                 layerId:"",
                 localAddress:"",
                 imageinfo:"",
-                builedingImg:''
+                builedingImg:'',
+                oid:''
             }
         },
         created: function(){
-            this.jasMap = parent.app.jasMap
-        },
-        computed: {
+            this.jasMap = parent.app.jasMap;
         },
         mounted: function () {
             var that = this;
@@ -295,12 +291,6 @@
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
             that.builedingImg = top.hcaMapApp.builedingImg;
-            if (param.oid) {
-                this.isEdit = true;
-                this.oid = param.oid;
-                this.tableFormData.oid = this.oid;
-                this.requestDetail(param.oid);
-            };
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
                 that.tableFormData.buildingTypeParent = arr[0].key;
@@ -332,15 +322,7 @@
                     that.tableFormData.buildingType = arr[0].key;
                 });
             },
-            requestDetail: function (oid) {
-                var that = this;
-                var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
-                jasTools.ajax.post(url, {
-                    oid: oid
-                }, function (data) {
-                    that.tableFormData = data.rows[0];
-                });
-            },
+
             uploadImage: function (cb) {
                 var that = this;
                 if(!that.imageinfo){
@@ -356,7 +338,6 @@
             },
             getImage: function () {
                 var that = this;
-                top.jasMap.cancelGraphicEdit();
                 var gra = that.builedingImg;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
@@ -368,39 +349,28 @@
             },
             save: function () {
                 var that = this;
-                var msg = "";
-                that.but_disabled = true;
-                if (!this.isEdit) {
-                    msg = "增加成功";
-                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
-                } else {
-                    msg = "修改成功";
-                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
-                }
                 var graphic = top.hcaMapApp.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
                 that.tableFormData.geometry = top.hcaMapApp.jasMap.geometryToText(graphic.geometry);
-                that.tableFormData.pipelineOid = top.hcaMapApp.pipelineOid;
-
-                url = jasTools.base.rootPath + "/hcabuildings/save.do";
+                var url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
-                    if(data.data === 0 ){
+                    if(!data.data){
                         top.Vue.prototype.$message({
                             type: 'error',
                             message: "操作失败！"
                         });
 					}else{
+                        that.$refs.upload.uploadFile(that.oid);
                         //config.json中以表名和类型名作为图层的layerId
-                        var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
+                       var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
                         that.oid = data.data;
                         top.hcaMapApp.jasMap.updateLayer(layerId,{
                             show:true
                         });
                         var gra = top.hcaMapApp.currentDrawBuildingGraphic;
                         top.hcaMapApp.jasMap.removeGraphic(gra);
-                        window.parent.closeDlg("editSettlementIframe");
 					}
                 });
             },
@@ -467,9 +437,9 @@
                 that.uploadImage(function(){
                     window.parent.Vue.prototype.$message({
                         type: 'success',
-                        message: !this.isEdit ? '保存成功' : '修改成功'
+                        message: '保存成功'
                     });
-                    that.cancel(1);
+                    window.parent.closeDlg("editSettlementIframe");
                 });
             },
         },

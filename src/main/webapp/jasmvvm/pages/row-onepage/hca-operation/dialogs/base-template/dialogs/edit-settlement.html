@@ -177,7 +177,6 @@ var currentGraphic = null  ;
                     'buildingTypeParent': '',
                     'centerx':'',
                     'centery':'',
-                    'pipelineOid':'',
                     'geometry':'',
                     'buildingDistribution':'',
                     'households':'',
@@ -275,15 +274,11 @@ var currentGraphic = null  ;
             },
             save: function () {
                 var that = this;
-                var msg = "";
-                that.but_disabled = true;
-                msg = "修改成功";
                 var graphic = currentGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
                 that.tableFormData.geometry = top.hcaMapApp.jasMap.geometryToText(graphic.geometry);
-                that.tableFormData.pipelineOid = top.hcaMapApp.pipelineOid;
                 url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
                     if (data.data === 0) {

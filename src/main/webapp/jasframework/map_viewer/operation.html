@@ -395,7 +395,7 @@
                 this.localAddress = e.result.formatted_address;
                 var fId = new Date().getTime();
                 var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
-                window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
+                window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性新增", 320, 350);
             }  ,
             drawSettlement: function(){
                 var that = this;
@@ -434,9 +434,8 @@
                 $("span[class=el-tag]").html(that.localPipelineName);
                 $('.title-div').show();
                 var fra = window.$("iframe");
-                for ( var i = 0; i < fra.length; i++) {
+                for (var i = 0; i < fra.length; i++) {
                     fra[i].contentWindow.close();
-                    //fra[i].remove();
                 }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
