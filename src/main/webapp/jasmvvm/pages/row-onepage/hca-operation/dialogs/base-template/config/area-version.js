@@ -126,6 +126,7 @@ var pageConfig = {
             	layerId = "hca_high_impact_area";
             }else{
             	layerId = "hca_area";
+            	top.hcaMapApp.localAreaVersionOid = row.oid;
             }
             that.jasMap.updateLayer(layerId, {
             	show: true,
