@@ -524,7 +524,7 @@
 
                                     if(result.status){
                                         that.saveVersion('0',result.data.versionId);
-                                        app.localAreaVersionOid = result.data.versionId;
+                                        that.localAreaVersionOid = result.data.versionId;
                                         that.jasMap.updateLayer('hca_area',{
                                             "show":true,
                                             "where":"version_oid like'" + result.data.versionId + "'"
@@ -591,7 +591,7 @@
             //2、通过code刷新高后果区图层 updateLayer() ; where :"code=="
             createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
                 var that = this;
-                var localAreaVersionOid = app.localAreaVersionOid; //that.localAreaVersionOid;
+                var localAreaVersionOid = that.localAreaVersionOid; //that.localAreaVersionOid;
                 this.jasMap.startPanMode();
                 this.closeBufferWindow();
                 if(!this.jasMap.getLayerVisible('hca_area')){
@@ -629,7 +629,7 @@
                                     loading.close();
                                     if(result.status !== 0){
                                         that.saveVersion('1',result.data.versionId);
-                                        that.localAreaVersionOid = result.data.versionId;
+                                        //that.localAreaVersionOid = result.data.versionId;
                                         that.jasMap.updateLayer('hca_high_impact_area',{
                                             "show":true,
                                             "where":"version_oid like'" + result.data.versionId + "'"
