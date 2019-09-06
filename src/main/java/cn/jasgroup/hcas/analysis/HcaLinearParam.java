@@ -53,7 +53,7 @@ public class HcaLinearParam {
     }
 
     public void setTotalMileage(Double totalMileage) {
-        this.totalMileage = totalMileage;
+        this.totalMileage = Double.valueOf(String.format("%.3f",totalMileage));
     }
 
     public Polyline getPipeline() {
@@ -91,7 +91,7 @@ public class HcaLinearParam {
     private void initLinearReference(){
         linearReferenceUtil = new LinearReferenceUtil(pipeline);
         linearReferenceUtil.resetMeasureByLocalLength();
-        this.totalMileage = linearReferenceUtil.getLinearPolyline().getTotalMeasure();
+        setTotalMileage(linearReferenceUtil.getLinearPolyline().getTotalMeasure());
     }
 
     public LinearReferenceUtil getLinearReferenceUtil() {

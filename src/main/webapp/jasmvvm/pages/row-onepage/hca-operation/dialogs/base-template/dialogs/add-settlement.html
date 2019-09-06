@@ -476,6 +476,8 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
+                            var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                            top.hcaMapApp.jasMap.removeGraphic(gra);
                             window.parent.closeDlg("editSettlementIframe");
                         }
                     }
