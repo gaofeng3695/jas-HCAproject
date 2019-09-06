@@ -150,8 +150,8 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-            <!--<jas-base-group-title name="附件信息"></jas-base-group-title>
-            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>-->
+            <jas-base-group-title name="附件信息"></jas-base-group-title>
+            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>
 		</el-form>
 		<div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="getImage()">截图</el-button>
@@ -322,6 +322,15 @@
                     that.tableFormData.buildingType = arr[0].key;
                 });
             },
+            requestDetail: function (oid) {
+                var that = this;
+                var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+                jasTools.ajax.post(url, {
+                    oid: oid
+                }, function (data) {
+                    that.tableFormData = data.rows[0];
+                });
+            },
 
             uploadImage: function (cb) {
                 var that = this;
@@ -338,6 +347,7 @@
             },
             getImage: function () {
                 var that = this;
+                top.jasMap.cancelGraphicEdit();
                 var gra = that.builedingImg;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
@@ -347,9 +357,31 @@
                     });
                 }
             },
+            uploadImage: function (cb) {
+                var that = this;
+                if(!that.imageinfo){
+                    return  cb&&cb();
+                }
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
+                jasTools.ajax.post(uploadurl,{
+                    fileData: that.imageinfo
+                },function (data) {
+                    console.log("success");
+                    cb&&cb();
+                });
+            },
             save: function () {
                 var that = this;
-                var graphic = top.hcaMapApp.currentDrawBuildingGraphic;
+                var msg = "";
+                that.but_disabled = true;
+                if (!this.isEdit) {
+                    msg = "增加成功";
+                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/save.do";
+                } else {
+                    msg = "修改成功";
+                    //url = jasTools.base.rootPath + "/jdbc/commonData/hcabuildings/update.do";
+                }
+                var graphic = top.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -369,7 +401,7 @@
                         top.hcaMapApp.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                        var gra = top.currentDrawBuildingGraphic;
                         top.hcaMapApp.jasMap.removeGraphic(gra);
 					}
                 });
@@ -425,7 +457,7 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                            var gra = top.currentDrawBuildingGraphic;
                             top.hcaMapApp.jasMap.removeGraphic(gra);
                             window.parent.closeDlg("editSettlementIframe");
                         }
