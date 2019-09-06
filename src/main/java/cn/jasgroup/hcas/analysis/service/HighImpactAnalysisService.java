@@ -184,6 +184,9 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
     @Override
     public Feature[] classifyHighConsequenceArea(Feature[] areaData, HcaLinearParam bo , String hcaVersionOid) {
         //
+        if(areaData .length == 0 ){
+            throw new RuntimeException("没有查询出地区等级数据，请检查数据是否完整！");
+        }
         Feature[] hcaFeatures = areaGradeAnalysis(areaData ,hcaVersionOid ,bo.getPipelineOid());//根据地区等级数据划分出高后果区单元
         //保存易燃易爆数据
         BuildingLocationMap explosiveLocationMap = explosivePlaceAnalysis(areaData,hcaFeatures,bo);
@@ -462,9 +465,9 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
      */
     @Override
     public Feature[] mergeHcaFeatures(Feature[] hcaDataBeforeMerge, BuildingLocationMap explosiveLocationMap, BuildingLocationMap specialLocationMap) {
+
         //
         List<Feature> result = new ArrayList<>();
-
         //1、
         Feature last = hcaDataBeforeMerge[0];
         result.add(last);

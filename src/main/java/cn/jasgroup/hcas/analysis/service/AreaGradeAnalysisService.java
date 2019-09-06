@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -307,8 +308,8 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             double startMileage = MapUtil.getDouble(feature.getAttributes(),startMileageFieldName,0d) / 1000;
             double endMileage = MapUtil.getDouble(feature.getAttributes(),endMileageFieldName,0d) / 1000;
 
-            startMileage = Double.valueOf(String.format("%.3f", startMileage)) ;
-            endMileage = Double.valueOf(String.format("%.3f", endMileage));
+            startMileage = new BigDecimal(startMileage).setScale(3 ,BigDecimal.ROUND_DOWN).doubleValue() ;
+            endMileage =new BigDecimal(endMileage).setScale(3 ,BigDecimal.ROUND_DOWN).doubleValue();
 
             feature.getAttributes().put(startMileageFieldName,startMileage);
             feature.getAttributes().put(endMileageFieldName,endMileage);
@@ -753,7 +754,8 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
         //
         double totalLength = bo.getTotalMileage();
         Feature last = features[features.length - 1] ;
-        double lastMileage = Double.valueOf(String.format("%.3f", MapUtil.getDouble(last.getAttributes() ,endMileageFieldName)));
+        double lastMileage = new BigDecimal( MapUtil.getDouble(last.getAttributes() ,endMileageFieldName)).setScale(3,BigDecimal.ROUND_DOWN) .doubleValue();
+
         if( lastMileage < totalLength){
             Feature f = createSingleCell(lastMileage , totalLength, 3 );
             f.getAttributes().put(HcaAnalysisContext.areaRankFieldName ,HcaAnalysisContext.AreaGradeLevel_I);
