@@ -577,7 +577,7 @@ Vue.component('jas-file-list', {
             var that = this;
             var url = jasTools.base.rootPath + "/attachment/getInfo.do";
             jasTools.ajax.get(url, {
-                businessType: 'pic',
+                businessType: 'file',
                 businessId: oid
             }, function (data) {
                 that.fileList = data.rows;
@@ -585,7 +585,7 @@ Vue.component('jas-file-list', {
             });
         },
         preview: function (oid) {
-            var url = jasTools.base.rootPath + "/attachment/download.do?oid="+oid;
+            var url = jasTools.base.rootPath + "/attachment/download.do?oid="+oid+'&token='+localStorage.getItem("token");
             top.jasTools.base.viewImg(url);
             /*var that = this;
             top.jasTools.dialog.show({
@@ -595,9 +595,7 @@ Vue.component('jas-file-list', {
                 src: jasTools.base.rootPath + '/jasmvvm/pages/template/pdfjs_1.10.88/web/viewer.html?oid=' + oid,
             });*/
         },
-
     },
-
 });
 
 Vue.component('jas-file-upload', {
@@ -644,7 +642,7 @@ Vue.component('jas-file-upload', {
             var that = this;
             var url = jasTools.base.rootPath + "/attachment/getInfo.do";
             jasTools.ajax.get(url, {
-                businessType: 'pic',
+                businessType: 'file',
                 businessId: bizId
             }, function (data) {
                 data.rows.forEach(function (item) {
