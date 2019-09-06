@@ -152,7 +152,7 @@ public class HcaBuildingsController extends BaseController {
 		SimpleResult result = new SimpleResult<>();
 		try {
 			int data = hcaBuildingService.save(hcaBuildings);
-			result.setData(data);
+			result.setData(hcaBuildings.getOid());
 			if(data == 0 ){
 				result.setStatus(0);
 				result.setMsg("保存失败！");
