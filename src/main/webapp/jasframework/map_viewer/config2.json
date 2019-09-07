@@ -16,7 +16,7 @@
     "defaultFlashEffect":"shine",
     "fullscreenTarget":"body",
     "feColorMatrixValue":"0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.1 0 0 0 0 0 1 0",
-    "domainData":"top.hcaMapApp.loadDomainData"
+    "domainData":"hcaMapApp.loadDomainData"
   },
   "resources": [
 

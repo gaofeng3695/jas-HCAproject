@@ -104,13 +104,13 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         //重新生成高后果区单元,补充描述信息
         Feature[] features = preparedFeatureData(hcaData ,bo ,pipelineOid ,buffer);
 
-        //5、保存数据
+        if(features .length ==0 ){
+            throw new RuntimeException("没有划分出高后果区结果，请检查构筑物数据、特定场所和易燃易爆场所数据。");
+        }
         int saveCount = saveHcaResult(features,areaVersionOid, hcaVersionId ,pipelineOid);
-
         hcaAnalysisResult.setTotal( saveCount);
-        //hcaAnalysisResult.setFeatures( hcaData );
-        hcaAnalysisResult.setVersionId(hcaVersionId);
 
+        hcaAnalysisResult.setVersionId(hcaVersionId);
         loggerUtil.timeEnd("执行高后果区分析,OID=" + hcaVersionId);
 
         return hcaAnalysisResult;

@@ -348,7 +348,7 @@
                 domainData:[],
                 hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
                 hcaBuildingsDrawGraphicId:"",
-                builedingImg:'',
+                //builedingImg:'',//vue 里面不能保存地图图形对象！图形渲染和修改时会关联图层、地图对象，造成vue卡顿 by kc
                 bufferValue:''
             }
         },
@@ -405,31 +405,18 @@
             }  ,
             drawSettlement: function(){
                 var that = this;
-                //top.jasMap.drawPolygon({
                 top.jasMap.startDrawAndEditMode("POLYGON",{
                     layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;
-                        that.builedingImg = feature;
-                        //var fId = new Date().getTime();
-                        //var gra = feature.attr("id",fId);
-                        //changedFeatures[fId] = feature;
-                        //that.hcaBuildingsDrawGraphicId = fId;
+                        ///vue 里面不能保存地图图形对象！图形渲染和修改时会关联图层、地图对象，造成vue卡顿 by kc
+                        //that.builedingImg = feature;
                         top.currentDrawBuildingGraphic = feature;
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
                         var key = that.baiduKey;
                         var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=hcaMapApp.callback1&location="+location;
                         $.getScript(url);
-                        /*that.$confirm("绘图完毕，确定保存构建筑物基本信息？" , "提示", {
-                            type: 'warning',
-                            callback: function (action) {
-                                if (action === 'confirm') {
-                                    var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(that.localAddress)
-                                    window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性编辑", 320, 350);
-                                }
-                            }
-                        });*/
                     }
                 })
             },

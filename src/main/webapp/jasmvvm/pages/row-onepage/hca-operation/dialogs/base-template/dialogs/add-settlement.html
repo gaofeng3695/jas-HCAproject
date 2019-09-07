@@ -206,7 +206,7 @@
                         required: true,
                         message: '请选择建(构)筑物分布',
                         trigger: 'blur'
-                    }],                    
+                    }],
                     /*startMileage: [{
                         //required: true,
                         message: '请输入起始里程',
@@ -278,12 +278,14 @@
                 layerId:"",
                 localAddress:"",
                 imageinfo:"",
-                builedingImg:'',
+                //builedingImg:'',// by kc
                 oid:''
             }
         },
         created: function(){
-            //this.jasMap = parent.app.jasMap;
+			//如果是地图弹出窗口可以使用该方式监听事件，关闭窗口时回调执行cancel方法
+			//var that = this ;
+            //top.jasMap.subscribe(top.jasMap.Events.MapDialogDestroyEvent,that.cancel);
         },
         mounted: function () {
             var that = this;
@@ -292,7 +294,7 @@
             that.layerId = param.layerId;
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
-            that.builedingImg = parent.hcaMapApp.builedingImg;
+            //that.builedingImg = parent.hcaMapApp.builedingImg;
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
                 that.tableFormData.buildingTypeParent = arr[0].key;
@@ -350,7 +352,7 @@
             getImage: function () {
                 var that = this;
                 top.jasMap.cancelGraphicEdit();
-                var gra = that.builedingImg;
+                var gra = top.currentDrawBuildingGraphic;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
@@ -373,7 +375,7 @@
             },
             save: function () {
                 var that = this;
-                var graphic = top.currentDrawBuildingGraphic;
+                var graphic = parent.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -394,7 +396,7 @@
                         top.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = top.currentDrawBuildingGraphic;
+                        var gra = parent.currentDrawBuildingGraphic;
                         top.jasMap.removeGraphic(gra);
 					}
                 });
@@ -450,8 +452,9 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            var gra = top.currentDrawBuildingGraphic;
+                            var gra = parent.currentDrawBuildingGraphic;
                             top.jasMap.removeGraphic(gra);
+                            top.jasMap.cancelGraphicEdit();
                             window.parent.closeDlg("editSettlementIframe");
                         }
                     }
