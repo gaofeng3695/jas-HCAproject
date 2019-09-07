@@ -359,13 +359,13 @@ var BaseMapToolsBar = function(options){
                         module.open(false);
                     }
                 }else{
-                    _self.mapApi.publishWarn("module不存在" + target );
+                    _self.mapApi.getEventManager().publishWarn("module不存在" + target );
                 }
             }else if(type === "api"){
                 if(_self.mapApi[target]){
                     _self.mapApi[target]();
                 }else{
-                    _self.mapApi.publishWarn("api不存在" + target );
+                    _self.mapApi.getEventManager().publishWarn("api不存在" + target );
                 }
             }
         } );
