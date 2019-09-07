@@ -2049,7 +2049,6 @@ var M = JasMap = null;
                     var renderer = featureLayer.renderer ;
                     var symbol = renderer.getSymbol(graphic) ;
                     graphic.setSymbol(symbol);
-                    styleManager
                 }
                 var topLayer = _this.map.graphics;
                 //2、draw to top layer
@@ -2781,7 +2780,7 @@ var M = JasMap = null;
             };
             _this.destroyMapDialog = function(){
                 if(mapManager.$mapDialog ){
-                    //_this.publish(_this.Events.MapDialogDestroyEvent);
+                    _this.publish(_this.Events.MapDialogDestroyEvent,{});
                     mapManager.$mapDialog.dialog('destroy');
                     mapManager.$mapDialog = null ;
                 }
@@ -3808,9 +3807,10 @@ var M = JasMap = null;
                     //
                     var op = {
                         type: code,
-                        target:target ? target : params[0]
+                        target:target ?target : params[0]
                     };
                     eventManager.publishEvent(_this.Events.MapStateChangedEvent,op);
+
                     eventManager.publishEvent(_this.Events.GraphicEndEditEvent);
 
                     return obj;
