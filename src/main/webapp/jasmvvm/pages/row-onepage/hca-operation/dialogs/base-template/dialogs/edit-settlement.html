@@ -216,7 +216,7 @@
             }
         },
         created: function(){
-            this.jasMap = parent.app.jasMap;
+            //this.jasMap = parent.app.jasMap;
             var that = this;
             var param = window.jasTools.base.getParamsInUrl(location.href);
             that.fId = param.fId;
@@ -285,7 +285,7 @@
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
-                that.tableFormData.geometry = top.hcaMapApp.jasMap.geometryToText(graphic.geometry);
+                that.tableFormData.geometry = top.jasMap.geometryToText(graphic.geometry);
                 url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
                     if (data.data === 0) {
@@ -344,7 +344,7 @@
                 var that = this;
                 //config.json中以表名和类型名作为图层的layerId
                 var layerId = that.layerId;
-                top.hcaMapApp.jasMap.updateLayer(layerId, {
+                top.jasMap.updateLayer(layerId, {
                     show: true
                 });
                 var gra = currentGraphic;
@@ -371,7 +371,7 @@
                         message: '删除成功'
                     });
                     var layerId = that.layerId;
-                    top.hcaMapApp.jasMap.updateLayer(layerId, {
+                    top.jasMap.updateLayer(layerId, {
                         show: true
                     });
                     top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();

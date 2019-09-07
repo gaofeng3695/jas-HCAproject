@@ -22,6 +22,18 @@
     <!--api-->
     <script>
         var jasMap = new JasMap();
+        jasMap.drawSettlement = function(){
+            jasMap.startDrawAndEditMode("POLYGON",{
+                layerId: "hcaBuildingsDrawLayerId" ,
+                onDrawEnd:function(evt){
+                    var feature = evt ;
+                    top.currentDrawBuildingGraphic = feature;
+                    var locationCenter = jasMap.getCenterLocation(feature.geometry);
+                    var location = locationCenter.y +","+ locationCenter.x;
+                    console.info(location );
+                }
+            })
+        }
     </script>
 
 </head>
