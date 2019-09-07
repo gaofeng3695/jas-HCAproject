@@ -66,9 +66,6 @@
                 },
                 created: function () {
                     var that = this;
-                    if(top.hcaMapApp){
-                    	that.jasMap = parent.jasMap;
-                    }
                     that.pageConfig = window.pageConfig;
                     var param = window.jasTools.base.getParamsInUrl(location.href);
                     that.privilegeCode = param.privilegeCode || pageConfig.privilegeCode;
