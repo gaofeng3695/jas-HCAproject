@@ -237,6 +237,12 @@
             background-position-y: center;
         }
 
+        .el-message-box__wrapper{
+            z-index:9990 !important;
+        }
+        .v-modal{
+            z-index:9089 !important;
+        }
     </style>
 </head>
 
@@ -322,7 +328,7 @@
         return "";
     }
     top.currentDrawBuildingGraphic = null ;
-    top.hcaMapApp = new Vue({
+    top.hcaMapApp = mapvm =  new Vue({
         el: '#app',
         data: function () {
             return {

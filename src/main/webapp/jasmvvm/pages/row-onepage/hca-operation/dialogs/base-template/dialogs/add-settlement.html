@@ -368,14 +368,11 @@
                 jasTools.ajax.post(uploadurl,{
                     fileData: that.imageinfo
                 },function (data) {
-                    console.log("success");
                     cb&&cb();
                 });
             },
             save: function () {
                 var that = this;
-                var msg = "";
-                that.but_disabled = true;
                 var graphic = top.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
@@ -389,15 +386,8 @@
                             message: "操作失败！"
                         });
 					}else{
-                        that.$refs.upload.uploadFile(that.oid);
-                        //config.json中以表名和类型名作为图层的layerId
-                       var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
                         that.oid = data.data;
-                        top.hcaMapApp.jasMap.updateLayer(layerId,{
-                            show:true
-                        });
-                        var gra = top.currentDrawBuildingGraphic;
-                        top.hcaMapApp.jasMap.removeGraphic(gra);
+                        that.$refs.upload.uploadFile(that.oid);
 					}
                 });
             },
@@ -466,6 +456,14 @@
                         type: 'success',
                         message: '保存成功'
                     });
+                    //config.json中以表名和类型名作为图层的layerId
+                    var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
+                    top.hcaMapApp.jasMap.updateLayer(layerId,{
+                        show:true
+                    });
+                    // var gra = top.currentDrawBuildingGraphic;
+                    // top.hcaMapApp.jasMap.removeGraphic(gra);
+                    // top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
                     window.parent.closeDlg("editSettlementIframe");
                 });
             },

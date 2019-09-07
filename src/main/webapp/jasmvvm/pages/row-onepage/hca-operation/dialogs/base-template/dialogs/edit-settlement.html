@@ -27,7 +27,9 @@
         .el-form-item {
             margin-bottom: 10px;
         }
-
+        .el-message-box__wrapper {
+            z-index:9090!important
+        }
     </style>
 </head>
 
@@ -230,12 +232,15 @@
             };
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
+                that.tableFormData.buildingTypeParent = arr[0].key;
+                that.parentDomainChange(arr[0].key);
             });
-            this.getDomainSelect('building_type_domain',function (arr) {
+            /*this.getDomainSelect('building_type_domain',function (arr) {
                 that.domain.buildingType = arr;
-            });
+            });*/
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
+                that.tableFormData.buildingDistribution = arr[0].key;
             });
 
             top.jasMap.cancelGraphicEdit();
@@ -372,7 +377,8 @@
                     top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
                     window.parent.closeDlg("editSettlementIframe");
                 };
-                window.top.Vue.prototype.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
+                //top.$('#mapIframe')[0].contentWindow.mapvm.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
+                top.$('#mapIframe')[0].contentWindow.Vue.prototype.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
                     type: 'warning',
                     callback: function (action) {
                         if (action === 'confirm') {
