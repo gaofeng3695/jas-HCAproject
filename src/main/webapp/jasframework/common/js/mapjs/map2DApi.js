@@ -25,6 +25,7 @@ var Constants = {
         "ModulesLoadedEvent": "ModulesLoadedEvent",
         "ModuleStartupEvent": "ModuleStartupEvent",
         "MapResizedEvent": "MapResizedEvent",
+        "MapDialogDestroyEvent": "MapDialogDestroyEvent",
         "MapStateChangedEvent": "MapStateChangedEvent",
         "MapGraphicsClearEvent": "MapGraphicsClearEvent",
         "GraphicStartEditEvent": "GraphicStartEditEvent",
@@ -220,7 +221,7 @@ var M = JasMap = null;
             appName: "",
             appConfig:"config.json",
             defaultZoomLevel: 3,
-            featureLayerMode:1,//6,//FeatureLayer.MODE_AUTO,FeatureLayer.MODE_ONDEMAND
+            featureLayerMode:6,//1,//FeatureLayer.MODE_AUTO 6 ,FeatureLayer.MODE_ONDEMAND 1
             defaultSymbolColor: [255, 0, 0, 255],
             defaultSymbolFillColor: [115, 76, 45, 100],
             defaultHighlightColor: [0, 0, 255, 255],
@@ -510,8 +511,10 @@ var M = JasMap = null;
                 mapManager.refreshLayerTipDom();
             };
             _this.removeGraphic = function(graphic){
-                var layer = graphic.getLayer();
-                layer.remove(graphic);
+                if(graphic && graphic.getLayer ){
+                    var layer = graphic.getLayer();
+                    layer.remove(graphic);
+                }
             };
             _this.removeGraphicById = function(id ,layerId){
                 var params = {
@@ -2778,6 +2781,7 @@ var M = JasMap = null;
             };
             _this.destroyMapDialog = function(){
                 if(mapManager.$mapDialog ){
+                    //_this.publish(_this.Events.MapDialogDestroyEvent);
                     mapManager.$mapDialog.dialog('destroy');
                     mapManager.$mapDialog = null ;
                 }

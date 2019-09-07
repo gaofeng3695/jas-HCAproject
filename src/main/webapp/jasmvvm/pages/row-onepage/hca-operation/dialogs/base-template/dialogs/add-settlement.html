@@ -206,7 +206,7 @@
                         required: true,
                         message: '请选择建(构)筑物分布',
                         trigger: 'blur'
-                    }],                    
+                    }],
                     /*startMileage: [{
                         //required: true,
                         message: '请输入起始里程',
@@ -284,6 +284,8 @@
         },
         created: function(){
             //this.jasMap = parent.app.jasMap;
+            top.jasMap.subscribe(top.jasMap.Events.MapDialogDestroyEvent,this.cancel);
+
         },
         mounted: function () {
             var that = this;
@@ -452,6 +454,7 @@
                         if (action === 'confirm') {
                             var gra = top.currentDrawBuildingGraphic;
                             top.jasMap.removeGraphic(gra);
+                            top.jasMap.cancelGraphicEdit();
                             window.parent.closeDlg("editSettlementIframe");
                         }
                     }

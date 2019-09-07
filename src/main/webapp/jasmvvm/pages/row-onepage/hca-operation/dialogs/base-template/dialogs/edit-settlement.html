@@ -245,6 +245,9 @@
 
             top.jasMap.cancelGraphicEdit();
             currentGraphic = top.currentDrawBuildingGraphic;
+
+            //
+            top.jasMap.subscribe(top.jasMap.Events.MapDialogDestroyEvent,this.dialogDestoryed);
         },
         computed: {
         },
@@ -252,6 +255,9 @@
 
          },
         methods: {
+            dialogDestoryed:function(){
+                this.can
+            },
             submit: function (formName) {
                 var that = this;
                 this.$refs[formName].validate(function (valid) {
@@ -376,6 +382,7 @@
                     });
                     top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
                     window.parent.closeDlg("editSettlementIframe");
+                    top.jasMap.destroyMapDialog();
                 };
                 //top.$('#mapIframe')[0].contentWindow.mapvm.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
                 top.$('#mapIframe')[0].contentWindow.Vue.prototype.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {
