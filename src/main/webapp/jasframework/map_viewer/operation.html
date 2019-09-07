@@ -365,7 +365,8 @@
                 onOptionalLayersLoaded:function(){
                     top.jasMap.updateLayer('hca_pipeline',{
                         "show":true
-                    })
+                    });
+                    that.jasMap.layerSetVisibleSwitch('layerSet001',true);
                 }
             });
             top.jasMap = that.jasMap;
@@ -447,6 +448,16 @@
             },
             createBuffer: function(){	// 调用识别区生成方法
                 var that = this;
+            	// 隐藏地区等级和高后果区,清空地区等级评价版本Id
+                that.jasMap.updateLayer('hca_area',{
+                    "show":false,
+                    "where":"version_oid like''"
+                });
+                that.jasMap.updateLayer('hca_high_impact_area',{
+                    "show":false,
+                    "where":"version_oid like''"
+                });
+            	that.localAreaVersionOid = "";
                 var radius = app.bufferValue;
                 that.isManage = app.isManage;
                 window.jasTools.selfDialog.close();
