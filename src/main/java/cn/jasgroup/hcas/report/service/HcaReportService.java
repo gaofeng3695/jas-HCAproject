@@ -107,7 +107,7 @@ public class HcaReportService extends CommonDataJdbcService {
 		pipelineQuery.setOid(pipelineOid);
 		List<?> pipelineList = super.getList(pipelineQuery);
 		RowRenderData header = RowRenderData.build(new TextRenderData("管线名称"), new TextRenderData("管线编号"),
-				new TextRenderData("长度"), new TextRenderData("外管径"), new TextRenderData("最大压强"));
+				new TextRenderData("长度（km）"), new TextRenderData("外管径（mm）"), new TextRenderData("最大压强(mpa)"));
 		List<RowRenderData> rowRenderDataList = new ArrayList<>();
 		int pipelineSize = pipelineList.size();
 		for (int i = 0; i < pipelineSize; i++) {

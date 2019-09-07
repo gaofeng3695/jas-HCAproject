@@ -108,6 +108,10 @@ var pageConfig = {
         	if(!top.app.panelShowed){
         		top.app._goMap();
         	}
+            top.jasMap.flashGraphic(row.pipelineOid, 'hca_pipeline', {
+                deep: 2,
+                fieldName: 'OID'
+            });        	
             top.jasMap.updateLayer("hca_high_impact_area", {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"

@@ -345,7 +345,6 @@
                     that.jasMap.updateLayer('hca_pipeline',{
                         "show":true
                     });
-                    //that.jasMap.layerSetVisibleSwitch('layerSet001',true);
                 }
             });
             top.jasMap = that.jasMap;
@@ -420,7 +419,7 @@
                     "where":"version_oid like''"
                 });
             	that.localAreaVersionOid = "";
-            	that.jasMap.layerSetVisibleSwitch('layerSet001',true);
+            	that.jasMap.layerSetVisibleSwitch('hca_buildings',true);
                 var radius = that.bufferValue;
                 that.isManage = that.isManage;
                 window.jasTools.selfDialog.close();

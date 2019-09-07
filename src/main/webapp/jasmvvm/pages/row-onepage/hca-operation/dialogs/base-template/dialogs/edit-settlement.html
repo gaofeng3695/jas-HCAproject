@@ -424,6 +424,7 @@
             uploadSuccess: function () {
                 var that = this;
                 that.uploadImage(function(){
+                	top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
                     window.parent.Vue.prototype.$message({
                         type: 'success',
                         message: !this.isEdit ? '保存成功' : '修改成功'
