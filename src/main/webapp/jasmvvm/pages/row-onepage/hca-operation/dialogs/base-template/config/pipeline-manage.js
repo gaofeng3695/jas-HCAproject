@@ -86,7 +86,7 @@ var pageConfig = {
             isRequired: true
         },
         pipelineLength: {
-            name: '管道长度（km）',
+            name: '管线长度（km）',
             type: 'number',
             max:999999.999,
             min: 0,
@@ -94,7 +94,7 @@ var pageConfig = {
             isRequired: true
         },
         outsideDiameter: {
-            name: '管道外管径(mm)',
+            name: '管线外管径(mm)',
             type: 'number',
             max:9999999,
             min: 0,

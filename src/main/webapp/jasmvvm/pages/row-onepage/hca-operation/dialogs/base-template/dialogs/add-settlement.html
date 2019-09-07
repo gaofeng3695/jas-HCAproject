@@ -150,12 +150,12 @@
 					</el-form-item>
 				</el-col>
 			</el-row>
-            <!--<jas-base-group-title name="附件信息"></jas-base-group-title>
-            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>-->
+            <jas-base-group-title name="附件信息"></jas-base-group-title>
+            <jas-file-upload  ref="upload" @success="uploadSuccess"></jas-file-upload>
 		</el-form>
 		<div slot="footer" style="margin-bottom:10px;">
             <el-button size="small" type="primary" @click="getImage()">截图</el-button>
-            <el-button size="small" type="primary" @click="save()">确定</el-button>
+            <el-button size="small" type="primary" @click="validateCodeUni()">确定</el-button>
             <el-button size="small" @click="cancel()">取消</el-button>
         </div>
 	</jas-dialog-wrapper>
@@ -172,7 +172,7 @@
         el: "#app",
         data: function () {
             var that = this;
-            let validateCodeUni = (rule, value, callback) => {
+            /* let validateCodeUni = (rule, value, callback) => {
                 var url = jasTools.base.rootPath + "/basedata/unique/check.do";
                 jasTools.ajax.post(url, {
                     tableName: "hca_buildings",
@@ -183,16 +183,13 @@
                         callback('建(构)筑物编号已存在')
                     }
                 });
-            }
+            } */
 
             return {
                 rules: {
                     buildingCode: [{
                         required: true,
                         message: '请输入建(构)筑物编号',
-                        trigger: 'blur'
-                    }, {
-                        validator:validateCodeUni,
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{
@@ -205,6 +202,11 @@
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
+                    buildingDistribution: [{
+                        required: true,
+                        message: '请选择建(构)筑物分布',
+                        trigger: 'blur'
+                    }],                    
                     /*startMileage: [{
                         //required: true,
                         message: '请输入起始里程',
@@ -322,6 +324,15 @@
                     that.tableFormData.buildingType = arr[0].key;
                 });
             },
+            requestDetail: function (oid) {
+                var that = this;
+                var url = jasTools.base.rootPath + "/jdbc/commonData/hcaelementunit/getPage.do";
+                jasTools.ajax.post(url, {
+                    oid: oid
+                }, function (data) {
+                    that.tableFormData = data.rows[0];
+                });
+            },
 
             uploadImage: function (cb) {
                 var that = this;
@@ -330,7 +341,7 @@
                 }
                 var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
                 jasTools.ajax.post(uploadurl,{
-                    buildingCode:that.tableFormData.buildingCode || "未命名截图",
+                    buildingCode:that.tableFormData.buildingCode || "建构筑物截图",
                     fileData: that.imageinfo
                 },function (data) {
                     cb&&cb();
@@ -338,18 +349,34 @@
             },
             getImage: function () {
                 var that = this;
+                top.jasMap.cancelGraphicEdit();
                 var gra = that.builedingImg;
                 if(gra){
                     top.jasMap.exportGraphicToImage(gra, function(data){
                         that.imageinfo = data;
-                        var file = {name:that.tableFormData.buildingCode || "未命名截图",url:data,status:''}
+                        var file = {name:that.tableFormData.buildingCode || "建构筑物截图",url:data,status:''}
                         that.$refs.upload.$refs.upload.$children[1].files.push(file);
                     });
                 }
             },
+            uploadImage: function (cb) {
+                var that = this;
+                if(!that.imageinfo){
+                    return  cb&&cb();
+                }
+                var uploadurl = jasTools.base.rootPath + "/hcabuildings/uploadImage.do?businessId=" + that.oid + "&businessType=file";
+                jasTools.ajax.post(uploadurl,{
+                    fileData: that.imageinfo
+                },function (data) {
+                    console.log("success");
+                    cb&&cb();
+                });
+            },
             save: function () {
                 var that = this;
-                var graphic = top.hcaMapApp.currentDrawBuildingGraphic;
+                var msg = "";
+                that.but_disabled = true;
+                var graphic = top.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -369,7 +396,7 @@
                         top.hcaMapApp.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                        var gra = top.currentDrawBuildingGraphic;
                         top.hcaMapApp.jasMap.removeGraphic(gra);
 					}
                 });
@@ -425,7 +452,7 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            var gra = top.hcaMapApp.currentDrawBuildingGraphic;
+                            var gra = top.currentDrawBuildingGraphic;
                             top.hcaMapApp.jasMap.removeGraphic(gra);
                             window.parent.closeDlg("editSettlementIframe");
                         }
@@ -442,6 +469,24 @@
                     window.parent.closeDlg("editSettlementIframe");
                 });
             },
+            validateCodeUni: function(){
+            	var that = this;
+            	var url = jasTools.base.rootPath + "/basedata/unique/check.do";
+                jasTools.ajax.post(url, {
+                    tableName: "hca_buildings",
+                    fieldName: "building_code",
+                    fieldValue: that.tableFormData.buildingCode
+                }, function (result) {
+                    if(result.data == 1){
+                    	top.Vue.prototype.$message({
+                            type: 'error',
+                            message:  '建(构)筑物编号已存在！'
+                        });
+                    }else{
+                    	that.save();
+                    }
+                });
+            }
         },
     });
 </script>

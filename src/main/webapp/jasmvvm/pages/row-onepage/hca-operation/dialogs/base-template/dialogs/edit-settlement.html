@@ -118,7 +118,7 @@
             <el-button size="small" type="primary" @click="editSettlement()" v-show="!isCanEdit">编辑</el-button>
             <el-button size="small" type="primary" @click="deleteSettlement()" v-show="!isCanEdit">删除</el-button>
             <el-button size="small" type="primary" @click="getImage()" v-show="isCanEdit">截图</el-button>
-            <el-button size="small" type="primary" @click="save()" v-show="isCanEdit">确定</el-button>
+            <el-button size="small" type="primary" @click="validateCodeUni()" v-show="isCanEdit">确定</el-button>
             <el-button size="small" @click="cancel()" v-show="isCanEdit">取消</el-button>
         </div>
     </jas-dialog-wrapper>
@@ -131,12 +131,12 @@
 <script src="../../../components/jas-tools.js"></script>
 
 <script>
-var currentGraphic = null  ;
+    var currentGraphic = null  ;
     var app = new Vue({
         el: "#app",
         data: function () {
             var that = this;
-            let validateCodeUni = (rule, value, callback) => {
+            /* let validateCodeUni = (rule, value, callback) => {
                 var url = jasTools.base.rootPath + "/basedata/unique/check.do";
                 jasTools.ajax.post(url, {
                     tableName: "hca_buildings",
@@ -147,7 +147,7 @@ var currentGraphic = null  ;
                         callback('建(构)筑物编号已存在')
                     }
                 });
-            }
+            } */
 
             return {
                 but_disabled:false,
@@ -155,9 +155,6 @@ var currentGraphic = null  ;
                     buildingCode: [{
                         required: true,
                         message: '请输入建(构)筑物编号',
-                        trigger: 'blur'
-                    }, {
-                        validator:validateCodeUni,
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{
@@ -168,6 +165,11 @@ var currentGraphic = null  ;
                     buildingType: [{
                         required: true,
                         message: '请选择建(构)筑物类型',
+                        trigger: 'blur'
+                    }],
+                    buildingDistribution: [{
+                        required: true,
+                        message: '请选择建(构)筑物分布',
                         trigger: 'blur'
                     }],
                 },
@@ -237,7 +239,7 @@ var currentGraphic = null  ;
             });
 
             top.jasMap.cancelGraphicEdit();
-            currentGraphic = top.hcaMapApp.currentDrawBuildingGraphic;
+            currentGraphic = top.currentDrawBuildingGraphic;
         },
         computed: {
         },
@@ -422,6 +424,25 @@ var currentGraphic = null  ;
                     that.cancel(1);
                 });
             },
+            validateCodeUni: function(){
+            	var that = this;
+            	var url = jasTools.base.rootPath + "/basedata/unique/check.do";
+                jasTools.ajax.post(url, {
+                    tableName: "hca_buildings",
+                    fieldName: "building_code",
+                    fieldValue: that.tableFormData.buildingCode,
+                    oid: that.tableFormData.oid
+                }, function (result) {
+                    if(result.data == 1){
+                    	top.Vue.prototype.$message({
+                            type: 'error',
+                            message:  '建(构)筑物编号已存在！'
+                        });
+                    }else{
+                    	that.save();
+                    }
+                });
+            }
         }
     });
 </script>

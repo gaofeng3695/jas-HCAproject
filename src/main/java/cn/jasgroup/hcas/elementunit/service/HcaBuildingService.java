@@ -110,6 +110,10 @@ public class HcaBuildingService extends CommonDataJdbcService {
      */
     protected void prepareBuildingsData(Geometry area,HcaBuildings2 hcaBuildings){
         String pipelineOid = hcaBuildings.getPipelineOid() ;
+        if(!StringUtil.hasText(pipelineOid) ){
+            logger.warn("没有获取到管线oid ,不能计算起止里程等参数！");
+            return;
+        }
         //$、查询管线
         LayerQueryParam param = new LayerQueryParam();
         param.setSrsname(HcaAnalysisContext.pipelineSourceName);

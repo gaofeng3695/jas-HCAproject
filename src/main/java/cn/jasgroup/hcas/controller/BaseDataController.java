@@ -2,6 +2,8 @@ package cn.jasgroup.hcas.controller;
 
 import cn.jasgroup.framework.data.result.BaseResult;
 import cn.jasgroup.framework.data.result.SimpleResult;
+import cn.jasgroup.jasframework.utils.StringUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,7 +57,12 @@ public class BaseDataController {
     @ResponseBody
     public BaseResult checkUniqueValue(@RequestBody UniqueCheckBO bo) throws Exception {
         String sql = "select count(1) from " + bo.getTableName() + " where " + bo.getFieldName() + "= ? ";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{ bo.getFieldValue() },Integer.class);
+        Object[] arr = new Object[]{ bo.getFieldValue() };
+        if(StringUtil.hasText(bo.getOid())){
+        	arr = new Object[]{ bo.getFieldValue(), bo.getOid() };
+        	sql += " and oid !=? ";
+        }
+        Integer count = jdbcTemplate.queryForObject(sql, arr ,Integer.class);
         SimpleResult result = new SimpleResult<>();
         result.setData(count);
         return result;

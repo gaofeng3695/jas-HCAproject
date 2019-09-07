@@ -321,6 +321,7 @@
         }
         return "";
     }
+    top.currentDrawBuildingGraphic = null ;
     top.hcaMapApp = new Vue({
         el: '#app',
         data: function () {
@@ -341,7 +342,6 @@
                 domainData:[],
                 hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
                 hcaBuildingsDrawGraphicId:"",
-                currentDrawBuildingGraphic:null,
                 builedingImg:''
             }
         },
@@ -409,7 +409,7 @@
                         //var gra = feature.attr("id",fId);
                         //changedFeatures[fId] = feature;
                         //that.hcaBuildingsDrawGraphicId = fId;
-                        that.currentDrawBuildingGraphic = feature;
+                        top.currentDrawBuildingGraphic = feature;
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
                         var key = that.baiduKey;

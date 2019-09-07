@@ -2,6 +2,7 @@ package cn.jasgroup.hcas.elementunit.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -152,7 +153,7 @@ public class HcaBuildingsController extends BaseController {
 		SimpleResult result = new SimpleResult<>();
 		try {
 			int data = hcaBuildingService.save(hcaBuildings);
-			result.setData(data);
+			result.setData(hcaBuildings.getOid());
 			if(data == 0 ){
 				result.setStatus(0);
 				result.setMsg("保存失败！");
@@ -199,7 +200,7 @@ public class HcaBuildingsController extends BaseController {
 			factory.setSizeThreshold(Integer.parseInt(memorySizeThreshold));
 		}
 		if(null == fileDataMap){
-			return new BaseResult(400,"-1","截图为空");
+			return new BaseResult(-1,"400","截图为空");
 		}
 		// 单个文件大小限制
 		String singleFileMaxsize = ReadConfigUtil.getPlatformConfig("fileUpload.singleFileMaxsize");
@@ -210,16 +211,22 @@ public class HcaBuildingsController extends BaseController {
 		}
 		List<String> fileIdList = new ArrayList<String>();
 		try {
-			String fileData =  fileDataMap.get("fileData");
+			String fileData = fileDataMap.get("fileData");
+			String fileName = fileDataMap.get("buildingCode");
+			
+			if(StringUtil.hasText(fileName)) {
+				fileName = URLDecoder.decode(fileName, "UTF-8");
+			}else{
+				fileName = "建构筑物截图";
+			}
 			// 二进制文件数组
-//			String fileData01 = fileData.replaceAll(" ", "+");
 			byte[] b = Base64.decodeBase64(fileData.replace("data:image/png;base64,", ""));
 			long fileSize = b.length;
 			if(fileSize == 0 || fileSize > maxsize){
-				return new BaseResult(400,"-1","图片过大");
+				return new BaseResult(-1,"400","图片过大");
 			}
 			SysAttachment sysAttachment = new SysAttachment();
-			sysAttachment.setFileName("地图截图.png");
+			sysAttachment.setFileName(fileName + ".png");
 			InputStream inputStream = new ByteArrayInputStream(b);
 			sysAttachment.setContentInputStream(inputStream);
 			sysAttachment.setFileSize(fileSize);
@@ -227,7 +234,7 @@ public class HcaBuildingsController extends BaseController {
 
 			//附件ID为空, 上传失败
 			if(!StringUtil.hasText(fileId)) {
-				return new BaseResult(400,"-1","截图保存出错");
+				return new BaseResult(-1,"400","截图保存出错");
 			}
 
 			fileIdList.add(fileId);
@@ -245,7 +252,7 @@ public class HcaBuildingsController extends BaseController {
 		} catch (Exception e) {
 			log.error("[截图保存出错]:{}", e);
 			e.printStackTrace();
-			return new BaseResult(400,"-1","截图保存出错");
+			return new BaseResult(-1,"400","截图保存出错");
 		}
 		return new ListResult<>(fileIdList);
 		
