@@ -9,10 +9,10 @@
 	<title>高后果区识别与分析系统</title>
 
 	<!-- 老框架的样式依赖 -->
-	<link rel="stylesheet" href="../jasframework/common/css/jasframework-layout.css" />
-	<link rel="stylesheet" href="../jasframework/common/lib/easyui/themes/default/easyui.css" />
-	<link rel="stylesheet" href="../jasframework/common/lib/easyui/themes/icon.css" />
-	<link rel="stylesheet" href="../jasframework/common/css/common.css" />
+	<link rel="stylesheet" href="./../jasframework/common/css/jasframework-layout.css" />
+	<link rel="stylesheet" href="./../jasframework/common/lib/easyui/themes/default/easyui.css" />
+	<link rel="stylesheet" href="./../jasframework/common/lib/easyui/themes/icon.css" />
+	<link rel="stylesheet" href="./../jasframework/common/css/common.css" />
 	<!-- <link rel="stylesheet" href="../jasframework/common/css/main.css" type="text/css" /> -->
 
 	<!-- 老框架的样式依赖END -->
@@ -261,7 +261,7 @@
 
 							<jas-two-panel-resizer :showed="panelShowed" ref="resizer" layout="horizontal" length="40%" @paneresize="paneresize" @statuschanged="statuschanged">
 								<div slot="closePanel"  style="height:100%;;width:100%;background-color: #ececec;"> 
-									<iframe  :src="mapSrc"  style="height:100%;width:100%;"></iframe>
+									<iframe  :src="mapSrc"  style="height:100%;width:100%;" id="mapIframe"></iframe>
 								</div>
 								<el-tabs id="tabs" style="position:relative" slot="mainPanel" class="tabswrapper jas-flex-box" v-model="currentTap" type="card"
 								 @tab-remove="removeTab">
