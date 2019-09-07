@@ -1,7 +1,7 @@
 var pageConfig = {
     privilegeCode: ['bt_select', 'bt_delete', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcahighimpactarea/getPage.do",
-    deletePath: '/jdbc/commonData/hcahighimpactarea/delete.do',
+    deletePath: '/jdbc/commonData/hcahighimpactarea/delete.do?layerId=hca_high_impact_area',
     detailPath: '/jdbc/commonData/hcahighimpactarea/getPage.do',
     savePath: '/jdbc/commonData/hcahighimpactarea/save.do',
     updatePath: '/jdbc/commonData/hcahighimpactarea/update.do',
