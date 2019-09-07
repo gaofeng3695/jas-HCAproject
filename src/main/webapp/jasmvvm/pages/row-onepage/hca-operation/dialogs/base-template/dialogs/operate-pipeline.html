@@ -108,8 +108,10 @@
                                 "show":true,
                                 "where":"oid like'" + that.oid + "'"
                             });
-                            top.hcaMapApp.localPipelineName = that.pipelineName;
+                            parent.hcaMapApp.localPipelineName = that.pipelineName;
                             top.createBufferDialog(that.oid);
+                            //
+                            top.jasMap.destroyMapDialog();
                         }
                     }
                 });

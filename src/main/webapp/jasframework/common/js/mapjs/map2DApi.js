@@ -2776,6 +2776,12 @@ var M = JasMap = null;
                 geometryService.buffer(bufferParams ,bufferResult);
 
             };
+            _this.destroyMapDialog = function(){
+                if(mapManager.$mapDialog ){
+                    mapManager.$mapDialog.dialog('destroy');
+                    mapManager.$mapDialog = null ;
+                }
+            };
             _this.dialog = function ( options ) {
                 if(!$){
                     eventManager.publishError(_this.Strings.hasNoJqueryEasyUILib);
@@ -2797,7 +2803,7 @@ var M = JasMap = null;
                     $dom :null,
                     container :"body", //inline :true 条件下可配置"map"|"body"|"#divid"
                     onClose: function () {//弹出层关闭事件
-                        $(this).dialog('destroy');
+                        _this.destroyMapDialog();
                     },
                     onLoad: function () {//弹出层加载事件
 
@@ -2811,10 +2817,7 @@ var M = JasMap = null;
                 if($dom){
                     return $dom.dialog(params);
                 }
-                if(mapManager.$mapDialog && mapManager.$mapDialog.dialog.methods["destroy"]){
-                    mapManager.$mapDialog.dialog('destroy');
-                }
-                mapManager.$mapDialog = null ;
+                _this.destroyMapDialog();
 
                 var inline = options.inline;
                 var $dialog = null;
