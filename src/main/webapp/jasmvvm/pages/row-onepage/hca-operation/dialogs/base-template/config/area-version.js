@@ -120,22 +120,18 @@ var pageConfig = {
         	if(!top.app.panelShowed){
         		top.app._goMap();
         	}
-            var that = this;
-            var layerId = "";
-            if(that.forBusiness=="1"){
-            	layerId = "hca_high_impact_area";
-            }else{
-            	layerId = "hca_area";
-            	top.hcaMapApp.localAreaVersionOid = row.oid;
-            }
-            that.jasMap.updateLayer(layerId, {
+            top.$('#mapIframe')[0].contentWindow.hcaMapApp.localAreaVersionOid = row.oid;
+            top.jasMap.updateLayer("hca_high_impact_area", {
+                show: false,
+            });
+            top.jasMap.updateLayer("hca_area", {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
-            var lineGraphic = top.hcaMapApp.getPipeline();
+            var lineGraphic = top.jasMap.getPipeline();
             var x = lineGraphic.geometry.paths[0][0][0];
             var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-            that.jasMap.zoomAt(15,x ,y );
+            top.jasMap.zoomAt(15,x ,y );
         },
         previewFile : function(){
             window.jasTools.dialog.show({
