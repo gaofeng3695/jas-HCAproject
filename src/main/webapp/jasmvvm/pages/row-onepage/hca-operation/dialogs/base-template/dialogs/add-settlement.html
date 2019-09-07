@@ -292,7 +292,7 @@
             that.layerId = param.layerId;
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
-            that.builedingImg = top.hcaMapApp.builedingImg;
+            that.builedingImg = parent.hcaMapApp.builedingImg;
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
                 that.tableFormData.buildingTypeParent = arr[0].key;
