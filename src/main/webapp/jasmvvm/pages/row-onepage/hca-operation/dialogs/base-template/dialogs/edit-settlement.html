@@ -228,26 +228,19 @@
             if (param.oid) {
                 this.oid = param.oid;
                 this.tableFormData.oid = this.oid;
-                this.requestDetail(param.oid);
+                that.$nextTick(function(){
+                    that.requestDetail(that.oid);
+                })
             };
             this.getDomainSelect('building_type_parent_domain',function (arr) {
                 that.domain.buildingTypeParent = arr;
-                that.tableFormData.buildingTypeParent = arr[0].key;
-                that.parentDomainChange(arr[0].key);
             });
-            /*this.getDomainSelect('building_type_domain',function (arr) {
-                that.domain.buildingType = arr;
-            });*/
             this.getDomainSelect('building_distribution_domain',function (arr) {
                 that.domain.buildingDistribution = arr;
-                that.tableFormData.buildingDistribution = arr[0].key;
             });
 
             top.jasMap.cancelGraphicEdit();
             currentGraphic = top.currentDrawBuildingGraphic;
-
-            //
-            top.jasMap.subscribe(top.jasMap.Events.MapDialogDestroyEvent,this.dialogDestoryed);
         },
         computed: {
         },
@@ -255,9 +248,6 @@
 
          },
         methods: {
-            dialogDestoryed:function(){
-                this.can
-            },
             submit: function (formName) {
                 var that = this;
                 this.$refs[formName].validate(function (valid) {
@@ -283,6 +273,10 @@
                 }, function (data) {
                     $.extend(that.tableFormData, data.rows[0]);
                     that.layerId = that.tableName + "#" + that.tableFormData.buildingType;
+                    that.changeParentCodeId = that.tableFormData.buildingTypeParent;
+                    that.getChildDomainSelect('building_type_domain',function (arr) {
+                        that.domain.buildingType = arr;
+                    });
                 });
             },
             save: function () {
@@ -361,6 +355,7 @@
             editSettlement: function () {
                 var that = this;
                 that.isCanEdit = true;
+
                 setTimeout(function(){
                     that.$refs.upload.requestFile(that.oid);
                     var gra = top.jasMap.getGraphicByObjectId(that.tableFormData.objectId, that.layerId);
@@ -381,7 +376,6 @@
                         show: true
                     });
                     top.$('.el-tab-pane:visible')[0].querySelector('iframe').contentWindow.vm.$refs.table.refresh();
-                    window.parent.closeDlg("editSettlementIframe");
                     top.jasMap.destroyMapDialog();
                 };
                 //top.$('#mapIframe')[0].contentWindow.mapvm.$confirm('您确定要删除删除建(构)筑物信息吗？', '提示', {

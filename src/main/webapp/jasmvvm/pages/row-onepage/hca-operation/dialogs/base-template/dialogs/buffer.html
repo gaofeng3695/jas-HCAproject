@@ -54,7 +54,7 @@
 		},
 		created: function () {
             var that = this;
-            parent.app.bufferValue=200;
+            top.$('#mapIframe')[0].contentWindow.hcaMapApp.bufferValue=200;
 		},
 		methods: {
             cancel: function(){
@@ -62,9 +62,9 @@
             },
             createBuffer: function(){
                 var radius = $('#radius').val();
-                parent.app.bufferValue=radius;
-                parent.app.isManage = true;
-                top.createBuffer();
+                top.$('#mapIframe')[0].contentWindow.hcaMapApp.bufferValue=radius;
+                top.$('#mapIframe')[0].contentWindow.hcaMapApp.isManage = true;
+                top.jasMap.createBuffer();
                 window.parent.closeDlg("bufferIframe");
             }
 		},

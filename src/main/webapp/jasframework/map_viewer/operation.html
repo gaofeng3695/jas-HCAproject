@@ -18,20 +18,7 @@
     <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/icon.css">
 
-
-    <link rel="stylesheet" href="./../../jasmvvm/lib/font-awesome-4.7.0/css/font-awesome.css">
-    <link rel="stylesheet" href="./../../jasmvvm/lib/element-ui/v2.4.1/theme-chalk/index.min.css">
-    <link rel="stylesheet" href="./../../jasmvvm/src/css/main.css">
     <style>
-
-        html,body,
-        .app {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            background:transparent;
-        }
         .center{
             width: 100%;
             height: 100%;
@@ -361,7 +348,8 @@
                 domainData:[],
                 hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
                 hcaBuildingsDrawGraphicId:"",
-                builedingImg:''
+                builedingImg:'',
+                bufferValue:''
             }
         },
         computed: {},
@@ -371,29 +359,30 @@
             var that = this;
             that.jasMap = new JasMap({
                 defaultHighlightColor:[255, 211, 81, 255],
+                defaultHighlightFillColor:[255, 211, 81, 255],
                 appConfig:that.mapConfig,
                 onConfigLoaded:function(config){
                     that.baiduKey = config.context["baidu-key"];
                 },
                 onOptionalLayersLoaded:function(){
-                    jasMap.updateLayer('hca_pipeline',{
+                    that.jasMap.updateLayer('hca_pipeline',{
                         "show":true
                     });
                     that.jasMap.layerSetVisibleSwitch('layerSet001',true);
                 }
             });
-            jasMap = that.jasMap;
-            that.jasMap.showHistoryBtn = this.showHistoryBtn;
-            that.jasMap.createHcaArea = this.createHcaArea;
-            that.jasMap.drawSettlement = this.drawSettlement;
-            //that.jasMap.deleteSettlement = this.deleteSettlement;
-            top.createBufferDialog = that.createBufferDialog;
-            top.createBuffer = that.createBuffer;
-            top.randomSettlementData = that.randomSettlementData;
-            top.showHistoryList = that.showHistoryList;
-            top.pipelineOid = that.pipelineOid;
-            top.showAreaDialogRight = that.showAreaDialogRight;
-            top.closeBufferWindow = that.closeBufferWindow;
+            top.jasMap = that.jasMap;
+            that.jasMap.showHistoryBtn = that.showHistoryBtn;
+            that.jasMap.createHcaArea = that.createHcaArea;
+            that.jasMap.drawSettlement = that.drawSettlement;
+            that.jasMap.createBufferDialog = that.createBufferDialog;
+            that.jasMap.createBuffer = that.createBuffer;
+            that.jasMap.randomSettlementData = that.randomSettlementData;
+            that.jasMap.showHistoryList = that.showHistoryList;
+            that.jasMap.pipelineOid = that.pipelineOid;
+            that.jasMap.showAreaDialogRight = that.showAreaDialogRight;
+            that.jasMap.closeBufferWindow = that.closeBufferWindow;
+            that.jasMap.getPipeline = that.getPipeline;
         },
         watch: {
             // 如果需要联动
@@ -408,7 +397,7 @@
             },
         },
         methods: {
-            queryAddressCallback1:function(e){
+            callback1:function(e){
                 this.localAddress = e.result.formatted_address;
                 var fId = new Date().getTime();
                 var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
@@ -416,7 +405,8 @@
             }  ,
             drawSettlement: function(){
                 var that = this;
-                jasMap.startDrawAndEditMode("POLYGON",{
+                //top.jasMap.drawPolygon({
+                top.jasMap.startDrawAndEditMode("POLYGON",{
                     layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;
@@ -429,7 +419,7 @@
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
                         var key = that.baiduKey;
-                        var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=hcaMapApp.queryAddressCallback1&location="+location;
+                        var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=hcaMapApp.callback1&location="+location;
                         $.getScript(url);
                         /*that.$confirm("绘图完毕，确定保存构建筑物基本信息？" , "提示", {
                             type: 'warning',
@@ -449,10 +439,6 @@
                 this.closeBufferWindow();
                 $("span[class=el-tag]").html(that.localPipelineName);
                 $('.title-div').show();
-                var fra = window.$("iframe");
-                for (var i = 0; i < fra.length; i++) {
-                    fra[i].contentWindow.close();
-                }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
             closeBufferWindow: function(){
@@ -470,10 +456,10 @@
                     "where":"version_oid like''"
                 });
             	that.localAreaVersionOid = "";
-                var radius = app.bufferValue;
-                that.isManage = app.isManage;
+                var radius = that.bufferValue;
+                that.isManage = that.isManage;
                 window.jasTools.selfDialog.close();
-                jasMap.commonUtil.simpleAjaxLoader({
+                top.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({
                         "pipesegmentTableName":"hca_pipeline",
@@ -489,7 +475,7 @@
                         if(json.status ){
                             var rings = json.data .rings;
                             that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
-                            jasMap.addPolygonGraphic(rings,{
+                            top.jasMap.addPolygonGraphic(rings,{
                                 layerId:'drawlayer_area_buffer',
                                 color:[255,255,255,100],
                                 outlineColor:[255,0,0,255],
@@ -497,7 +483,7 @@
                             var lineGraphic = that.getPipeline();
                             var x = lineGraphic.geometry.paths[0][0][0];
                             var y = lineGraphic.geometry.paths[0][0][1] ;
-                            jasMap.zoomAt(15,x ,y );
+                            top.jasMap.zoomAt(15,x ,y );
                         }else{
                             that.$alert(json.msg ,"提示");
                         }
@@ -506,7 +492,7 @@
                 });
             },
             getPipeline: function(){
-                var layer = jasMap.getLayerById('hca_pipeline');
+                var layer = top.jasMap.getLayerById('hca_pipeline');
                 return layer.graphics[0];
             },
             close: function(){
@@ -514,7 +500,7 @@
             },
             randomSettlementData: function(){
                 var that = this;
-                var common = jasMap.commonUtil;
+                var common = top.jasMap.commonUtil;
                 var msg = "确认重新生成地区等级？";
                 var settlementLayerId = "hca_buidings";
                 //top.Vue.prototype.$confirm(msg , "提示", {
@@ -538,7 +524,7 @@
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
                                     pipesegmentKeyValue: that.pipelineOid,
-                                    bufferDistance:app.bufferValue,
+                                    bufferDistance:that.bufferValue,
                                 }) ,
                                 method:"post",
                                 contentType:"application/json",
@@ -605,7 +591,7 @@
                 }
             },
             refreshAreaRankDialog: function(data){
-                var module = jasMap.getModuleById("areaRankManager");
+                var module = top.jasMap.getModuleById("areaRankManager");
                 if(!module){
                     return
                 }
@@ -617,9 +603,9 @@
             createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
                 var that = this;
                 var localAreaVersionOid = that.localAreaVersionOid;
-                jasMap.startPanMode();
+                top.jasMap.startPanMode();
                 this.closeBufferWindow();
-                if(!jasMap.getLayerVisible('hca_area')){
+                if(!top.jasMap.getLayerVisible('hca_area')){
                     //top.Vue.prototype.$alert('请先进行地区等级划分', '提示', {
                     that.$alert('请先进行地区等级划分', '提示', {
                         type: 'warning',
@@ -628,7 +614,7 @@
                     });
                     return;
                 }
-                var common = jasMap.commonUtil;
+                var common = top.jasMap.commonUtil;
                 //top.Vue.prototype.$confirm('生成新的高后果区？',  "提示",  {
                 that.$confirm('生成新的高后果区？',  "提示",  {
                     type: 'warning',
@@ -680,7 +666,7 @@
             },
             showHistoryBtn: function(){	// 打开地区等级选择窗口
                 var that = this;
-                jasMap.startPanMode();
+                top.jasMap.startPanMode();
                 this.closeBufferWindow();
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/select-area.html', "areaSelectIframe", "地区等级划分", 340,140);
             },
