@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="../../jasframework/common/lib/esri/3.18/jasgroup/styles/default/style.css">
     <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="../../jasframework/common/lib/easyui/themes/icon.css">
+    <link rel="stylesheet" href="./../../jasmvvm/lib/viewer/viewer.min.css">
 
     <style>
         .center{
@@ -243,6 +244,9 @@
         .v-modal{
             z-index:9089 !important;
         }
+        .viewer-container.viewer-backdrop.viewer-fixed.viewer-fade.viewer-transition.viewer-in{
+            z-index:9999 !important;
+        }
     </style>
 </head>
 
@@ -275,8 +279,10 @@
 <script type="text/javascript" src="../../jasframework/common/lib/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../../jasframework/common/js/common.js"></script>
 <script src="../../jasmvvm/lib/element-ui/v2.4.1/index.min.js"></script>
-<script src="../../jasmvvm/common/components/jas-components.js"></script>
-<script src="../../jasmvvm/common/js/jas-tools.js"></script>
+<script src="./../../jasmvvm/lib/viewer/viewer.min.js"></script>
+<script src="../../jasmvvm/pages/row-onepage/hca-operation/components/jas-components.js"></script>
+<script src="../../jasmvvm/pages/row-onepage/hca-operation/components/jas-tools.js"></script>
+
 <script src="../../jasmvvm/pages/row-onepage/hca-operation/components/onepage-components.js"></script>
 <script src="../common/lib/html2canvas.min.js"></script>
 
@@ -298,35 +304,6 @@
 <script id="mapApi" data-config="config2.json" src="../../jasframework/common/js/mapjs/map2DApi.js"  ></script>
 
 <script>
-    /**
-     * @desc 获取访问路径中某个参数
-     *
-     * @param paramName 参数名
-     * @param url 指定要截取参数的url（可以为空，如果为空url指向当前页面）
-     */
-    function getParamter(paramName, url) {
-        var seachUrl = window.location.search.replace("?", "");
-        if (url != null) {
-            var index = url.indexOf('?');
-            url = url.substr(index + 1);
-            seachUrl = url;
-        }
-        var ss = seachUrl.split("&");
-        var paramNameStr = "";
-        var paramNameIndex = -1;
-        for ( var i = 0; i < ss.length; i++) {
-            paramNameIndex = ss[i].indexOf("=");
-            paramNameStr = ss[i].substring(0, paramNameIndex);
-            if (paramNameStr == paramName) {
-                var returnValue = ss[i].substring(paramNameIndex + 1, ss[i].length);
-                if (typeof (returnValue) == "undefined") {
-                    returnValue = "";
-                }
-                return returnValue;
-            }
-        }
-        return "";
-    }
     top.currentDrawBuildingGraphic = null ;
     hcaMapApp = new Vue({
         el: '#app',
@@ -719,6 +696,19 @@
                     }
                 });
                 return _this.domainData;
+            },
+            viewImg : function(src) {
+                if (!window.Image || !window.Viewer) {
+                    return alert('缺少必要的资源包');
+                }
+                var image = new Image();
+                image.src = src;
+                var viewer = new Viewer(image, {
+                    hidden: function () {
+                        viewer.destroy();
+                    },
+                });
+                viewer.show();
             }
         }
     })

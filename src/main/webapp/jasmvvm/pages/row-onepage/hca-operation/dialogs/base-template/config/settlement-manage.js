@@ -1,7 +1,7 @@
 var pageConfig = {
     privilegeCode: ['bt_select', 'bt_update', 'bt_delete', 'bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcaelementunit/getPage.do",
-    deletePath: '/jdbc/commonData/hcabuildings/delete.do',
+    deletePath: '/jdbc/commonData/hcabuildings/delete.do?layerId=hca_buildings',
     detailPath: '/jdbc/commonData/hcaelementunit/getPage.do',
     //savePath: '/jdbc/commonData/hcabuildings/save.do',
     updatePath: '/jdbc/commonData/hcabuildings/update.do',
@@ -181,7 +181,7 @@ var pageConfig = {
         }
     },
     btncolwidth:200,
-    rowBtns:[
+rowBtns:[
         {
             name:'定位',
             icon: 'fa fa-info-circle pointer',
