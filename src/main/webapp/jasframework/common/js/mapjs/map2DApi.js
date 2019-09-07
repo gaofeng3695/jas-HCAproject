@@ -380,9 +380,11 @@ var M = JasMap = null;
                 }
                 if(commonUtil.isFullscreen(context)){
                     commonUtil.exitFullscreen(context);
+                    _this.isFullscreen = false ;
                 }else{
                     full.style.backgroundColor = "white";
                     commonUtil.launchIntoFullscreen(full,context);
+                    _this.isFullscreen = true ;
                 }
             };
             _this.centerAt = function (x, y) {

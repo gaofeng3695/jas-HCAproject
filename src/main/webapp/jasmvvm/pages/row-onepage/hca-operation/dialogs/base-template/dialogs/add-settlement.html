@@ -281,7 +281,7 @@
             }
         },
         created: function(){
-            this.jasMap = parent.app.jasMap;
+            //this.jasMap = parent.app.jasMap;
         },
         mounted: function () {
             var that = this;
@@ -385,7 +385,7 @@
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
-                that.tableFormData.geometry = top.hcaMapApp.jasMap.geometryToText(graphic.geometry);
+                that.tableFormData.geometry = top.jasMap.geometryToText(graphic.geometry);
                 var url = jasTools.base.rootPath + "/hcabuildings/save.do";
                 jasTools.ajax.post(url, that.tableFormData, function (data) {
                     if(!data.data){
@@ -398,11 +398,11 @@
                         //config.json中以表名和类型名作为图层的layerId
                        var layerId = "hca_buildings" + "#" + that.tableFormData.buildingType;
                         that.oid = data.data;
-                        top.hcaMapApp.jasMap.updateLayer(layerId,{
+                        top.jasMap.updateLayer(layerId,{
                             show:true
                         });
                         var gra = top.currentDrawBuildingGraphic;
-                        top.hcaMapApp.jasMap.removeGraphic(gra);
+                        top.jasMap.removeGraphic(gra);
 					}
                 });
             },
@@ -458,7 +458,7 @@
                     callback: function(action){
                         if (action === 'confirm') {
                             var gra = top.currentDrawBuildingGraphic;
-                            top.hcaMapApp.jasMap.removeGraphic(gra);
+                            top.jasMap.removeGraphic(gra);
                             window.parent.closeDlg("editSettlementIframe");
                         }
                     }

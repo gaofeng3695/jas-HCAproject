@@ -322,7 +322,7 @@
         return "";
     }
     top.currentDrawBuildingGraphic = null ;
-    top.hcaMapApp = new Vue({
+    hcaMapApp = new Vue({
         el: '#app',
         data: function () {
             return {
@@ -350,7 +350,6 @@
         },
         created: function () {
             var that = this;
-
             that.jasMap = new JasMap({
                 defaultHighlightColor:[255, 211, 81, 255],
                 appConfig:that.mapConfig,
@@ -358,14 +357,12 @@
                     that.baiduKey = config.context["baidu-key"];
                 },
                 onOptionalLayersLoaded:function(){
-                    that.jasMap.updateLayer('hca_pipeline',{
+                    top.jasMap.updateLayer('hca_pipeline',{
                         "show":true
                     })
                 }
             });
             top.jasMap = that.jasMap;
-            parent.jasMap = that.jasMap;
-            window.jasMap = that.jasMap;
             that.jasMap.showHistoryBtn = this.showHistoryBtn;
             that.jasMap.createHcaArea = this.createHcaArea;
             that.jasMap.drawSettlement = this.drawSettlement;
@@ -399,8 +396,8 @@
             }  ,
             drawSettlement: function(){
                 var that = this;
-                //this.jasMap.drawPolygon({
-                this.jasMap.startDrawAndEditMode("POLYGON",{
+                //top.jasMap.drawPolygon({
+                top.jasMap.startDrawAndEditMode("POLYGON",{
                     layerId: that.hcaBuildingsDrawLayerId ,
                     onDrawEnd:function(evt){
                         var feature = evt ;
@@ -413,7 +410,7 @@
                         var locationCenter = that.jasMap.getCenterLocation(feature.geometry);
                         var location = locationCenter.y +","+ locationCenter.x;
                         var key = that.baiduKey;
-                        var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=top.hcaMapApp.callback1&location="+location;
+                        var url = "http://api.map.baidu.com/reverse_geocoding/v3/?ak="+key+"&output=json&coordtype=wgs84ll&callback=hcaMapApp.callback1&location="+location;
                         $.getScript(url);
                         /*that.$confirm("绘图完毕，确定保存构建筑物基本信息？" , "提示", {
                             type: 'warning',
@@ -447,7 +444,7 @@
                 var radius = app.bufferValue;
                 that.isManage = app.isManage;
                 window.jasTools.selfDialog.close();
-                this.jasMap.commonUtil.simpleAjaxLoader({
+                top.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({
                         "pipesegmentTableName":"hca_pipeline",
@@ -463,7 +460,7 @@
                         if(json.status ){
                             var rings = json.data .rings;
                             that.jasMap.clearGraphicsLayer('drawlayer_area_buffer');
-                            this.jasMap.addPolygonGraphic(rings,{
+                            top.jasMap.addPolygonGraphic(rings,{
                                 layerId:'drawlayer_area_buffer',
                                 color:[255,255,255,100],
                                 outlineColor:[255,0,0,255],
@@ -471,7 +468,7 @@
                             var lineGraphic = that.getPipeline();
                             var x = lineGraphic.geometry.paths[0][0][0];
                             var y = lineGraphic.geometry.paths[0][0][1] ;
-                            this.jasMap.zoomAt(15,x ,y );
+                            top.jasMap.zoomAt(15,x ,y );
                         }else{
                             that.$alert(json.msg ,"提示");
                         }
@@ -480,7 +477,7 @@
                 });
             },
             getPipeline: function(){
-                var layer = this.jasMap.getLayerById('hca_pipeline');
+                var layer = top.jasMap.getLayerById('hca_pipeline');
                 return layer.graphics[0];
             },
             close: function(){
@@ -488,7 +485,7 @@
             },
             randomSettlementData: function(){
                 var that = this;
-                var common = this.jasMap.commonUtil;
+                var common = top.jasMap.commonUtil;
                 var msg = "确认重新生成地区等级？";
                 var settlementLayerId = "hca_buidings";
                 //top.Vue.prototype.$confirm(msg , "提示", {
@@ -579,7 +576,7 @@
                 }
             },
             refreshAreaRankDialog: function(data){
-                var module = this.jasMap.getModuleById("areaRankManager");
+                var module = top.jasMap.getModuleById("areaRankManager");
                 if(!module){
                     return
                 }
@@ -591,9 +588,9 @@
             createHcaArea: function(){// 1.计算影响区 2.加载特定场所/易燃易爆场所 3.计算高后果区
                 var that = this;
                 var localAreaVersionOid = that.localAreaVersionOid;
-                this.jasMap.startPanMode();
+                top.jasMap.startPanMode();
                 this.closeBufferWindow();
-                if(!this.jasMap.getLayerVisible('hca_area')){
+                if(!top.jasMap.getLayerVisible('hca_area')){
                     //top.Vue.prototype.$alert('请先进行地区等级划分', '提示', {
                     that.$alert('请先进行地区等级划分', '提示', {
                         type: 'warning',
@@ -602,7 +599,7 @@
                     });
                     return;
                 }
-                var common = this.jasMap.commonUtil;
+                var common = top.jasMap.commonUtil;
                 //top.Vue.prototype.$confirm('生成新的高后果区？',  "提示",  {
                 that.$confirm('生成新的高后果区？',  "提示",  {
                     type: 'warning',
@@ -654,7 +651,7 @@
             },
             showHistoryBtn: function(){	// 打开地区等级选择窗口
                 var that = this;
-                this.jasMap.startPanMode();
+                top.jasMap.startPanMode();
                 this.closeBufferWindow();
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/select-area.html', "areaSelectIframe", "地区等级划分", 340,140);
             },
