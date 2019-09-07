@@ -375,7 +375,7 @@
             },
             save: function () {
                 var that = this;
-                var graphic = parent.currentDrawBuildingGraphic;
+                var graphic = top.currentDrawBuildingGraphic;
                 var center = graphic.geometry.getExtent().getCenter();
                 that.tableFormData.centerx = center.x;
                 that.tableFormData.centery = center.y;
@@ -396,7 +396,7 @@
                         top.jasMap.updateLayer(layerId,{
                             show:true
                         });
-                        var gra = parent.currentDrawBuildingGraphic;
+                        var gra = top.currentDrawBuildingGraphic;
                         top.jasMap.removeGraphic(gra);
 					}
                 });
@@ -452,7 +452,7 @@
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            var gra = parent.currentDrawBuildingGraphic;
+                            var gra = top.currentDrawBuildingGraphic;
                             top.jasMap.removeGraphic(gra);
                             top.jasMap.cancelGraphicEdit();
                             window.parent.closeDlg("editSettlementIframe");
