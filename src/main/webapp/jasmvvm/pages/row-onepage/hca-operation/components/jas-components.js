@@ -586,7 +586,13 @@ Vue.component('jas-file-list', {
         },
         preview: function (oid) {
             var url = jasTools.base.rootPath + "/attachment/download.do?oid="+oid+'&token='+localStorage.getItem("token");
-            top.jasTools.base.viewImg(url);
+            if(top.$('#mapIframe').width() == $(top.window).width()){
+                top.$('#mapIframe')[0].contentWindow.hcaMapApp.viewImg(url);
+            }else{
+                top.jasTools.base.viewImg(url);
+                //top.$('#mapIframe')[0].contentWindow.viewImg(url);
+            }
+            //top.jasTools.base.viewImg(url);
             /*var that = this;
             top.jasTools.dialog.show({
                 width: '80%',
@@ -674,7 +680,22 @@ Vue.component('jas-file-upload', {
         },
         handlePictureCardPreview: function(file) {
             // this.dialogImageUrl = file.url;
-            top.jasTools.base.viewImg(file.url)
+            var that = this;
+            if(top.$('#mapIframe').width() == $(top.window).width()){
+                if (file.url) {
+                    top.$('#mapIframe')[0].contentWindow.hcaMapApp.viewImg(url);
+                } else {
+                    var url = jasTools.base.rootPath + "/attachment/download.do?oid=" + file.oid + '&token=' + localStorage.getItem("token");
+                    top.$('#mapIframe')[0].contentWindow.hcaMapApp.viewImg(url);
+                }
+            }else{
+                if (file.url) {
+                    top.jasTools.base.viewImg(file.url)
+                } else {
+                    var url = jasTools.base.rootPath + "/attachment/download.do?oid=" + file.oid + '&token=' + localStorage.getItem("token");
+                    top.jasTools.base.viewImg(url);
+                }
+            }
         },
         uploadFile: function (oid) {
             var that = this;
@@ -1081,7 +1102,7 @@ Vue.component('jas-table-for-list', {
         importConfig: {},
         searchType: {
             default: 'post' //可以是get,post和postForm
-        }
+        },
     },
     data: function () {
         return {

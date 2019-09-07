@@ -1,7 +1,7 @@
 var pageConfig = {
     privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete','bt_position', 'bt_export', 'bt_import'],
     searchPath: "/jdbc/commonData/hcapipeline/getPage.do",
-    deletePath: '/jdbc/commonData/hcapipeline/delete.do',
+    deletePath: '/jdbc/commonData/hcapipeline/delete.do?layerId=hca_pipeline',
     detailPath: '/jdbc/commonData/hcapipeline/getPage.do',
     savePath: '/jdbc/commonData/hcapipeline/save.do',
     updatePath: '/jdbc/commonData/hcapipeline/update.do',

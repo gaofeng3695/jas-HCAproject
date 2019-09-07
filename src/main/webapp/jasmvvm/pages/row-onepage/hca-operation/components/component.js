@@ -593,12 +593,20 @@ Vue.component('jas-table-for-list', {
             var that = this;
             if (this.deletePath) {
                 var url = jasTools.base.rootPath + this.deletePath;
+                var param = jasTools.base.getParamsInUrl(url);
                 jasTools.ajax.post(url, {
                     oid: row[that.prop.oid]
                 }, function (data) {
                     top.Vue.prototype.$message({
                         type: 'success',
                         message: '删除成功'
+                    });
+                    var layerId = param.layerId;
+                    if(row.buildingType){
+                        layerId += "#" + row.buildingType;
+                    }
+                    top.jasMap.updateLayer(layerId,{
+                        show:true
                     });
                     that.refresh();
                 });
