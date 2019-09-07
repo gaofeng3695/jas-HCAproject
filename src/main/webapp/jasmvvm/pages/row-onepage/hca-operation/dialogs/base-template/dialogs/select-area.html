@@ -78,10 +78,10 @@
 				var that = this;
 				var msg = "";
 				if('2' == that.radio){
-					top.showHistoryList(0);
+					top.jasMap.showHistoryList(0);
                     window.parent.closeDlg("areaSelectIframe");
                 }else{
-					top.randomSettlementData();
+					top.jasMap.randomSettlementData();
                     that.cancel();
                 }
 			},

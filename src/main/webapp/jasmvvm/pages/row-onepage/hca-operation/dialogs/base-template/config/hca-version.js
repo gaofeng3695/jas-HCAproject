@@ -108,15 +108,14 @@ var pageConfig = {
         	if(!top.app.panelShowed){
         		top.app._goMap();
         	}
-            var that = this;
-            that.jasMap.updateLayer("hca_high_impact_area", {
+            top.jasMap.updateLayer("hca_high_impact_area", {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
-            var lineGraphic = top.hcaMapApp.getPipeline();
+            var lineGraphic = top.jasMap.getPipeline();
             var x = lineGraphic.geometry.paths[0][0][0];
             var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-            that.jasMap.zoomAt(15,x ,y );
+            top.jasMap.zoomAt(15,x ,y );
         },
         previewFile : function(row){
         	var that = this;

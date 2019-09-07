@@ -150,8 +150,8 @@ var pageConfig = {
                             "show":true,
                             "where":"oid like'" + item.oid + "'"
                         });
-                        top.hcaMapApp.localPipelineName = item.pipelineName;
-                        top.createBufferDialog(item.oid);
+                        top.$('#mapIframe')[0].contentWindow.hcaMapApp.localPipelineName = item.pipelineName;
+                        top.jasMap.createBufferDialog(item.oid);
                     }
                 }
             });

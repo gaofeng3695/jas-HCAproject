@@ -348,7 +348,8 @@
                 domainData:[],
                 hcaBuildingsDrawLayerId:"drawlayer_hca_buildings",
                 hcaBuildingsDrawGraphicId:"",
-                builedingImg:''
+                builedingImg:'',
+                bufferValue:''
             }
         },
         computed: {},
@@ -358,29 +359,30 @@
             var that = this;
             that.jasMap = new JasMap({
                 defaultHighlightColor:[255, 211, 81, 255],
+                defaultHighlightFillColor:[255, 211, 81, 255],
                 appConfig:that.mapConfig,
                 onConfigLoaded:function(config){
                     that.baiduKey = config.context["baidu-key"];
                 },
                 onOptionalLayersLoaded:function(){
-                    top.jasMap.updateLayer('hca_pipeline',{
+                    that.jasMap.updateLayer('hca_pipeline',{
                         "show":true
                     });
                     that.jasMap.layerSetVisibleSwitch('layerSet001',true);
                 }
             });
             top.jasMap = that.jasMap;
-            that.jasMap.showHistoryBtn = this.showHistoryBtn;
-            that.jasMap.createHcaArea = this.createHcaArea;
-            that.jasMap.drawSettlement = this.drawSettlement;
-            //that.jasMap.deleteSettlement = this.deleteSettlement;
-            top.createBufferDialog = that.createBufferDialog;
-            top.createBuffer = that.createBuffer;
-            top.randomSettlementData = that.randomSettlementData;
-            top.showHistoryList = that.showHistoryList;
-            top.pipelineOid = that.pipelineOid;
-            top.showAreaDialogRight = that.showAreaDialogRight;
-            top.closeBufferWindow = that.closeBufferWindow;
+            that.jasMap.showHistoryBtn = that.showHistoryBtn;
+            that.jasMap.createHcaArea = that.createHcaArea;
+            that.jasMap.drawSettlement = that.drawSettlement;
+            that.jasMap.createBufferDialog = that.createBufferDialog;
+            that.jasMap.createBuffer = that.createBuffer;
+            that.jasMap.randomSettlementData = that.randomSettlementData;
+            that.jasMap.showHistoryList = that.showHistoryList;
+            that.jasMap.pipelineOid = that.pipelineOid;
+            that.jasMap.showAreaDialogRight = that.showAreaDialogRight;
+            that.jasMap.closeBufferWindow = that.closeBufferWindow;
+            that.jasMap.getPipeline = that.getPipeline;
         },
         watch: {
             // 如果需要联动
@@ -437,10 +439,6 @@
                 this.closeBufferWindow();
                 $("span[class=el-tag]").html(that.localPipelineName);
                 $('.title-div').show();
-                var fra = window.$("iframe");
-                for (var i = 0; i < fra.length; i++) {
-                    fra[i].contentWindow.close();
-                }
                 window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/buffer.html', "bufferIframe", "识别区条件", 230,150);
             },
             closeBufferWindow: function(){
@@ -458,8 +456,8 @@
                     "where":"version_oid like''"
                 });
             	that.localAreaVersionOid = "";
-                var radius = app.bufferValue;
-                that.isManage = app.isManage;
+                var radius = that.bufferValue;
+                that.isManage = that.isManage;
                 window.jasTools.selfDialog.close();
                 top.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
@@ -526,7 +524,7 @@
                                 url:jasTools.base.rootPath + "/analysis/area/grade.do",
                                 data: JSON.stringify({
                                     pipesegmentKeyValue: that.pipelineOid,
-                                    bufferDistance:app.bufferValue,
+                                    bufferDistance:that.bufferValue,
                                 }) ,
                                 method:"post",
                                 contentType:"application/json",

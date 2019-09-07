@@ -93,13 +93,10 @@
             },
             createBuffer: function(){
                 var that = this;
-                top.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
+                top.$('#mapIframe')[0].contentWindow.Vue.prototype.$confirm('是否开始高后果区识别？',  "提示",  {
                     type: 'warning',
                     callback: function(action){
                         if (action === 'confirm') {
-                            if(!top.app.panelShowed){
-                                top.app._goMap();
-                            }
                             top.jasMap.flashGraphic(that.oid, 'hca_pipeline',{
                                 deep:2,
                                 fieldName: 'OID'
@@ -108,8 +105,8 @@
                                 "show":true,
                                 "where":"oid like'" + that.oid + "'"
                             });
-                            parent.hcaMapApp.localPipelineName = that.pipelineName;
-                            top.createBufferDialog(that.oid);
+                            top.$('#mapIframe')[0].contentWindow.hcaMapApp.localPipelineName = that.pipelineName;
+                            top.jasMap.createBufferDialog(that.oid);
                             //
                             top.jasMap.destroyMapDialog();
                         }
