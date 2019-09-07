@@ -6,7 +6,7 @@ window.app = new Vue({
 		return {
 			username: localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).userName,
 			userunit: localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).unitName,
-			userImg: './src/images/enterlogo.png',
+			userImg: jasTools.base.rootPath + '/jasmvvm/src/images/enterlogo.png',
 			progress: 0,
 			error: false,
 			direction: 'right',
@@ -220,11 +220,11 @@ window.app = new Vue({
 			jasTools.ajax.get(url, {}, function (data) {
 				localStorage.removeItem('token');
 				localStorage.removeItem('user');
-				location.href = './login.html';
+				location.href = jasTools.base.rootPath + '/jasmvvm/login.html';
 			}, function () {
 				localStorage.removeItem('token');
 				localStorage.removeItem('user');
-				location.href = './login.html';
+				location.href = jasTools.base.rootPath + '/jasmvvm/login.html';
 			});
 		},
 		_goPage: function () {
