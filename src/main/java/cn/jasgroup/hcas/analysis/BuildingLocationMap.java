@@ -3,6 +3,9 @@ package cn.jasgroup.hcas.analysis;
 import cn.jasgroup.gis.data.Feature;
 import cn.jasgroup.gis.geometry.Point;
 import cn.jasgroup.gis.util.GeometryUtil;
+import cn.jasgroup.gis.util.MapUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -15,25 +18,62 @@ import java.util.*;
  */
 public class BuildingLocationMap {
 
-    private Map<String,Feature[]> map = new HashMap<>();
+    protected  Logger logger = LoggerFactory.getLogger(getClass());
+
+
+    private Map<String,Map<String,Feature>> map = new HashMap<>();
     /**
      *
      * @param oid
      * @return
      */
     public Feature[] get(String oid){
-        if(contains(oid))
-            return map.get(oid);
+        if(contains(oid)){
+            Map featureMap = map.get(oid);
+            return (Feature[]) featureMap.values().toArray(new Feature[0]);
+        }
         return null;
     }
 
     /**
      *
-     * @param oid
-     * @param points
+     * @param oid1
+     * @param oid2
+     * @return
      */
-    public void put(String oid,Feature[] points){
-        map.put(oid,points);
+    public Feature[] getSameFeatures(String oid1,String oid2){
+        if(!contains(oid1) || !contains(oid2)){
+            return new Feature[0] ;
+        }
+        List<Feature> list = new ArrayList<>() ;
+        Map<String,Feature> featureMap = map.get(oid1);
+        Map<String,Feature> featureMap2 = map.get(oid2);
+        Iterator<String> iterator = featureMap.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator .next() ;
+            if(featureMap2.containsKey(key)){
+                list.add(featureMap.get(key));
+            }
+        }
+        return list.toArray(new Feature[0]) ;
+    }
+    /**
+     *
+     * @param oid
+     * @param features
+     */
+    public void put(String oid,Feature[] features){
+        if(!map.containsKey(oid)){
+            map.put(oid,new HashMap<String,Feature>());
+        }
+        Map<String,Feature> featureMap = map.get(oid);
+        for(int i = 0 ; i < features.length;i++){
+            String buildingOid = MapUtil.getString(features[i].getAttributes() ,HcaAnalysisContext.TableKeyName);
+            if(featureMap.containsKey(buildingOid)){
+                logger.warn("识别单元{}已经包含构筑物{},原有构筑物将被覆盖",oid ,buildingOid);
+            }
+            featureMap.put(buildingOid,features[i]);
+        }
     }
 
     /**
@@ -48,13 +88,13 @@ public class BuildingLocationMap {
         if(!contains(to)){
             put(to,new Feature[0]);
         }
-        Feature[] features = map.get(from);
-        Feature[] features0 = map.get(to);
-        int size = features.length + features0 .length ;
-        Feature[] features1 = new Feature[size];
-        System.arraycopy(features0, 0, features1, 0, features0.length);
-        System.arraycopy(features, 0, features1, features0.length, features.length);
-        put(to,features1);
+        Map<String,Feature> features = map.get(from);
+        Map<String,Feature> features0 = map.get(to);
+        Iterator<String> iterator = features.keySet().iterator();
+        while (iterator.hasNext()){
+            String key = iterator.next();
+            features0.put(key,features.get(key));
+        }
     }
     /**
      *
@@ -83,11 +123,11 @@ public class BuildingLocationMap {
         return -1 ;
     }
 
-    public Map<String, Feature[]> getMap() {
+    public Map<String, Map<String,Feature>> getMap() {
         return map;
     }
 
-    public void setMap(Map<String, Feature[]> map) {
+    public void setMap(Map<String, Map<String,Feature>> map) {
         this.map = map;
     }
 }

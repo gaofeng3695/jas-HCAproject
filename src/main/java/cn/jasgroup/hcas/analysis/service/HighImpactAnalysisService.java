@@ -245,9 +245,10 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
             Map<String,Object> props = hcaFeatures[i].getAttributes();
             String oid = MapUtil.getString(props , HcaAnalysisContext.TableKeyName);
             //
-            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) * 1000;
-            Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) * 1000;
-            Polyline polyline = linearReferenceUtil.locateBetween( startMileage ,endMileage,0d);
+            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) ;
+            Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) ;
+
+            Polyline polyline = linearReferenceUtil.locateBetween( startMileage * 1000 ,endMileage * 1000,0d);
             Geometry bufferArea = GeometryUtil.buffer( polyline,buffer,2) ;
             //Geometry polygon = GeometryUtil.gaussToBL(bufferArea);
 
@@ -278,7 +279,7 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
 
             //String des = "潜在影响区内含有" + features.length + "处特定场所";
             result.putFeatures(oid,features);
-            //
+            //由特定场所的边界计算里程值范围
             double[] mileages = locateBetweenPoints(linearReferenceUtil,features);
             if(mileages[0] < 0 || mileages[1] < 0){
                 logger.error("识别区{}特定场所前后里程值[{} ,{}]计算出错 ！",oid,mileages[0] ,mileages[1]);
@@ -441,6 +442,12 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         to.getAttributes().put(fieldName,toValue + fromValue) ;
     }
 
+    /**
+     * 判断前一个等级是否比后一个等级高
+     * @param pre
+     * @param last
+     * @return
+     */
     protected Boolean isUpperLevel(String pre ,String last){
         if(StringUtil.isBlank(last)){
             return true ;
@@ -455,7 +462,16 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
         return levelInteger > lastLevelInteger ;
     }
 
-
+    /**
+     *
+     * @param currentOid
+     * @param explosiveLocationMap
+     * @param specialLocationMap
+     * @return
+     */
+    public boolean hasExplosiveOrSpecial( String currentOid , BuildingLocationMap explosiveLocationMap , BuildingLocationMap specialLocationMap){
+        return explosiveLocationMap.size(currentOid) > 0  ||  specialLocationMap.size(currentOid) > 0;
+    }
     /**
      * 合并计算高后果区等级
      * @param hcaDataBeforeMerge
@@ -465,50 +481,85 @@ public class HighImpactAnalysisService implements IHighImpactAnalysisService {
      */
     @Override
     public Feature[] mergeHcaFeatures(Feature[] hcaDataBeforeMerge, BuildingLocationMap explosiveLocationMap, BuildingLocationMap specialLocationMap) {
-
         //
-        List<Feature> result = new ArrayList<>();
-        //1、
+        List<Feature> hcaDataBeforeMergeList = new ArrayList<>();
+        // 合并逻辑
+        //1、判断有没有 易燃易爆场所或特定场所 ，如果有低就高;
         Feature last = hcaDataBeforeMerge[0];
-        result.add(last);
+        hcaDataBeforeMergeList.add(last);
+
         int size0 = hcaDataBeforeMerge.length ;
 
         for(int i = 1 ; i < hcaDataBeforeMerge.length ;i++){
             Feature cell = hcaDataBeforeMerge[i] ;
             Map<String,Object> props = cell.getAttributes();
+            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) ;
             Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) ;
             String level = MapUtil.getString(props,HcaAnalysisContext.hcaRankFieldName);
             String oid = MapUtil.getString(props ,HcaAnalysisContext.TableKeyName);
 
-            String lastLevel = MapUtil.getString(last.getAttributes() ,HcaAnalysisContext.hcaRankFieldName);
-            String lastOid = MapUtil.getString(last.getAttributes() ,HcaAnalysisContext.TableKeyName);
+            Map<String,Object> lastProps = last.getAttributes();
+            String lastLevel = MapUtil.getString(lastProps ,HcaAnalysisContext.hcaRankFieldName);
+            String lastOid = MapUtil.getString(lastProps ,HcaAnalysisContext.TableKeyName);
+            Double lastStartMileage = MapUtil.getDouble(lastProps , HcaAnalysisContext.startMileageFieldName) ;
+            Double lastEndMileage = MapUtil.getDouble(lastProps , HcaAnalysisContext.endMileageFieldName) ;
 
-            // 合并逻辑 （需要合并人口、描述信息）
-            // 1、同级合并
-            // 2、如果含有易燃易爆场所，低就高
             boolean flg = isUpperLevel(level,lastLevel);
 
-            if( lastLevel.equalsIgnoreCase(level)){
-                last.getAttributes().put(HcaAnalysisContext.endMileageFieldName,endMileage);
-                //mergeFeatureNumberValue(cell,last,HcaAnalysisContext.buildingsSourcePopulationFieldName);
-                explosiveLocationMap.merge(oid ,lastOid);
-                specialLocationMap.merge(oid ,lastOid);
-            }else if( explosiveLocationMap.size(oid) > 0 && !flg){
-                last.getAttributes().put(HcaAnalysisContext.endMileageFieldName,endMileage);
-                explosiveLocationMap.merge(oid ,lastOid);
-                specialLocationMap.merge(oid ,lastOid);
-                //mergeFeatureNumberValue(cell,last,HcaAnalysisContext.buildingsSourcePopulationFieldName);
-                //String l = flg ? level:lastLevel ;
-                //last.getAttributes().put(HcaAnalysisContext.hcaRankFieldName,l);
-                appendFeatureStringValue(cell,last,HcaAnalysisContext.hcaRemarkFieldName );
+            if( explosiveLocationMap.getSameFeatures(oid,lastOid).length > 0  || specialLocationMap.getSameFeatures(oid,lastOid).length > 0 ||( hasExplosiveOrSpecial( oid ,explosiveLocationMap ,specialLocationMap) && !flg  ) ){
+                double largerEndMileage = Math.max(lastEndMileage,endMileage);
+                double largerStartMileage = Math.min(lastStartMileage,startMileage);
+                lastProps.put( HcaAnalysisContext.endMileageFieldName,largerEndMileage );
+                lastProps.put( HcaAnalysisContext.startMileageFieldName,largerStartMileage);
+                explosiveLocationMap.merge( oid ,lastOid );
+                specialLocationMap.merge( oid ,lastOid );
+                appendFeatureStringValue( cell,last,HcaAnalysisContext.hcaRemarkFieldName );
+                if(!flg){
+                    lastProps.put( HcaAnalysisContext.hcaRankFieldName,level );
+                }
+
+            }else{
+                last = cell ;
+                hcaDataBeforeMergeList.add(last);
+            }
+
+        }
+        int size1 = hcaDataBeforeMergeList.size() ;
+        logger.info("高后果区根据易燃易爆场所条件合并{}处识别区。",( size0 - size1) );
+
+        //
+        last = hcaDataBeforeMergeList.get(0);
+        List<Feature> result = new ArrayList<>();
+        result.add(last);
+
+        for(int i = 1 ; i < hcaDataBeforeMergeList.size() ;i++){
+            Feature cell = hcaDataBeforeMergeList.get(i) ;
+            Map<String,Object> props = cell.getAttributes();
+            Double startMileage = MapUtil.getDouble(props , HcaAnalysisContext.startMileageFieldName) ;
+            Double endMileage = MapUtil.getDouble(props , HcaAnalysisContext.endMileageFieldName) ;
+            String level = MapUtil.getString(props,HcaAnalysisContext.hcaRankFieldName);
+            String oid = MapUtil.getString(props ,HcaAnalysisContext.TableKeyName);
+
+            Map<String,Object> lastProps = last.getAttributes();
+            String lastLevel = MapUtil.getString(lastProps ,HcaAnalysisContext.hcaRankFieldName);
+            String lastOid = MapUtil.getString(lastProps ,HcaAnalysisContext.TableKeyName);
+            Double lastStartMileage = MapUtil.getDouble(lastProps , HcaAnalysisContext.startMileageFieldName) ;
+            Double lastEndMileage = MapUtil.getDouble(lastProps , HcaAnalysisContext.endMileageFieldName) ;
+            if( lastLevel.equalsIgnoreCase(level)) {
+                double largerEndMileage = Math.max(lastEndMileage,endMileage);
+                double largerStartMileage = Math.min(lastStartMileage,startMileage);
+                lastProps.put( HcaAnalysisContext.endMileageFieldName,largerEndMileage );
+                lastProps.put( HcaAnalysisContext.startMileageFieldName,largerStartMileage);
+                explosiveLocationMap.merge(oid, lastOid);
+                specialLocationMap.merge(oid, lastOid);
             }else{
                 last = cell ;
                 result.add(last);
             }
         }
-        int size1 = result.size() ;
 
-        logger.info("高后果区合并{}处识别区。",( size0 - size1) );
+        int size2 = result.size() ;
+        logger.info("高后果区合并同级合并{}处识别区。",( size1 - size2) );
 
         //3、重复边界，低就高 （这样合并会有问题）,补充易燃易爆、特定场所信息提示
         Feature lastFeature = result.get(0);

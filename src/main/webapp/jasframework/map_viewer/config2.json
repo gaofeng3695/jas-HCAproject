@@ -647,7 +647,7 @@
           "listener": {
             "onHover": {
               "responseType": "tip",
-              "template": "高后果区名称：{HIGH_IMPACT_AREA_NAME}<br>高后果区编号：{HIGH_IMPACT_AREA_CODE}<br>高后果区等级：{HIGH_IMPACT_LEVEL_NAME}<br>开始里程：{START_MILEAGE}<br>结束里程：{END_MILEAGE}<br>描述：{DESCRIPTION}"
+              "template": "高后果区名称：{HIGH_IMPACT_AREA_NAME}<br>高后果区编号：{HIGH_IMPACT_AREA_CODE}<br>高后果区等级：{HIGH_IMPACT_LEVEL_NAME}<br>开始里程：{START_MILEAGE,#.###}<br>结束里程：{END_MILEAGE,#.##}<br>描述：{DESCRIPTION}"
             }
           }
         },{
