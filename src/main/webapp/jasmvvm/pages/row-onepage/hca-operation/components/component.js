@@ -605,9 +605,18 @@ Vue.component('jas-table-for-list', {
                     if(row.buildingType){
                         layerId += "#" + row.buildingType;
                     }
-                    top.jasMap.updateLayer(layerId,{
-                        show:true
-                    });
+                    if(layerId.indexOf("_version") != -1){
+                    	layerId = layerId.substr(0, layerId.indexOf("_version"));
+                    	top.jasMap.updateLayer(layerId,{
+                    		show:false,
+                            where:"oid like''"
+                    	});
+                    }else{
+                    	top.jasMap.updateLayer(layerId,{
+                    		show:true
+                    	});
+                    }
+                    
                     that.refresh();
                 });
             } else {
