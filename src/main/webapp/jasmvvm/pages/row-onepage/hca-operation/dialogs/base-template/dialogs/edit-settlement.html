@@ -343,7 +343,7 @@
             cancel: function (param) {
                 var that = this;
                 //config.json中以表名和类型名作为图层的layerId
-                var layerId = that.layerId;
+                var layerId = "hca_buildings#" + that.tableFormData.buildingType;
                 top.jasMap.updateLayer(layerId, {
                     show: true
                 });
