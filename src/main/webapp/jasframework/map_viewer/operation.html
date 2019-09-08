@@ -422,6 +422,7 @@
             	that.jasMap.layerSetVisibleSwitch('hca_buildings',true);
                 var radius = that.bufferValue;
                 that.isManage = that.isManage;
+                ///window.jasTools.selfDialog.close();
                 top.jasMap.commonUtil.simpleAjaxLoader({
                     url:jasTools.base.rootPath + "/analysis/area.do",
                     data:JSON.stringify({

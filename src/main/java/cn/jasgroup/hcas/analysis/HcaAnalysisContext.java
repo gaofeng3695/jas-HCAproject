@@ -171,6 +171,8 @@ public class HcaAnalysisContext {
 
     private static String specialPlaceExpress = null ;
 
+    private static String unSpecialPlaceExpress = null ;
+
     public static String getExplosivePlaceExpress() {
         return explosivePlaceExpress;
     }
@@ -186,6 +188,15 @@ public class HcaAnalysisContext {
 
     public static void setSpecialPlaceExpress(String specialPlaceExpress) {
         HcaAnalysisContext.specialPlaceExpress = specialPlaceExpress;
+    }
+
+
+    public static String getUnSpecialPlaceExpress() {
+        return unSpecialPlaceExpress;
+    }
+
+    public static void setUnSpecialPlaceExpress(String unSpecialPlaceExpress) {
+        HcaAnalysisContext.unSpecialPlaceExpress = unSpecialPlaceExpress;
     }
 
     /**
