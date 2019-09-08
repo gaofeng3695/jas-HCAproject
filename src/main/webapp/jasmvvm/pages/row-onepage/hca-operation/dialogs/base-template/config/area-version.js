@@ -124,14 +124,18 @@ var pageConfig = {
             top.jasMap.updateLayer("hca_high_impact_area", {
                 show: false,
             });
+            top.jasMap.flashGraphic(row.pipelineOid, 'hca_pipeline', {
+                deep: 2,
+                fieldName: 'OID'
+            });
             top.jasMap.updateLayer("hca_area", {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
-            var lineGraphic = top.jasMap.getPipeline();
+            /*var lineGraphic = top.jasMap.getPipeline();
             var x = lineGraphic.geometry.paths[0][0][0];
             var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-            top.jasMap.zoomAt(15,x ,y );
+            top.jasMap.zoomAt(15,x ,y );*/
         },
         previewFile : function(){
             window.jasTools.dialog.show({

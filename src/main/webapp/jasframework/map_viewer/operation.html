@@ -345,7 +345,6 @@
                     that.jasMap.updateLayer('hca_pipeline',{
                         "show":true
                     });
-                    //that.jasMap.layerSetVisibleSwitch('layerSet001',true);
                 }
             });
             top.jasMap = that.jasMap;
@@ -420,7 +419,7 @@
                     "where":"version_oid like''"
                 });
             	that.localAreaVersionOid = "";
-            	that.jasMap.layerSetVisibleSwitch('layerSet001',true);
+            	that.jasMap.layerSetVisibleSwitch('hca_buildings',true);
                 var radius = that.bufferValue;
                 that.isManage = that.isManage;
                 ///window.jasTools.selfDialog.close();
@@ -637,7 +636,7 @@
             },
             showHistoryList: function(forBusiness){
                 var that = this;
-                window.jasTools.selfDialog.close(this.closeBufferWindow());
+                //window.jasTools.selfDialog.close(this.closeBufferWindow());
                 if(forBusiness == "0"){
                     window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/area-version-list.html?forBusiness=0&pipelineOid='+that.pipelineOid, "areaVersionSelectIframe", "地区等级划分成果", 360,400);
                 }
