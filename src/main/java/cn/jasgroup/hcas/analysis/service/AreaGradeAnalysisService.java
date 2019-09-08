@@ -793,11 +793,11 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
      * @return
      */
     private String getUnSpecialQueryExpress(){
-        String exp = HcaAnalysisContext.getSpecialPlaceExpress();
+        String exp = HcaAnalysisContext.getUnSpecialPlaceExpress();
         if(StringUtil.isBlank(exp)){
             String domains = hcaCommonService.getCodeIdsByParentCodeId(HcaAnalysisContext.buildingTypeValue_UnSpecialPlace);
             exp = "building_type in(" + domains + ")" ;
-            HcaAnalysisContext.setSpecialPlaceExpress(exp);
+            HcaAnalysisContext.setUnSpecialPlaceExpress(exp);
         }
         return exp;
     }
