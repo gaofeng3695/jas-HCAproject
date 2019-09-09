@@ -16,7 +16,7 @@
 	<appender name="errorFile" class="org.apache.log4j.RollingFileAppender">
 		<param name="maxFileSize" value="10MB" />
 		<param name="maxBackupIndex" value="5" />
-		<param name="File" value="d://platform_syslog.log" />
+		<param name="File" value="E://HCAProject_syslog.log" />
 		<param name="threshold" value="INFO" />
 		<param name="Append" value="false" />
 		<layout class="org.apache.log4j.PatternLayout">
