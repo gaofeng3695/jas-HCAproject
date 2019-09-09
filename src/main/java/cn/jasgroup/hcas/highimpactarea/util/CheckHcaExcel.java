@@ -38,8 +38,8 @@ public class CheckHcaExcel implements ImportAutoCheck {
 		int listSize = validatedData.size();
 		for (int i = 0; i < listSize; i++) {
 			Map<String, Object> map = validatedData.get(i);
-			Double start = (Double) map.get("start_mileage");
-			Double end = (Double) map.get("end_mileage");
+			Double start = Double.valueOf(map.get("start_mileage").toString());
+			Double end = Double.valueOf(map.get("end_mileage").toString());
 			if (start == end) {
 				sb.append("第");
 				sb.append(map.get("rowIndex"));
@@ -47,7 +47,7 @@ public class CheckHcaExcel implements ImportAutoCheck {
 			}
 			if (i != listSize - 1) {
 				Map<String, Object> nextMap = validatedData.get(i + 1);
-				Double nextStart = (Double) nextMap.get("start_mileage");
+				Double nextStart = Double.valueOf(nextMap.get("start_mileage").toString());
 				if (nextStart < end) {
 					sb.append("第");
 					sb.append(map.get("rowIndex"));
