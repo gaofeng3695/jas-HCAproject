@@ -186,7 +186,7 @@ COMMENT ON COLUMN "EXCEL_TABLEINFO"."ENTITY_PATH" IS ' 实体全路径';
 INSERT INTO "EXCEL_TABLEINFO" VALUES ('7eae2269-39c8-4cc8-bc89-98470d8170f3', 'hca_buildings', '建（构）筑物', '2', null, '46d459b9-6b15-4430-8a11-94a819de4976', 'none', '0', '0', 'building_code', null);
 INSERT INTO "EXCEL_TABLEINFO" VALUES ('e4b20050-7bc0-4260-be12-6efd6f268422', 'hca_pipeline', '管线', '2', null, 'f1ebeb13-752f-44d3-9aee-7b1f97ab827f', 'Polyline', '0', '0', 'pipeline_code', null);
 INSERT INTO "EXCEL_TABLEINFO" VALUES ('f596c952-cff3-47ea-b25b-9f3bf8eee6d4', 'hca_area', '地区等级', '2', null, '12e62a30-1064-4698-b92c-4353f026d270', 'Polygon', '0', '0', 'area_code,version_oid,pipeline_oid', null);
-INSERT INTO "EXCEL_TABLEINFO" VALUES ('cefac140-28a7-4d85-ba1c-509f9db5b6c1', 'hca_high_impact_area', '高后果区', '2', null, 'e3c221f4-fe57-437f-9c92-974d51eaac50', 'Polygon', '0', '0', 'pipeline_oid,version_oid,high_Impact_area_Code', null);
+INSERT INTO "EXCEL_TABLEINFO" VALUES ('cefac140-28a7-4d85-ba1c-509f9db5b6c1', 'hca_high_impact_area', '高后果区', '2', null, 'e3c221f4-fe57-437f-9c92-974d51eaac50', 'Polygon', '0', '0', 'pipeline_oid,version_oid,high_impact_area_code', null);
 
 -- ----------------------------
 -- Table structure for EXCEL_TEMPLATEINFO
