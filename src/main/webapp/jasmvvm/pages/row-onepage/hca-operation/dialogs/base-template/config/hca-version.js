@@ -1,7 +1,7 @@
 var pageConfig = {
     privilegeCode: ['bt_add', 'bt_select', 'bt_update', 'bt_delete'],
     searchPath: "/jdbc/commonData/hcaversion/getPage.do",
-    deletePath: '/jdbc/commonData/hcaversion/delete.do?layerId=hca_high_impact_area',
+    deletePath: '/jdbc/commonData/hcaversion/delete.do?layerId=hca_high_impact_area_version',
     detailPath: '/jdbc/commonData/hcaversion/getPage.do',
     savePath: '/jdbc/commonData/hcaversion/save.do',
     updatePath: '/jdbc/commonData/hcaversion/update.do',
@@ -108,18 +108,26 @@ var pageConfig = {
         	if(!top.app.panelShowed){
         		top.app._goMap();
         	}
-            top.jasMap.flashGraphic(row.pipelineOid, 'hca_pipeline', {
-                deep: 2,
-                fieldName: 'OID'
-            });        	
             top.jasMap.updateLayer("hca_high_impact_area", {
             	show: true,
             	where: "VERSION_OID = '" + row.oid +"'"
             });
-            var lineGraphic = top.jasMap.getPipeline();
-            var x = lineGraphic.geometry.paths[0][0][0];
-            var y = lineGraphic.geometry.paths[0][0][1] - 0.003;
-            top.jasMap.zoomAt(15,x ,y );
+            var layer = top.jasMap.getLayerById('hca_pipeline');
+            var hasGraphics = false;
+            $.each(layer.graphics, function(i, lineGraphic){
+            	if(lineGraphic.attributes.OID == row.pipelineOid){
+            		var x = lineGraphic.geometry.paths[0][0][0];
+                    var y = lineGraphic.geometry.paths[0][0][1];
+                    top.jasMap.zoomAt(12,x ,y );
+                    hasGraphics = true;
+                    return;
+            	}
+            });
+            if(!hasGraphics){
+            	top.jasMap.flashGraphic(row.pipelineOid, 'hca_pipeline', {
+                    fieldName: 'OID'
+                });
+            }
         },
         previewFile : function(row){
         	var that = this;

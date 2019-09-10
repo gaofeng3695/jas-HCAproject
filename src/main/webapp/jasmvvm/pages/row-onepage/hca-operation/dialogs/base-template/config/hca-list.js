@@ -131,7 +131,14 @@ var pageConfig = {
         	if(!top.app.panelShowed){
         		top.app._goMap();
         	}
-            top.jasMap.flashGraphic(item.oid, "hca_high_impact_area",{
+        	var layerId = "hca_high_impact_area";
+        	if(!top.jasMap.getLayerVisible(layerId)){
+        		top.jasMap.updateLayer(layerId, {
+        			show: true,
+        			where:"VERSION_OID like'" + item.versionOid + "'"
+        		});
+        	}
+            top.jasMap.flashGraphic(item.oid, layerId, {
                 deep:2,
                 fieldName: 'OID'
             });
