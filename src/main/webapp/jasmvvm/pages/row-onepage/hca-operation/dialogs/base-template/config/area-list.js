@@ -1,5 +1,5 @@
 var pageConfig = {
-    privilegeCode: ['bt_select', 'bt_delete', 'bt_export', 'bt_import'],
+    privilegeCode: ['bt_select', 'bt_delete'],
     searchPath: "/jdbc/commonData/hcaarea/getPage.do",
     deletePath: '/jdbc/commonData/hcaarea/delete.do?layerId=hca_area',
     detailPath: '/jdbc/commonData/hcaarea/getPage.do',
