@@ -9,6 +9,7 @@ var pageConfig = {
     	'functionName': "hcabuildingsinfo",
         'tableName': "hca_buildings",
         'exportUrl': "/hcabuildings/exportToExcelAction.do",
+        'hasDownload': false
     },
     searchFields: [
         'buildingCode',
@@ -19,8 +20,8 @@ var pageConfig = {
         'buildingCode',
         'buildingTypeParentName',
         'buildingTypeName',
-//        'startMileage',
-//        'endMileage',
+        'startMileage',
+        'endMileage',
 //        'horizontalDistance',
 //        'verticalDistance',
         'buildingDistributionName',
@@ -58,8 +59,8 @@ var pageConfig = {
             'buildingCode',
             'buildingTypeParentName',
             'buildingTypeName',
-//            'startMileage',
-//            'endMileage',
+            'startMileage',
+            'endMileage',
 //            'horizontalDistance',
 //            'verticalDistance',
             'buildingDistributionName',
@@ -87,7 +88,7 @@ var pageConfig = {
             name: '建(构)筑物类别',
             type: 'select',
             domainName: 'building_type_parent_domain',
-            isRequired: true,
+//            isRequired: true,
             childSelect: ['buildingType'],
             childUrl: ['/jasframework/sysdoman/getChildDoman.do?domainName=building_type_domain&parentCodeId='],
         },
@@ -97,7 +98,7 @@ var pageConfig = {
         buildingType: {
             name: '建(构)筑物类型',
             type: 'select',
-            isRequired: true,
+//            isRequired: true,
             requestParams: {
             	parentCodeId: true
             }
@@ -139,7 +140,7 @@ var pageConfig = {
             name: '建(构)筑物分布',
             type: 'select',
             domainName: 'building_distribution_domain',
-            isRequired: true
+//            isRequired: true
         },
         households: {
             name: '户数',

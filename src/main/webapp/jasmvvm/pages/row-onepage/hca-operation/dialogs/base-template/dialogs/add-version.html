@@ -28,6 +28,12 @@
         .el-form-item {
             margin-bottom: 10px;
         }
+        .el-form-item__label{
+        	width: 134px !important;
+        }
+        .el-form-item__content{
+        	margin-left: 134px !important;
+        }
 	</style>
 </head>
 
@@ -38,12 +44,12 @@
 				<jas-base-group-title name="基本信息"></jas-base-group-title>
 				<el-row :gutter="10">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
-						<el-form-item label="版本名称" prop="versionName">
+						<el-form-item :label="versionNameCN" prop="versionName">
 							<el-input v-model="tableFormData.versionName" clearable placeholder="请输入版本名称" size="small"></el-input>
 						</el-form-item>
 					</el-col>	
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="8">
-						<el-form-item label="版本编号" prop="versionCode">
+						<el-form-item label="识别编号" prop="versionCode">
 							<el-input v-model="tableFormData.versionCode" clearable placeholder="请输入版本编号" size="small"></el-input>
 						</el-form-item>
 					</el-col>		
@@ -82,12 +88,12 @@
 				rules: {
 					versionName: [{
 						required: true,
-						message: '请输入版本名称',
+						message: '请输入识别名称',
 						trigger: 'blur'
 					}],
 					versionCode: [{
 						required: true,
-						message: '请输入版本编号',
+						message: '请输入识别编号',
 						trigger: 'blur'
 					}]
 				},
@@ -100,7 +106,9 @@
 					"remarks": ""
 				},
                 isEdit:false,
-                oid:''
+                oid:'',
+                versionNameCN: '',
+                versionCodeCN: ''
             }
 		},
 			
@@ -117,6 +125,13 @@
                 this.oid = param.versionOid;
                 this.tableFormData.oid = this.oid;
                 this.requestDetail(this.oid);
+            }
+            if(this.forBusiness == 0){
+            	this.versionNameCN = "地区等级划分名称";
+            	this.versionCodeCN = "划分编号";
+            }else{
+            	this.versionNameCN = "高后果区识别名称";
+            	this.versionCodeCN = "识别编号";
             }
         },
 		mounted: function () {

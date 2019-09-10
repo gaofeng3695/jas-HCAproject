@@ -9,6 +9,7 @@ var pageConfig = {
     	'functionName': "pipelineinfo",
         'tableName': "hca_pipeline",
         'exportUrl': "/hcapipeline/exportToExcelAction.do",
+        'hasDownload': true
     },
     searchFields: [
         'pipelineName',
@@ -127,7 +128,7 @@ var pageConfig = {
             method: 'locatePipeline'
         },
         {
-            name:'开始识别',
+            name:'高后果区识别',
             icon: 'fa fa-eye',
             method: 'createBuffer'
         }
@@ -142,16 +143,21 @@ var pageConfig = {
                     	if(!top.app.panelShowed){
                     		top.app._goMap();
                     	}
-                        top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
+                        /*top.jasMap.flashGraphic(item.oid, 'hca_pipeline',{
                             deep:2,
                             fieldName: 'OID'
-                        });
+                        });*/
                         top.jasMap.updateLayer('hca_pipeline',{
                             "show":true,
                             "where":"oid like'" + item.oid + "'"
                         });
+                        
                         top.$('#mapIframe')[0].contentWindow.hcaMapApp.localPipelineName = item.pipelineName;
-                        top.jasMap.createBufferDialog(item.oid);
+                        top.$('#mapIframe')[0].contentWindow.hcaMapApp.pipelineOid = item.oid;
+                        //top.jasMap.createBufferDialog(item.oid);
+                        top.$('#mapIframe')[0].contentWindow.hcaMapApp.isManage = true;
+                        top.$('#mapIframe')[0].contentWindow.hcaMapApp.bufferValue=200;
+                        top.jasMap.createBuffer();
                     }
                 }
             });

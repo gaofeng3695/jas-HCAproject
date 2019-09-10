@@ -471,6 +471,8 @@
             },
             createBuffer: function(){	// 调用识别区生成方法
                 var that = this;
+            	$("span[class=el-tag]").html(that.localPipelineName);
+            	$('.title-div').show();
             	// 隐藏地区等级和高后果区,清空地区等级评价版本Id
                 that.jasMap.updateLayer('hca_area',{
                     "show":false,
@@ -506,10 +508,20 @@
                                 color:[255,255,255,100],
                                 outlineColor:[255,0,0,255],
                             });
-                            var lineGraphic = that.getPipeline();
+                            /* var lineGraphic = that.getPipeline();
                             var x = lineGraphic.geometry.paths[0][0][0];
                             var y = lineGraphic.geometry.paths[0][0][1] ;
-                            top.jasMap.zoomAt(15,x ,y );
+                            top.jasMap.zoomAt(15,x ,y ); */
+                            var queryObj = {
+                                	url: 'http://192.168.100.35:6080/arcgis/rest/services/hca/features/FeatureServer/1',
+                                	where: "oid ='" + that.pipelineOid + "'"
+                                }
+                            var queryArr = [queryObj];
+                            that.jasMap.queryFeatures(queryArr, function(lineGraphic){
+                            	var x = lineGraphic[0][0].geometry.paths[0][0][0];
+                                var y = lineGraphic[0][0].geometry.paths[0][0][1] ;
+                                that.jasMap.zoomAt(15,x ,y );
+                            });
                         }else{
                             that.$alert(json.msg ,"提示");
                         }
@@ -724,7 +736,7 @@
                 if(forBusiness=="0"){
                     title = "新增地区等级划分成果";
                 }
-                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 390,360);
             },
             loadDomainData:function(){
                 var _this = this ;

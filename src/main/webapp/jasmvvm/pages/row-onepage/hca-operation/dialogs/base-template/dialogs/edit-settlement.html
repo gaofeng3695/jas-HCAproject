@@ -160,17 +160,17 @@
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{
-                        required: true,
+                        //required: true,
                         message: '请选择建(构)筑物类别',
                         trigger: 'blur'
                     }],
                     buildingType: [{
-                        required: true,
+                        //required: true,
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
                     buildingDistribution: [{
-                        required: true,
+                        //required: true,
                         message: '请选择建(构)筑物分布',
                         trigger: 'blur'
                     }],
@@ -224,6 +224,7 @@
             that.localAddress = decodeURI(param.localAddress);
             that.tableFormData.address = that.localAddress;
             that.tableFormData.objectId =  parseInt(param.objectid); ;
+            that.tableFormData.pipelineOid =  top.$('#mapIframe')[0].contentWindow.hcaMapApp.pipelineOid
 
             if (param.oid) {
                 this.oid = param.oid;

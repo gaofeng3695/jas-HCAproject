@@ -49,21 +49,21 @@ var pageConfig = {
     fieldsConfig: {
         pipelineOid:{
             type: 'select',
-            name: '评价管线',
+            name: '识别管线',
             optionUrl: '/jdbc/commonData/hcapipeline/getPage.do',
             isRequired: true,
 //            disabled: true,
         },
         pipelineName: {
-            name: '评价管线',
+            name: '识别管线',
         },
         versionName: {
-            name: '评价名称',
+            name: '地区等级划分名称',
             type: 'input',
             isRequired: true
         },
         versionCode: {
-            name: '评价编号',
+            name: '划分编号',
             type: 'input',
             isRequired: true
         },
@@ -72,10 +72,10 @@ var pageConfig = {
             type: "textarea"
         },
         modifyUserName: {
-            name: "评价人"
+            name: "识别人"
         },
         modifyDatetime: {
-            name: "评价时间"
+            name: "识别时间"
         },
         /*hasUsed: {
             name: "是否启用",
