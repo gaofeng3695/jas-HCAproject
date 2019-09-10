@@ -9,6 +9,8 @@ var pageConfig = {
     	'functionName': "areainfo",
         'tableName': "hca_area",
         'exportUrl': "/hcaarea/exportToExcelAction.do",
+        'isExportAll': true,
+        'hasDownload': false
     },
     searchFields: [
        // 'pipelineOid',

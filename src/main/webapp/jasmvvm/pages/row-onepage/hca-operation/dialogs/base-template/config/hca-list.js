@@ -9,6 +9,8 @@ var pageConfig = {
     	'functionName': "hcahighinfo",
         'tableName': "hca_high_impact_area",
         'exportUrl': "/hcahighimpactarea/exportToExcelAction.do",
+        'isExportAll': true,
+        'hasDownload': false
     },
     searchFields: [
         //'pipelineOid',

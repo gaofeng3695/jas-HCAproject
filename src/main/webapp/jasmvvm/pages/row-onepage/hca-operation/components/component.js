@@ -662,14 +662,6 @@ Vue.component('jas-hca-import-export-btns', {
             type: Boolean,
             default: true,
         },
-        isExportAll:{
-            type: Boolean,
-            default: false,
-        },
-        isImportBuilding:{
-            type: Boolean,
-            default: true,
-        },
         importConfig: {},
     },
     data: function () {
@@ -679,7 +671,7 @@ Vue.component('jas-hca-import-export-btns', {
         '<span style="margin-left: 10px;" >',
         /*'<el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导出已选</el-button>',
         '<el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出全部</el-button>',*/
-        '<el-button size="small" v-if="isExportAll" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出</el-button>',
+        '<el-button size="small" v-if="importConfig? importConfig.isExportAll : false" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出</el-button>',
 
         '<el-dropdown placement="bottom" v-if="isExport">',
 		  	'<el-button size="small" plain type="primary" icon="fa fa-mail-reply-all">导出<i class="el-icon-arrow-down el-icon--right"></i></el-button>',
@@ -689,7 +681,7 @@ Vue.component('jas-hca-import-export-btns', {
 		    '</el-dropdown-menu>',
 		'</el-dropdown>',
         '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-mail-forward" @click="bt_import">导入</el-button>',
-        '<el-button size="small" v-if="isImportBuilding" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
+        '<el-button size="small" v-if="importConfig? importConfig.hasDownload : false" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
         '</span>',
     ].join(''),
     methods: {
@@ -732,16 +724,6 @@ Vue.component('jas-hca-import-export-btns', {
 
     },
     created: function () {
-        var that = this;
-        var layerId = that.form.pageCode;
-        if(layerId == 'area-list' || layerId == 'hca-list' ){
-            that.isExportAll = true;
-            that.isExport = false;
-            that.isImportBuilding = false;
-        }
-        if(layerId == 'settlement-manage' || layerId == 'area-version' || layerId == 'hca-version'){
-            that.isImportBuilding = false;
-        }
     },
     mounted: function () {
     }
