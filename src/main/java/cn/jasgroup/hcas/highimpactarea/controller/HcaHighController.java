@@ -58,31 +58,33 @@ public class HcaHighController extends BaseController {
 	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaHighImpactAreaQuery query) {
 		// 列属性名称
 		String propertyName = "pipelineOid,versionOid,highImpactAreaCode,highImpactAreaName,highImpactLevel,"
-				+ "startMileage,endMileage,hcaLength,description,shape";
+//				+ "startMileage,endMileage,hcaLength,description,shape";
+		+ "startMileage,endMileage,hcaLength,description";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyList = Arrays.asList(propertyName.split(","));
 		}
 		// 列属性描述
-		String propertyDes = "管线名称,识别名称,高后果区编号,高后果区名称,高后果区等级,起始里程,终止里程,高后果区长度,描述,空间坐标";
+//		String propertyDes = "管线名称,识别名称,高后果区编号,高后果区名称,高后果区等级,起始里程,终止里程,高后果区长度,描述,空间坐标";
+		String propertyDes = "管线名称,识别名称,高后果区编号,高后果区名称,高后果区等级,起始里程,终止里程,高后果区长度,描述";
 		List<String> propertyDesList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyDesList = Arrays.asList(propertyDes.split(","));
 		}
 		List<HcaHighImpactAreaBo> list = (List<HcaHighImpactAreaBo>) this.commonDataJdbcService.getList(query);
-		List<Map<String, String>> geometryList = this.hcaHighService.queryGeometryList(query);
+//		List<Map<String, String>> geometryList = this.hcaHighService.queryGeometryList(query);
 		// format导出数据的格式，确保数据的导出的正确性
 		List<Map<String, String>> map = new ArrayList<Map<String, String>>();
 		if(null != list && list.size() > 0 ){
 			int listSize = list.size();
 			for (int i=0; i<listSize; i++) {
 				HcaHighImpactAreaBo bo = list.get(i);
-				String shapeText = "";
+				/*String shapeText = "";
 				if(geometryList.size()>0){
 					shapeText = geometryList.get(i).get("shape");
-				}
+				}*/
 				Map<String, Object> ms = bo.getValueMap();
-				ms.put("shape", "");
+//				ms.put("shape", "");
 				Set<String> key = ms.keySet();
 				Map<String, String> mss = new HashMap<>();
 				for (Iterator it = key.iterator(); it.hasNext();) {
@@ -109,9 +111,9 @@ public class HcaHighController extends BaseController {
 					} else if (valueObject != null) {
 						valueString = String.valueOf(valueObject);
 					}
-					if("shape".equals(s)){
+					/*if("shape".equals(s)){
 						valueString = shapeText;
-					}
+					}*/
 					mss.put(s, valueString);
 				}
 				map.add(mss);
