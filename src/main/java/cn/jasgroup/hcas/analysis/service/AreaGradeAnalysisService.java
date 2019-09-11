@@ -303,7 +303,7 @@ public class AreaGradeAnalysisService extends AnalysisBaseService implements IAr
             feature.getAttributes().put("active",1);
             feature.getAttributes().put("pipeline_oid",pipelineOid);
             feature.getAttributes().put("version_oid",versionOid);
-            feature.getAttributes().put("area_code","area-" + i );
+            feature.getAttributes().put("area_code","area-" + (i + 1) );
 
             double startMileage = MapUtil.getDouble(feature.getAttributes(),startMileageFieldName,0d) / 1000;
             double endMileage = MapUtil.getDouble(feature.getAttributes(),endMileageFieldName,0d) / 1000;

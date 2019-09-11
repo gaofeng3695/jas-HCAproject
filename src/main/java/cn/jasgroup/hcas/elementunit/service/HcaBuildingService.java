@@ -53,6 +53,11 @@ public class HcaBuildingService extends CommonDataJdbcService {
      */
     public int save( HcaBuildings2 hcaBuildings){
         int result = 0 ;
+
+
+
+
+
         if(StringUtil.hasText(hcaBuildings.getOid() ) && hcaBuildings.getObjectId() >0){
             result = update(hcaBuildings);
         }else{

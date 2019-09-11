@@ -13,6 +13,7 @@
   "context":{
     "tdt-key":"46631a6a7eeeefecf46ebc480483d9ca",
     "baidu-key":"E9sBTCcBTuZBm9Gh56nIGkk5",
+    "autoClearHighlight":true,
     "defaultFlashEffect":"shine",
     "fullscreenTarget":"body",
     "feColorMatrixValue":"0.1 0 0 0 0 0 0.1 0 0 0 0 0 0.1 0 0 0 0 0 1 0",

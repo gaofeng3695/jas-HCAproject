@@ -274,7 +274,7 @@ var M = JasMap = null;
             "esri/symbols/PictureMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/symbols/TextSymbol", "esri/symbols/Font", "esri/Color",
             "esri/geometry/jsonUtils", "esri/toolbars/navigation", "esri/toolbars/draw", "esri/toolbars/edit", "esri/geometry/geometryEngine",
             "esri/tasks/PrintTask", "esri/tasks/PrintParameters", "esri/dijit/Scalebar", "esri/dijit/Popup","esri/tasks/query","esri/tasks/QueryTask",
-            "jasgroup/layers/FlashFeatureLayer", "jasgroup/layers/TiandituLayer", "jasgroup/layers/PipelineLayer",
+            "esri/layers/layer" ,"jasgroup/layers/FlashFeatureLayer", "jasgroup/layers/TiandituLayer", "jasgroup/layers/PipelineLayer",
             "jasgroup/layers/GaodeLayer","jasgroup/layers/BaiduLayer","jasgroup/layers/EsriTiledLayer",
             "dojo/domReady!"
         ], function (lang, array, Deferred, all, Event, domConstruct, topic, units ,urlUtils,
@@ -285,7 +285,7 @@ var M = JasMap = null;
                      Symbol,SimpleRenderer, SimpleMarkerSymbol, SimpleLineSymbol, PictureMarkerSymbol, SimpleFillSymbol, TextSymbol, Font, Color,
                      jsonUtils, Navigation, Draw, Edit, geometryEngine,
                      PrintTask, PrintParameters, Scalebar, Popup, Query ,QueryTask ,
-                     FlashLayer, TiandituLayer, PipelineLayer,GaodeLayer,BaiduLayer,EsriTiledLayer) {
+                     Layer,FlashLayer, TiandituLayer, PipelineLayer,GaodeLayer,BaiduLayer,EsriTiledLayer) {
 
             apiDefaults = lang.mixin({}, apiDefaults, options);
 
@@ -789,10 +789,10 @@ var M = JasMap = null;
                     if (layer.tipsOnMouseOutEventHandler) {
                         eventManager.destroyEventHandler(layer.tipsOnMouseOutEventHandler);
                     }
-                    layer.tipsOnMouseOverEventHandler = layer.on("mouse-over", function (e) {
+                    layer.tipsOnMouseOverEventHandler = _this.addLayerMouseOverEventListener(layer,function (e) {
                         showLayerTips(true, e);
                     });
-                    layer.tipsOnMouseOutEventHandler = layer.on("mouse-out", function (e) {
+                    layer.tipsOnMouseOutEventHandler = _this.addLayerMouseOutEventListener(layer,function (e) {
                         showLayerTips(false);
                     });
                 }
@@ -814,14 +814,14 @@ var M = JasMap = null;
                 var params = lang.mixin(defaults, options);
                 if( !layer) return ;
                 if (!layer.tipsOnMouseOverEventHandler) {
-                    layer.tipsOnMouseOverEventHandler = layer.on("mouse-over", function (e) {
+                    layer.tipsOnMouseOverEventHandler = _this.addLayerMouseOverEventListener( layer , function (e) {
                         var x = e.layerX + 10 ;
                         var y = e.layerY + 10 ;
                         mapManager.showGraphicTip(true, e.graphic ,template ,x, y ,params);
                     });
                 }
                 if (!layer.tipsOnMouseOutEventHandler) {
-                    layer.tipsOnMouseOutEventHandler = layer.on("mouse-out", function (e) {
+                    layer.tipsOnMouseOutEventHandler = _this.addLayerMouseOutEventListener(layer , function (e) {
                         mapManager.showGraphicTip(false );
                     });
                 }
@@ -927,6 +927,9 @@ var M = JasMap = null;
                 }
             };
             _this.getLayerById = function (id) {
+                if(id instanceof Layer){
+                    return id ;
+                }
                 if(_this.map.graphics && id===_this.map.graphics.id)
                     return _this.map.graphics;
                 var layerId = id && id.toUpperCase();
@@ -1007,13 +1010,71 @@ var M = JasMap = null;
             _this.addMouseMoveEventListener = function ( callBack) {
                 return _this.addMapEvent("mouse-move", callBack);
             };
-            _this.addLayerClickEventListener = function ( layerId, callBack) {
-                if(!layerId || "default" === layerId){
-                    return _this.map.graphics.on("click", callBack);
+
+            _this.addLayerEventListener = function(layer ,type ,callback){
+                var func = function(e){
+                    var state = mapManager.currentMapState;
+                    if(state !== "navigator"){
+                        Event.stop(e);
+                        return ;
+                    }else{
+                        callback(e);
+                    }
                 };
-                var layer = _this.getLayerById(layerId);
                 if (layer) {
-                    return layer.on("click", callBack);
+                    return layer.on(type, func);
+                } else {
+                    return null;
+                }
+            };
+            _this.addLayerClickEventListener = function ( layerId, callBack) {
+                var layer = null ;
+                if(!layerId || "default" === layerId){
+                    layer = _this.map.graphics ;
+                }else {
+                    layer = _this.getLayerById(layerId);
+                }
+                if (layer) {
+                    return _this.addLayerEventListener(layer ,"click", callBack );
+                } else {
+                    return null;
+                }
+            };
+            _this.addLayerDbClickEventListener = function(layerId ,callBack){
+                var layer = null ;
+                if(!layerId || "default" === layerId){
+                    layer = _this.map.graphics ;
+                }else {
+                    layer = _this.getLayerById(layerId);
+                }
+                if (layer) {
+                    return _this.addLayerEventListener(layer ,"dbl-click", callBack );
+                } else {
+                    return null;
+                }
+            };
+            _this.addLayerMouseOverEventListener = function(layerId ,callBack){
+                var layer = null ;
+                if(!layerId || "default" === layerId){
+                    layer = _this.map.graphics ;
+                }else {
+                    layer = _this.getLayerById(layerId);
+                }
+                if (layer) {
+                    return _this.addLayerEventListener(layer ,"mouse-over", callBack );
+                } else {
+                    return null;
+                }
+            };
+            _this.addLayerMouseOutEventListener = function(layerId ,callBack){
+                var layer = null ;
+                if(!layerId || "default" === layerId){
+                    layer = _this.map.graphics ;
+                }else {
+                    layer = _this.getLayerById(layerId);
+                }
+                if (layer) {
+                    return _this.addLayerEventListener(layer ,"mouse-out", callBack );
                 } else {
                     return null;
                 }
@@ -2978,6 +3039,7 @@ var M = JasMap = null;
                 var startY = screenExtent.ymax;
                 var width = screenExtent.xmax - screenExtent.xmin;
                 var height = screenExtent.ymin - screenExtent.ymax;
+                console.info(this) ;
                 _this.exportMapToImage(startX ,startY ,width ,height ,callback);
             };
 
@@ -3105,16 +3167,16 @@ var M = JasMap = null;
                     if(configManager.context.autoClearHighlight === false){
                         layerManager.highlightlayer = _this.createGraphicLayer(apiDefaults.highlightGraphicLayerId);
                         //事件关联
-                        layerManager.highlightlayer.on("click",function(e){
+                        _this.addLayerClickEventListener(layerManager.highlightlayer,function(e){
                             fireTargetLayerEvent(e ,"click");
                         });
-                        layerManager.highlightlayer.on("dbl-click",function(e){
+                        _this.addLayerDbClickEventListener(layerManager.highlightlayer,function(e){
                             fireTargetLayerEvent(e,"dbl-click");
                         });
-                        layerManager.highlightlayer.on("mouse-out",function(e){
+                        _this.addLayerMouseOutEventListener(layerManager.highlightlayer,function(e){
                             fireTargetLayerEvent(e,"mouse-out");
                         });
-                        layerManager.highlightlayer.on("mouse-over",function(e){
+                        _this.addLayerMouseOverEventListener(layerManager.highlightlayer,function(e){
                             fireTargetLayerEvent(e,"mouse-over");
                         });
                     }
@@ -3644,26 +3706,37 @@ var M = JasMap = null;
                 _class.parseLayerListenerConfig = function(layer ,conf){
                     for(var key in conf){
                         if(key === "onHover"){
-                            layer.on("mouse-over",function(e){
-                                var id = layer.id ;
-                                var reps = layerListenersConfig[id].listener;
-                                var rep = reps["onHover"];
-                                _class.parseListenerResponse(rep ,e);
+                            _this.addLayerMouseOverEventListener(layer,function(e){
+                                var _targetLayerId = e.graphic._targetLayerId;
+                                var id = _targetLayerId ? _targetLayerId: e.graphic._layer.id ;
+                                var cfg = layerListenersConfig[id];
+                                if(cfg && cfg.listener){
+                                    var reps = cfg.listener;
+                                    var rep = reps["onHover"];
+                                    _class.parseListenerResponse(rep ,e);
+                                }
                             });
                         }else if(key === "onClick"){
-                            layer.on("click",function(e){
-                                var id = e.graphic._layer.id ;
-                                var reps = layerListenersConfig[id].listener;
-                                var rep = reps["onClick"];
-                                _class.parseListenerResponse(rep ,e);
+                            _this.addLayerClickEventListener(layer,function(e){
+                                var _targetLayerId = e.graphic._targetLayerId;
+                                var id = _targetLayerId ? _targetLayerId: e.graphic._layer.id ;
+                                var cfg = layerListenersConfig[id];
+                                if(cfg && cfg.listener){
+                                    var reps = cfg.listener;
+                                    var rep = reps["onClick"];
+                                    _class.parseListenerResponse(rep ,e);
+                                }
                             });
                         }else if(key === "onDbClick"){
-                            layer.on("dbl-click",function(e){
-                                var id = e.graphic._layer.id ;
-                                var reps = layerListenersConfig[id].listener;
-                                var rep = reps["onDbClick"];
-                                _class.parseListenerResponse(rep ,e);
-                                Event.stop(e);
+                            _this.addLayerDbClickEventListener(layer,function(e){
+                                var _targetLayerId = e.graphic._targetLayerId;
+                                var id = _targetLayerId ? _targetLayerId: e.graphic._layer.id ;
+                                var cfg = layerListenersConfig[id];
+                                if(cfg && cfg.listener){
+                                    var reps = cfg.listener;
+                                    var rep = reps["onDbClick"];
+                                    _class.parseListenerResponse(rep ,e);
+                                }
                             });
                         }else{
                             eventManager.publishWarn(_this.Strings.unsupportedEventType + "layerId=" + layer.id + ",eventType=" + key);
@@ -3961,7 +4034,7 @@ var M = JasMap = null;
                     _class.onDrawEnd = null;
                     _class.deactivate();
                     if(_class.onDrawLayerDeleteClick  == null){
-                        _class.onDrawLayerDeleteClick = targetLayer.on('click', function (e) {
+                        _class.onDrawLayerDeleteClick = _this.addLayerClickEventListener(targetLayer , function (e) {
                             targetLayer.remove(e.graphic);
                             Event.stop(e);
                         });

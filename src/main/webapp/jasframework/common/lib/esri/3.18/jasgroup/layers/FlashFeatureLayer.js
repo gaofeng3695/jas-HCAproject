@@ -82,19 +82,13 @@ define([
                 this.onMouseOut = this._onMouseOut;
             }
         },
-        onClick:function(e){
-            var state = this._mapApi.getMapManager().currentMapState;
-            if(state === "navigator"){
-                this.inherited(arguments);
-            }
-        },
-        onDblClick:function(e){
-            var state = this._mapApi.getMapManager().currentMapState;
-            if(state === "navigator"){
-                this.inherited(arguments);
-            }
-        },
+
         _onMouseOver :function(e){
+            var state = this._mapApi.getMapManager().currentMapState;
+            if(state !== "navigator"){
+                Event.stop(e);
+                return ;
+            }
             this.inherited(arguments);
             this._showHighlightGraphic(e.graphic);
         },
