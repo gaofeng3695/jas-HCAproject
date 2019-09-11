@@ -107,10 +107,10 @@
 		<div class="content-list"  v-loading="loading">
 			<div  class="table-div" v-for="item,index in tableData">
 				<ul class="data-ul" @click="locateAreaList(item,index)" :class="{active:showActive==index}">
-                    <li><span class="name-span">评价名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
-					<li><span class="name-span">评价编号：</span><span class="value-span">{{item.versionCode}}</span></li>
-					<li><span class="name-span">评价人：</span><span class="value-span">{{item.createUserName}} </span></li>
-					<li><span class="name-span">评价时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
+                    <li><span class="name-span">地区等级划分名称：</span><span class="value-span">{{item.versionName}}</span><!--<span class="used-span" v-show="!item.isEdit">（已启用）</span>--></li>
+					<li><span class="name-span">划分编号：</span><span class="value-span">{{item.versionCode}}</span></li>
+					<li><span class="name-span">识别人：</span><span class="value-span">{{item.createUserName}} </span></li>
+					<li><span class="name-span">识别时间：</span><span class="value-span">{{item.createDatetime}}</span></li>
 				</ul>
 			</div>
 		</div>
