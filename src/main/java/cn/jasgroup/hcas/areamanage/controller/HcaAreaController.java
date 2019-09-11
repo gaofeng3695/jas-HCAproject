@@ -54,31 +54,33 @@ public class HcaAreaController extends BaseController {
 	@RequestMapping(value = "/exportToExcelAction")
 	public String exportToExcelAction(HttpServletRequest request, HttpServletResponse response, HcaAreaQuery query) {
 		// 列属性名称
-		String propertyName = "pipelineOid,areaCode,versionOid,startMileage,endMileage,regionLevel,areaLength,description,shape";
+//		String propertyName = "pipelineOid,areaCode,versionOid,startMileage,endMileage,regionLevel,areaLength,description,shape";
+		String propertyName = "pipelineOid,areaCode,versionOid,startMileage,endMileage,regionLevel,areaLength,description";
 		List<String> propertyList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyList = Arrays.asList(propertyName.split(","));
 		}
 		// 列属性描述
-		String propertyDes = "管线名称,地区等级编号,地区等级划分名称,起始里程,终止里程,地区等级,地区等级长度,地区等级描述,空间坐标";
+//		String propertyDes = "管线名称,地区等级编号,地区等级划分名称,起始里程,终止里程,地区等级,地区等级长度,地区等级描述,空间坐标";
+		String propertyDes = "管线名称,地区等级编号,地区等级划分名称,起始里程,终止里程,地区等级,地区等级长度,地区等级描述";
 		List<String> propertyDesList = new ArrayList<String>();
 		if (propertyName != null) {
 			propertyDesList = Arrays.asList(propertyDes.split(","));
 		}
 		List<HcaAreaBo> list = (List<HcaAreaBo>) this.hcaAreaService.getList(query);
-		List<Map<String, String>> geometryList = this.hcaAreaService.queryGeometryList(query);
+//		List<Map<String, String>> geometryList = this.hcaAreaService.queryGeometryList(query);
 		// format导出数据的格式，确保数据的导出的正确性
 		List<Map<String, String>> map = new ArrayList<Map<String, String>>();
 		if(null != list && list.size() > 0 ){
 			int listSize = list.size();
 			for (int i=0; i<listSize; i++) {
 				HcaAreaBo bo = list.get(i);
-				String shapeText = "";
+				/*String shapeText = "";
 				if(geometryList.size()>0){
 					shapeText = geometryList.get(i).get("shape");
-				}
+				}*/
 				Map<String, Object> ms = bo.getValueMap();
-				ms.put("shape", "");
+//				ms.put("shape", "");
 				Set<String> key = ms.keySet();
 				Map<String, String> mss = new HashMap<>();
 				for (Iterator it = key.iterator(); it.hasNext();) {
@@ -105,9 +107,9 @@ public class HcaAreaController extends BaseController {
 					} else if (valueObject != null) {
 						valueString = String.valueOf(valueObject);
 					}
-					if("shape".equals(s)){
+					/*if("shape".equals(s)){
 						valueString = shapeText;
-					}
+					}*/
 					mss.put(s, valueString);
 				}
 				map.add(mss);
