@@ -1,5 +1,5 @@
 var pageConfig = {
-    privilegeCode: ['bt_select', 'bt_delete', 'bt_export', 'bt_import'],
+    privilegeCode: ['bt_select', 'bt_delete'],
     searchPath: "/jdbc/commonData/hcahighimpactarea/getPage.do",
     deletePath: '/jdbc/commonData/hcahighimpactarea/delete.do?layerId=hca_high_impact_area',
     detailPath: '/jdbc/commonData/hcahighimpactarea/getPage.do',
@@ -9,6 +9,8 @@ var pageConfig = {
     	'functionName': "hcahighinfo",
         'tableName': "hca_high_impact_area",
         'exportUrl': "/hcahighimpactarea/exportToExcelAction.do",
+        'isExportAll': true,
+        'hasDownload': false
     },
     searchFields: [
         //'pipelineOid',

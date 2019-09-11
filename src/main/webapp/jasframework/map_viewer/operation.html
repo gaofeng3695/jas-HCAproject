@@ -237,6 +237,62 @@
             background-position-x: center;
             background-position-y: center;
         }
+        .draw-btn{
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/dock/buildings.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #f5faff;
+            border: 1px solid #e0ecff;
+            background-position-x: center;
+            background-position-y: center;
+        }
+        .draw-btn:hover {
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/dock/buildings_h.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #013e89;
+            border: 1px solid #013e89;
+            background-position-x: center;
+            background-position-y: center;
+        }
+        .radius-btn{
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/radius.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #f5faff;
+            border: 1px solid #e0ecff;
+            background-position-x: center;
+            background-position-y: center;
+        }
+        .radius-btn:hover {
+            cursor: pointer;
+            height: 29px;
+            line-height: 49px;
+            text-align: center;
+            width: 20px;
+            background: url(images/radius_h.png) no-repeat;
+            margin: 26px 1px 0px 6px;
+            padding: 0px 5px 0px 5px !important;
+            background-color: #013e89;
+            border: 1px solid #013e89;
+            background-position-x: center;
+            background-position-y: center;
+        }
 
         .el-message-box__wrapper{
             z-index:9990 !important;
@@ -264,6 +320,8 @@
                 </div>
                 <!--左侧流程操作按钮-->
                 <div class="operate-left-div">
+                    <div class="radius-btn" @click="radiusBtn" v-show="isManage" title="高后果区识别半径"></div>
+                    <div class="draw-btn" @click="drawSettlement" v-show="isManage" title="建（构）筑物标绘"></div>
                     <div class="area-btn" @click="showHistoryBtn" v-show="isManage" title="地区等级划分"></div>
                     <div class="hca-btn" @click="createHcaArea" v-show="isManage" title="高后果区识别"></div>
                 </div>
@@ -373,12 +431,16 @@
             },
         },
         methods: {
+            radiusBtn:function(){
+                var pipelinOid = this.pipelineOid;
+                this.createBufferDialog(pipelinOid);
+            },
             callback1:function(e){
                 this.localAddress = e.result.formatted_address;
                 var fId = new Date().getTime();
                 var baseSrc = jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-settlement.html?fId=' + fId + "&layerId=drawlayer_hca_buildings&localAddress=" + encodeURI(this.localAddress)
                 window.getDlg(baseSrc, "editSettlementIframe", "建(构)筑物属性新增", 320, 350);
-            }  ,
+            },
             drawSettlement: function(){
                 var that = this;
                 top.jasMap.startDrawAndEditMode("POLYGON",{
@@ -409,6 +471,8 @@
             },
             createBuffer: function(){	// 调用识别区生成方法
                 var that = this;
+            	$("span[class=el-tag]").html(that.localPipelineName);
+            	$('.title-div').show();
             	// 隐藏地区等级和高后果区,清空地区等级评价版本Id
                 that.jasMap.updateLayer('hca_area',{
                     "show":false,
@@ -444,10 +508,20 @@
                                 color:[255,255,255,100],
                                 outlineColor:[255,0,0,255],
                             });
-                            var lineGraphic = that.getPipeline();
+                            /* var lineGraphic = that.getPipeline();
                             var x = lineGraphic.geometry.paths[0][0][0];
                             var y = lineGraphic.geometry.paths[0][0][1] ;
-                            top.jasMap.zoomAt(15,x ,y );
+                            top.jasMap.zoomAt(15,x ,y ); */
+                            var queryObj = {
+                                	url: 'http://192.168.100.35:6080/arcgis/rest/services/hca/features/FeatureServer/1',
+                                	where: "oid ='" + that.pipelineOid + "'"
+                                }
+                            var queryArr = [queryObj];
+                            that.jasMap.queryFeatures(queryArr, function(lineGraphic){
+                            	var x = lineGraphic[0][0].geometry.paths[0][0][0];
+                                var y = lineGraphic[0][0].geometry.paths[0][0][1] ;
+                                that.jasMap.zoomAt(15,x ,y );
+                            });
                         }else{
                             that.$alert(json.msg ,"提示");
                         }
@@ -662,7 +736,7 @@
                 if(forBusiness=="0"){
                     title = "新增地区等级划分成果";
                 }
-                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 300,330);
+                window.getDlg(jasTools.base.rootPath + '/jasmvvm/pages/row-onepage/hca-operation/dialogs/base-template/dialogs/add-version.html?forBusiness=' + forBusiness + '&pipelineOid='+that.pipelineOid + '&versionOid='+versionOid, "createVersionIframe", title, 390,360);
             },
             loadDomainData:function(){
                 var _this = this ;

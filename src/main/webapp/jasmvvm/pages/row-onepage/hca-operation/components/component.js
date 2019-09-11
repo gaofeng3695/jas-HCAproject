@@ -260,7 +260,7 @@ Vue.component('jas-table-for-list', {
         '	<el-button size="small" plain type="primary" icon="fa fa-check" v-if="isApprove&&isHasPrivilege(' + "'bt_approve'" + ')" :disabled="approveRows.length==0" @click="approve">审核</el-button>',
         '   <slot name="btns"></slot>',
         '<jas-hca-import-export-btns  @refreshtable="refresh" :is-import="isHasPrivilege(' + "'bt_import'" + ')" :is-export="isHasPrivilege(' + "'bt_export'" + ')" ',
-        '		:form="form" :oids="oids" :import-config="importConfig" :template-code="_templateCode" :export-template-code="_exportTemplateCode" :function-code="functionCode" ', 
+        '		:form="form" :oids="oids" :import-config="importConfig" :template-code="_templateCode" :export-template-code="_exportTemplateCode" :function-code="functionCode"  ',
         '		:class-name="_classNameQuery"></jas-hca-import-export-btns>',
         //':class-name="_classNameQuery" :export-url=exportUrl :table-name=tableName :function-name=functionName></jas-hca-import-export-btns>',
 /*        '<jas-import-export-btns  @refreshtable="refresh" :is-import="isHasPrivilege(' + "'bt_import'" + ')" :is-export="isHasPrivilege(' + "'bt_export'" + ')" ',
@@ -344,9 +344,9 @@ Vue.component('jas-table-for-list', {
             return item.name;
         });
         this.propconfig.oid && (this.prop.oid = this.propconfig.oid);
+        this.form.pageCode = param.pageCode;
     },
     mounted: function () {
-
         this._requestPrivilege(this._privilegeCode);
         this.search();
     },
@@ -594,6 +594,7 @@ Vue.component('jas-table-for-list', {
             if (this.deletePath) {
                 var url = jasTools.base.rootPath + this.deletePath;
                 var param = jasTools.base.getParamsInUrl(url);
+                that.form.pageCode = param.layerId;
                 jasTools.ajax.post(url, {
                     oid: row[that.prop.oid]
                 }, function (data) {
@@ -661,24 +662,26 @@ Vue.component('jas-hca-import-export-btns', {
             type: Boolean,
             default: true,
         },
-        importConfig: {}
+        importConfig: {},
     },
     data: function () {
         return {}
     },
     template: [
         '<span style="margin-left: 10px;" >',
-        '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-mail-forward" @click="bt_import">导入</el-button>',
         /*'<el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导出已选</el-button>',
         '<el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出全部</el-button>',*/
+        '<el-button size="small" v-if="importConfig? importConfig.isExportAll : false" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导出</el-button>',
+
         '<el-dropdown placement="bottom" v-if="isExport">',
 		  	'<el-button size="small" plain type="primary" icon="fa fa-mail-reply-all">导出<i class="el-icon-arrow-down el-icon--right"></i></el-button>',
 			  	'<el-dropdown-menu slot="dropdown" >',
-			    '<el-dropdown-item v-if="isExport"><el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导&#8197;出&#8197;全&#8197;部</el-button></el-dropdown-item>',
+                '<el-dropdown-item v-if="isExport"><el-button size="small" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply-all" @click="bt_export_all">导&#8197;出&#8197;全&#8197;部</el-button></el-dropdown-item>',
 			    '<el-dropdown-item v-if="isExport"><el-button size="small" :disabled="oids.length==0" v-if="isExport" type="primary" plain="plain" icon="fa fa-mail-reply" @click="bt_export">导&#8197;出&#8197;已&#8197;选</el-button></el-dropdown-item>',
 		    '</el-dropdown-menu>',
 		'</el-dropdown>',
-        '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
+        '<el-button size="small" v-if="isImport" type="primary" plain="plain" icon="fa fa-mail-forward" @click="bt_import">导入</el-button>',
+        '<el-button size="small" v-if="importConfig? importConfig.hasDownload : false" type="primary" plain="plain" icon="fa fa-download" @click="bt_download">下载模板</el-button>',
         '</span>',
     ].join(''),
     methods: {
@@ -720,8 +723,9 @@ Vue.component('jas-hca-import-export-btns', {
         },
 
     },
+    created: function () {
+    },
     mounted: function () {
-        console.log(this.importConfig);
     }
 });
 

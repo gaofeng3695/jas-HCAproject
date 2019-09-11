@@ -193,17 +193,17 @@
                         trigger: 'blur'
                     }],
                     buildingTypeParent: [{
-                        required: true,
+                        //required: true,
                         message: '请选择建(构)筑物类别',
                         trigger: 'blur'
                     }],
                     buildingType: [{
-                        required: true,
+                       // required: true,
                         message: '请选择建(构)筑物类型',
                         trigger: 'blur'
                     }],
                     buildingDistribution: [{
-                        required: true,
+                        //required: true,
                         message: '请选择建(构)筑物分布',
                         trigger: 'blur'
                     }],
@@ -307,6 +307,7 @@
                 that.domain.buildingDistribution = arr;
                 that.tableFormData.buildingDistribution = arr[0].key;
             });
+        	that.tableFormData.pipelineOid = top.$('#mapIframe')[0].contentWindow.hcaMapApp.pipelineOid;
         },
         methods: {
             submit: function (formName) {

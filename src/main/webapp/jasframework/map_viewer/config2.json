@@ -747,13 +747,6 @@
         "target": "mapExport",
         "index": "",
         "toggle": true
-      },
-      {
-        "type": "api",
-        "target": "drawSettlement",
-        "label":"建（构）筑物标绘",
-        "icon": "../../jasframework/map_viewer/images/dock/buildings.png",
-        "index": ""
       }
     ]
   },
